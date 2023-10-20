@@ -29,6 +29,7 @@ class Repository {
             case 'dimensions': return this.createDimensionsFile(fileName, source);
             case 'process': return this.createProcessFile(fileName, source);
             case 'humantask': return this.createHumanTaskFile(fileName, source);
+            case 'cfi': return this.createCFIFile(fileName, source);
             case 'cfid': return this.createCFIDFile(fileName, source);
             default: throw new Error(`File type ${fileType} is not supported on the client`);
         }
@@ -104,6 +105,24 @@ class Repository {
      */
     createHumanTaskFile(fileName, source) {
         return new HumanTaskFile(this, fileName, source);        
+    }
+
+    /**
+     * Returns the list of case file items in the repository
+     * @returns {Array<CFIFile>}
+     */
+    getCaseFileItems() {
+        return /** @type {Array<CFIFile>} */ (this.list.filter(serverFile => serverFile instanceof CFIFile));
+    }
+
+    /**
+     * Create a new CFIFile that can parse and write server side .cfi files
+     * @param {String} fileName 
+     * @param {*} source 
+     * @returns {CFIFile}
+     */
+    createCFIFile(fileName, source) {
+        return new CFIFile(this, fileName, source);        
     }
 
     /**

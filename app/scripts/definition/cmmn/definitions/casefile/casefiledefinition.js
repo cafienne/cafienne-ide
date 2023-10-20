@@ -2,6 +2,7 @@ class CaseFileDefinition extends CaseFileItemCollection {
     constructor(importNode, caseDefinition, parent) {
         super(importNode, caseDefinition, parent);
         this.parseElements('caseFileItem', CaseFileItemDef, this.children);
+        this.parseElements('caseFileItemRef', CaseFileItemRefDef, this.children);
     }
 
     createExportNode(parentNode) {

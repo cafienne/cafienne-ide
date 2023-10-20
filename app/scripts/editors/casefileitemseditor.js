@@ -1,4 +1,5 @@
 ﻿const NEWDEF = '__new__';
+const _EMPTY_CFI = '_empty_.cfi'; //Placeholder file for new created empty CFI models
 
 class CaseFileItemsEditor {
     /**
@@ -14,8 +15,8 @@ class CaseFileItemsEditor {
 
         this.divCaseFileDefinitions = this.html.find('.divCaseFileDefinitions');
         this.caseFileItemDefinitionEditor = new CaseFileItemDefinitionEditor(this, this.divCaseFileDefinitions);
-        this.splitter = new BottomSplitter(htmlParent, '70%', 175);        
-        
+        this.splitter = new BottomSplitter(htmlParent, '70%', 175);
+
         //get the tree table which will contain the data from the html
         this.tree = this.html.find('table');
         //render the treetable. Add the data from the treeEditor object to the tree
@@ -74,7 +75,11 @@ class CaseFileItemsEditor {
                 //the first column is the title property
                 const node = data.node;
                 const $tdList = $(data.node.tr).find('>td');
-                const caseFileItem = this.getDefinitionElement(data.node);
+                const caseFileItem = this.getDefinitionElement(node);
+                if (!caseFileItem) {
+                    debugger;
+                    throw new Error("No CFI to render");
+                }
 
                 // Set the fancy tree node title of the element.
                 $tdList.eq(0).find('.fancytree-title').html(caseFileItem.name); // Setting it in the HTML ensures that the name is also rendered for child items
@@ -90,8 +95,40 @@ class CaseFileItemsEditor {
                             caseFileItem.definitionRef = cfid.fileName;
                         }
                     }
-                    this.case.refreshReferencingFields(caseFileItem);
-                    this.case.editor.completeUserAction();
+                    if (caseFileItem instanceof CaseFileItemRefDef) {
+                        // Ignore upper/lower case in file name
+                        const oldCfiRef = caseFileItem.cfiRef;
+                        const newName = caseFileItem.name.toLowerCase();
+                        const newCfiRef = newName + '.cfi';
+                        if (this.ide.repository.get(newCfiRef)) {
+                            this.ide.repository.load(newCfiRef, file => {
+                                const newModel = file.definition;
+                                // change the referred model
+                                caseFileItem.cfiRef = newCfiRef; // This cfiRef was changed in repository
+                                caseFileItem.caseFileItemModel = newModel;
+                                this.case.refreshReferencingFields(caseFileItem);
+                                this.case.editor.completeUserAction();
+                                // Need to reload fancy tree, but can only be done async
+                                window.setTimeout(() => this.fancyTree.reload(), 0);
+                            });
+                        } else {
+                            this.ide.repository.rename(oldCfiRef, newCfiRef, () => {
+                                // change the referred model
+                                caseFileItem.cfiRef = newCfiRef; // This cfiRef was changed in repository
+                                // change name/id in the referred model too
+                                caseFileItem.caseFileItemModel.id = newCfiRef;
+                                caseFileItem.caseFileItemModel.name = newName;
+    
+                                this.case.refreshReferencingFields(caseFileItem);
+                                this.saveCFIFile(caseFileItem);
+                                this.case.editor.completeUserAction();
+                            });
+                        }
+                    } else {
+                        this.case.refreshReferencingFields(caseFileItem);
+                        this.saveCFIFile(caseFileItem);
+                        this.case.editor.completeUserAction();
+                    }
                 })
 
                 const multiplicitySelect = `<select>
@@ -101,7 +138,7 @@ class CaseFileItemsEditor {
                     <option value="OneOrMore">[1..*]</option>
                     <option value="Unspecified">[*]</option>
                     <option value="Unknown">[?]</option>
-               </select>`;
+                </select>`;
 
                 $tdList.eq(1).html(multiplicitySelect);
 
@@ -111,6 +148,7 @@ class CaseFileItemsEditor {
                 //attach the onchange select here
                 $(multiplicityField).on('change', () => {
                     caseFileItem.multiplicity = multiplicityField.value;
+                    this.saveCFIFile(caseFileItem);
                     this.case.editor.completeUserAction();
                 });
 
@@ -143,7 +181,7 @@ class CaseFileItemsEditor {
                 const usedInField = $tdList.eq(3)[0].firstChild;
                 usedInField.innerHTML = caseFileItem.usedIn;
             }
-        };
+        }
         return treeRender;
     }
 
@@ -174,7 +212,20 @@ class CaseFileItemsEditor {
         if (!node) {
             throw new Error('Node must be given to this function');
         }
-        return this.case.caseDefinition.getElement(node.data.__id);
+
+        const identifier = node.data.__id;
+        if (node.parent && node.parent.data && node.parent.data.modelDefinition) {
+            if (node.parent.data.caseFileItemModel) {
+                // If the parent is a CaseFileItemRefDef we should not take the model definition, as that points to the CaseDefinition instead of to the implementation
+                return node.parent.data.caseFileItemModel.getElement(identifier);
+            } else {
+                // Use use our parent's definition to find the element (whether it is CaseDefinition or CaseFileItemDefinition doesn't really matter)
+                return node.parent.data.modelDefinition.getElement(identifier);
+            }
+        } else {
+            // We have no parent, so use the CaseDefinition
+            return /** @type {CaseFileItemDef} */ (this.case.caseDefinition.getElement(identifier));
+        }
     }
 
     /**
@@ -191,8 +242,8 @@ class CaseFileItemsEditor {
      */
     enterSelectionMode(callback) {
         //set the callback function for when a tree item has been selected
-        this.callback = callback;        
-        this.html.find('.dialogButtons').css('display', 'block');        
+        this.callback = callback;
+        this.html.find('.dialogButtons').css('display', 'block');
     }
 
     /**
@@ -264,6 +315,51 @@ class CaseFileItemsEditor {
     }
 
     /**
+     * 
+     * @param {CaseFileItemCollection} caseFileItem 
+     */
+    saveCFIFile(caseFileItem) {
+        if (caseFileItem instanceof CaseFileItemRefDef) {
+            const file = this.ide.repository.get(caseFileItem.cfiRef);
+            file.source = caseFileItem.caseFileItemModel.toXML();
+            file.save();
+        }
+        if (caseFileItem instanceof CaseFile) {
+            // This means the case file is part of the ase, and it get's automatically saved in the case upon completeUserAction
+            return;
+        }
+        if (! caseFileItem) {
+            // pretty weird
+            console.log("Case File Item no longer exists???")
+            return;
+        }
+        return this.saveCFIFile(/** @type {CaseFileItemCollection} */(caseFileItem.parentCollection));
+    }
+
+    createChildNode(parentNode) {
+        const parentCaseFileItemID = parentNode && parentNode.data ? parentNode.data.__id : undefined;
+        if (parentCaseFileItemID) {
+            const parentDefinition = this.getDefinitionElement(parentNode);
+            const newChild = parentDefinition.createChildDefinition(CaseFileItemDef);
+            this.saveCFIFile(newChild);
+            return newChild;
+        } else {
+            /** @type {CaseFileItemCollection} */
+            const parentDefinition = this.case.caseDefinition.getCaseFile();
+            // At root level create a CaseFileItemRefDef
+            /** @type {CaseFileItemRefDef} */
+            const caseFileItemRefDef = /** @type {CaseFileItemRefDef} */ (parentDefinition.createChildDefinition(CaseFileItemRefDef));
+            const cfiRef = _EMPTY_CFI;
+            const newFile = this.ide.repository.createCFIFile(cfiRef);
+            newFile.source = `<caseFileItem id="${newFile.fileName}" name="${newFile.name}" definitionRef=""/>`;
+            caseFileItemRefDef.cfiRef = cfiRef;
+            caseFileItemRefDef.caseFileItemModel = newFile.definition;
+            newFile.save();
+            return caseFileItemRefDef;
+        }
+    }
+
+    /**
      * Adds a node to the fancy tree, either as sibling or child of the current node (depends on the value of the position string)
      * @param {String} position Must be either 'child' or 'after' for either adding a child or a sibling.
      */
@@ -271,14 +367,8 @@ class CaseFileItemsEditor {
         const anchorNode = this.fancyTree.getActiveNode() || this.fancyTree.getRootNode();
         // Parent node is used for determining the new case file item definition's parent.
         const parentNode = position == 'after' ? anchorNode.parent : anchorNode;
-        const caseDefinition = this.case.caseDefinition;
-        const parentCaseFileItemID = parentNode && parentNode.data ? parentNode.data.__id : undefined;
-        /** @type {CaseFileItemCollection} */
-        const parentDefinition = parentCaseFileItemID ? caseDefinition.getElement(parentCaseFileItemID) : caseDefinition.getCaseFile();
-        const newCaseFileItemDefinition = parentDefinition.createChildDefinition()
-
         // Fancy tree likes to get his new nodes in an array...
-        const newDataNode = [newCaseFileItemDefinition];
+        const newDataNode = [this.createChildNode(parentNode)];
 
         // Adding a sibling to the root will result in a fancytree error. Here we check for that case, and convert it to adding a child instead of a sibling
         if (position == 'after' && !parentNode) {
@@ -286,7 +376,7 @@ class CaseFileItemsEditor {
         }
         const newNode = anchorNode.addNode(newDataNode, position);
         this.editStart(newNode);
-        this.case.editor.completeUserAction();                
+        this.case.editor.completeUserAction();
     }
 
     clickRemoveButton(e) {
@@ -294,6 +384,7 @@ class CaseFileItemsEditor {
         const activeNode = this.fancyTree.getActiveNode();
         if (activeNode) {
             const definitionElement = this.getDefinitionElement(activeNode);
+            const parent = definitionElement.parentCollection;
             if (this.hasReferences(definitionElement)) {
                 // Only remove the node if it is not in use
                 this.ide.danger('The item (or one of its children) is in use, it cannot be deleted');
@@ -301,12 +392,13 @@ class CaseFileItemsEditor {
                 // Remove the node and the corresponding definition element.
                 definitionElement.removeDefinition();
                 activeNode.remove();
+                this.saveCFIFile(parent);
                 this.caseFileItemDefinitionEditor.hideEditor();
             }
         } else {
             ide.warning('Select a node to be removed', 1000);
         }
-        this.case.editor.completeUserAction();        
+        this.case.editor.completeUserAction();
     }
 
     /**
@@ -381,6 +473,7 @@ class CaseFileItemsEditor {
 
         // Do the actual definition change and make sure it is saved
         caseFileItem.definitionRef = definitionRef;
+        this.saveCFIFile(caseFileItem);
         this.case.editor.completeUserAction();
     }
 

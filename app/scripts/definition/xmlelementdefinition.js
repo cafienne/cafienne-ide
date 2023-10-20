@@ -331,6 +331,7 @@ class XMLElementDefinition {
      * @param {Array} propertyNames
      */
     createExportNode(parentNode, tagName, ...propertyNames) {
+        /** @type {Element} */
         this.exportNode = XML.createChildElement(parentNode, tagName);
         this.exportProperties(propertyNames);
     }

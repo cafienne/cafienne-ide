@@ -26,16 +26,46 @@ class CaseModelEditor extends ModelEditor {
     }
 
     /**
-     * Loads the model and makes the editor visible
+     * Async Load of the case model, dimensions model and all referred cfi models. 
      */
     loadModel() {
         this.ide.repository.load(this.fileName, file => {
             const caseDefinition = file.definition;
+            // When case model finished loading then load the dimensions model
             this.ide.repository.load(this.dimensionsFileName, file => {
                 const dimensions = file.definition;
-                this.open(caseDefinition, dimensions)
+                // When dimensions model finished loading then filter for all <caseFileItemRef>'s and push in array 
+                const cfiRefs = [];
+                caseDefinition.elements.filter(element => element instanceof CaseFileItemRefDef).forEach(cfi => cfiRefs.push(cfi));
+                // Load all referred cfi models
+                this.loadCFIModels(cfiRefs, () => {
+                    // When all referred cfi models finished loading we can open the editor
+                    this.open(caseDefinition, dimensions)
+                });
             });
         });
+    }
+
+    /**
+     * Will load CaseFileItemRefDef models recursively in the callback until array is entirely processed
+     * 
+     * @param {Array<CaseFileItemRefDef>} cfiRefs 
+     * @param {Function} callbackWhenAllCfiModelsAreLoaded 
+     */
+    loadCFIModels(cfiRefs, callbackWhenAllCfiModelsAreLoaded) {
+        const caseFileItemRef = cfiRefs.pop();
+        if ( caseFileItemRef ) {
+            // As long there is a remaining item in the array then load the model
+            this.ide.repository.load(caseFileItemRef.cfiRef, file => {
+                caseFileItemRef.caseFileItemModel = file.definition;
+                // Recursively load the next one in the array
+                this.loadCFIModels(cfiRefs, callbackWhenAllCfiModelsAreLoaded);
+            });
+        }
+        else {
+            // When cfiRefs is empty and all models are loaded then execute final callback
+            callbackWhenAllCfiModelsAreLoaded();
+        }
     }
 
     /**
@@ -113,8 +143,13 @@ class CaseModelEditor extends ModelEditor {
     }
 
     refresh() {
-        // Overwrite to ensure that we also clear the dimensions file from the cache
+        // Overwrite 'refresh()' to ensure that we also clear the dimensions and cfi files from the cache
         this.ide.repository.clear(this.dimensionsFileName);
+        this.case.caseDefinition.elements.forEach(element => {
+            if (element instanceof CaseFileItemRefDef) {
+                this.ide.repository.clear(element.cfiRef);
+            }
+        });
         super.refresh();
     }
 

@@ -46,6 +46,14 @@ class CaseFileItemDef extends CaseFileItemCollection {
         return descendants;
     }
 
+    get definitionRef() {
+        return this._definitionRef;
+    }
+
+    set definitionRef(value) {
+        this._definitionRef = value;
+    }
+
     parseGrandChildren(childName, constructor, collection) {
         const child = XML.getChildByTagName(this.importNode, 'children');
         if (child) {
@@ -54,10 +62,17 @@ class CaseFileItemDef extends CaseFileItemCollection {
         return collection;
     }
 
-    createExportNode(parentNode) {
+    createExportNode(parentNode, tagName = 'caseFileItem', ...propertyNames) {
         if (this.isEmpty) return;
+        if (tagName === 'children') {
+            //On top level <caseFileModel> children should be exported as <caseFileItem> and not as <children>
+            tagName = 'caseFileItem';
+        }
+        super.createExportNode(parentNode, tagName, 'multiplicity', 'definitionRef', propertyNames);
+        this.exportChildren();
+    }
 
-        super.createExportNode(parentNode, 'caseFileItem', 'multiplicity', 'definitionRef');
+    exportChildren() {
         if (this.children.length > 0) {
             const childrenNode = XML.createChildElement(this.exportNode, 'children');
             this.children.forEach(child => child.createExportNode(childrenNode));
