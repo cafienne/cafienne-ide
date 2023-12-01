@@ -28,9 +28,21 @@ class CaseDefinition {
         this.identifier = this.caseElement.getAttribute('id');
         this.definitionsDocument.addCase(this);
 
+        // Add case file item references
+        const caseFileItemRefs = this.findReferences('caseFileItemRef', 'cfiRef');
+        definitionsDocument.resolveCaseFileItemReferences(caseFileItemRefs);
+        const caseFileItems = /** @type {IterableIterator<Element>}} */ (definitionsDocument.loadedCaseFileItems.values());
+
         // Add case file definition references
         const caseFileDefinitionRefs = this.findReferences('caseFileItem', 'definitionRef');
         definitionsDocument.resolveCaseFileDefinitionReferences(caseFileDefinitionRefs);
+
+        // Now also make sure that all the definitionRefs of the CaseFileItemRef objects are loaded
+        for (const cfiDefinition of definitionsDocument.loadedCaseFileItems.values()) {
+            const definitionRefs = this.findReferences('caseFileItem', 'definitionRef', cfiDefinition);
+            definitionRefs.push(cfiDefinition.getAttribute('definitionRef'));
+            definitionsDocument.resolveCaseFileDefinitionReferences(definitionRefs.filter(value => value !== ''));
+        }
 
         // Find out the process that this case refers to and add them to the definitions document
         const processRefs = this.findReferences('processTask', 'processRef');
@@ -49,12 +61,15 @@ class CaseDefinition {
         definitionsDocument.resolveSubCaseReferences(caseRefs);
     }
 
-    /* returns all external references in this case of a certain type
-    - elementName   : search for elements with this name
-    - referenceAttributeName  : name of xml attribute that holds the reference
-    */
-    findReferences(elementName, referenceAttributeName) {
-        return XML.findElementsWithTag(this.caseElement, elementName).map(element => element.getAttribute(referenceAttributeName)).filter(string => string !== '');
+    /**
+     * Returns all external references in this case of a certain type
+     * @param {String} elementName Search for elements with this name.
+     * @param {String} referenceAttributeName  Name of xml attribute that holds the references to be returned
+     * @param {Element} parent The node in which to search for the elements
+     * @returns 
+     */
+    findReferences(elementName, referenceAttributeName, parent = this.caseElement) {
+        return XML.findElementsWithTag(parent, elementName).map(element => element.getAttribute(referenceAttributeName)).filter(string => string !== '');
     }
 
     appendDiagramInformation(diagramElement) {
@@ -65,6 +80,39 @@ class CaseDefinition {
             const shapeElement = shapeElements[i].cloneNode(true);
             diagramElement.appendChild(shapeElement);
         }
+    }
+
+    fillCaseFileModel() {
+        XML.findElementsWithTag(this.caseElement, 'caseFileItemRef').forEach(cfi => this.fillCaseFileItem(cfi));
+    }
+
+    fillCaseFileItem(cfiElement) {
+        const cfiName = cfiElement.getAttribute('name');
+        const cfiRef = cfiElement.getAttribute('cfiRef');
+        if (cfiRef === '') {
+            console.log(`Case File Item ${cfiName} does not have a reference to an implementation and will not be included in the case file model`);
+            return;
+        }
+        const cfiDefinition = this.definitionsDocument.loadedCaseFileItems.get(cfiRef);
+        if (cfiDefinition === undefined) {
+            console.log(`Cannot find the reference ${cfiRef} used in case file item ${cfiName}`);
+            return;
+        }
+
+        // Always overwrite the name from the definition with the one defined in the .case file
+        cfiDefinition.setAttribute('name', cfiElement.getAttribute('name'));
+        // Same for id and multiplicity
+        cfiDefinition.setAttribute('id', cfiElement.getAttribute('id'));
+        cfiDefinition.setAttribute('multiplicity', cfiElement.getAttribute('multiplicity'));
+
+        // Make sure the definitionRef is at the end of the attributes (as before)
+        const defRef = cfiDefinition.getAttribute('definitionRef');
+        cfiDefinition.removeAttribute('definitionRef');
+        cfiDefinition.setAttribute('definitionRef', defRef);
+
+        const casefileModel = cfiElement.parentNode;
+        casefileModel.removeChild(cfiElement);
+        casefileModel.appendChild(cfiDefinition);
     }
 
     fillInHumanTaskExtensions() {
@@ -120,7 +168,7 @@ class CaseDefinition {
             clonedHumanTaskImplementation.setAttribute('validatorRef', validatorRef);
             this.definitionsDocument.resolveProcessReferences([validatorRef]);
         }
-        
+
         // Now move the parameterMapping children from the case model into the human task
         //  Note: this should first clone the human task into the case model, otherwise we get
         //  all parameter mappings spread across all human tasks ...

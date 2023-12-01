@@ -25,6 +25,7 @@ class Definitions {
         // Cache of definitions
         /** @type {Map<String, CaseDefinition>} */
         this.loadedCases = new Map();
+        this.loadedCaseFileItems = new Map();
         this.loadedProcesses = new Map();
         this.loadedHumanTasks = new Map();
         this.loadedCaseFileDefinitions = new Map();
@@ -52,6 +53,13 @@ class Definitions {
     }
 
     /**
+     * Loads the case file item refs that have not been loaded yet, and adds them to this definitions object
+     */
+    resolveCaseFileItemReferences(caseFileItemRefs) {
+        this._loadArtifactByIds(caseFileItemRefs, this.loadedCaseFileItems);
+    }
+
+    /**
      * Loads the process refs that have not been loaded yet, and adds them to this definitions object
      */
     resolveProcessReferences(processRefs) {
@@ -59,14 +67,14 @@ class Definitions {
     }
 
     /**
-     * Loads the process refs that have not been loaded yet, and adds them to this definitions object
+     * Loads the human task refs that have not been loaded yet, and adds them to this definitions object
      */
     resolveHumanTaskReferences(humanTaskRefs) {
         this._loadArtifactByIds(humanTaskRefs, this.loadedHumanTasks);
     }
 
     /**
-     * Loads the process refs that have not been loaded yet, and adds them to this definitions object
+     * Loads the casefileitemdefinition refs that have not been loaded yet, and adds them to this definitions object
      */
     resolveCaseFileDefinitionReferences(caseFileDefinitionRefs) {
         this._loadArtifactByIds(caseFileDefinitionRefs, this.loadedCaseFileDefinitions);
@@ -140,9 +148,23 @@ class Definitions {
         return XML.printNiceXML(this.definitionsElement) + '\n';
     }
 
+    _appendCaseFileDefinitions() {
+        for (const cfidEntry of this.loadedCaseFileDefinitions.entries()) {
+            /*
+            cfidEntry[0] has definitionRef(=case file definition file name)
+            cfidEntry[1] has the <caseFileDefinition> node from the case file definition file
+            Set the file name as the 'id' of the <process> node
+            */
+            cfidEntry[1].setAttribute('id',cfidEntry[0]);
+            this.definitionsElement.appendChild(cfidEntry[1]);
+        }
+    }
+
     _appendCaseDefinitions() {
         for (const caseDefinition of this.loadedCases.values()) {
-            // First make sure to load all the human task ref extensions
+            // Construct the case file model from the cfiRefs.
+            caseDefinition.fillCaseFileModel();
+            // Load the human task ref extensions
             caseDefinition.fillInHumanTaskExtensions();
             this.definitionsElement.appendChild(caseDefinition.caseElement);
         }
@@ -161,18 +183,6 @@ class Definitions {
             */
            processEntry[1].setAttribute('id', processEntry[0]);
            this.definitionsElement.appendChild(processEntry[1]);
-        }
-    }
-
-    _appendCaseFileDefinitions() {
-        for (const cfidEntry of this.loadedCaseFileDefinitions.entries()) {
-            /*
-            cfidEntry[0] has definitionRef(=case file definition file name)
-            cfidEntry[1] has the <caseFileDefinition> node from the case file definition file
-            Set the file name as the 'id' of the <process> node
-            */
-            cfidEntry[1].setAttribute('id',cfidEntry[0]);
-            this.definitionsElement.appendChild(cfidEntry[1]);
         }
     }
 
