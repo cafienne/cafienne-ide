@@ -1,4 +1,8 @@
-class CFIFile extends ServerFile {
+class CFIFile extends ServerFileWithEditor {
+    createEditor() {
+        return new CFIModelEditor(this);
+    }
+
     createDefinition() {
         return new CaseFileItemDefinition(this.content.xml);
     }

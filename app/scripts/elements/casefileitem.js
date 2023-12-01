@@ -60,6 +60,70 @@
         }
     }
 
+    setDropHandlers() {
+        super.setDropHandlers();
+        // Add drop handler with repository browser to handle changing cfi implementation when it is drag/dropped from there.
+        this.case.editor.ide.repositoryBrowser.setDropHandler(dragData => this.changeDefinitionImplementation(dragData), dragData => this.constructor.name == dragData.shapeType);
+    }
+
+    removeDropHandlers() {
+        super.removeDropHandlers();
+        this.case.editor.ide.repositoryBrowser.removeDropHandler();
+    }
+
+    /**
+    * @param {DragData} dragData 
+    * @param {Boolean} updateName 
+    */
+    changeDefinitionImplementation(dragData, updateName = false) {
+        if (this.definition instanceof CaseFileItemRefDef && this.definition.cfiRef === dragData.fileName) {
+            // Nothing changed, let's return;
+            return;
+        }
+        const fileName = dragData.fileName;
+        const caseDefinition = this.definition.caseDefinition;
+
+        const existingRefDef = caseDefinition.getCaseFile().children.find(child => child instanceof CaseFileItemRefDef && child.cfiRef === dragData.fileName)
+        this.setDefinition(existingRefDef);
+
+        if (! existingRefDef) {
+            const newChild = /** @type {CaseFileItemRefDef} */ (caseDefinition.getCaseFile().createChildDefinition(CaseFileItemRefDef));
+            // const newChild = CaseFileItemRefDef.createEmptyDefinition(this.definition.caseDefinition, dragData.fileName, dragData.fileName);
+            newChild.cfiRef = dragData.fileName;
+            newChild.id = dragData.fileName;
+            newChild.name = dragData.fileName;
+            this.setDefinition(newChild);
+
+            // this.case.cfiEditor.refresh();
+        }
+
+        this.editor.ide.repository.load(fileName, file => {
+            const model = file.definition;
+            if (!model) {
+                this.case.editor.ide.warning('Could not read the model ' + fileName + ' which is referenced from the case file item ' + this.name);
+                return;
+            }
+
+            if (updateName) {
+                console.warn(`Updating the cfi name to ${model.name}`);
+                const name = model.name;
+                if (name) {
+                    this.definition.name = name;
+                    this.refreshView();
+                }
+            }
+
+            this.definition.caseFileItemModel = model;
+
+            // Make sure to save changes if any.
+            this.case.editor.completeUserAction();
+            this.refreshView();
+
+            this.case.cfiEditor.fancyTree.reload();
+            // window.setTimeout(() => this.case.cfiEditor.fancyTree.reload(),0);
+        });
+    }
+
     /**
      * 
      * @param {CaseFileItemDef} definition 

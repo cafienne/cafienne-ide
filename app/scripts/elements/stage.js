@@ -30,7 +30,7 @@
     setDropHandlers() {
         super.setDropHandlers();
         // allow for dropping tasks directly from repository browser ...
-        this.case.editor.ide.repositoryBrowser.setDropHandler(dragData => this.addTaskModel(dragData));
+        this.case.editor.ide.repositoryBrowser.setDropHandler(dragData => this.addModel(dragData));
         // ... and case file items to be dropped from the cfiEditor
         this.case.cfiEditor.setDropHandler(dragData => this.addCaseFileItem(dragData));
     }
@@ -54,10 +54,13 @@
      * Add a 'drag-dropped' task implementation
      * @param {DragData} dragData 
      */
-    addTaskModel(dragData) {
-        /** @type {Task} */
+    addModel(dragData) {
         const element = super.addElementView(dragData.shapeType, dragData.event);
-        element.changeTaskImplementation(dragData, true);
+        if (element instanceof Task) {
+            element.changeTaskImplementation(dragData, true);
+        } else if (element instanceof CaseFileItem) {
+            element.changeDefinitionImplementation(dragData, true);
+        }
     }
 
     /**
