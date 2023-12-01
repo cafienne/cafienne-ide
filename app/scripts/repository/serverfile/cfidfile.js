@@ -1,4 +1,8 @@
-class CFIDFile extends ServerFile {
+class CFIDFile extends ServerFileWithEditor {
+    createEditor() {
+        return new CFIDModelEditor(this);
+    }
+
     createDefinition() {
         return new CaseFileDefinitionDefinition(this.content.xml);
     }

@@ -1,0 +1,51 @@
+/* TODO: Styling for POC CFID Model editor;  Now it is just a copy from process-model-editor */
+.cfid-model-editor {
+    background-color: #f5f5f5 !important;
+    position: absolute;
+    /* needed for tabs: | Editor | Source | */
+    top: 33px; 
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    border: 0px;
+}
+
+.cfid-model-editor>div {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+}
+
+/*name and description fields*/
+.cfid-model-editor .modelgenericfields {
+    top: 10px;
+}
+
+.cfid-model-editor .modelgenericfields div label:first-child,
+.cfid-model-editor .modelgenericfields div input:first-child {
+    width: 200px;
+}
+
+.cfid-model-editor .modelgenericfields div label:last-child,
+.cfid-model-editor .modelgenericfields div input:last-child {
+    width: 417px;
+}
+
+/*Task Model json editor*/
+.cfid-model-editor .cfid-model-source {
+    top: 255px;
+    bottom: 10px;
+}
+
+.cfid-model-editor .cfid-model-source>div {
+    position: absolute;
+    top: 15px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    border: 1px solid rgb(169, 169, 169);
+}
+
+.cfid-model-editor .cfid-model-source>div>div {
+    height: 100%;
+}
