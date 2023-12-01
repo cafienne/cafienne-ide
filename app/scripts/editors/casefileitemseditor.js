@@ -319,21 +319,27 @@ class CaseFileItemsEditor {
      * @param {CaseFileItemCollection} caseFileItem 
      */
     saveCFIFile(caseFileItem) {
+        if (caseFileItem.modelDefinition instanceof CaseFileItemDefinition) {
+            // Any change (also nested childs) inside the cfiRef modelDefinition needs to be saved
+            const file = this.ide.repository.get(caseFileItem.modelDefinition.id); //The id contains the fileName by convention
+            if (file) {
+                file.source = caseFileItem.modelDefinition.toXML();
+                file.save();
+                return;                 
+            }
+        }
         if (caseFileItem instanceof CaseFileItemRefDef) {
+            // The definitionRef attribute can be changed and needs to be saved inside the referred cfiRef model.
+            // When only the multiplicity attrubute is changed we don't need to save the cfiRef model as that
+            //  will be saved in the <caseFileItemRef> as part of the case and not inside the cfiRef model
+            //  but we can't distingusish this point so anyway we will save the cfiRef model.
             const file = this.ide.repository.get(caseFileItem.cfiRef);
             file.source = caseFileItem.caseFileItemModel.toXML();
             file.save();
-        }
-        if (caseFileItem instanceof CaseFile) {
-            // This means the case file is part of the ase, and it get's automatically saved in the case upon completeUserAction
             return;
         }
-        if (! caseFileItem) {
-            // pretty weird
-            console.log("Case File Item no longer exists???")
-            return;
-        }
-        return this.saveCFIFile(/** @type {CaseFileItemCollection} */(caseFileItem.parentCollection));
+        // For Compatibility: The <caseFileItem> is part of the <caseFileModel>, it get's automatically saved in the case upon completeUserAction
+        return;
     }
 
     createChildNode(parentNode) {
