@@ -61,6 +61,7 @@ class RepositoryElement {
         refs.push(...getReferences('caseFileItem', 'definitionRef'));
         refs.push(...getReferences('caseFileItemRef', 'cfiRef'));
         refs.push(...getReferences('cafienne:implementation', 'humanTaskRef'))
+        refs.push(...getReferences('type', 'type'));
         return refs;
     }
 
@@ -87,6 +88,7 @@ class RepositoryElement {
         if (extension == consts.HUMANTASK_EXT) return 'humantask';
         if (extension == consts.CASE_FILE_ITEM_EXT) return 'caseFileItem';
         if (extension == consts.CASE_FILE_ITEM_DEFINITION_EXT) return 'caseFileItemDefinition';
+        if (extension == consts.TYPE_EXT) return 'type';
         return '';
     }
 

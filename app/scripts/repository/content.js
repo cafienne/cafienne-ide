@@ -13,7 +13,7 @@ class Content {
     set source(source) {
         // If we get a new source, flatten and parse it, and also remove the existing definition
         const stringifiedSource = this.serialize(source);
-        if (this._serialized !== stringifiedSource) { // It's a real change
+        if (!this._serialized || this._serialized !== stringifiedSource) { // source undefined or it is a real change
             this._source = source;
             this._definition = undefined;
             this._serialized = undefined;
