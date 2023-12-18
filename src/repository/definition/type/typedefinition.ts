@@ -3,11 +3,22 @@ import SchemaDefinition from "./schemadefinition";
 import ModelDefinition from "../modeldefinition";
 
 export default class TypeDefinition extends ModelDefinition {
-    schema?: SchemaDefinition;
+    private _schema?: SchemaDefinition;
+
+    static createDefinitionSource(name: string) {
+        return `<type id="${name + '.type'}" name="${name}"><schema/></type>`;
+    }
 
     constructor(public file: TypeFile) {
         super(file);
-        this.schema = this.parseElement(SchemaDefinition.TAG, SchemaDefinition);
+        this._schema = this.parseElement(SchemaDefinition.TAG, SchemaDefinition);
+    }
+
+    get schema(): SchemaDefinition {
+        if (!this._schema) {
+            this._schema = this.createDefinition(SchemaDefinition);
+        }
+        return this._schema;
     }
 
     createExportNode(parentNode: Element, tagName = 'type', ...propertyNames: any[]) {
