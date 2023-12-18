@@ -29,7 +29,8 @@ class Utilities {
             || extension == consts.PROCESS_EXT
             || extension == consts.CASE_DEFINITION_EXT
             || extension == consts.HUMANTASK_EXT
-            || extension == consts.CASE_FILE_ITEM_DEFINITION_EXT;
+            || extension == consts.CASE_FILE_ITEM_DEFINITION_EXT
+            || extension == consts.TYPE_EXT;
     }
 }
 

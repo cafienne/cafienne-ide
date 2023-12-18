@@ -60,6 +60,7 @@ class RepositoryElement {
         refs.push(...getReferences('processTask', 'processRef'))
         refs.push(...getReferences('caseFileItem', 'definitionRef'));
         refs.push(...getReferences('cafienne:implementation', 'humanTaskRef'))
+        refs.push(...getReferences('property', 'type'));
         return refs;
     }
 
@@ -85,6 +86,7 @@ class RepositoryElement {
         if (extension == consts.CASE_DEFINITION_EXT) return 'definitions'; // not quite needed here, but ok.
         if (extension == consts.HUMANTASK_EXT) return 'humantask';
         if (extension == consts.CASE_FILE_ITEM_DEFINITION_EXT) return 'caseFileItemDefinition';
+        if (extension == consts.TYPE_EXT) return 'type';
         return '';
     }
 
