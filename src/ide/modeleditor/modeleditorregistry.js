@@ -6,12 +6,14 @@ import CaseModelEditorMetadata from "./case/casemodeleditormetadata";
 import HumantaskModelEditorMetadata from "./humantask/humantaskmodeleditormetadata";
 import ProcessModelEditorMetadata from "./process/processtaskmodeleditormetadata";
 import IDE from "@ide/ide";
+import TypeModelEditorMetadata from "./type/typemodeleditormetadata";
 
 export default class ModelEditorRegistry {
     static initialize() {
         IDE.registerEditorType(new CaseModelEditorMetadata());
         IDE.registerEditorType(new HumantaskModelEditorMetadata());
         IDE.registerEditorType(new ProcessModelEditorMetadata());
+        IDE.registerEditorType(new TypeModelEditorMetadata());
         ElementRegistry.initialize();
     }
 }
