@@ -5,6 +5,10 @@ import ModelDefinition from "../modeldefinition";
 export default class TypeDefinition extends ModelDefinition {
     schema?: SchemaDefinition;
 
+    static createDefinitionSource(name: string) {
+        return `<type id="${name + '.type'}" name="${name}"><schema/></type>`;
+    }
+
     constructor(public file: TypeFile) {
         super(file);
         this.schema = this.parseElement(SchemaDefinition.TAG, SchemaDefinition);
