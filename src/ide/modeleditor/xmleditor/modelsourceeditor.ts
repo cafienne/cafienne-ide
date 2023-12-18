@@ -10,7 +10,7 @@ export default class ModelSourceEditor {
     /**
      * 
      * @param {JQuery<HTMLElement>} html 
-     * @param {ModelEditor} editor 
+     * @param {ModelEditor|TypeEditor} editor 
      */
     constructor(public html: JQuery<HTMLElement>, public editor: ModelEditor) {
         // Add the code mirror object to the model-container

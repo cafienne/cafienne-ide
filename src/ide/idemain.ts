@@ -33,6 +33,7 @@ import "@styles/ide/modeleditors/case/elements/properties/timereventproperties.c
 import "@styles/ide/modeleditors/case/elements/elements.css";
 import "@styles/ide/modeleditors/case/editors/cfiselector.css";
 import "@styles/ide/editors/casefileitemseditor.css";
+import "@styles/ide/modeleditors/type/typemodeleditor.css";
 import "@styles/ide/editors/roleseditor.css";
 import "@styles/ide/editors/tableeditor.css";
 import "@styles/ide/editors/jsoneditor.css";
