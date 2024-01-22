@@ -68,6 +68,11 @@ class ParameterDefinition extends CMMNElementDefinition {
 class ImplementationParameterDefinition extends ReferableElementDefinition {
     constructor(importNode, modelDefinition, parent) {
         super(importNode, modelDefinition, parent);
+        this.type = this.parseAttribute('type');
         this.isNew = false; // This property is used in the HumanTaskEditor and ProcessTaskEditor
+    }
+
+    createExportNode(parentNode, tagName) {
+        super.createExportNode(parentNode, tagName, 'type');
     }
 }

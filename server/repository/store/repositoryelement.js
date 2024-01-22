@@ -61,6 +61,8 @@ class RepositoryElement {
         refs.push(...getReferences('caseFileItem', 'definitionRef'));
         refs.push(...getReferences('cafienne:implementation', 'humanTaskRef'))
         refs.push(...getReferences('property', 'type'));
+        refs.push(...getReferences('input', 'type'));
+        refs.push(...getReferences('output', 'type'));
         return refs;
     }
 
