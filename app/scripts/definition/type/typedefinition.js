@@ -20,4 +20,17 @@ class TypeDefinition extends ModelDefinition {
         const xmlDocument = super.exportModel('type', 'schema');
         return xmlDocument;
     }
+
+    toJSONSchema() {
+        // Example JSON
+        const jsonSchema = {
+            schema: {
+                $id: this.id,
+                title: this.name,
+                type: 'object'
+            }
+        }
+        this.schema.toJSONSchema(jsonSchema.schema)
+        return jsonSchema;
+    }
 }

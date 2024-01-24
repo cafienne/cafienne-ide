@@ -26,6 +26,7 @@ class TypeModelEditor extends ModelEditor {
                 <ul>
                     <li><a href="#modelEditor">Editor</a></li>
                     <li><a href="#sourceEditor">Source</a></li>
+                    <li><a href="#jsonSchemaEditor">JSON Schema</a></li>
                 </ul>
                 <div class="type-model-editor typeeditor" id="modelEditor">
                     <div class="formcontainer">
@@ -50,6 +51,7 @@ class TypeModelEditor extends ModelEditor {
                     </div>
                 </div>
                 <div class="model-source-editor" id="sourceEditor"></div>
+                <div class="json-schema-editor" id="jsonSchemaEditor"></div>
             </div>
         `);
 
@@ -65,6 +67,9 @@ class TypeModelEditor extends ModelEditor {
                 if (ui.newPanel.hasClass('model-source-editor')) {
                     this.viewSourceEditor.render(XML.prettyPrint(this.file['activeDefinition'].toXML()));
                 }
+                if (ui.newPanel.hasClass('json-schema-editor')) {
+                    this.jsonSchemaEditor.setValue(JSON.stringify(this.file['activeDefinition'].toJSONSchema(), null, 2));
+                }
             }
         });
 
@@ -72,6 +77,31 @@ class TypeModelEditor extends ModelEditor {
 
         //add the source part
         this.viewSourceEditor = new ModelSourceEditor(this.html.find('.model-source-tabs .model-source-editor'), this);
+
+        //add the JSON Schema part
+        this.createJSONSchemaEditor();
+    }
+
+    createJSONSchemaEditor() {
+        //add code mirror JSON style
+        this.jsonSchemaEditor = CodeMirrorConfig.createJSONEditor(this.html.find('.model-source-tabs .json-schema-editor'));
+
+        /* Events for saving and keeping track of changes in the task model editor
+        The model should only be saved when there is a change and the codemirror is blurred.
+        The onchange event of codemirror fires after every keydown, this is not wanted.
+        So only save after blur, but only when there is a change in content.
+        */
+        // Add event handlers on code mirror to track changes
+        this.jsonSchemaEditor.on('focus', () => this._changed = false);
+        this.jsonSchemaEditor.on('blur', () => {
+            if (this._changed) {
+                 //TODO Need to implement parsing changes in the JSON Schema:
+                // this.file['activeDefinition'].parseJSONSchema(JSON.parse(this.jsonSchemaEditor.getValue()));
+                // this.saveModel(this.file);
+                this.ide.warning('Parsing changes in JSON Schema not implemented');
+            }
+        });
+        this.jsonSchemaEditor.on('change', () => {this._changed = true;});
     }
 
     onEscapeKey(e) {
@@ -141,27 +171,10 @@ class TypeModelEditor extends ModelEditor {
             <div><button class="buttonRemoveType" title="removeType"></button><input class="inputTypeName" value="${property.name}" /></div>
             <div><select class="selectType">
                     <option value=""></option>
-                    <option value="http://www.omg.org/spec/CMMN/PropertyType/string">string</option>
-                    <option value="http://www.omg.org/spec/CMMN/PropertyType/boolean">boolean</option>
-                    <option value="http://www.omg.org/spec/CMMN/PropertyType/integer">integer</option>
-                    <option value="http://www.omg.org/spec/CMMN/PropertyType/float">float</option>
-                    <option value="http://www.omg.org/spec/CMMN/PropertyType/time">time</option>
-                    <option value="http://www.omg.org/spec/CMMN/PropertyType/date">date</option>
-                    <option value="http://www.omg.org/spec/CMMN/PropertyType/dateTime">dateTime</option>
-                    <option value="http://www.omg.org/spec/CMMN/PropertyType/anyURI">anyURI</option>
-                    <option value="http://www.omg.org/spec/CMMN/PropertyType/QName">QName</option>
-<!-- These elements not (yet) supported
-
-                    <option value="http://www.omg.org/spec/CMMN/PropertyType/double">double</option>
-                    <option value="http://www.omg.org/spec/CMMN/PropertyType/duration">duration</option>
-                    <option value="http://www.omg.org/spec/CMMN/PropertyType/gYearMonth">gYearMonth</option>
-                    <option value="http://www.omg.org/spec/CMMN/PropertyType/gYear">gYear</option>
-                    <option value="http://www.omg.org/spec/CMMN/PropertyType/gMonthDay">gMonthDay</option>
-                    <option value="http://www.omg.org/spec/CMMN/PropertyType/gDay">gDay</option>
-                    <option value="http://www.omg.org/spec/CMMN/PropertyType/hexBinary">hexBinary</option>
-                    <option value="http://www.omg.org/spec/CMMN/PropertyType/base64Binary">base64Binary</option>
-                    <option value="http://www.omg.org/spec/CMMN/PropertyType/decimal">decimal</option>
--->
+                    <option value="string">string</option>
+                    <option value="number">number</option>
+                    <option value="integer">integer</option>
+                    <option value="boolean">boolean</option>
                     <option value="object">object</option>
                     ${this.getOptionTypeHTML()}
                 </select>

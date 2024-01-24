@@ -55,4 +55,55 @@ class SchemaPropertyDefinition extends ReferableElementDefinition {
             this.exportNode.setAttribute('isBusinessIdentifier', 'true');
         }
     }
+
+    toJSONSchema(properties, required) {
+        const jsonProperty = {};
+        properties[this.name] = jsonProperty;
+        jsonProperty.$id = this.id;
+        /** @type {object} */
+        let property =  jsonProperty;
+        if (this.type === 'object') {
+            property.type = 'object';
+            this.schema.toJSONSchema(property)
+        } else if (this.typeRef) {
+            property.$ref = this.typeRef;
+        } else {
+            property.type = this.type;
+        }
+        switch (this.multiplicity) {
+        case 'ExactlyOne':
+            // Required property
+            required.push(this.name);
+            break;
+        case 'ZeroOrOne':
+            // Optional property
+            jsonProperty.minItems = 0;
+            jsonProperty.maxItems = 1;
+            break;
+        case 'ZeroOrMore':
+            // Array with optional items
+            jsonProperty.minItems = 0;
+            jsonProperty.type = 'array';
+            // Array items will have the type of the property
+            property = jsonProperty.items = {};
+            break;
+        case 'OneOrMore':
+            // Array with at least on required item
+            required.push(this.name);
+            jsonProperty.minItems = 1;
+            jsonProperty.type = 'array';
+            // Array items will have the type of the property
+            property = jsonProperty.items = {};
+            break;
+        case 'Unspecified':
+            // Array with unspecified number of items
+            jsonProperty.type = 'array';
+            // Array items will have the type of the property
+            property = jsonProperty.items = {};
+            break;
+        case 'Unknown':
+            break;
+        }
+        return jsonProperty;
+    }
 }

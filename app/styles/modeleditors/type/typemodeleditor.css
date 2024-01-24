@@ -115,3 +115,27 @@
     background-size: 8px 8px;
     border: 1px solid rgb(221, 221, 221);
 }
+
+.json-schema-editor {
+    background-color: #f5f5f5 !important;
+    position: absolute;
+    top: 33px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    border: 0px;
+}
+
+.json-schema-editor {
+    display: none;
+}
+
+.json-schema-editor>div {
+    border: 1px solid rgb(169, 169, 169);
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    top: 10px;
+    height: auto;
+}

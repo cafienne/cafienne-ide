@@ -30,6 +30,19 @@ class SchemaDefinition extends XMLElementDefinition {
     createExportNode(parentNode, tagName = SchemaDefinition.TAG, ...propertyNames) {
         super.createExportNode(parentNode, tagName, 'properties', propertyNames);
     }
+
+    toJSONSchema(parent) {
+        const jsonSchema = {};
+        parent['properties'] = jsonSchema;
+        const required = [];
+        this.properties.forEach(property => {
+            property.toJSONSchema(jsonSchema, required);
+            if (required.length) {
+                parent['required'] = required;
+            }
+        });
+        return jsonSchema;
+    }
 }
 
 SchemaDefinition.TAG = 'schema';
