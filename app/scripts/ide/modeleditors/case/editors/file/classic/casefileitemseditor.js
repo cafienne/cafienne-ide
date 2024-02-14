@@ -2,12 +2,13 @@
 
 class CaseFileItemsEditor {
     /**
-     * Renders the CaseFile definition through CFINode
-     * @param {CaseView} cs 
+     * Renders the CaseFile definition through fancytree
+     * @param {CaseFileEditor} caseFileEditor 
      * @param {JQuery<HTMLElement>} htmlParent 
      */
-    constructor(cs, htmlParent) {
-        this.case = cs;
+    constructor(caseFileEditor, htmlParent) {
+        this.caseFileEditor = caseFileEditor;
+        this.case = caseFileEditor.case;
         this.ide = this.case.editor.ide;
         this.htmlParent = htmlParent;
 
@@ -122,14 +123,6 @@ class CaseFileItemsEditor {
      */
     createNode(cfi) {
         return new CFINode(this, undefined, this.divCFIDetailsContainer, cfi);
-    }
-
-    /**
-     * Opens the editor as dialog.
-     * @param {(CaseFileItemDef) => void} callback 
-     */
-    open(callback = undefined) {
-        new CFISelector(this.case).showModalDialog(cfi => cfi && callback(cfi));
     }
 
     /**
@@ -319,24 +312,7 @@ class CaseFileItemsEditor {
      * Handles the dragging of a case file item from the cfi editor to a zoom field (cfi field)
      */
     handleDragStartCFIDataNode(cfi) {
-        this.dragData = new CaseFileItemDragData(this, cfi);
-    }
-
-    /**
-     * Registers a function handler that is invoked upon dropping an element.
-     * If an item from the editor is moved over the canvas, elements and form properties can register themselves as a drop handler
-     * @param {Function} dropHandler
-     * @param {Function} filter
-     */
-    setDropHandler(dropHandler, filter = undefined) {
-        if (this.dragData) this.dragData.setDropHandler(dropHandler, filter);
-    }
-
-    /**
-     * Removes the active drop handler and filter
-     */
-    removeDropHandler() {
-        if (this.dragData) this.dragData.removeDropHandler();
+        this.caseFileEditor.setDragData(new CaseFileItemDragData(this, cfi));
     }
 
     /**
