@@ -24,15 +24,20 @@
         <div class="basicbox basicform undoredobox"></div>
         <div class="basicbox basicform shapebox"></div>
         <div class="divCaseModel">
-            <div class="divCaseCanvas basicbox">
-                <div class="paper-container-scroller">
-                    <div class="paper-container" />
-                    <div class="divResizers"></div>
-                    <div class="divHalos"></div>
-                    <img class="halodragimgid" />
+            <div class="divCaseContainer">
+                <div class="divCaseCanvas basicbox">
+                    <div class="paper-container-scroller">
+                        <div class="paper-container" />
+                        <div class="divResizers"></div>
+                        <div class="divHalos"></div>
+                        <img class="halodragimgid" />
+                    </div>
                 </div>
+                <div class="divCaseTypeEditor"></div>
             </div>
-            <div class="divCaseFileEditor"></div>
+            <div>
+                <div class="divCaseFileEditor"></div>
+            </div>
         </div>
     </div>
 </div>`);
@@ -42,15 +47,18 @@
         this.divUndoRedo = this.html.find('.undoredobox');
         this.divShapeBox = this.html.find('.shapebox');
         this.divCFIEditor = this.html.find('.divCaseFileEditor');
+        this.divCaseTypeEditor = this.html.find('.divCaseTypeEditor');
         this.canvas = this.divCaseModel.find('.divCaseCanvas');
         this.paperContainer = this.html.find('.paper-container');
 
         this.deployForm = new Deploy(editor);
         this.sourceEditor = new CaseSourceEditor(editor, this.html);
         this.cfiEditor = new CaseFileItemsEditor(this, this.divCFIEditor);
+        this.typeEditor = new CaseTypeEditor(this, this.divCaseTypeEditor);
         this.undoBox = new UndoRedoBox(this, this.divUndoRedo);
         this.shapeBox = new ShapeBox(this, this.divShapeBox);
         this.splitter = new RightSplitter(this.divCaseModel, '60%', 5);
+        this.splitter2 = new BottomSplitter(this.divCaseModel.find('.divCaseContainer'), '60%', 5);
 
         /** @type {Array<CMMNElement>} */
         this.items = [];
