@@ -171,7 +171,7 @@ class TypeEditor {
      */
     renderProperty(property, file, container) {
         const html = $(`<div class='propertycontainer'>
-            <div><button class="buttonRemoveType" title="removeType"></button><input class="inputTypeName" value="${property.name}" /></div>
+            <div><img style="width:14px;margin:2px" src="/images/svg/casefileitem.svg"></img><input class="inputTypeName" value="${property.name}" /><button tabindex="-1" class="buttonRemoveType" title="Delete property"></button></div>
             <div><select class="selectType">
                     <option value=""></option>
                     <option value="string">string</option>

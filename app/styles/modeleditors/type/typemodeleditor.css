@@ -96,7 +96,7 @@
 }
 
 .type-model-editor .schemacontainer .inputTypeName {
-    width: calc(100% - 20px);
+    width: calc(100% - 40px);
 }
 
 .type-model-editor .schemacontainer input[type='checkbox']
@@ -109,11 +109,11 @@
     margin-right: 4px;
     width: 16px;
     height: 16px;
-    background-image: url(/images/close_black_32.png);
-    background-position: 3px;
+    background-image: url(/images/delete_32.png);
+    background-position: 4px;
     background-repeat: no-repeat;
-    background-size: 8px 8px;
-    border: 1px solid rgb(221, 221, 221);
+    background-size: 13px 13px;
+    border: 0px;
 }
 
 .json-schema-editor {
