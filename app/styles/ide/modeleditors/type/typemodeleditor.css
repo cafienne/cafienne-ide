@@ -76,10 +76,21 @@
     background-color: inherit;
 }
 
+.type-model-editor .property-renderer {
+    position: relative;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    margin: 0px;
+    padding: 0px;
+    background-color: inherit;
+}
+
 .type-model-editor .propertycontainer {
     display: grid;
     grid-column-gap: 15px;
-    grid-template-columns: auto 150px 60px 60px;
+    grid-template-columns: auto 90px 60px 60px;
 }
 
 /* (nested) properyschemascontainer will be indented with 20px */
@@ -96,7 +107,7 @@
 }
 
 .type-model-editor .schemacontainer .inputPropertyName {
-    width: calc(100% - 40px);
+    width: calc(100% - 45px);
 }
 
 .type-model-editor .schemacontainer input[type='checkbox']

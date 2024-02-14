@@ -19,8 +19,8 @@ export default class DragData {
         }
     }
 
-    private dropHandler: ((dragData: DragData) => void) | undefined = undefined;
-    private dropFilter: ((dragData: DragData) => boolean) | undefined = undefined;
+    private dropHandler: ((dragData: any) => void) | undefined = undefined;
+    private dropFilter: ((dragData: any) => boolean) | undefined = undefined;
 
     /**
      * Simple helper class for dragging/dropping elements from either RepositoryBrowser or ShapeBox to the CaseModelEditor canvas.
@@ -83,7 +83,7 @@ export default class DragData {
      * Registers a drop handler with the repository browser.
      * If an item from the browser is moved over the canvas, elements can register a drop handler
          */
-    setDropHandler(dropHandler: (dragData: DragData) => void, filter: ((dragData: DragData) => boolean) | undefined = undefined) {
+    setDropHandler<D extends DragData>(dropHandler: (dragData: D) => void, filter: ((dragData: D) => boolean) | undefined = undefined) {
         this.dropHandler = dropHandler;
         this.dropFilter = filter;
     }
