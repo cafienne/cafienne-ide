@@ -38,6 +38,7 @@
 .cfi-editorform .cfi-children-container {
     border-left: 1px dotted #ccc;
     margin-left: 9px;
+    padding-left: 7px;
 }
 
 .cfi-editorform .cfi-buttons button {
@@ -70,7 +71,7 @@
     border-left: 1px solid #eee;
 }
 
-.cfi-editorform .selectContainer {
+.cfi-editorform .select-container {
     border-left: 1px solid #eee;
 }
 
@@ -83,7 +84,7 @@
     outline: none;
 }
 
-.cfi-editorform .cfi-details .inputNameContainer {
+.cfi-editorform .cfi-details .input-name-container {
     position: relative;
     overflow: hidden;
     text-wrap: nowrap;

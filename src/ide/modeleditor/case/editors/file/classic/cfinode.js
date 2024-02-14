@@ -1,8 +1,7 @@
-import CaseFileItemCollection from "@definition/cmmn/casefile/casefileitemdef";
-import CaseFileItemDef from "@definition/cmmn/casefile/casefileitemdef";
-import CaseFileItemsEditor, { NEWDEF } from "../casefileitemseditor";
+import CaseFileItemDef, { CaseFileItemCollection } from "@repository/definition/cmmn/casefile/casefileitemdef";
 import Util from "@util/util";
 import $ from "jquery";
+import CaseFileItemsEditor, { NEWDEF } from "./casefileitemseditor";
 
 export default class CFINode {
     /**
@@ -28,7 +27,7 @@ export default class CFINode {
             `<div>
                 <div class="cfi-details">
                 </div>
-                <div style="padding-left: 11px" class="cfi-children-container"></div>
+                <div class="cfi-children-container"></div>
             </div>`
         );
         this.htmlParent.append(this.html);
@@ -42,8 +41,8 @@ export default class CFINode {
     renderDetails() {
         Util.clearHTML(this.divCFIDetails);
         this.divCFIDetails.html(
-            `<div class="inputNameContainer">
-                <img class="cfi-icon" src="/images/svg/casefileitem.svg" title="Drag item on case model ..."/>
+            `<div class="input-name-container">
+                <img class="cfi-icon" src="images/svg/casefileitem.svg" title="Drag item on case model ..."/>
                 <input class="inputName" type="text" readonly></input>
                 <div class="action-icon-container">
                     <img class="action-icon delete-icon" src="images/delete_32.png" title="Delete ..."/>
@@ -51,7 +50,7 @@ export default class CFINode {
                     <img class="action-icon add-child-icon" src="images/svg/add-child-node.svg" title="Add child ..."/>
                 </div>
             </div>
-            <div class="selectContainer">
+            <div class="select-container">
                 <select class="selectMultiplicity">
                     <option value="ExactlyOne">[1]</option>
                     <option value="ZeroOrOne">[0..1]</option>
@@ -61,7 +60,7 @@ export default class CFINode {
                     <option value="Unknown">[?]</option>
                 </select>
             </div>
-            <div class="selectContainer">
+            <div class="select-container">
                 ${this.getSelectDefinitionRefHTML()}
             </div>
             <div class="divUsedIn">
@@ -104,6 +103,7 @@ export default class CFINode {
         inputName.on('change', (e) => {
             // Captures changes to name of case file item
             this.definition.name = e.target.value;
+            // If we do not yet have a definitionRef, then check to see if there is a definition that has the same name, and then set it
             if (!this.definition.definitionRef) {
                 const cfid = this.editor.ide.repository.getCaseFileItemDefinitions().find(definition => definition.name.toLowerCase() == this.definition.name.toLowerCase());
                 if (cfid) {
@@ -125,7 +125,7 @@ export default class CFINode {
         this.divCFIDetails.find('.cfi-icon').on('pointerdown', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            this.editor.handleDragStartCFIDataNode(this.definition);
+            this.editor.caseFileEditor.startDragging(cfi)
         });
         this.divCFIDetails.find('.add-child-icon').on('click', e => this.editor.addChild(e, this));
         this.divCFIDetails.find('.add-sibling-icon').on('click', e => this.editor.addSibling(e, this));
