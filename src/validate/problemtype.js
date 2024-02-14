@@ -100,7 +100,7 @@ export default class ProblemType {
                 new CMMNWarning(35, 'The -par0- of element "-par1-"  in case "-par2-" has an onPart plan item row with no standard event'),
                 new CMMNError(36, 'The -par0- of element "-par1-"  in case "-par2-" has an onPart plan item element ("-par3-") which is discretionary. This is not allowed.'),
                 new CMMNWarning(37, 'The -par2- mapping of element "-par0-"  in case "-par1-" has empty task parameter(s)'),
-                new CMMNError(38, 'Case "-par0-" has no Case File Items. Each case should at least have one.'),
+                new CMMNError(38, 'Case "-par0-" has no Case File definition. Each case should at least have one.'),
                 new CMMNWarning(39, 'The element "-par0-" in case "-par1-" has a -par2- rule without a -par3-'),
                 new CMMNWarning(40, 'The element "-par0-" in case "-par1-" has an empty authorized role')
             ];
