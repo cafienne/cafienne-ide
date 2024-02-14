@@ -73,6 +73,7 @@ export default class CaseFileItemDef extends CaseFileItemCollection {
 
     /**
      * Returns all descending case file items including this one, recursively.
+     * @returns {Array[CaseFileItemDef]}
      */
     getDescendants() {
         const descendants: CaseFileItemDef[] = [this];
