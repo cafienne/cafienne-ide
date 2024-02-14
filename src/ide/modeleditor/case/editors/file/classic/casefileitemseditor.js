@@ -1,23 +1,23 @@
 ﻿import CaseFileItemDef from "@definition/cmmn/casefile/casefileitemdef";
-import Util from "@util/util";
-import CFINode from "./file/cfinode";
-import CFISelector from "./file/cfiselector";
-import CaseFileItemDefinitionEditor from "@ide/modeleditor/cfid/casefileitemdefinitioneditor";
 import CaseFileItemDragData from "@ide/dragdrop/casefileitemdragdata";
+import CaseFileItemDefinitionEditor from "@ide/modeleditor/cfid/casefileitemdefinitioneditor";
 import BottomSplitter from "@ide/splitter/bottomsplitter";
-import CaseView from "../elements/caseview";
+import Util from "@util/util";
 import $ from "jquery";
+import CaseFileEditor from "../casefileeditor";
+import CFINode from "./cfinode";
 
 export const NEWDEF = '__new__';
 
 export default class CaseFileItemsEditor {
     /**
-     * Renders the CaseFile definition through CFINode
-     * @param {CaseView} cs 
+     * Renders the CaseFile definition through fancytree
+     * @param {CaseFileEditor} caseFileEditor 
      * @param {JQuery<HTMLElement>} htmlParent 
      */
-    constructor(cs, htmlParent) {
-        this.case = cs;
+    constructor(caseFileEditor, htmlParent) {
+        this.caseFileEditor = caseFileEditor;
+        this.case = caseFileEditor.case;
         this.ide = this.case.editor.ide;
         this.htmlParent = htmlParent;
 
@@ -135,14 +135,6 @@ export default class CaseFileItemsEditor {
     }
 
     /**
-     * Opens the editor as dialog.
-     * @param {(CaseFileItemDef) => void} callback 
-     */
-    open(callback = undefined) {
-        new CFISelector(this.case).showModalDialog(cfi => cfi && callback(cfi));
-    }
-
-    /**
      * Deletes this editor
      */
     delete() {
@@ -224,7 +216,7 @@ export default class CaseFileItemsEditor {
                 this.case.editor.completeUserAction();
             }
         } else {
-            this.ide.warning('Select a Case File Item to be removed', 1000);
+            this.ide.warning('Select a Case File Item to be removed', 3000);
         }
     }
 
@@ -323,29 +315,6 @@ export default class CaseFileItemsEditor {
             references.push(this.case.caseParametersEditor);
         }
         return references;
-    }
-
-    /**
-     * Handles the dragging of a case file item from the cfi editor to a zoom field (cfi field)
-     */
-    handleDragStartCFIDataNode(cfi) {
-        this.dragData = new CaseFileItemDragData(this, cfi);
-    }
-
-    /**
-     * Registers a function handler that is invoked upon dropping an element.
-     * If an item from the editor is moved over the canvas, elements and form properties can register themselves as a drop handler
-     * @param {(dragData: CaseFileItemDragData) => void} dropHandler
-     */
-    setDropHandler(dropHandler) {
-        if (this.dragData) this.dragData.setDropHandler(dropHandler);
-    }
-
-    /**
-     * Removes the active drop handler and filter
-     */
-    removeDropHandler() {
-        if (this.dragData) this.dragData.removeDropHandler();
     }
 
     /**

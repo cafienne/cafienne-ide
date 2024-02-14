@@ -4,13 +4,14 @@ import CaseView from "../../elements/caseview";
 import $ from "jquery";
 
 export default class CFISelector extends Dialog {
+    case: CaseView;
+    selectedItem?: CaseFileItemDef;
     /**
      * @param {CaseView} cs
      */
-    constructor(cs) {
+    constructor(cs: CaseView) {
         super(cs.editor.ide, 'Select a Case File Item');
         this.case = cs;
-        /** @type {CaseFileItemDef} */
         this.selectedItem = undefined;
     }
 
@@ -23,10 +24,10 @@ export default class CFISelector extends Dialog {
                 <button class='buttonCancel'>Cancel</button>
             </form>
         `);
-        this.dialogHTML.append(htmlDialog);
-        this.case.caseDefinition.caseFile.children.forEach(cfi => this.renderCaseFileItem(cfi, this.dialogHTML.find('.cfi-tree')));
-        this.dialogHTML.find('.buttonOk').on('click', e => this.ok());
-        this.dialogHTML.find('.buttonCancel').on('click', e => this.cancel());
+        this.dialogHTML?.append(htmlDialog);
+        this.case.caseDefinition.caseFile.children.forEach(cfi => this.renderCaseFileItem(cfi, this.dialogHTML?.find('.cfi-tree')));
+        this.dialogHTML?.find('.buttonOk').on('click', e => this.ok());
+        this.dialogHTML?.find('.buttonCancel').on('click', e => this.cancel());
     }
 
     /**
@@ -34,18 +35,18 @@ export default class CFISelector extends Dialog {
      * @param {CaseFileItemDef} item 
      * @param {JQuery<HTMLElement>} container
      */
-    renderCaseFileItem(item, container) {
+    renderCaseFileItem(item: CaseFileItemDef, container?: JQuery<HTMLElement>) {
         const html = $(
         `<div class='cfi-container'>
             <div class='cfi-summary'>
-                <img class="cfi-icon" src="/images/svg/casefileitem.svg" />
+                <img class="cfi-icon" src="images/svg/casefileitem.svg" />
                 ${item.name}
             </div>
             <div class="cfi-children-tree"></div>
         </div>`);
-        container.append(html);
+        container?.append(html);
         html.find('.cfi-summary').on('click', e => {
-            this.dialogHTML.find('.cfi-selected').removeClass('cfi-selected');
+            this.dialogHTML?.find('.cfi-selected').removeClass('cfi-selected');
             this.selectedItem = item;
             $(e.target).addClass('cfi-selected');
         });
