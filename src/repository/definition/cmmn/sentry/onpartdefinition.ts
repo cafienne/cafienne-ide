@@ -24,10 +24,6 @@ export default class OnPartDefinition extends UnnamedCMMNElementDefinition {
         return element.id === this.sourceRef;
     }
 
-    get defaultTransition() {
-        return this.source.defaultTransition;
-    }
-
     removeProperty(propertyName: string) {
         super.removeProperty(propertyName);
         if (propertyName === 'sourceRef') {
