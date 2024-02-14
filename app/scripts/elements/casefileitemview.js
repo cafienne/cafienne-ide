@@ -27,7 +27,7 @@
     /**
      * Creates a new CaseFileItemView
      * @param {StageView} parent 
-     * @param {CaseFileItemDef} definition 
+     * @param {CaseFileItemDef|SchemaPropertyDefinition} definition 
      * @param {ShapeDefinition} shape 
      */
     constructor(parent, definition, shape) {
@@ -39,6 +39,14 @@
             this.temporaryId = definition.id;
         }
         this.__resizable = false;
+    }
+
+    get id() {
+        if (this.definition instanceof CaseFileItemDef) {
+            return this.definition.id;
+        } else if (this.definition instanceof SchemaPropertyDefinition) {
+            return this.shape.cmmnElementRef;
+        }
     }
 
     createProperties() {
@@ -62,7 +70,7 @@
 
     /**
      * 
-     * @param {CaseFileItemDef} definition 
+     * @param {CaseFileItemDef|SchemaPropertyDefinition} definition 
      */
     setDefinition(definition) {
         this.definition = definition ? definition : CaseFileItemDef.createEmptyDefinition(this.case.caseDefinition);
@@ -80,7 +88,7 @@
     }
 
     get text() {
-        return this.definition ? this.definition.name : '';
+        return this.case.getContextName(this.shape.cmmnElementRef);
     }
 
     /**

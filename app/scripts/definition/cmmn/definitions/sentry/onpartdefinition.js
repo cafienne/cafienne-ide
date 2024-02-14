@@ -15,10 +15,10 @@ class OnPartDefinition extends UnnamedCMMNElementDefinition {
     }
 
     /**
-     * @returns {PlanItem | CaseFileItemDef}
+     * @returns {PlanItem | CaseFileItemDef | SchemaPropertyDefinition}
      */
     get source() {
-        return this.caseDefinition.getElement(this.sourceRef, this.sourceConstructor)
+        return this.caseDefinition.getElement(this.sourceRef, this.sourceConstructor) || SchemaPropertyDefinition.getSchemaPropertyFromCache(this.sourceRef);
     }
 
     /**

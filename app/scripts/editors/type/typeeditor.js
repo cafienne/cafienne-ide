@@ -155,7 +155,7 @@ class TypeEditor {
     renderSchema(schema, file, container) {
         Util.clearHTML(container);
         if (schema) {
-            container.data('data', new ContainerData(schema, file));
+            container.data('data', new ContainerData(container, schema, file));
             container.css('display', 'block');
             schema.properties.forEach(type => this.renderProperty(type, file, container));
             this.renderProperty(this.createPropertyTemplate(schema), file, container);    
@@ -171,7 +171,7 @@ class TypeEditor {
      */
     renderProperty(property, file, container) {
         const html = $(`<div class='propertycontainer'>
-            <div><img style="width:14px;margin:2px" src="/images/svg/casefileitem.svg"></img><input class="inputTypeName" value="${property.name}" /><button tabindex="-1" class="buttonRemoveType" title="Delete property"></button></div>
+            <div><img class="schemaPropertyIcon" style="width:14px;margin:2px" src="/images/svg/casefileitem.svg"></img><input class="inputTypeName" value="${property.name}" /><button tabindex="-1" class="buttonRemoveType" title="Delete property"></button></div>
             <div><select class="selectType">
                     <option value=""></option>
                     <option value="string">string</option>
@@ -210,13 +210,22 @@ class TypeEditor {
             this.saveModel(file);
         });
         container.append(html);
-        html.data('data', new ContainerData(property, file));
+        html.data('data', new ContainerData(container, property, file));
         html.find('.inputTypeName').on('change', e => this.changeProperty('name', e.currentTarget.value, property, file, html));
         html.find('.selectType').on('change', e => this.changeProperty('type', e.currentTarget.value, property, file, html));
         html.find('.selectType').val(property.type);
         html.find('.selectMultiplicity').on('change', e => this.changeProperty('multiplicity', e.currentTarget.value, property, file, html));
         html.find('.selectMultiplicity').val(property.multiplicity);
         html.find('.inputBusinessIdentifier').on('change', e => this.changeProperty('isBusinessIdentifier', e.currentTarget.checked, property, file, html));
+        html.find('.schemaPropertyIcon').on('pointerdown', e => {
+            e.preventDefault();
+            e.stopPropagation();
+            this.handleDragStartProperty(property, html);
+        });
+        html.on('keydown', e => {
+            e.stopPropagation();
+        });
+
         this.renderComplexTypeProperty(property, file, html);
         return html;
     }
@@ -282,20 +291,22 @@ class TypeEditor {
      * @param {JQuery<HTMLElement>} html
      */
     changeProperty(propertyName, propertyValue, property, file, html) {
+        const oldPropertyValue = property[propertyName];
+        property[propertyName] = propertyValue;
         if (property['isNew']) {
             // No longer transient parameter
             property['isNew'] = false;
             const schema = /** @type {SchemaDefinition} */ (property.parent);
             schema.properties.push(property);
+            SchemaPropertyDefinition.setSchemaPropertyCache(property, property.id);
             this.renderProperty(this.createPropertyTemplate(schema), file, html.parent());  
         }
-        const oldPropertyValue = property[propertyName];
-        property[propertyName] = propertyValue;
         if (oldPropertyValue != propertyValue) {
             this.saveModel(file);
             if (propertyName === 'type') {
                 this.renderComplexTypeProperty(property, file, html);
             }
+            //TODO update container data
         }
     }
 
@@ -336,7 +347,6 @@ class TypeEditor {
      * Search for same file in ancestors
      * @param {string} typeRef
      * @param {JQuery<HTMLElement>} container
-     * @returns {string} cyclePath
     */
     isCycleDetected(typeRef, container) {
         let data = null;
@@ -351,17 +361,73 @@ class TypeEditor {
         } while (container.length && data);
         return '';
     }
+    
+    /**
+     * Handles the dragging of a case file item from the cfi editor to a zoom field (cfi field)
+     * @param {SchemaPropertyDefinition} property
+     * @param {JQuery<HTMLElement>} html 
+     */
+    handleDragStartProperty(property, html) {
+        this.dragData = new PropertyDragData(this, property, /** @type {ContainerData} */ html.data('data').path);
+    }
+    
+    /**
+     * Registers a function handler that is invoked upon dropping an element.
+     * If an item from the editor is moved over the canvas, elements and form properties can register themselves as a drop handler
+     * @param {Function} dropHandler
+     * @param {Function} filter
+     */
+    setDropHandler(dropHandler, filter = undefined) {
+        if (this.dragData) this.dragData.setDropHandler(dropHandler, filter);
+    }
+
+    /**
+     * Removes the active drop handler and filter
+     */
+    removeDropHandler() {
+        if (this.dragData) this.dragData.removeDropHandler();
+    }
+
+    /**
+     * 
+     * @param {string} path
+     * @returns {SchemaPropertyDefinition} 
+     */
+    getSchemaPropertyDefinitionWithPath(path) {
+        return SchemaPropertyDefinition.getSchemaPropertyFromCache(path);
+    }
+}
+
+class PropertyDragData extends DragData {
+    constructor(editor, property, path) {
+        super(editor.ide, editor, property.name, SchemaPropertyDefinition.name, '/images/svg/casefileitem.svg', property.id);
+        this.item = property;
+        this.path = path;
+    }
 }
 
 class ContainerData {
     /**
      * class for rendering a row in a table control for the schema
+     * @param {JQuery<HTMLElement>} container
      * @param {XMLElementDefinition} definition 
      * @param {TypeFile} file 
      */
-    constructor(definition, file) {
+    constructor(container, definition, file) {
         this.definition = definition;
         this.file = file;
+        // Calculation of path;
+        if (definition instanceof SchemaPropertyDefinition) {
+            let path = definition.name;
+            let data = null;
+            do {
+                data = /** @type {ContainerData} */ container.data('data');
+                path = ((data && data.file && data.definition instanceof SchemaPropertyDefinition) ? data.definition.name + '/' : '') + path;
+                container = container.parent();
+            } while (container.length && data);
+            this.path = path;
+            SchemaPropertyDefinition.setSchemaPropertyCache(definition, path);
+        }
     }
 }
 

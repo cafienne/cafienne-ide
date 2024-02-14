@@ -108,7 +108,7 @@ class SentryView extends CMMNElementView {
             // Do not create an onpart if the definition is not set.
             return;
         }
-        const sourceRef = source.definition.id; // CaseFileItemView stores it's value in the contextRef property
+        const sourceRef = source.id; // CaseFileItemView stores it's value in the contextRef property
         // If we cannot find the onpart in our definition, then we'll create a new one
         if (!this.definition.caseFileItemOnParts.find(onPart => onPart.sourceRef == sourceRef)) {
             const newOnPart = this.definition.createCaseFileItemOnPart();

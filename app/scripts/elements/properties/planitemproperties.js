@@ -23,7 +23,7 @@ class PlanItemProperties extends Properties {
         const rule = element.planItemControl ? element.planItemControl[ruleName] : undefined;
         const ruleAvailable = rule ? true : false;
         const contextRef = rule ? rule.contextRef : '';
-        const contextName = contextRef ? this.cmmnElement.definition.caseDefinition.getElement(contextRef).name : '';
+        const contextName = contextRef ? this.case.getContextName(contextRef) : '';
         const ruleBody = rule ? rule.body : defaultValue;
         const ruleLanguage = rule && rule.hasCustomLanguage ? rule.language : '';
         const nonDefaultLanguage = rule && rule.hasCustomLanguage ? ' custom-language' : '';
@@ -90,28 +90,38 @@ class PlanItemProperties extends Properties {
                 Util.removeClassOverride(htmlExpressionLanguage, 'show-language-input');
             }
         });
-        html.find('textarea').on('change', e => this.change(this.cmmnElement.definition.itemControl.getRule(ruleName), 'body', e.target.value));
+        html.find('textarea').on('change', e => this.change(this.cmmnElement.definition.itemControl.getRule(ruleName), 'body', e.target.value))
         html.find('.zoombt').on('click', e => {
-            this.cmmnElement.case.cfiEditor.open(cfi => {
-                this.change(this.cmmnElement.definition.itemControl.getRule(ruleName), 'contextRef', cfi.id);
-                html.find('.valuelabel').html(cfi.name);
-            });
+            if (this.cmmnElement.case.caseDefinition.caseFile.typeRef) {
+                const zoomType = new ZoomTypeDialog(this.case.editor.ide, this.case.caseDefinition.caseFile.typeRef);
+                zoomType.showModalDialog(retVal => {
+                    if (retVal) {
+                        this.change(this.cmmnElement.definition.itemControl.getRule(ruleName), 'contextRef', retVal.path);
+                    }
+                });
+            } else {
+                this.cmmnElement.case.cfiEditor.open(cfi => {
+                    this.change(this.cmmnElement.definition.itemControl.getRule(ruleName), 'contextRef', cfi.id);
+                });
+            }
         });
         html.find('.removeReferenceButton').on('click', e => {
             this.change(this.cmmnElement.definition.itemControl.getRule(ruleName), 'contextRef', undefined);
-            html.find('.valuelabel').html('');
         });
         html.find('.zoomRow').on('pointerover', e => {
             e.stopPropagation();
             this.cmmnElement.case.cfiEditor.setDropHandler(dragData => {
                 const newContextRef = dragData.item.id;
                 this.change(this.cmmnElement.definition.itemControl.getRule(ruleName), 'contextRef', newContextRef);
-                const name = newContextRef ? this.cmmnElement.definition.caseDefinition.getElement(newContextRef).name : '';
-                html.find('.valuelabel').html(name);
+            });
+            this.cmmnElement.case.typeEditor.typeEditor.setDropHandler(dragData => {
+                const newContextRef = dragData.path;
+                this.change(this.cmmnElement.definition.itemControl.getRule(ruleName), 'contextRef', newContextRef);
             });
         });
         html.find('.zoomRow').on('pointerout', e => {
             this.cmmnElement.case.cfiEditor.removeDropHandler();
+            this.cmmnElement.case.typeEditor.typeEditor.removeDropHandler();
         });
         this.htmlContainer.append(html);
         return html;

@@ -86,7 +86,8 @@ class ApplicabilityRuleProperties {
 
         const name = rule ? rule.name : '';
         const body = rule ? rule.body : '';
-        const context = rule ? rule.contextName : '';
+
+        const context = rule ? this.cmmnElement.case.getContextName(rule.contextRef) : '';
         const html = $(`<tr class="applicability-rule">
             <td title="Delete this rule from the table">
                 <button class="btnDelete delete-rule"><img src="images/delete_32.png" /></button>
@@ -120,20 +121,31 @@ class ApplicabilityRuleProperties {
         });
 
         html.find('.zoombt').on('click', e => {
-            this.cmmnElement.case.cfiEditor.open(cfi => {
-                this.change(this.getRule(), 'contextRef', cfi.id);
-                html.find('.valuelabel').html(this.getRule().contextName);
-            });
+            if (this.cmmnElement.case.caseDefinition.caseFile.typeRef) {
+                const zoomType = new ZoomTypeDialog(this.cmmnElement.editor.ide, this.cmmnElement.case.caseDefinition.caseFile.typeRef);
+                zoomType.showModalDialog(retVal => {
+                    if (retVal) {
+                        this.change(this.getRule(), 'contextRef', retVal.path);
+                    }
+                });
+            } else {
+                this.cmmnElement.case.cfiEditor.open(cfi => {
+                    this.change(this.getRule(), 'contextRef', cfi.id);
+                });
+            }
         });
         html.find('.zoomRow').on('pointerover', e => {
             e.stopPropagation();
             this.cmmnElement.case.cfiEditor.setDropHandler(dragData => {
                 this.change(this.getRule(), 'contextRef', dragData.item.id);
-                html.find('.valuelabel').html(this.getRule().contextName);
+            });
+            this.cmmnElement.case.typeEditor.typeEditor.setDropHandler(dragData => {
+                this.change(this.getRule(), 'contextRef', dragData.path);
             });
         });
         html.find('.zoomRow').on('pointerout', e => {
             this.cmmnElement.case.cfiEditor.removeDropHandler();
+            this.cmmnElement.case.typeEditor.typeEditor.removeDropHandler();
         });
         html.find('.clearContextRef').on('click', e => {
             if (this.rule) {

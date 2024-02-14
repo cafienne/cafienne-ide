@@ -32,9 +32,10 @@ class ParameterMappingDefinition extends UnnamedCMMNElementDefinition {
 
     /**
      * 
-     * @param {CaseFileItemDef} newBinding 
+     * @param {CaseFileItemDef|SchemaPropertyDefinition} newBinding 
+     * @param {string} path 
      */
-    updateBindingRef(newBinding) {
+    updateBindingRef(newBinding, path = null) {
         const task = this.task;
         // In input mappings we try to reuse parameters. In output mappings they are unique
         if (this.isInputMapping) {
@@ -48,7 +49,7 @@ class ParameterMappingDefinition extends UnnamedCMMNElementDefinition {
                 } else if (newBinding && this.taskParameter.binding != newBinding) {
                     this.taskParameter = task.getInputParameterWithName(newBinding.name);
                 }
-            } else if (newBinding) { // We have no task parameter, let's try to find one with the CaseFileItem's name
+            } else if (newBinding) { // We have no task parameter, let's try to find one with the CaseFileItem's or SchemaProperty's name
                 this.taskParameter = task.getInputParameterWithName(newBinding.name);
             } else {
                 // We have no task parameter, but also no new binding. Quite strange.
@@ -73,7 +74,7 @@ class ParameterMappingDefinition extends UnnamedCMMNElementDefinition {
             }
         }
         // On the (potentially new) task parameter we can now set the new bindingRef
-        this.taskParameter.bindingRef = newBinding ? newBinding.id : undefined;
+        this.taskParameter.bindingRef = newBinding ? path || newBinding.id : undefined;
     }
 
     /**

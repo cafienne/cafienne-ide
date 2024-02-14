@@ -23,15 +23,20 @@
         <div class="basicbox basicform undoredobox"></div>
         <div class="basicbox basicform shapebox"></div>
         <div class="divCaseModel">
-            <div class="divCaseCanvas basicbox">
-                <div class="paper-container-scroller">
-                    <div class="paper-container" />
-                    <div class="divResizers"></div>
-                    <div class="divHalos"></div>
-                    <img class="halodragimgid" />
+            <div class="divCaseContainer">
+                <div class="divCaseCanvas basicbox">
+                    <div class="paper-container-scroller">
+                        <div class="paper-container" />
+                        <div class="divResizers"></div>
+                        <div class="divHalos"></div>
+                        <img class="halodragimgid" />
+                    </div>
                 </div>
             </div>
-            <div class="divCaseFileEditor"></div>
+            <div class="divCaseFileContainer">
+                <div class="divCaseFileEditor"></div>
+                <div class="divCaseTypeEditor"></div>
+            </div>
         </div>
     </div>
 </div>`);
@@ -41,12 +46,14 @@
         this.divUndoRedo = this.html.find('.undoredobox');
         this.divShapeBox = this.html.find('.shapebox');
         this.divCFIEditor = this.html.find('.divCaseFileEditor');
+        this.divCaseTypeEditor = this.html.find('.divCaseTypeEditor');
         this.canvas = this.divCaseModel.find('.divCaseCanvas');
         this.paperContainer = this.html.find('.paper-container');
 
         this.deployForm = new Deploy(editor);
         this.sourceEditor = new CaseSourceEditor(editor, this.html);
         this.cfiEditor = new CaseFileItemsEditor(this, this.divCFIEditor);
+        this.typeEditor = new CaseTypeEditor(this, this.divCaseTypeEditor);
         this.undoBox = new UndoRedoBox(this, this.divUndoRedo);
         this.shapeBox = new ShapeBox(this, this.divShapeBox);
         this.splitter = new RightSplitter(this.divCaseModel, '60%', 5);
@@ -71,7 +78,7 @@
 
 
             const getDefinition = shape => {
-                const element = caseDefinition.getElement(shape.cmmnElementRef);
+                const element = this.getContextDefinition(shape.cmmnElementRef);
                 if (element) {
                     return element;
                 } else {
@@ -90,9 +97,9 @@
             this.diagram.shapes.forEach(shape => {
                 const definitionElement = getDefinition(shape);
                 // Only take the textboxes and case file items, not the other elements, as they are rendered from caseplanmodel constructor.
-                if (definitionElement instanceof CaseFileItemDef || definitionElement instanceof TextAnnotationDefinition) {
+                if (definitionElement instanceof CaseFileItemDef || definitionElement instanceof TextAnnotationDefinition || definitionElement instanceof SchemaPropertyDefinition) {
                     const parent = this.getSurroundingStage(stages, shape);
-                    if (definitionElement instanceof CaseFileItemDef) {
+                    if (definitionElement instanceof CaseFileItemDef || definitionElement instanceof SchemaPropertyDefinition) {
                         parent.__addCMMNChild(new CaseFileItemView(parent, definitionElement, shape));
                     } else if (definitionElement instanceof TextAnnotationDefinition) {
                         parent.__addCMMNChild(new TextAnnotationView(parent, definitionElement, shape)); 
@@ -132,6 +139,15 @@
             }
         });
 
+        if (this.case.caseDefinition.caseFile.children.length > 0) {
+            // For compatibility show old model with CFI / CFID struncture in caseFileModel
+            this.divCFIEditor.show();
+            this.divCaseTypeEditor.hide();
+        } else {
+            // Show new type model editor
+            this.divCFIEditor.hide();
+            this.divCaseTypeEditor.show();
+        }
         const end = new Date();
         console.log(`Case '${this.caseDefinition.file.fileName}' loaded in ${((end - now) / 1000)} seconds`)
     }
@@ -566,7 +582,33 @@
      * @param {String} caseFileItemID 
      */
     getCaseFileItemElement(caseFileItemID) {
-        return this.items.find(item => item instanceof CaseFileItemView && item.definition.id == caseFileItemID);
+        return this.items.find(item => item instanceof CaseFileItemView && item.id == caseFileItemID);
+    }
+
+    /**
+     * Data binding definition to internal or external type definition
+     * @param {string} ref id(internal refs) or path (external refs)
+     * @returns {CaseFileItemDef|SchemaPropertyDefinition} internal {CaseFileItemDef} or external {SchemaPropertyDefinition}
+     */
+    getContextDefinition(ref) {
+        return (/** @type {CaseFileItemDef} */ (this.caseDefinition.getElement(ref)) || this.typeEditor.typeEditor.getSchemaPropertyDefinitionWithPath(ref));
+    }
+
+    /**
+     * Data binding name to internal or external type definition
+     * @param {string} ref id(internal refs) or path (external refs)
+     * @returns {string} name of internal {CaseFileItemDef} or external {SchemaPropertyDefinition}
+     */
+    getContextName(ref) {
+        const definition = this.getContextDefinition(ref);
+        if (definition instanceof CaseFileItemDef) {
+            return definition.name;
+        } else if (definition instanceof SchemaPropertyDefinition) {
+            return `> ${definition.name}`; // for valid refs
+        } else if (ref) {
+            return `* ${ref}`; // for invalid refs
+        }
+        return '';
     }
 
     switchLabels() {

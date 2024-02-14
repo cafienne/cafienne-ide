@@ -33,12 +33,14 @@
         this.case.editor.ide.repositoryBrowser.setDropHandler(dragData => this.addTaskModel(dragData));
         // ... and case file items to be dropped from the cfiEditor
         this.case.cfiEditor.setDropHandler(dragData => this.addCaseFileItem(dragData));
+        this.case.typeEditor.typeEditor.setDropHandler(dragData => this.addTypeItem(dragData));
     }
 
     removeDropHandlers() {
         super.removeDropHandlers();
         this.case.editor.ide.repositoryBrowser.removeDropHandler();
         this.case.cfiEditor.removeDropHandler();
+        this.case.typeEditor.typeEditor.removeDropHandler();
     }
 
     /**
@@ -49,6 +51,18 @@
         const coor = this.case.getCursorCoordinates(dragData.event);
         this.__addCMMNChild(CaseFileItemView.create(this, coor.x, coor.y, dragData.item));
     }
+
+    /**
+     * Add a 'drag-dropped' type
+     * @param {PropertyDragData} dragData 
+     */
+    addTypeItem(dragData) {
+        const coor = this.case.getCursorCoordinates(dragData.event);
+        const localCFI = CaseFileItemView.create(this, coor.x, coor.y, dragData.item);
+        localCFI.shape.cmmnElementRef = dragData.path;
+        this.__addCMMNChild(localCFI);
+    }
+
 
     /**
      * Add a 'drag-dropped' task implementation

@@ -41,7 +41,8 @@ class WorkflowProperties extends TaskProperties {
         const assignmentExpression = this.humanTaskDefinition.assignment;
         const ruleAvailable = assignmentExpression ? true : false;
         const contextRef = assignmentExpression ? assignmentExpression.contextRef : '';
-        const contextName = contextRef ? this.cmmnElement.definition.caseDefinition.getElement(contextRef).name : '';
+        //TODO: Fix async binding to external SchemaPropertyDefinition;  For now display a '> '
+        const contextName = this.case.getContextName(contextRef);
         const expressionBody = assignmentExpression ? assignmentExpression.body : '';
         const assignmentPresenceIdentifier = Util.createID();
         // const checked = ;
@@ -76,26 +77,36 @@ class WorkflowProperties extends TaskProperties {
         });
         html.find('textarea').on('change', e => this.change(this.humanTaskDefinition.assignment, 'body', e.target.value));
         html.find('.zoombt').on('click', e => {
-            this.cmmnElement.case.cfiEditor.open(cfi => {
-                this.change(this.humanTaskDefinition.assignment, 'contextRef', cfi.id);
-                html.find('.valuelabel').html(cfi.name);
-            });
+            if (this.cmmnElement.case.caseDefinition.caseFile.typeRef) {
+                const zoomType = new ZoomTypeDialog(this.cmmnElement.editor.ide, this.cmmnElement.case.caseDefinition.caseFile.typeRef);
+                zoomType.showModalDialog(retVal => {
+                    if (retVal) {
+                        this.change(this.humanTaskDefinition.assignment, 'contextRef', retVal.path);
+                    }
+                });
+            } else {
+                this.cmmnElement.case.cfiEditor.open(cfi => {
+                    this.change(this.humanTaskDefinition.assignment, 'contextRef', cfi.id);
+                });
+             }
         });
         html.find('.removeReferenceButton').on('click', e => {
             this.change(this.humanTaskDefinition.assignment, 'contextRef', undefined);
-            html.find('.valuelabel').html('');
         });
         html.find('.zoomRow').on('pointerover', e => {
             e.stopPropagation();
             this.cmmnElement.case.cfiEditor.setDropHandler(dragData => {
                 const newContextRef = dragData.item.id;
                 this.change(this.humanTaskDefinition.assignment, 'contextRef', newContextRef);
-                const name = dragData.item ? dragData.item.name : '';
-                html.find('.valuelabel').html(name);
+            });
+            this.cmmnElement.case.typeEditor.typeEditor.setDropHandler(dragData => {
+                const newContextRef = dragData.path;
+                this.change(this.humanTaskDefinition.assignment, 'contextRef', newContextRef);
             });
         });
         html.find('.zoomRow').on('pointerout', e => {
             this.cmmnElement.case.cfiEditor.removeDropHandler();
+            this.cmmnElement.case.typeEditor.typeEditor.removeDropHandler();
         });
         this.htmlContainer.append(html);
         return html;
@@ -108,7 +119,8 @@ class WorkflowProperties extends TaskProperties {
         const dueDateExpression = this.humanTaskDefinition.dueDate;
         const ruleAvailable = dueDateExpression ? true : false;
         const contextRef = dueDateExpression ? dueDateExpression.contextRef : '';
-        const contextName = contextRef ? this.cmmnElement.definition.caseDefinition.getElement(contextRef).name : '';
+        //TODO: Fix async binding to external SchemaPropertyDefinition;  For now display a '> '
+        const contextName = this.case.getContextName(contextRef);
         const expressionBody = dueDateExpression ? dueDateExpression.body : '';
         const assignmentPresenceIdentifier = Util.createID();
         // const checked = ;
@@ -143,26 +155,36 @@ class WorkflowProperties extends TaskProperties {
         });
         html.find('textarea').on('change', e => this.change(this.humanTaskDefinition.dueDate, 'body', e.target.value));
         html.find('.zoombt').on('click', e => {
-            this.cmmnElement.case.cfiEditor.open(cfi => {
-                this.change(this.humanTaskDefinition.dueDate, 'contextRef', cfi.id);
-                html.find('.valuelabel').html(cfi.name);
-            });
+            if (this.cmmnElement.case.caseDefinition.caseFile.typeRef) {
+                const zoomType = new ZoomTypeDialog(this.cmmnElement.editor.ide, this.cmmnElement.case.caseDefinition.caseFile.typeRef);
+                zoomType.showModalDialog(retVal => {
+                    if (retVal) {
+                        this.change(this.humanTaskDefinition.dueDate, 'contextRef', retVal.path);
+                    }
+                });
+            } else {
+                this.cmmnElement.case.cfiEditor.open(cfi => {
+                    this.change(this.humanTaskDefinition.dueDate, 'contextRef', cfi.id);
+                });
+             }
         });
         html.find('.removeReferenceButton').on('click', e => {
             this.change(this.humanTaskDefinition.dueDate, 'contextRef', undefined);
-            html.find('.valuelabel').html('');
         });
         html.find('.zoomRow').on('pointerover', e => {
             e.stopPropagation();
             this.cmmnElement.case.cfiEditor.setDropHandler(dragData => {
                 const newContextRef = dragData.item.id;
                 this.change(this.humanTaskDefinition.dueDate, 'contextRef', newContextRef);
-                const name = dragData.item ? dragData.item.name : '';
-                html.find('.valuelabel').html(name);
+            });
+            this.cmmnElement.case.typeEditor.typeEditor.setDropHandler(dragData => {
+                const newContextRef = dragData.path;
+                this.change(this.humanTaskDefinition.dueDate, 'contextRef', newContextRef);
             });
         });
         html.find('.zoomRow').on('pointerout', e => {
             this.cmmnElement.case.cfiEditor.removeDropHandler();
+            this.cmmnElement.case.typeEditor.typeEditor.removeDropHandler();
         });
         this.htmlContainer.append(html);
         return html;

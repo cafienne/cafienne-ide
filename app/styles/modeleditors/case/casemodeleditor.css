@@ -43,7 +43,7 @@
     height: 6000px;
 }
 
-.divCaseFileEditor {
+.divCaseFileEditor, .divCaseTypeEditor {
     position: absolute;
     top: 0px;
     left: 4px;

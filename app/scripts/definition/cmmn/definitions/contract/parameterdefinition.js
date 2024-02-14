@@ -7,16 +7,19 @@ class ParameterDefinition extends CMMNElementDefinition {
         this.required = this.parseImplementation().parseBooleanAttribute('required', false);
     }
 
+    /**
+     * @returns {CaseFileItemDef|SchemaPropertyDefinition}
+     */
     get binding() {
-        return /** @type {CaseFileItemDef} */ (this.caseDefinition.getElement(this.bindingRef, CaseFileItemDef));
+        return /** @type {CaseFileItemDef} */ (this.caseDefinition.getElement(this.bindingRef, CaseFileItemDef)) || SchemaPropertyDefinition.getSchemaPropertyFromCache(this.bindingRef);
     }
 
     get bindingName() {
-        return this.bindingRef ? this.binding && this.binding.name : '';
+        return (this.bindingRef && this.binding) ? (this.binding instanceof CaseFileItemDef) ? this.binding.name : '> ' + this.binding.name  : '';
     }
 
     get defaultOperation() {
-        return this.binding ? this.binding.isArray ? 'add' : 'update' : ''; 
+        return this.binding && this.binding instanceof CaseFileItemDef ? this.binding.isArray ? 'add' : 'update' : ''; 
     }
 
     get hasUnusualBindingRefinement() {

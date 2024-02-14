@@ -48,7 +48,8 @@ class TimerEventProperties extends PlanItemProperties {
      * @param {CaseFileItemStartTrigger} trigger
      */
     getCaseFileItemStandardEvents(trigger) {
-        if (trigger && trigger.source) {
+        //TODO: Fix async binding to external SchemaPropertyDefinition;  For now display a '> '
+        if (trigger && (trigger.source || (trigger.sourceRef && trigger.sourceRef.startsWith('sp__')))) {
             const isTransitionSelected = transition => transition == trigger.standardEvent ? 'selected="true"' : '';
             return CaseFileItemDef.transitions.map(t => `<option value="${t}" ${isTransitionSelected(t)}>${t}</option>`).join('');
         } else {
@@ -63,7 +64,13 @@ class TimerEventProperties extends PlanItemProperties {
         const planItemSelection = this.getPlanItemsSelect(piTrigger);
         const planItemTransitions = this.getPlanItemStandardEvents(piTrigger);
         const caseFileItemTransitions = this.getCaseFileItemStandardEvents(cfiTrigger);
-        const caseFileItemName = cfiTrigger && cfiTrigger.source ? cfiTrigger.source.name : '';
+        let caseFileItemName = cfiTrigger && cfiTrigger.source ? cfiTrigger.source.name : '';
+
+        //TODO: Fix async binding to external SchemaPropertyDefinition;  For now display a '> '
+        if (!caseFileItemName && cfiTrigger && cfiTrigger.sourceRef && cfiTrigger.sourceRef.startsWith('sp__')) {
+            caseFileItemName = this.case.getContextName(cfiTrigger.sourceRef);
+        } 
+
         const html = $(`<label>Optional trigger for the timer event. A trigger is similar to an Entry Criterion.</label>
                         <span class="separator"></span>
                         <div class="propertyRow">
@@ -132,11 +139,22 @@ class TimerEventProperties extends PlanItemProperties {
             this.show();
         });
         html.find('.zoombt').on('click', e => {
-            this.cmmnElement.case.cfiEditor.open(cfi => {
-                const trigger = this.cmmnElement.planItemDefinition.getCaseFileItemStartTrigger();
-                this.change(trigger, 'sourceRef', cfi.id);
-                this.show();
-            });
+            if (this.cmmnElement.case.caseDefinition.caseFile.typeRef) {
+                const zoomType = new ZoomTypeDialog(this.cmmnElement.editor.ide, this.cmmnElement.case.caseDefinition.caseFile.typeRef);
+                zoomType.showModalDialog(retVal => {
+                    if (retVal) {
+                        const trigger = this.cmmnElement.planItemDefinition.getCaseFileItemStartTrigger();
+                        this.change(trigger, 'sourceRef', retVal.path);
+                        this.show();
+                    }
+                });
+            } else {
+                this.cmmnElement.case.cfiEditor.open(cfi => {
+                    const trigger = this.cmmnElement.planItemDefinition.getCaseFileItemStartTrigger();
+                    this.change(trigger, 'sourceRef', cfi.id);
+                    this.show();
+                });
+            }
         });
         html.find('.removeReferenceButton').on('click', e => {
             const trigger = this.cmmnElement.planItemDefinition.getCaseFileItemStartTrigger();
@@ -150,6 +168,11 @@ class TimerEventProperties extends PlanItemProperties {
                 this.change(trigger, 'sourceRef', dragData.item.id);
                 this.show();
             });
+            this.cmmnElement.case.typeEditor.typeEditor.setDropHandler(dragData => {
+                const trigger = this.cmmnElement.planItemDefinition.getCaseFileItemStartTrigger();
+                this.change(trigger, 'sourceRef', dragData.path);
+                this.show();
+            });
         });
         html.find('#selectCaseFileItemTransition').on('change', e => {
             const trigger = this.cmmnElement.planItemDefinition.getCaseFileItemStartTrigger();
@@ -160,6 +183,7 @@ class TimerEventProperties extends PlanItemProperties {
         });
         html.find('.zoomRow').on('pointerout', e => {
             this.cmmnElement.case.cfiEditor.removeDropHandler();
+            this.cmmnElement.case.typeEditor.typeEditor.removeDropHandler();
         });
         this.htmlContainer.append(html);
     }
