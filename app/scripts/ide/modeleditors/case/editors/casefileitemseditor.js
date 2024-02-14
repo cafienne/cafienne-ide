@@ -355,7 +355,7 @@ class CaseFileItemsEditor {
      */
     validate() {
         const allCaseFileItems = this.case.caseDefinition.getCaseFile().getDescendants();
-        if (!allCaseFileItems || allCaseFileItems.length <= 0) {
+        if ((!allCaseFileItems || allCaseFileItems.length <= 0) && !this.case.caseDefinition.caseFile.typeRef) {
             this.raiseEditorIssue(this.case, 38, [this.case.name]);
         }
         allCaseFileItems.forEach(item => {
