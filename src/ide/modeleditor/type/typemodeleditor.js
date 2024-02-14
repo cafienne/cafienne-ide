@@ -13,7 +13,8 @@ export default class TypeModelEditor extends ModelEditor {
      */
     constructor(ide, file) {
         super(ide, file);
-        this.typeEditor = new TypeEditor(this.ide, file, this.htmlContainer);
+        this.file = file;
+        this.typeEditor = new TypeEditor(this, this.htmlContainer);
     }
 
     get label() {
@@ -28,6 +29,6 @@ export default class TypeModelEditor extends ModelEditor {
     }
 
     loadModel() {
-        this.typeEditor.loadModel();
+        this.typeEditor.setMainType(this.file);
     }
 }
