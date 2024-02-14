@@ -1,8 +1,7 @@
-import CaseFileItemCollection from "@definition/cmmn/casefile/casefileitemdef";
-import CaseFileItemDef from "@definition/cmmn/casefile/casefileitemdef";
-import CaseFileItemsEditor, { NEWDEF } from "../casefileitemseditor";
+import CaseFileItemDef, { CaseFileItemCollection } from "@repository/definition/cmmn/casefile/casefileitemdef";
 import Util from "@util/util";
 import $ from "jquery";
+import CaseFileItemsEditor, { NEWDEF } from "./casefileitemseditor";
 
 export default class CFINode {
     /**
@@ -104,6 +103,7 @@ export default class CFINode {
         inputName.on('change', (e) => {
             // Captures changes to name of case file item
             this.definition.name = e.target.value;
+            // If we do not yet have a definitionRef, then check to see if there is a definition that has the same name, and then set it
             if (!this.definition.definitionRef) {
                 const cfid = this.editor.ide.repository.getCaseFileItemDefinitions().find(definition => definition.name.toLowerCase() == this.definition.name.toLowerCase());
                 if (cfid) {
@@ -125,7 +125,7 @@ export default class CFINode {
         this.divCFIDetails.find('.cfi-icon').on('pointerdown', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            this.editor.handleDragStartCFIDataNode(this.definition);
+            this.editor.caseFileEditor.startDragging(cfi)
         });
         this.divCFIDetails.find('.add-child-icon').on('click', e => this.editor.addChild(e, this));
         this.divCFIDetails.find('.add-sibling-icon').on('click', e => this.editor.addSibling(e, this));
