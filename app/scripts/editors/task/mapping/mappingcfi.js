@@ -30,6 +30,9 @@ class MappingCFI {
             </div>`);
 
         //add events for drag and drop
+        zoomRow.on('pointerover', e => row.editor.case.typeEditor.typeEditor.setDropHandler(dragData => this.changeBindingRef(dragData.item, row)));
+        zoomRow.on('pointerleave', e => row.editor.case.typeEditor.typeEditor.removeDropHandler());
+
         zoomRow.on('pointerover', e => row.editor.case.cfiEditor.setDropHandler(dragData => this.changeBindingRef(dragData.item, row)));
         zoomRow.on('pointerleave', e => row.editor.case.cfiEditor.removeDropHandler());
         zoomRow.find('.removeReferenceButton').on('click', e => {
@@ -58,7 +61,7 @@ class MappingCFI {
     /**
      * Changing the binding ref also sets the new binding.
      * Passing undefined will delete the existing bindingRef.
-     * @param {CaseFileItemDef} newBinding 
+     * @param {CaseFileItemDef|SchemaPropertyDefinition} newBinding 
      * @param {MappingRow} row
      */
     changeBindingRef(newBinding, row) {

@@ -62,7 +62,7 @@
 
     /**
      * 
-     * @param {CaseFileItemDef} definition 
+     * @param {CaseFileItemDef|SchemaPropertyDefinition} definition 
      */
     setDefinition(definition) {
         this.definition = definition ? definition : CaseFileItemDef.createEmptyDefinition(this.case.caseDefinition);
@@ -80,7 +80,8 @@
     }
 
     get text() {
-        return this.definition ? this.definition.name : '';
+        //TODO: Fix async binding to external SchemaPropertyDefinition;  For now display a '> '
+        return this.definition && this.definition.name || ((this.shape.cmmnElementRef.startsWith('sp__') ? '> ' + this.shape.cmmnElementRef : ''));
     }
 
     /**

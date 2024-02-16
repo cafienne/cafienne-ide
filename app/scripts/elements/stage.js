@@ -33,12 +33,14 @@
         this.case.editor.ide.repositoryBrowser.setDropHandler(dragData => this.addTaskModel(dragData));
         // ... and case file items to be dropped from the cfiEditor
         this.case.cfiEditor.setDropHandler(dragData => this.addCaseFileItem(dragData));
+        this.case.typeEditor.typeEditor.setDropHandler(dragData => this.addCaseFileItem(dragData));
     }
 
     removeDropHandlers() {
         super.removeDropHandlers();
         this.case.editor.ide.repositoryBrowser.removeDropHandler();
         this.case.cfiEditor.removeDropHandler();
+        this.case.typeEditor.typeEditor.removeDropHandler();
     }
 
     /**

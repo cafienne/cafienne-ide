@@ -27,9 +27,11 @@ class CFIZoom {
         td.on('pointerover', e => {
             e.stopPropagation();
             row.case.cfiEditor.setDropHandler(dragData => row.changeBindingRef(dragData.item));
+            row.case.typeEditor.typeEditor.setDropHandler(dragData => row.changeBindingRef(dragData.item));
         });
         td.on('pointerleave', e => {
             row.case.cfiEditor.removeDropHandler();
+            row.case.typeEditor.typeEditor.removeDropHandler();
         });
         td.find('.removeReferenceButton').on('click', e => {
             row.change('bindingRef', undefined)
