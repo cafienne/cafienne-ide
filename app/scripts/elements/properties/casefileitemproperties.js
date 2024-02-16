@@ -11,8 +11,9 @@ class CaseFileItemProperties extends Properties {
     renderData() {
         const caseFileItemId = this.cmmnElement.shape.cmmnElementRef ? this.cmmnElement.shape.cmmnElementRef : '';
         const cfi = this.cmmnElement.case.caseDefinition.getElement(caseFileItemId);
-        const contextName = cfi ? cfi.name : '';
 
+        //TODO: Fix async binding to external SchemaPropertyDefinition;  For now display a '> '
+        const contextName = cfi ? cfi.name : (caseFileItemId.startsWith('sp__') ? '> ' + caseFileItemId : '');
 
         const html = $(`<div class="zoomRow zoomDoubleRow" title="Drag/drop a case file item from the editor to change the reference">
                             <label class="zoomlabel">Case File Item</label>
@@ -27,16 +28,20 @@ class CaseFileItemProperties extends Properties {
         html.on('pointerover', e => {
             e.stopPropagation();
             this.cmmnElement.case.cfiEditor.setDropHandler(dragData => this.changeContextRef(html, dragData.item));
+            this.cmmnElement.case.typeEditor.typeEditor.setDropHandler(dragData => this.changeContextRef(html, dragData.item));
         });
-        html.find('.zoomRow').on('pointerout', e => this.cmmnElement.case.cfiEditor.removeDropHandler());
+        html.find('.zoomRow').on('pointerout', e => {
+            this.cmmnElement.case.cfiEditor.removeDropHandler();
+            this.cmmnElement.case.typeEditor.typeEditor.removeDropHandler();
+        });
         this.addDocumentationField();
         this.addIdField();
     }
 
-    changeContextRef(html, cfi = undefined) {
-        const cfiName = cfi ? cfi.name : '';
-        const cfiId = cfi ? cfi.id : undefined;
-        this.cmmnElement.setDefinition(cfi);
+    changeContextRef(html, newContextRef = undefined) {
+        const cfiName = newContextRef ? newContextRef.name : '';
+        const cfiId = newContextRef ? newContextRef.id : undefined;
+        this.cmmnElement.setDefinition(newContextRef);
         html.find('.valuelabel').html(cfiName);
     }
 }

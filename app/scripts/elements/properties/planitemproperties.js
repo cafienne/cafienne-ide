@@ -23,7 +23,11 @@ class PlanItemProperties extends Properties {
         const rule = element.planItemControl ? element.planItemControl[ruleName] : undefined;
         const ruleAvailable = rule ? true : false;
         const contextRef = rule ? rule.contextRef : '';
-        const contextName = contextRef ? this.cmmnElement.definition.caseDefinition.getElement(contextRef).name : '';
+        const contextRefDefinition = this.cmmnElement.definition.caseDefinition.getElement(contextRef);
+
+        //TODO: Load external contextRef to SchemaPropertyDefintion;
+        //TODO: Fix async binding to external SchemaPropertyDefinition;  For now display a '> '
+        const contextName = contextRefDefinition ? contextRefDefinition.name : (contextRef && contextRef.startsWith('sp__') ? '> ' + contextRef : '');
         const ruleBody = rule ? rule.body : defaultValue;
         const ruleLanguage = rule && rule.hasCustomLanguage ? rule.language : '';
         const nonDefaultLanguage = rule && rule.hasCustomLanguage ? ' custom-language' : '';
@@ -94,24 +98,25 @@ class PlanItemProperties extends Properties {
         html.find('.zoombt').on('click', e => {
             this.cmmnElement.case.cfiEditor.open(cfi => {
                 this.change(this.cmmnElement.definition.itemControl.getRule(ruleName), 'contextRef', cfi.id);
-                html.find('.valuelabel').html(cfi.name);
             });
         });
         html.find('.removeReferenceButton').on('click', e => {
             this.change(this.cmmnElement.definition.itemControl.getRule(ruleName), 'contextRef', undefined);
-            html.find('.valuelabel').html('');
         });
         html.find('.zoomRow').on('pointerover', e => {
             e.stopPropagation();
             this.cmmnElement.case.cfiEditor.setDropHandler(dragData => {
                 const newContextRef = dragData.item.id;
                 this.change(this.cmmnElement.definition.itemControl.getRule(ruleName), 'contextRef', newContextRef);
-                const name = newContextRef ? this.cmmnElement.definition.caseDefinition.getElement(newContextRef).name : '';
-                html.find('.valuelabel').html(name);
+            });
+            this.cmmnElement.case.typeEditor.typeEditor.setDropHandler(dragData => {
+                const newContextRef = dragData.item.id;
+                this.change(this.cmmnElement.definition.itemControl.getRule(ruleName), 'contextRef', newContextRef);
             });
         });
         html.find('.zoomRow').on('pointerout', e => {
             this.cmmnElement.case.cfiEditor.removeDropHandler();
+            this.cmmnElement.case.typeEditor.typeEditor.removeDropHandler();
         });
         this.htmlContainer.append(html);
         return html;

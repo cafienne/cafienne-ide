@@ -155,14 +155,15 @@ class ParameterRow extends RowRenderer {
 
     /**
      * 
-     * @param {CaseFileItemDef} cfi 
+     * @param {CaseFileItemDef|SchemaPropertyDefinition} newBinding 
      */
-    changeBindingRef(cfi) {
+    changeBindingRef(newBinding) {
         if (! this.parameterName) {
-            this.parameter.bindingRef = cfi.id;
+            this.parameter.bindingRef = newBinding.id;
+            this.parameter.externalBinding = newBinding;
             this.parameterName = this.parameter.name = this.parameter.bindingName;
         }
-        this.change('bindingRef', cfi.id);
+        this.change('bindingRef', newBinding.id);
         this.html.find('.cfiName').html(this.parameter.bindingName);
         this.html.find('.parameter-name').val(this.parameter.name);
     }

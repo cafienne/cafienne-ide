@@ -5,14 +5,21 @@ class ParameterDefinition extends CMMNElementDefinition {
         this.bindingRef = this.parseAttribute('bindingRef');
         this.bindingRefinement = this.parseElement('bindingRefinement', ExpressionDefinition);
         this.required = this.parseImplementation().parseBooleanAttribute('required', false);
+        
+        //TODO: Fix async binding to external SchemaPropertyDefinition;  For now display a '> '
+        this.externalBinding = /** @type {SchemaPropertyDefinition} */ null; 
     }
-
+    /**
+     * @returns {CaseFileItemDef|SchemaPropertyDefinition}
+     */
     get binding() {
-        return /** @type {CaseFileItemDef} */ (this.caseDefinition.getElement(this.bindingRef, CaseFileItemDef));
+        //TODO: Fix async binding to external SchemaPropertyDefinition;  For now display a '> '
+        return /** @type {CaseFileItemDef} */ (this.caseDefinition.getElement(this.bindingRef, CaseFileItemDef)) || this.externalBinding;
     }
 
     get bindingName() {
-        return this.bindingRef ? this.binding && this.binding.name : '';
+        //TODO: Fix async binding to external SchemaPropertyDefinition;  For now display a '> '
+        return (this.bindingRef && this.binding) ? this.binding.name : (this.bindingRef ? '> ' + this.bindingRef : '');
     }
 
     get defaultOperation() {

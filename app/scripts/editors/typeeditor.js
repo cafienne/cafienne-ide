@@ -171,7 +171,7 @@ class TypeEditor {
      */
     renderProperty(property, file, container) {
         const html = $(`<div class='propertycontainer'>
-            <div><img style="width:14px;margin:2px" src="/images/svg/casefileitem.svg"></img><input class="inputTypeName" value="${property.name}" /><button tabindex="-1" class="buttonRemoveType" title="Delete property"></button></div>
+            <div><img class="schemaPropertyIcon" style="width:14px;margin:2px" src="/images/svg/casefileitem.svg"></img><input class="inputTypeName" value="${property.name}" /><button tabindex="-1" class="buttonRemoveType" title="Delete property"></button></div>
             <div><select class="selectType">
                     <option value=""></option>
                     <option value="string">string</option>
@@ -217,6 +217,12 @@ class TypeEditor {
         html.find('.selectMultiplicity').on('change', e => this.changeProperty('multiplicity', e.currentTarget.value, property, file, html));
         html.find('.selectMultiplicity').val(property.multiplicity);
         html.find('.inputBusinessIdentifier').on('change', e => this.changeProperty('isBusinessIdentifier', e.currentTarget.checked, property, file, html));
+        html.find('.schemaPropertyIcon').on('pointerdown', e => {
+            e.preventDefault();
+            e.stopPropagation();
+            this.handleDragStartProperty(property);
+        });
+
         this.renderComplexTypeProperty(property, file, html);
         return html;
     }
@@ -350,6 +356,39 @@ class TypeEditor {
             container = container.parent();
         } while (container.length && data);
         return '';
+    }
+    
+    /**
+     * Handles the dragging of a case file item from the cfi editor to a zoom field (cfi field)
+     */
+    handleDragStartProperty(property) {
+        this.dragData = new PropertyDragData(this, property);
+    }
+    
+    /**
+     * Registers a function handler that is invoked upon dropping an element.
+     * If an item from the editor is moved over the canvas, elements and form properties can register themselves as a drop handler
+     * @param {Function} dropHandler
+     * @param {Function} filter
+     */
+    setDropHandler(dropHandler, filter = undefined) {
+        if (this.dragData) this.dragData.setDropHandler(dropHandler, filter);
+    }
+
+    /**
+     * Removes the active drop handler and filter
+     */
+    removeDropHandler() {
+        if (this.dragData) this.dragData.removeDropHandler();
+    }
+
+
+}
+
+class PropertyDragData extends DragData {
+    constructor(editor, property) {
+        super(editor.ide, editor, property.name, SchemaPropertyDefinition.name, '/images/svg/casefileitem.svg', property.id);
+        this.item = property;
     }
 }
 
