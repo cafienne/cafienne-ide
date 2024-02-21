@@ -102,10 +102,18 @@ class SentryProperties extends Properties {
         // html.find('.ifPartLanguage').on('change', e => this.change(this.cmmnElement.definition.getIfPart(), 'language', e.target.value));
         html.find('.ifPartBody textarea').on('change', e => this.change(this.cmmnElement.definition.getIfPart(), 'body', e.target.value));
         html.find('.zoombt').on('click', e => {
-            this.cmmnElement.case.cfiEditor.open(cfi => {
-                this.change(this.cmmnElement.definition.getIfPart(), 'contextRef', cfi.id);
-                // html.find('.valuelabel').html(cfi.name);
-            });
+            if (this.cmmnElement.case.caseDefinition.caseFile.typeRef) {
+                const zoomType = new ZoomTypeDialog(this.cmmnElement.editor.ide, this.cmmnElement.case.caseDefinition.caseFile.typeRef);
+                zoomType.showModalDialog(retVal => {
+                    if (retVal) {
+                        this.change(this.cmmnElement.definition.getIfPart(), 'contextRef', retVal.property.id);
+                    }
+                });
+            } else {
+                this.cmmnElement.case.cfiEditor.open(cfi => {
+                    this.change(this.cmmnElement.definition.getIfPart(), 'contextRef', cfi.id);
+                });
+            }
         });
         html.find('.removeReferenceButton').on('click', e => {
             this.change(this.cmmnElement.definition.getIfPart(), 'contextRef', undefined);
@@ -413,7 +421,16 @@ class SentryProperties extends Properties {
         // Event handler for removing the onpart
         html.find('.btnDelete').on('click', e => this.deleteOnPart(onPart, connector));
         html.find('.zoombt').on('click', e => {
-            this.cmmnElement.case.cfiEditor.open(cfi => this.changeCaseFileItemOnPart(onPart, connector, html, cfi));
+            if (this.cmmnElement.case.caseDefinition.caseFile.typeRef) {
+                const zoomType = new ZoomTypeDialog(this.cmmnElement.editor.ide, this.cmmnElement.case.caseDefinition.caseFile.typeRef);
+                zoomType.showModalDialog(retVal => {
+                    if (retVal) {
+                        this.changeCaseFileItemOnPart(onPart, connector, html, retVal.property);
+                    }
+                });
+            } else {
+                this.cmmnElement.case.cfiEditor.open(cfi => this.changeCaseFileItemOnPart(onPart, connector, html, cfi));
+            }
         });
         html.find('.zoomRow').on('pointerover', e => {
             e.stopPropagation();

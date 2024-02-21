@@ -9,6 +9,7 @@ class SchemaPropertyDefinition extends ReferableElementDefinition {
             /** @type {SchemaDefinition} */
             this.schema = this.parseElement(SchemaDefinition.TAG, SchemaDefinition);
         }
+        SchemaPropertyDefinition.setSchemaPropertyCache(this);
     }
 
     /** @returns {string} */
@@ -18,6 +19,25 @@ class SchemaPropertyDefinition extends ReferableElementDefinition {
 
     static get prefix() {
         return 'sp';
+    }
+
+    static schemaPropertyCache = new Map();
+ 
+    /**
+     * 
+     * @param {string} id 
+     * @returns {SchemaPropertyDefinition}
+     */
+    static getSchemaPropertyFromCache(id) {
+        return SchemaPropertyDefinition.schemaPropertyCache.get(id);
+    }
+
+    /**
+     * 
+     * @param {SchemaPropertyDefinition} property 
+     */
+    static setSchemaPropertyCache(property) {
+        this.schemaPropertyCache.set(property.id, property);
     }
 
     /** @param {string} newType */

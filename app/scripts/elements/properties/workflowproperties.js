@@ -78,9 +78,18 @@ class WorkflowProperties extends TaskProperties {
         });
         html.find('textarea').on('change', e => this.change(this.humanTaskDefinition.assignment, 'body', e.target.value));
         html.find('.zoombt').on('click', e => {
-            this.cmmnElement.case.cfiEditor.open(cfi => {
-                this.change(this.humanTaskDefinition.assignment, 'contextRef', cfi.id);
-            });
+            if (this.cmmnElement.case.caseDefinition.caseFile.typeRef) {
+                const zoomType = new ZoomTypeDialog(this.cmmnElement.editor.ide, this.cmmnElement.case.caseDefinition.caseFile.typeRef);
+                zoomType.showModalDialog(retVal => {
+                    if (retVal) {
+                        this.change(this.humanTaskDefinition.assignment, 'contextRef', retVal.property.id);
+                    }
+                });
+            } else {
+                this.cmmnElement.case.cfiEditor.open(cfi => {
+                    this.change(this.humanTaskDefinition.assignment, 'contextRef', cfi.id);
+                });
+             }
         });
         html.find('.removeReferenceButton').on('click', e => {
             this.change(this.humanTaskDefinition.assignment, 'contextRef', undefined);
@@ -148,9 +157,18 @@ class WorkflowProperties extends TaskProperties {
         });
         html.find('textarea').on('change', e => this.change(this.humanTaskDefinition.dueDate, 'body', e.target.value));
         html.find('.zoombt').on('click', e => {
-            this.cmmnElement.case.cfiEditor.open(cfi => {
-                this.change(this.humanTaskDefinition.dueDate, 'contextRef', cfi.id);
-            });
+            if (this.cmmnElement.case.caseDefinition.caseFile.typeRef) {
+                const zoomType = new ZoomTypeDialog(this.cmmnElement.editor.ide, this.cmmnElement.case.caseDefinition.caseFile.typeRef);
+                zoomType.showModalDialog(retVal => {
+                    if (retVal) {
+                        this.change(this.humanTaskDefinition.dueDate, 'contextRef', retVal.property.id);
+                    }
+                });
+            } else {
+                this.cmmnElement.case.cfiEditor.open(cfi => {
+                    this.change(this.humanTaskDefinition.dueDate, 'contextRef', cfi.id);
+                });
+             }
         });
         html.find('.removeReferenceButton').on('click', e => {
             this.change(this.humanTaskDefinition.dueDate, 'contextRef', undefined);

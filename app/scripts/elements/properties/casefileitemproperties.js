@@ -23,7 +23,18 @@ class CaseFileItemProperties extends Properties {
                         </div>`);
         this.htmlContainer.append(html);
                         
-        html.find('.zoombt').on('click', e => this.cmmnElement.case.cfiEditor.open(cfi => this.changeContextRef(html, cfi)));
+        html.find('.zoombt').on('click', e => {
+            if (this.cmmnElement.case.caseDefinition.caseFile.typeRef) {
+                const zoomType = new ZoomTypeDialog(this.cmmnElement.case.editor.ide, this.cmmnElement.case.caseDefinition.caseFile.typeRef);
+                zoomType.showModalDialog(retVal => {
+                    if (retVal) {
+                        this.changeContextRef(html, retVal.property);
+                    }
+                });
+            } else {
+                this.cmmnElement.case.cfiEditor.open(cfi => this.changeContextRef(html, cfi));
+            }
+        });
         html.find('.removeReferenceButton').on('click', e => this.changeContextRef(html));
         html.on('pointerover', e => {
             e.stopPropagation();
