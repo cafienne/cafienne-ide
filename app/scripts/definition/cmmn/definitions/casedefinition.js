@@ -50,11 +50,11 @@ class CaseDefinition extends ModelDefinition {
      * If the constructor argument is specified, the element is checked against the constructor with 'instanceof'
      * @param {String} id 
      * @param {Function} constructor
-     * @returns {CMMNElementDefinition}
+     * @returns {CMMNElementDefinition|SchemaPropertyDefinition}
      */
     getElement(id, constructor = undefined) {
         // Override, just to have a generic type cast
-        return super.getElement(id, constructor);
+        return super.getElement(id, constructor) || SchemaPropertyDefinition.getSchemaPropertyFromCache(id);
     }
 
     get inputParameters() {

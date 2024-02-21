@@ -94,11 +94,20 @@ class PlanItemProperties extends Properties {
                 Util.removeClassOverride(htmlExpressionLanguage, 'show-language-input');
             }
         });
-        html.find('textarea').on('change', e => this.change(this.cmmnElement.definition.itemControl.getRule(ruleName), 'body', e.target.value));
+        html.find('textarea').on('change', e => this.change(this.cmmnElement.definition.itemControl.getRule(ruleName), 'body', e.target.value))
         html.find('.zoombt').on('click', e => {
-            this.cmmnElement.case.cfiEditor.open(cfi => {
-                this.change(this.cmmnElement.definition.itemControl.getRule(ruleName), 'contextRef', cfi.id);
-            });
+            if (this.cmmnElement.case.caseDefinition.caseFile.typeRef) {
+                const zoomType = new ZoomTypeDialog(this.case.editor.ide, this.case.caseDefinition.caseFile.typeRef);
+                zoomType.showModalDialog(retVal => {
+                    if (retVal) {
+                        this.change(this.cmmnElement.definition.itemControl.getRule(ruleName), 'contextRef', retVal.property.id);
+                    }
+                });
+            } else {
+                this.cmmnElement.case.cfiEditor.open(cfi => {
+                    this.change(this.cmmnElement.definition.itemControl.getRule(ruleName), 'contextRef', cfi.id);
+                });
+            }
         });
         html.find('.removeReferenceButton').on('click', e => {
             this.change(this.cmmnElement.definition.itemControl.getRule(ruleName), 'contextRef', undefined);

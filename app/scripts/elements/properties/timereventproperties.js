@@ -139,11 +139,22 @@ class TimerEventProperties extends PlanItemProperties {
             this.show();
         });
         html.find('.zoombt').on('click', e => {
-            this.cmmnElement.case.cfiEditor.open(cfi => {
-                const trigger = this.cmmnElement.planItemDefinition.getCaseFileItemStartTrigger();
-                this.change(trigger, 'sourceRef', cfi.id);
-                this.show();
-            });
+            if (this.cmmnElement.case.caseDefinition.caseFile.typeRef) {
+                const zoomType = new ZoomTypeDialog(this.cmmnElement.editor.ide, this.cmmnElement.case.caseDefinition.caseFile.typeRef);
+                zoomType.showModalDialog(retVal => {
+                    if (retVal) {
+                        const trigger = this.cmmnElement.planItemDefinition.getCaseFileItemStartTrigger();
+                        this.change(trigger, 'sourceRef', retVal.property.id);
+                        this.show();
+                    }
+                });
+            } else {
+                this.cmmnElement.case.cfiEditor.open(cfi => {
+                    const trigger = this.cmmnElement.planItemDefinition.getCaseFileItemStartTrigger();
+                    this.change(trigger, 'sourceRef', cfi.id);
+                    this.show();
+                });
+            }
         });
         html.find('.removeReferenceButton').on('click', e => {
             const trigger = this.cmmnElement.planItemDefinition.getCaseFileItemStartTrigger();

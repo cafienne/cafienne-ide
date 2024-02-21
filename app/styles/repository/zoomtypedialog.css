@@ -1,0 +1,21 @@
+.zoomtypedialog .typeschemacontainer {
+    overflow:auto;
+    max-height: 50vh;
+    border: 1px solid #bbb;
+    padding: 10px;
+}
+
+.zoomtypedialog .buttonOk {
+    background-color:steelblue;
+    color: #fff;
+}
+
+.zoomtypedialog .schema-property-item:hover {
+    background-color: #f6f6f6;
+}
+
+.zoomtypedialog .schema-property-item.propertyselected {
+    background-color:steelblue;
+    color:#fff;
+}
+
