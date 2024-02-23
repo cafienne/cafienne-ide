@@ -99,9 +99,9 @@
             this.diagram.shapes.forEach(shape => {
                 const definitionElement = getDefinition(shape);
                 // Only take the textboxes and case file items, not the other elements, as they are rendered from caseplanmodel constructor.
-                if (definitionElement instanceof CaseFileItemDef || definitionElement instanceof TextAnnotationDefinition) {
+                if (definitionElement instanceof CaseFileItemDef || definitionElement instanceof TextAnnotationDefinition || definitionElement instanceof SchemaPropertyDefinition) {
                     const parent = this.getSurroundingStage(stages, shape);
-                    if (definitionElement instanceof CaseFileItemDef) {
+                    if (definitionElement instanceof CaseFileItemDef || definitionElement instanceof SchemaPropertyDefinition) {
                         parent.__addCMMNChild(new CaseFileItem(parent, definitionElement, shape));
                     } else if (definitionElement instanceof TextAnnotationDefinition) {
                         parent.__addCMMNChild(new TextAnnotation(parent, definitionElement, shape)); 
