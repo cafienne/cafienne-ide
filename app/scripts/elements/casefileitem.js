@@ -27,7 +27,7 @@
     /**
      * Creates a new CaseFileItem
      * @param {Stage} parent 
-     * @param {CaseFileItemDef} definition 
+     * @param {CaseFileItemDef|SchemaPropertyDefinition} definition 
      * @param {ShapeDefinition} shape 
      */
     constructor(parent, definition, shape) {
