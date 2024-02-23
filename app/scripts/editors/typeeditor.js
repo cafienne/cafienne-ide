@@ -288,15 +288,16 @@ class TypeEditor {
      * @param {JQuery<HTMLElement>} html
      */
     changeProperty(propertyName, propertyValue, property, file, html) {
+        const oldPropertyValue = property[propertyName];
+        property[propertyName] = propertyValue;
         if (property['isNew']) {
             // No longer transient parameter
             property['isNew'] = false;
             const schema = /** @type {SchemaDefinition} */ (property.parent);
             schema.properties.push(property);
+            SchemaPropertyDefinition.setSchemaPropertyCache(property);
             this.renderProperty(this.createPropertyTemplate(schema), file, html.parent());  
         }
-        const oldPropertyValue = property[propertyName];
-        property[propertyName] = propertyValue;
         if (oldPropertyValue != propertyValue) {
             this.saveModel(file);
             if (propertyName === 'type') {

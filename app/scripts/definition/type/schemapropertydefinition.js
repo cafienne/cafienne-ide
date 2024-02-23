@@ -37,7 +37,9 @@ class SchemaPropertyDefinition extends ReferableElementDefinition {
      * @param {SchemaPropertyDefinition} property 
      */
     static setSchemaPropertyCache(property) {
-        this.schemaPropertyCache.set(property.id, property);
+        if (property && property.id) {
+            this.schemaPropertyCache.set(property.id, property);
+        }
     }
 
     /** @param {string} newType */
