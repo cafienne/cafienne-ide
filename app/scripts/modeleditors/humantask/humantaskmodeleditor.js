@@ -32,6 +32,7 @@ class HumantaskModelEditor extends ModelEditor {
                         </div>
                         <div class="task-model-source">
                             <label>Task Model (JSON)</label>
+                            <button class="buttonGenerateSchema">Generate schema from type information</button>
                             <span class="json-error-description"></span>
                             <div class="code-mirror-source"></div>
                         </div>
@@ -63,6 +64,8 @@ class HumantaskModelEditor extends ModelEditor {
         // Render input parameters
         this.inputParametersControl = new ModelParameters(this, this.html.find('.model-input-parameters'), 'Input Parameters');
         this.outputParametersControl = new ModelParameters(this, this.html.find('.model-output-parameters'), 'Output Parameters');
+
+        this.htmlContainer.find('.buttonGenerateSchema').on('click', e => this.generateSchema());
 
         //add the tab control
         this.htmlContainer.find('.model-source-tabs').tabs({
@@ -120,6 +123,22 @@ class HumantaskModelEditor extends ModelEditor {
     change(propertyName, propertyValue, element = this.model.implementation) {
         element[propertyName] = propertyValue;
         this.saveModel();
+    }
+
+    generateSchema() {
+        const generator = parameters => parameters.filter(parameter => parameter.typeRef).map(parameter => this.ide.repository.getTypes().find(type => type.fileName === parameter.typeRef)).filter(file => file).map(file => file.definition);
+        const types = [...generator(this.file.definition.inputParameters), ...generator(this.file.definition.outputParameters)]
+        const formSchema = {
+            schema: {
+                title: this.file.definition.implementation.documentation.text || this.file.definition.name,
+                type: "object",
+                properties: {}
+            }
+        }
+        types.map(type => type.toJSONSchema().schema).forEach(schema => formSchema.schema.properties[schema.title] = schema);
+
+        this.change('value', JSON.stringify(formSchema, undefined, 2), this.model.implementation.taskModel)
+        this.render();
     }
 
     render() {
@@ -284,7 +303,7 @@ class HumantaskModelEditorMetadata extends ModelEditorMetadata {
      * @param {Function} callback
      * @returns {String} fileName of the new model
      */
-    createNewModel(ide, name, description, callback = (/** @type {String} */ fileName) => {}) {
+    createNewModel(ide, name, description, callback = (/** @type {String} */ fileName) => { }) {
         const newModelContent =
             `<humantask>
                 <${IMPLEMENTATION_TAG} name="${name}" description="${description}" ${CAFIENNE_PREFIX}="${CAFIENNE_NAMESPACE}" class="org.cafienne.cmmn.definition.task.WorkflowTaskDefinition">
