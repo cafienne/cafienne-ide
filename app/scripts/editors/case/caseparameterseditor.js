@@ -160,7 +160,6 @@ class ParameterRow extends RowRenderer {
     changeBindingRef(newBinding) {
         if (! this.parameterName) {
             this.parameter.bindingRef = newBinding.id;
-            this.parameter.externalBinding = newBinding;
             this.parameterName = this.parameter.name = this.parameter.bindingName;
         }
         this.change('bindingRef', newBinding.id);
