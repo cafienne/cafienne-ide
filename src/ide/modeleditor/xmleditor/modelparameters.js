@@ -25,12 +25,14 @@ export default class ModelParameters {
                 <colgroup>
                     <col class="modelparameterdeletebtcol"></col>
                     <col class="modelparameternamecol"></col>
+                    <col class="modelparametertypecol"></col>
                     <col class="modelparameteridcol"></col>
                 </colgroup>
                 <thead>
                     <tr>
                         <th></th>
                         <th>Name</th>
+                        <th>Type</th>
                         <th>ID</th>
                     </tr>
                 </thead>
@@ -58,7 +60,7 @@ export default class ModelParameters {
         this.addParameter();
     }
 
-    changeParameter(html, parameter, name, id) {
+    changeParameter(html, parameter, name, id, typeRef = undefined) {
         if (parameter.isNew) {
             // No longer transient parameter
             parameter.isNew = false;
@@ -66,6 +68,7 @@ export default class ModelParameters {
             this.addParameter();
         }
         parameter.name = name;
+        parameter.typeRef = typeRef;
         parameter.id = id;
         if (! parameter.id) parameter.id = Util.createID('_', 4) + '_' + name.replace(/\s/g, '');
         if (! parameter.name) parameter.name = parameter.id;
@@ -88,9 +91,12 @@ export default class ModelParameters {
             parameter.isNew = true;
         }
 
+        const typeSelector = () => this.editor.ide.repository.getTypes().map(type => `<option value="${type.fileName}" ${parameter.typeRef === type.fileName ? ' selected' : ''}>${type.name}</option>`).join('\n');
+
         const html = $(`<tr>
             <td><button class="removeParameter"></button></td>
             <td><input class="inputParameterName modelparameternamecol" value="${parameter.name}" /></td>
+            <td><select class="parameterTypeRef"><option></option>${typeSelector()}</select></td>
             <td><input class="inputParameterId modelparameteridcol" readonly value="${parameter.id}" /></td>
         </tr>`);
         html.find('.removeParameter').on('click', e => {
@@ -102,6 +108,7 @@ export default class ModelParameters {
             this.editor.completeUserAction();
         });
         html.find('.inputParameterName').on('change', e => this.changeParameter(html, parameter, e.currentTarget.value, parameter.id));
+        html.find('.parameterTypeRef').on('change', e => this.changeParameter(html, parameter, parameter.name, parameter.id,  e.currentTarget.value));
         // Remove "readonly" upon dblclick; id's are typically generated because they must be unique across multiple models
         html.find('.inputParameterId').on('dblclick', e => $(e.currentTarget).attr('readonly', false));
         html.find('.inputParameterId').on('change', e => this.changeParameter(html, parameter, parameter.name, e.currentTarget.value));
