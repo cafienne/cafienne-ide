@@ -74,9 +74,6 @@ class ParameterMappingDefinition extends UnnamedCMMNElementDefinition {
         }
         // On the (potentially new) task parameter we can now set the new bindingRef
         this.taskParameter.bindingRef = newBinding ? newBinding.id : undefined;
-        
-        //TODO: Fix async binding to external SchemaPropertyDefinition;  For now display a '> '
-        this.taskParameter.externalBinding = newBinding;
     }
 
     /**

@@ -578,6 +578,30 @@
         return this.items.find(item => item instanceof CaseFileItem && item.definition.id == caseFileItemID);
     }
 
+    /**
+     * Data binding definition to internal or external type definition
+     * @param {string} ref id(internal refs) or path (external refs)
+     * @returns {CaseFileItemDef|SchemaPropertyDefinition} internal {CaseFileItemDef} or external {SchemaPropertyDefinition}
+     */
+    getContextDefinition(ref) {
+        return (/** @type {CaseFileItemDef} */ (this.caseDefinition.getElement(ref, CaseFileItemDef)) || this.typeEditor.typeEditor.getSchemaPropertyDefinitionWithPath(ref));
+    }
+
+    /**
+     * Data binding name to internal or external type definition
+     * @param {string} ref id(internal refs) or path (external refs)
+     * @returns {string} name of internal {CaseFileItemDef} or external {SchemaPropertyDefinition}
+     */
+    getContextName(ref) {
+        const definition = this.getContextDefinition(ref);
+        if (definition) {
+            return definition.name;
+        } else if (ref) {
+            return `* ${ref}`; // '* ...' for invalid refs;
+        }
+        return '';
+    }
+
     switchLabels() {
         this.diagram.connectorStyle.shiftRight();
         this.editor.ide.info(this.diagram.connectorStyle.infoMessage, 8000);

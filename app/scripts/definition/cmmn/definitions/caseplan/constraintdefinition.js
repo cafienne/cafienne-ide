@@ -6,10 +6,12 @@ class ConstraintDefinition extends UnnamedCMMNElementDefinition {
     }
 
     get contextName() {
-        const contextRef = this.contextRef;
-        const contextRefDefinition = this.caseDefinition.getElement(contextRef);
-        //TODO: Fix async binding to external SchemaPropertyDefinition;  For now display a '> '
-        return contextRefDefinition ? contextRefDefinition.name : (contextRef && contextRef.startsWith('sp__') ? '> ' + contextRef : '');
+        const context = this.caseDefinition.getElement(this.contextRef);
+        return context ? context.name : '';
+        // const contextRef = this.contextRef;
+        // const contextRefDefinition = this.caseDefinition.getElement(contextRef);
+        // //TODO: Fix async binding to external SchemaPropertyDefinition;  For now display a '> '
+        // return contextRefDefinition ? contextRefDefinition.name : (contextRef && contextRef.startsWith('sp__') ? '> ' + contextRef : '');
     }
 
     createExportNode(parentNode, tagName) {

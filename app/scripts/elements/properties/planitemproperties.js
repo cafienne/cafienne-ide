@@ -27,7 +27,9 @@ class PlanItemProperties extends Properties {
 
         //TODO: Load external contextRef to SchemaPropertyDefintion;
         //TODO: Fix async binding to external SchemaPropertyDefinition;  For now display a '> '
-        const contextName = contextRefDefinition ? contextRefDefinition.name : (contextRef && contextRef.startsWith('sp__') ? '> ' + contextRef : '');
+        // const contextName = contextRefDefinition ? contextRefDefinition.name : (contextRef && contextRef.startsWith('sp__') ? '> ' + contextRef : '');
+        
+        const contextName = contextRef ? this.case.getContextName(contextRef) : '';
         const ruleBody = rule ? rule.body : defaultValue;
         const ruleLanguage = rule && rule.hasCustomLanguage ? rule.language : '';
         const nonDefaultLanguage = rule && rule.hasCustomLanguage ? ' custom-language' : '';
@@ -53,7 +55,7 @@ class PlanItemProperties extends Properties {
                                 </div>
                                 <div class="zoomRow zoomDoubleRow">
                                     <label class="zoomlabel">${ruleAcronym}. Rule Context</label>
-                                    <label class="valuelabel">${contextName}</label>
+                                    <label class="valuelabel">${contextName} title="${contextRef ? 'contextRef = ' + contextRef : 'Drag/drop a case file item from the editor to change the reference'}"</label>
                                     <button class="zoombt"></button>
                                     <button class="removeReferenceButton" title="remove the reference to the case file item" />
                                 </div>

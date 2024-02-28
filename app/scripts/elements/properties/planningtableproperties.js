@@ -86,7 +86,12 @@ class ApplicabilityRuleProperties {
 
         const name = rule ? rule.name : '';
         const body = rule ? rule.body : '';
-        const context = rule ? rule.contextName : '';
+
+        //TODO: Fix async binding to external SchemaPropertyDefinition;  For now display a '> '
+        //TODO: Remove log message:        
+        console.log(`rule.contextRef = ${rule ? rule.contextRef : ' NO RULE '} ${rule ? this.cmmnElement.case.getContextName(rule.contextRef): ' NO CONTEXT NAME '}`);
+
+        const context = rule ? this.cmmnElement.case.getContextName(rule.contextRef) : '';
         const html = $(`<tr class="applicability-rule">
             <td title="Delete this rule from the table">
                 <button class="btnDelete delete-rule"><img src="images/delete_32.png" /></button>
@@ -99,7 +104,7 @@ class ApplicabilityRuleProperties {
             </td>
             <td title="A case file item can provide context to the rule expression evaluation">
                 <div class="zoomRow zoomSingleRow">
-                    <label class="valuelabel context-label">${context}</label>
+                    <label class="valuelabel context-label" title="${rule?rule.contextRef : 'Drag/drop a case file item from the editor to change the reference'}">${context}</label>
                     <button class="zoombt"></button>
                     <button class="removeReferenceButton clearContextRef" title="remove the reference to the case file item">
                 </div>
@@ -124,7 +129,7 @@ class ApplicabilityRuleProperties {
                 const zoomType = new ZoomTypeDialog(this.cmmnElement.editor.ide, this.cmmnElement.case.caseDefinition.caseFile.typeRef);
                 zoomType.showModalDialog(retVal => {
                     if (retVal) {
-                        this.change(this.getRule(), 'contextRef', retVal.property.id);
+                        this.change(this.getRule(), 'contextRef', retVal.path);
                     }
                 });
             } else {
@@ -139,7 +144,7 @@ class ApplicabilityRuleProperties {
                 this.change(this.getRule(), 'contextRef', dragData.item.id);
             });
             this.cmmnElement.case.typeEditor.typeEditor.setDropHandler(dragData => {
-                this.change(this.getRule(), 'contextRef', dragData.item.id);
+                this.change(this.getRule(), 'contextRef', dragData.path);
             });
         });
         html.find('.zoomRow').on('pointerout', e => {
