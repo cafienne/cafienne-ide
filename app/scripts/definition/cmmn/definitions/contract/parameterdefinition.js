@@ -72,5 +72,10 @@ class ImplementationParameterDefinition extends ReferableElementDefinition {
     constructor(importNode, modelDefinition, parent) {
         super(importNode, modelDefinition, parent);
         this.isNew = false; // This property is used in the HumanTaskEditor and ProcessTaskEditor
+        this.typeRef = this.parseAttribute('typeRef')
+    }
+
+    createExportNode(parentNode, tag) {
+        super.createExportNode(parentNode, tag, 'typeRef');
     }
 }
