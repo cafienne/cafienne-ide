@@ -594,10 +594,12 @@
      */
     getContextName(ref) {
         const definition = this.getContextDefinition(ref);
-        if (definition) {
+        if (definition instanceof CaseFileItemDef) {
             return definition.name;
+        } else if (definition instanceof SchemaPropertyDefinition) {
+            return `> ${definition.name}`; // for valid refs
         } else if (ref) {
-            return `* ${ref}`; // '* ...' for invalid refs;
+            return `* ${ref}`; // for invalid refs
         }
         return '';
     }

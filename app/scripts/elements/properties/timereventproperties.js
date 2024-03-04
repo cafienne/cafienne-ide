@@ -144,7 +144,7 @@ class TimerEventProperties extends PlanItemProperties {
                 zoomType.showModalDialog(retVal => {
                     if (retVal) {
                         const trigger = this.cmmnElement.planItemDefinition.getCaseFileItemStartTrigger();
-                        this.change(trigger, 'sourceRef', retVal.property.id);
+                        this.change(trigger, 'sourceRef', retVal.path);
                         this.show();
                     }
                 });

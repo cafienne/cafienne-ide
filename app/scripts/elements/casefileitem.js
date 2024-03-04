@@ -80,9 +80,7 @@
     }
 
     get text() {
-        //TODO: Fix async binding to external SchemaPropertyDefinition;  For now display a '> '
         return this.case.getContextName(this.shape.cmmnElementRef);
-        //return this.definition && this.definition.name || ((this.shape.cmmnElementRef.startsWith('sp__') ? '> ' + this.shape.cmmnElementRef : ''));
     }
 
     /**

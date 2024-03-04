@@ -41,9 +41,8 @@ class WorkflowProperties extends TaskProperties {
         const assignmentExpression = this.humanTaskDefinition.assignment;
         const ruleAvailable = assignmentExpression ? true : false;
         const contextRef = assignmentExpression ? assignmentExpression.contextRef : '';
-        const contextRefDefinition = this.cmmnElement.definition.caseDefinition.getElement(contextRef);
         //TODO: Fix async binding to external SchemaPropertyDefinition;  For now display a '> '
-        const contextName = contextRefDefinition ? contextRefDefinition.name : (contextRef && contextRef.startsWith('sp__') ? '> ' + contextRef : '');
+        const contextName = this.case.getContextName(contextRef);
         const expressionBody = assignmentExpression ? assignmentExpression.body : '';
         const assignmentPresenceIdentifier = Util.createID();
         // const checked = ;
@@ -82,7 +81,7 @@ class WorkflowProperties extends TaskProperties {
                 const zoomType = new ZoomTypeDialog(this.cmmnElement.editor.ide, this.cmmnElement.case.caseDefinition.caseFile.typeRef);
                 zoomType.showModalDialog(retVal => {
                     if (retVal) {
-                        this.change(this.humanTaskDefinition.assignment, 'contextRef', retVal.property.id);
+                        this.change(this.humanTaskDefinition.assignment, 'contextRef', retVal.path);
                     }
                 });
             } else {
@@ -101,7 +100,7 @@ class WorkflowProperties extends TaskProperties {
                 this.change(this.humanTaskDefinition.assignment, 'contextRef', newContextRef);
             });
             this.cmmnElement.case.typeEditor.typeEditor.setDropHandler(dragData => {
-                const newContextRef = dragData.item.id;
+                const newContextRef = dragData.path;
                 this.change(this.humanTaskDefinition.assignment, 'contextRef', newContextRef);
             });
         });
@@ -120,9 +119,8 @@ class WorkflowProperties extends TaskProperties {
         const dueDateExpression = this.humanTaskDefinition.dueDate;
         const ruleAvailable = dueDateExpression ? true : false;
         const contextRef = dueDateExpression ? dueDateExpression.contextRef : '';
-        const contextRefDefinition = this.cmmnElement.definition.caseDefinition.getElement(contextRef);
         //TODO: Fix async binding to external SchemaPropertyDefinition;  For now display a '> '
-        const contextName = contextRefDefinition ? contextRefDefinition.name : (contextRef && contextRef.startsWith('sp__') ? '> ' + contextRef : '');
+        const contextName = this.case.getContextName(contextRef);
         const expressionBody = dueDateExpression ? dueDateExpression.body : '';
         const assignmentPresenceIdentifier = Util.createID();
         // const checked = ;
@@ -161,7 +159,7 @@ class WorkflowProperties extends TaskProperties {
                 const zoomType = new ZoomTypeDialog(this.cmmnElement.editor.ide, this.cmmnElement.case.caseDefinition.caseFile.typeRef);
                 zoomType.showModalDialog(retVal => {
                     if (retVal) {
-                        this.change(this.humanTaskDefinition.dueDate, 'contextRef', retVal.property.id);
+                        this.change(this.humanTaskDefinition.dueDate, 'contextRef', retVal.path);
                     }
                 });
             } else {
@@ -180,7 +178,7 @@ class WorkflowProperties extends TaskProperties {
                 this.change(this.humanTaskDefinition.dueDate, 'contextRef', newContextRef);
             });
             this.cmmnElement.case.typeEditor.typeEditor.setDropHandler(dragData => {
-                const newContextRef = dragData.item.id;
+                const newContextRef = dragData.path;
                 this.change(this.humanTaskDefinition.dueDate, 'contextRef', newContextRef);
             });
         });

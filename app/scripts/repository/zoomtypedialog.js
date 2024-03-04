@@ -1,7 +1,6 @@
 class ZoomTypeDialog extends Dialog {
     /**
      * @param {IDE} ide
-     * @param {string} label
      * @param {string} typeRef
      */
     constructor(ide, typeRef) {

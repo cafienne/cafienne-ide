@@ -15,7 +15,7 @@ class ParameterDefinition extends CMMNElementDefinition {
     }
 
     get bindingName() {
-        return (this.bindingRef && this.binding) ? this.binding.name : (this.bindingRef ? '> ' + this.bindingRef : '');
+        return (this.bindingRef && this.binding && (this.binding instanceof CaseFileItemDef)) ? this.binding.name : (this.binding.name ? '> ' + this.binding.name : '');
     }
 
     get defaultOperation() {

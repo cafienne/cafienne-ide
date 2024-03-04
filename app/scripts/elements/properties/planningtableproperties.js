@@ -87,10 +87,6 @@ class ApplicabilityRuleProperties {
         const name = rule ? rule.name : '';
         const body = rule ? rule.body : '';
 
-        //TODO: Fix async binding to external SchemaPropertyDefinition;  For now display a '> '
-        //TODO: Remove log message:        
-        console.log(`rule.contextRef = ${rule ? rule.contextRef : ' NO RULE '} ${rule ? this.cmmnElement.case.getContextName(rule.contextRef): ' NO CONTEXT NAME '}`);
-
         const context = rule ? this.cmmnElement.case.getContextName(rule.contextRef) : '';
         const html = $(`<tr class="applicability-rule">
             <td title="Delete this rule from the table">
@@ -104,7 +100,7 @@ class ApplicabilityRuleProperties {
             </td>
             <td title="A case file item can provide context to the rule expression evaluation">
                 <div class="zoomRow zoomSingleRow">
-                    <label class="valuelabel context-label" title="${rule?rule.contextRef : 'Drag/drop a case file item from the editor to change the reference'}">${context}</label>
+                    <label class="valuelabel context-label">${context}</label>
                     <button class="zoombt"></button>
                     <button class="removeReferenceButton clearContextRef" title="remove the reference to the case file item">
                 </div>

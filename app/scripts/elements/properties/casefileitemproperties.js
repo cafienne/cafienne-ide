@@ -10,10 +10,6 @@ class CaseFileItemProperties extends Properties {
 
     renderData() {
         const caseFileItemId = this.cmmnElement.shape.cmmnElementRef ? this.cmmnElement.shape.cmmnElementRef : '';
-        // const cfi = this.cmmnElement.case.caseDefinition.getElement(caseFileItemId);
-
-        //TODO: Fix async binding to external SchemaPropertyDefinition;  For now display a '> '
-        // const contextName = cfi ? cfi.name : (caseFileItemId.startsWith('sp__') ? '> ' + caseFileItemId : '');
         const contextName = this.cmmnElement.case.getContextName(caseFileItemId);
 
         const html = $(`<div class="zoomRow zoomDoubleRow" title="Drag/drop a case file item from the editor to change the reference">

@@ -28,11 +28,7 @@ class SentryProperties extends Properties {
         const rule = sentry.ifPart;
         const ruleAvailable = rule ? true : false;
         const contextRef = rule ? rule.contextRef : '';
-        const contextRefDefinition = this.cmmnElement.definition.caseDefinition.getElement(contextRef);
-
-        //TODO: Load external contextRef to SchemaPropertyDefintion;
-        //TODO: Fix async binding to external SchemaPropertyDefinition;  For now display a '> '
-        const contextName = contextRefDefinition ? contextRefDefinition.name : (contextRef && contextRef.startsWith('sp__') ? '> ' + contextRef : '');
+        const contextName = contextRef ? this.case.getContextName(contextRef) : '';
         const ruleBody = rule ? rule.body : '';
         const ruleLanguage = rule && rule.hasCustomLanguage ? rule.language : '';
         const nonDefaultLanguage = rule && rule.hasCustomLanguage ? ' custom-language' : '';
@@ -106,7 +102,7 @@ class SentryProperties extends Properties {
                 const zoomType = new ZoomTypeDialog(this.cmmnElement.editor.ide, this.cmmnElement.case.caseDefinition.caseFile.typeRef);
                 zoomType.showModalDialog(retVal => {
                     if (retVal) {
-                        this.change(this.cmmnElement.definition.getIfPart(), 'contextRef', retVal.property.id);
+                        this.change(this.cmmnElement.definition.getIfPart(), 'contextRef', retVal.path);
                     }
                 });
             } else {
@@ -117,21 +113,16 @@ class SentryProperties extends Properties {
         });
         html.find('.removeReferenceButton').on('click', e => {
             this.change(this.cmmnElement.definition.getIfPart(), 'contextRef', undefined);
-            // html.find('.valuelabel').html('');
         });
         html.find('.zoomRow').on('pointerover', e => {
             e.stopPropagation();
             this.cmmnElement.case.cfiEditor.setDropHandler(dragData => {
                 const newContextRef = dragData.item.id;
                 this.change(this.cmmnElement.definition.getIfPart(), 'contextRef', newContextRef);
-                // const name = newContextRef ? this.cmmnElement.definition.caseDefinition.getElement(newContextRef).name : '';
-                // html.find('.valuelabel').html(name);
             });
             this.cmmnElement.case.typeEditor.typeEditor.setDropHandler(dragData => {
-                const newContextRef = dragData.item.id;
+                const newContextRef = dragData.path;
                 this.change(this.cmmnElement.definition.getIfPart(), 'contextRef', newContextRef);
-                // const name = newContextRef ? this.cmmnElement.definition.caseDefinition.getElement(newContextRef).name : '';
-                // html.find('.valuelabel').html(name);
             });
         });
         html.find('.zoomRow').on('pointerout', e => {
@@ -228,7 +219,7 @@ class SentryProperties extends Properties {
 
     /**
      * 
-     * @param {PlanItemOnPartDefinition} planItem 
+     * @param {PlanItemOnPartDefinition} onPart 
      */
     getPlanItemStandardEvents(onPart) {
         if (!onPart || !onPart.source) {
@@ -369,9 +360,9 @@ class SentryProperties extends Properties {
      */
     getCaseFileItemStandardEvents(onPart) {
         //TODO: Fix async binding to external SchemaPropertyDefinition;  For now display a '> '
-        if (onPart && (onPart.source || (onPart.sourceRef && onPart.sourceRef.startsWith('sp__')))) {
+        if (onPart && onPart.source) {
             const isTransitionSelected = transition => transition == onPart.standardEvent ? 'selected="true"' : '';
-            return CaseFileItemDef.transitions.map(t => `<option value="${t}" ${isTransitionSelected(t)}>${t}</option>`).join('');
+            return onPart.source.constructor.transitions.map(t => `<option value="${t}" ${isTransitionSelected(t)}>${t}</option>`).join('');
         } else {
             return '<option></option><option>first select a case file item item</option>';
         }
@@ -384,16 +375,9 @@ class SentryProperties extends Properties {
      */
     addCaseFileItemOnPart(parentHTML, onPart = undefined) {
         //TODO: Fix async binding to external SchemaPropertyDefinition;  For now display a '> '
-        let caseFileItemName = onPart && onPart.source ? onPart.source.name : '';
-
+        const caseFileItemName = onPart ? this.cmmnElement.case.getContextName(onPart.sourceRef) : '';
         const standardEvents = this.getCaseFileItemStandardEvents(onPart);
         const cfiView = onPart ? this.cmmnElement.case.getCaseFileItemElement(onPart.sourceRef) : undefined;
-
-        //TODO: Fix async binding to external SchemaPropertyDefinition;  For now display a '> '
-        if (!cfiView && onPart && onPart.sourceRef && onPart.sourceRef.startsWith('sp__')) {
-            caseFileItemName = '> ' + onPart.sourceRef;
-        } 
-
         const connector = cfiView ? this.cmmnElement.__getConnector(cfiView.id) : undefined;
         const checked = connector ? 'checked="true"' : '';
         const checkedLabel = connector && connector.label ? 'checked="true"' : '';
@@ -425,7 +409,7 @@ class SentryProperties extends Properties {
                 const zoomType = new ZoomTypeDialog(this.cmmnElement.editor.ide, this.cmmnElement.case.caseDefinition.caseFile.typeRef);
                 zoomType.showModalDialog(retVal => {
                     if (retVal) {
-                        this.changeCaseFileItemOnPart(onPart, connector, html, retVal.property);
+                        this.changeCaseFileItemOnPart(onPart, connector, html, retVal.property, retVal.path);
                     }
                 });
             } else {
@@ -435,7 +419,7 @@ class SentryProperties extends Properties {
         html.find('.zoomRow').on('pointerover', e => {
             e.stopPropagation();
             this.cmmnElement.case.cfiEditor.setDropHandler(dragData => this.changeCaseFileItemOnPart(onPart, connector, html, dragData.item));
-            this.cmmnElement.case.typeEditor.typeEditor.setDropHandler(dragData => this.changeCaseFileItemOnPart(onPart, connector, html, dragData.item));
+            this.cmmnElement.case.typeEditor.typeEditor.setDropHandler(dragData => this.changeCaseFileItemOnPart(onPart, connector, html, dragData.item, dragData.path));
         });
         html.find('.zoomRow').on('pointerout', e => {
             this.cmmnElement.case.cfiEditor.removeDropHandler();
@@ -484,10 +468,11 @@ class SentryProperties extends Properties {
      * @param {Connector} connector 
      * @param {JQuery<HTMLElement>} html 
      * @param {CaseFileItemDef} cfi 
+     * @param {string} path 
      */
-    changeCaseFileItemOnPart(onPart, connector, html, cfi) {
+    changeCaseFileItemOnPart(onPart, connector, html, cfi, path = undefined) {
         const currentSourceRef = onPart ? onPart.sourceRef : '';
-        if (cfi.id === currentSourceRef) {
+        if ((path && path === currentSourceRef) || cfi.id === currentSourceRef) {
             // Nothing changes
             return;
         }
@@ -496,10 +481,10 @@ class SentryProperties extends Properties {
         if (!onPart) {
             newOnPart.standardEvent = 'create';
         }
-        if (cfi.id !== currentSourceRef && connector) {
+        if ((path && path !== currentSourceRef || cfi.id !== currentSourceRef) && connector) {
             connector.remove();
         }
-        this.change(newOnPart, 'sourceRef', cfi.id);
+        this.change(newOnPart, 'sourceRef', path ? path : cfi.id);
         // Render again.
         this.show();
     }

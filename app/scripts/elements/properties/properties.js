@@ -221,7 +221,7 @@ class Properties extends MovableEditor {
         this.addSeparator();
         const html = $(
 `<div class="propertyRule" title="Unique identifier of the element">
-    <div class="cmmn-element-id">${this.cmmnElement.shape && this.cmmnElement.shape.cmmnElementRef ? this.cmmnElement.shape.cmmnElementRef : this.cmmnElement.definition.id}</div>
+    <div class="cmmn-element-id">${this.cmmnElement.definition.id}</div>
 </div>`);
         this.htmlContainer.append(html);
     }

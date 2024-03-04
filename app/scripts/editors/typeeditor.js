@@ -298,7 +298,7 @@ class TypeEditor {
             property['isNew'] = false;
             const schema = /** @type {SchemaDefinition} */ (property.parent);
             schema.properties.push(property);
-            SchemaPropertyDefinition.setSchemaPropertyCache(property);
+            SchemaPropertyDefinition.setSchemaPropertyCache(property, property.id);
             this.renderProperty(this.createPropertyTemplate(schema), file, html.parent());  
         }
         if (oldPropertyValue != propertyValue) {
@@ -394,8 +394,7 @@ class TypeEditor {
      * @returns {SchemaPropertyDefinition} 
      */
     getSchemaPropertyDefinitionWithPath(path) {
-        const foundContainer = this.htmlContainer.find('.schemacontainer .propertycontainer').filter( (index, element) => $(element).data('data').path === path);
-        return foundContainer && foundContainer.length && foundContainer.data('data').definition;
+        return SchemaPropertyDefinition.getSchemaPropertyFromCache(path);
     }
 }
 
@@ -427,6 +426,7 @@ class ContainerData {
                 container = container.parent();
             } while (container.length && data);
             this.path = path;
+            SchemaPropertyDefinition.setSchemaPropertyCache(definition, path);
         }
     }
 }

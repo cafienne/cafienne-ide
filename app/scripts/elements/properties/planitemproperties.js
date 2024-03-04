@@ -23,12 +23,6 @@ class PlanItemProperties extends Properties {
         const rule = element.planItemControl ? element.planItemControl[ruleName] : undefined;
         const ruleAvailable = rule ? true : false;
         const contextRef = rule ? rule.contextRef : '';
-        const contextRefDefinition = this.cmmnElement.definition.caseDefinition.getElement(contextRef);
-
-        //TODO: Load external contextRef to SchemaPropertyDefintion;
-        //TODO: Fix async binding to external SchemaPropertyDefinition;  For now display a '> '
-        // const contextName = contextRefDefinition ? contextRefDefinition.name : (contextRef && contextRef.startsWith('sp__') ? '> ' + contextRef : '');
-        
         const contextName = contextRef ? this.case.getContextName(contextRef) : '';
         const ruleBody = rule ? rule.body : defaultValue;
         const ruleLanguage = rule && rule.hasCustomLanguage ? rule.language : '';
@@ -55,7 +49,7 @@ class PlanItemProperties extends Properties {
                                 </div>
                                 <div class="zoomRow zoomDoubleRow">
                                     <label class="zoomlabel">${ruleAcronym}. Rule Context</label>
-                                    <label class="valuelabel">${contextName} title="${contextRef ? 'contextRef = ' + contextRef : 'Drag/drop a case file item from the editor to change the reference'}"</label>
+                                    <label class="valuelabel">${contextName}</label>
                                     <button class="zoombt"></button>
                                     <button class="removeReferenceButton" title="remove the reference to the case file item" />
                                 </div>
@@ -102,7 +96,7 @@ class PlanItemProperties extends Properties {
                 const zoomType = new ZoomTypeDialog(this.case.editor.ide, this.case.caseDefinition.caseFile.typeRef);
                 zoomType.showModalDialog(retVal => {
                     if (retVal) {
-                        this.change(this.cmmnElement.definition.itemControl.getRule(ruleName), 'contextRef', retVal.property.id);
+                        this.change(this.cmmnElement.definition.itemControl.getRule(ruleName), 'contextRef', retVal.path);
                     }
                 });
             } else {
@@ -121,7 +115,7 @@ class PlanItemProperties extends Properties {
                 this.change(this.cmmnElement.definition.itemControl.getRule(ruleName), 'contextRef', newContextRef);
             });
             this.cmmnElement.case.typeEditor.typeEditor.setDropHandler(dragData => {
-                const newContextRef = dragData.item.id;
+                const newContextRef = dragData.path;
                 this.change(this.cmmnElement.definition.itemControl.getRule(ruleName), 'contextRef', newContextRef);
             });
         });
