@@ -30,10 +30,10 @@ class MappingCFI {
             </div>`);
 
         //add events for drag and drop
-        zoomRow.on('pointerover', e => row.editor.case.typeEditor.typeEditor.setDropHandler(dragData => this.changeBindingRef(dragData.item, row)));
+        zoomRow.on('pointerover', e => row.editor.case.typeEditor.typeEditor.setDropHandler(dragData => this.changeBindingRef(dragData.item, dragData.path, row)));
         zoomRow.on('pointerleave', e => row.editor.case.typeEditor.typeEditor.removeDropHandler());
 
-        zoomRow.on('pointerover', e => row.editor.case.cfiEditor.setDropHandler(dragData => this.changeBindingRef(dragData.item, row)));
+        zoomRow.on('pointerover', e => row.editor.case.cfiEditor.setDropHandler(dragData => this.changeBindingRef(dragData.item, null, row)));
         zoomRow.on('pointerleave', e => row.editor.case.cfiEditor.removeDropHandler());
         zoomRow.find('.removeReferenceButton').on('click', e => {
             this.removeBindingRef(row);
@@ -62,10 +62,11 @@ class MappingCFI {
      * Changing the binding ref also sets the new binding.
      * Passing undefined will delete the existing bindingRef.
      * @param {CaseFileItemDef|SchemaPropertyDefinition} newBinding 
+     * @param {string} path 
      * @param {MappingRow} row
      */
-    changeBindingRef(newBinding, row) {
-        row.mapping.updateBindingRef(newBinding);
+    changeBindingRef(newBinding, path = null, row) {
+        row.mapping.updateBindingRef(newBinding, path);
         row.control.refresh(); // This will also refresh the task parameters editor, and hence this zoom field
         //update the column UsedIn in the case file items treetable
         row.control.task.case.cfiEditor.showUsedIn();
