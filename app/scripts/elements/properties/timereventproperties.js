@@ -68,7 +68,7 @@ class TimerEventProperties extends PlanItemProperties {
 
         //TODO: Fix async binding to external SchemaPropertyDefinition;  For now display a '> '
         if (!caseFileItemName && cfiTrigger && cfiTrigger.sourceRef && cfiTrigger.sourceRef.startsWith('sp__')) {
-            caseFileItemName = '> ' + cfiTrigger.sourceRef;
+            caseFileItemName = this.case.getContextName(cfiTrigger.sourceRef);
         } 
 
         const html = $(`<label>Optional trigger for the timer event. A trigger is similar to an Entry Criterion.</label>
@@ -170,7 +170,7 @@ class TimerEventProperties extends PlanItemProperties {
             });
             this.cmmnElement.case.typeEditor.typeEditor.setDropHandler(dragData => {
                 const trigger = this.cmmnElement.planItemDefinition.getCaseFileItemStartTrigger();
-                this.change(trigger, 'sourceRef', dragData.item.id);
+                this.change(trigger, 'sourceRef', dragData.path);
                 this.show();
             });
         });
