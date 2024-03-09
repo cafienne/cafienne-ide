@@ -35,6 +35,11 @@ class Sentry extends CMMNElement {
     refreshIfPartTooltip() {
         const tooltip = this.definition.ifPart ? this.definition.ifPart.createTooltip('If Part') : '';
         this.html.find('.tooltip').html(tooltip);
+
+        const visibility = this.definition.ifPart ? 'visible' : 'hidden';
+        const color = this instanceof ExitCriterion ? 'fill: white' : 'fill: black';
+        this.html.find('.ifPartIndicator').attr('visibility', visibility);
+        this.html.find('.ifPartIndicator').attr('style', color);
     }
 
     /**
@@ -119,9 +124,13 @@ class Sentry extends CMMNElement {
 
     get markup() {
         return `
-        <polyline style="pointer-events: bounding-box;" class="cmmn-shape cmmn-border cmmn-${this.constructor.name.toLowerCase()}-shape" points="6,0  0,10  6,20  12,10 6,0">
-            <title class="tooltip"></title>
-        </polyline>`;
+        <g>
+            <polyline style="pointer-events: bounding-box;" class="cmmn-shape cmmn-border cmmn-${this.constructor.name.toLowerCase()}-shape" points="6,0  0,10  6,20  12,10 6,0">
+                <title class="tooltip"></title>
+            </polyline>
+            <rect class="ifPartIndicator" style="fill:black" x="5.5" y="7" width="1" height="1" visibility="visible">i</rect>
+            <rect class="ifPartIndicator" style="fill:black" x="5.5" y="9" width="1" height="4" visibility="visible">i</rect>
+        </g>`;
     }
 
     __resize() {
