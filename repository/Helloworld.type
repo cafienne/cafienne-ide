@@ -1,0 +1,13 @@
+<type id="Helloworld.type" name="HelloWorld">
+    <schema>
+        <property id="sp__cZrKV_0" name="Greeting" type="Greeting.type" multiplicity="ExactlyOne"/>
+        <property id="sp__cZrKV_1" name="Response" type="object" multiplicity="ExactlyOne">
+            <schema>
+                <property id="sp__cZrKV_5" name="Message" type="string" multiplicity="ExactlyOne"/>
+                <property id="sp__WFyBG_1" name="SomeBoolean" type="boolean" multiplicity="ExactlyOne"/>
+                <property id="sp__LHipL_0" name="GreetingInResponse" type="Greeting.type" multiplicity="ExactlyOne"/>
+            </schema>
+        </property>
+        <property id="sp__zO0wU_1" name="AnotherGreeting" type="Greeting.type" multiplicity="ExactlyOne"/>
+    </schema>
+</type>
