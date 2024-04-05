@@ -1,0 +1,5 @@
+<case id="a_new_moon.case" name="a_new_moon" expressionLanguage="spel" guid="_lqS7a">
+    <caseFileModel typeRef="Helloworld.type"/>
+    <casePlanModel id="cm__lqS7a_0" name="a_new_moon" autoComplete="true"/>
+    <caseRoles/>
+</case>
