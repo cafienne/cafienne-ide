@@ -1,0 +1,7 @@
+<type id="Greeting.type" name="Greeting">
+    <schema>
+        <property id="sp__Lsbuv_0" name="Message" type="string" multiplicity="ExactlyOne"/>
+        <property id="sp__Lsbuv_1" name="From" type="string" multiplicity="ExactlyOne"/>
+        <property id="sp__Lsbuv_2" name="To" type="string" multiplicity="ExactlyOne"/>
+    </schema>
+</type>
