@@ -6,10 +6,12 @@ class TypeEditor {
      * @param {IDE} ide 
      * @param {TypeFile} file 
      * @param {JQuery<HTMLElement>} htmlParent 
+     * @param {CaseView} cs 
      */
-    constructor(ide, file, htmlParent) {
+    constructor(ide, file, htmlParent, cs = undefined) {
         this.ide = ide;
         this.htmlContainer = htmlParent;
+        this.case = cs;
         this.biTooltip = 'Cases and Tasks can be queried on business identifiers.\nThe identifiers are tracked in a separate index, but adding identifiers does have a performance impact';
         this.file = file;
         this.files = {};

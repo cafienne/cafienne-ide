@@ -12,7 +12,7 @@ class CaseTypeEditor {
         this.ide = this.case.editor.ide;
         this.htmlContainer = htmlParent;
         this.file =  /** @type {TypeFile} */ (this.ide.repository.get(this.case.caseDefinition.caseFile.typeRef));
-        this.typeEditor = new TypeEditor(this.ide, this.file, this.htmlContainer);
+        this.typeEditor = new TypeEditor(this.ide, this.file, this.htmlContainer, this.case);
         if (this.file) {
             this.typeEditor.loadModel();
         }

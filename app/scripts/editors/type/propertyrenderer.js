@@ -68,11 +68,14 @@ class PropertyRenderer extends TypeRenderer {
         this.html.find('.selectMultiplicity').val(this.property.multiplicity);
         this.html.find('.inputBusinessIdentifier').on('change', e => this.changeProperty('isBusinessIdentifier', e.currentTarget.checked));
         this.html.find('.schemaPropertyIcon').on('pointerdown', e => {
-            if (this.property.isComplexType) {
+            if (this.property.isComplexType && this.editor.case) {
                 // Only support drag/drop for complex type
                 e.preventDefault();
                 e.stopPropagation();
-                this.editor.setDragData(new PropertyDragData(this, this.property, this.path));
+                const cfi = this.editor.case.caseDefinition.createDefinition(CaseFileItemDef, this.path, '+' + this.name);        
+                this.editor.case.cfiEditor.dragData = new CaseFileItemDragData(this.editor, cfi);
+            } else {
+                this.ide.warning('Cannot drag items here', 1000)
             }
         });
         this.html.on('keydown', e => e.stopPropagation());
