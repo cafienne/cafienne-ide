@@ -11,10 +11,15 @@ class CaseDefinition extends ModelDefinition {
 
     parseDocument() {
         super.parseDocument();
+        /** @type {CaseFileDefinition} */
         this.caseFile = this.parseElement('caseFileModel', CaseFileDefinition);
+        /** @type {CasePlanDefinition} */
         this.casePlan = this.parseElement('casePlanModel', CasePlanDefinition);
+        /** @type {CaseTeamDefinition} */
         this.caseTeam = this.parseCaseTeam();
+        /** @type {Array<ParameterDefinition>} */
         this.input = this.parseElements('input', ParameterDefinition);
+        /** @type {Array<ParameterDefinition>} */
         this.output = this.parseElements('output', ParameterDefinition);
         this.annotations = this.parseElements('textAnnotation', TextAnnotationDefinition);
         this.startCaseSchema = this.parseExtension(StartCaseSchemaDefinition);

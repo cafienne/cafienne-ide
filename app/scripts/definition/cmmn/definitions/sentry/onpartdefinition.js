@@ -3,7 +3,7 @@ class OnPartDefinition extends UnnamedCMMNElementDefinition {
      * 
      * @param {Element} importNode 
      * @param {SentryDefinition} parent 
-     * @param {ModelDefinition} caseDefinition 
+     * @param {CaseDefinition} caseDefinition 
      * @param {Function} sourceConstructor 
      */
     constructor(importNode, caseDefinition, parent, sourceConstructor) {
@@ -41,4 +41,3 @@ class OnPartDefinition extends UnnamedCMMNElementDefinition {
         XML.createTextChild(XML.createChildElement(this.exportNode, 'standardEvent'), this.standardEvent);
     }
 }
-
