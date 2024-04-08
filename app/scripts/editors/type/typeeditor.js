@@ -26,6 +26,10 @@ class TypeEditor {
         this.files = {};
         file.load(() => {
             this.mainType = this.registerLocalDefinition(file);
+            if (this.renderer) {
+                this.renderer.delete();
+                Util.clearHTML(this.htmlTypeSchemaContainer);    
+            }
             this.render();    
         });
     }
@@ -175,29 +179,8 @@ class TypeEditor {
     }
 
     refresh() {
-        if (this.renderer) {
-            // console.log("Refreshing main type renderer in " + this.renderer.prefix)
-            this.renderer.delete();
-            Util.clearHTML(this.htmlTypeSchemaContainer);
-            this.setMainType(this.file);
-        } else {
-            console.log("No renderer available to refresh")
-            this.render()
-        }
+        this.setMainType(this.file);
     }
-
-    /**
-     * return a string that defines the <option>'s for the type select
-     * The select has an empty option and the already available type's
-     * @returns {String}
-     */
-    getOptionTypeHTML() {
-        // First create 1 options for "empty" then add all type files
-        return (
-            ['<option value=""></option>']
-                .concat(this.ide.repository.getTypes().map(type => `<option value="${type.fileName}">${type.name}</option>`))
-                .join(''));
-    };
 
     onShow() {
         //always start with editor tab

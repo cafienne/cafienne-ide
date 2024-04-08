@@ -14,8 +14,18 @@ class PropertyRenderer extends TypeRenderer {
         this.htmlParent.append(this.html);
     }
 
+    delete() {
+        if (this.typeSelector) {
+            this.typeSelector.delete();
+        }
+        super.delete();
+    }
+
     refresh() {
         Util.clearHTML(this.htmlContainer);
+        if (this.typeSelector) {
+            this.typeSelector.delete();
+        }
         this.render();
     }
 
@@ -26,15 +36,8 @@ class PropertyRenderer extends TypeRenderer {
                 <input class="inputTypeName" value="${this.property.name}" />
                 <button tabindex="-1" class="buttonRemoveType" title="Delete property"></button>
             </div>
-            <div><select class="selectType">
-                    <option value=""></option>
-                    <option value="string">string</option>
-                    <option value="number">number</option>
-                    <option value="integer">integer</option>
-                    <option value="boolean">boolean</option>
-                    <option value="object">object</option>
-                    ${this.editor.getOptionTypeHTML()}
-                </select>
+            <div>
+                <select class="selectType"></select>
             </div>
             <div>
                 <select class="selectMultiplicity">
@@ -65,9 +68,8 @@ class PropertyRenderer extends TypeRenderer {
             Util.removeHTML(this.htmlContainer);
             this.localType.save(this);
         });
+        this.typeSelector = new TypeSelector(this.editor, this.htmlContainer.find('.selectType'), this.property.type, typeRef => this.changeProperty('type', typeRef), true);
         this.htmlContainer.find('.inputTypeName').on('change', e => this.changeProperty('name', e.currentTarget.value));
-        this.htmlContainer.find('.selectType').on('change', e => this.changeProperty('type', e.currentTarget.value));
-        this.htmlContainer.find('.selectType').val(this.property.type);
         this.htmlContainer.find('.selectMultiplicity').on('change', e => this.changeProperty('multiplicity', e.currentTarget.value));
         this.htmlContainer.find('.selectMultiplicity').val(this.property.multiplicity);
         this.htmlContainer.find('.inputBusinessIdentifier').on('change', e => this.changeProperty('isBusinessIdentifier', e.currentTarget.checked));
