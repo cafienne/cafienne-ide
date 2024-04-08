@@ -114,14 +114,9 @@ class PlanItemProperties extends Properties {
                 const newContextRef = dragData.item.id;
                 this.change(this.cmmnElement.definition.itemControl.getRule(ruleName), 'contextRef', newContextRef);
             });
-            this.cmmnElement.case.typeEditor.typeEditor.setDropHandler(dragData => {
-                const newContextRef = dragData.path;
-                this.change(this.cmmnElement.definition.itemControl.getRule(ruleName), 'contextRef', newContextRef);
-            });
         });
         html.find('.zoomRow').on('pointerout', e => {
             this.cmmnElement.case.cfiEditor.removeDropHandler();
-            this.cmmnElement.case.typeEditor.typeEditor.removeDropHandler();
         });
         this.htmlContainer.append(html);
         return html;

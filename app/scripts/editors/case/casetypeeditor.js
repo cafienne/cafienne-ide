@@ -3,20 +3,28 @@
 class CaseTypeEditor {
     /**
      * Renders the caseFileModel definition
-     * @param {CaseView} cs 
+     * @param {CaseFileEditor} caseFileEditor 
      * @param {JQuery<HTMLElement>} htmlParent 
      */
-
-    constructor(cs, htmlParent) {
-        this.case = cs;
+    constructor(caseFileEditor, htmlParent) {
+        this.caseFileEditor = caseFileEditor;
+        this.case = caseFileEditor.case;
         this.ide = this.case.editor.ide;
         this.htmlContainer = htmlParent;
         this.file =  /** @type {TypeFile} */ (this.ide.repository.get(this.case.caseDefinition.caseFile.typeRef));
-        this.typeEditor = new TypeEditor(this.ide, this.file, this.htmlContainer, this.case);
-        if (this.file) {
-            this.typeEditor.loadModel();
-        }
+        this.typeEditor = new TypeEditor(this, this.htmlContainer, this.case);
         this.generateTypeSelectorHTML();
+        if (this.file) {
+            this.typeEditor.setMainType(this.file);
+        }
+    }
+
+    /**
+     * Deletes this editor
+     */
+    delete() {
+        this.typeEditor.delete();
+        Util.removeHTML(this.htmlContainer);
     }
 
     generateTypeSelectorHTML() {
@@ -31,8 +39,7 @@ class CaseTypeEditor {
             this.file =  /** @type {TypeFile} */ (this.ide.repository.get(typeRef));
             this.case.caseDefinition.caseFile.typeRef = typeRef;
             if (this.file) {
-                this.typeEditor.file = this.file;
-                this.typeEditor.loadModel();
+                this.typeEditor.setMainType(this.file);
             } else {
                 Util.clearHTML(this.htmlContainer);
                 this.typeEditor.generateHTML();

@@ -34,8 +34,10 @@
                 </div>
             </div>
             <div class="divCaseFileContainer">
-                <div class="divCaseFileEditor"></div>
-                <div class="divCaseTypeEditor"></div>
+                <div class="divCaseFileEditor">
+                    <div class="divClassicCaseFileEditor"></div>
+                    <div class="divCaseTypeEditor"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -45,15 +47,13 @@
         this.divCaseModel = this.html.find('.divCaseModel');
         this.divUndoRedo = this.html.find('.undoredobox');
         this.divShapeBox = this.html.find('.shapebox');
-        this.divCFIEditor = this.html.find('.divCaseFileEditor');
-        this.divCaseTypeEditor = this.html.find('.divCaseTypeEditor');
+        this.divCaseFileEditor = this.html.find('.divCaseFileEditor');
         this.canvas = this.divCaseModel.find('.divCaseCanvas');
         this.paperContainer = this.html.find('.paper-container');
 
         this.deployForm = new Deploy(editor);
         this.sourceEditor = new CaseSourceEditor(editor, this.html);
-        this.cfiEditor = new CaseFileItemsEditor(this, this.divCFIEditor);
-        this.typeEditor = new CaseTypeEditor(this, this.divCaseTypeEditor);
+        this.cfiEditor = new CaseFileEditor(this, this.divCaseFileEditor);
         this.undoBox = new UndoRedoBox(this, this.divUndoRedo);
         this.shapeBox = new ShapeBox(this, this.divShapeBox);
         this.splitter = new RightSplitter(this.divCaseModel, '60%', 5);
@@ -139,15 +139,7 @@
             }
         });
 
-        if (this.case.caseDefinition.caseFile.children.length > 0) {
-            // For compatibility show old model with CFI / CFID struncture in caseFileModel
-            this.divCFIEditor.show();
-            this.divCaseTypeEditor.hide();
-        } else {
-            // Show new type model editor
-            this.divCFIEditor.hide();
-            this.divCaseTypeEditor.show();
-        }
+
         const end = new Date();
         console.log(`Case '${this.caseDefinition.file.fileName}' loaded in ${((end - now) / 1000)} seconds`)
     }
@@ -268,9 +260,9 @@
 
         const containerWidth = this.htmlParent.width(); // Our parent's parent is "divCaseModelEditor"
         const containerLeft = this.htmlParent.offset().left;
-        const cfiBoxWidth = this.divCFIEditor.width();
+        const cfiBoxWidth = this.divCaseFileEditor.width();
         const shapesWidth = this.divShapeBox.width();
-        const cfiBoxLeft = this.divCFIEditor.offset().left;
+        const cfiBoxLeft = this.divCaseFileEditor.offset().left;
 
         const canvasWidth = containerWidth - shapesWidth - cfiBoxWidth - containerLeft + cfiBoxLeft;
 
@@ -279,7 +271,7 @@
 
     refreshSplitter() {
         // Recalculate the splitter position in % after refresh
-        const splitterPosition = 100 - (100 * this.divCFIEditor.width() / this.divCaseModel.width());
+        const splitterPosition = 100 - (100 * this.divCaseFileEditor.width() / this.divCaseModel.width());
         const splitterPercentage = splitterPosition > 0 ? `${splitterPosition}%` : '0%';
 
         this.splitter.repositionSplitter(splitterPercentage);
@@ -591,7 +583,7 @@
      * @returns {CaseFileItemDef|SchemaPropertyDefinition} internal {CaseFileItemDef} or external {SchemaPropertyDefinition}
      */
     getContextDefinition(ref) {
-        return (/** @type {CaseFileItemDef} */ (this.caseDefinition.getElement(ref)) || this.typeEditor.typeEditor.getSchemaPropertyDefinitionWithPath(ref));
+        return (/** @type {CaseFileItemDef} */ (this.caseDefinition.getElement(ref)) || this.cfiEditor.getElement(ref));
     }
 
     /**

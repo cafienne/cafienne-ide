@@ -36,11 +36,9 @@ class CaseFileItemProperties extends Properties {
         html.on('pointerover', e => {
             e.stopPropagation();
             this.cmmnElement.case.cfiEditor.setDropHandler(dragData => this.changeContextRef(html, dragData.item));
-            this.cmmnElement.case.typeEditor.typeEditor.setDropHandler(dragData => this.changeContextRef(html, dragData.item, dragData.path));
         });
         html.find('.zoomRow').on('pointerout', e => {
             this.cmmnElement.case.cfiEditor.removeDropHandler();
-            this.cmmnElement.case.typeEditor.typeEditor.removeDropHandler();
         });
         this.addDocumentationField();
         this.addIdField();

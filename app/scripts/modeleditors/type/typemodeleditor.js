@@ -5,10 +5,10 @@ class TypeModelEditor extends ModelEditor {
      * This editor handles type models; only validates the xml
      * @param {TypeFile} file The ServerFile to be loaded. E.g. 'customer.type', 'order.type'
      */
-
     constructor(file) {
         super(file);
-        this.typeEditor = new TypeEditor(this.ide, file, this.htmlContainer);
+        this.file = file;
+        this.typeEditor = new TypeEditor(this, this.htmlContainer);
     }
 
     get label() {
@@ -23,7 +23,7 @@ class TypeModelEditor extends ModelEditor {
     }
 
     loadModel() {
-        this.typeEditor.loadModel();
+        this.typeEditor.setMainType(this.file);
     }
 }
 

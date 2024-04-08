@@ -3,11 +3,12 @@
 class CaseFileItemsEditor {
     /**
      * Renders the CaseFile definition through fancytree
-     * @param {CaseView} cs 
+     * @param {CaseFileEditor} caseFileEditor 
      * @param {JQuery<HTMLElement>} htmlParent 
      */
-    constructor(cs, htmlParent) {
-        this.case = cs;
+    constructor(caseFileEditor, htmlParent) {
+        this.caseFileEditor = caseFileEditor;
+        this.case = caseFileEditor.case;
         this.ide = this.case.editor.ide;
         this.htmlParent = htmlParent;
         this.renderHTML();
@@ -467,6 +468,7 @@ class CaseFileItemsEditor {
     handleDragStartCFIDataNode(node, data) {
         const cfi = this.getDefinitionElement(node);
         this.dragData = new CaseFileItemDragData(this, cfi);
+        this.caseFileEditor.setDragData(new CaseFileItemDragData(this, cfi));
     }
 
     /**

@@ -44,7 +44,7 @@ class ExpressionEditor {
         }
 
         const simpleCaseFileBuilder = new SimpleCaseFileBuilder();
-        const simpleCaseFile = simpleCaseFileBuilder.build(ide.caseModelEditor.case.cfiEditor.caseFileItemDefinitionEditor.getData(), ide.caseModelEditor.case.caseDefinition.getCaseFile());
+        // const simpleCaseFile = simpleCaseFileBuilder.build(ide.caseModelEditor.case.cfiEditor.caseFileItemDefinitionEditor.getData(), ide.caseModelEditor.case.caseDefinition.getCaseFile());
 
         const contextRefId = g_element instanceof SentryView && g_element.definition.ifPart ? g_element.definition.ifPart.contextRef : undefined;
 

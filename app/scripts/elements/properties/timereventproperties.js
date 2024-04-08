@@ -168,11 +168,6 @@ class TimerEventProperties extends PlanItemProperties {
                 this.change(trigger, 'sourceRef', dragData.item.id);
                 this.show();
             });
-            this.cmmnElement.case.typeEditor.typeEditor.setDropHandler(dragData => {
-                const trigger = this.cmmnElement.planItemDefinition.getCaseFileItemStartTrigger();
-                this.change(trigger, 'sourceRef', dragData.path);
-                this.show();
-            });
         });
         html.find('#selectCaseFileItemTransition').on('change', e => {
             const trigger = this.cmmnElement.planItemDefinition.getCaseFileItemStartTrigger();
@@ -183,7 +178,6 @@ class TimerEventProperties extends PlanItemProperties {
         });
         html.find('.zoomRow').on('pointerout', e => {
             this.cmmnElement.case.cfiEditor.removeDropHandler();
-            this.cmmnElement.case.typeEditor.typeEditor.removeDropHandler();
         });
         this.htmlContainer.append(html);
     }

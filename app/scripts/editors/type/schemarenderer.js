@@ -32,6 +32,7 @@ class SchemaRenderer extends TypeRenderer {
     }
 
     refresh() {
+        this.children.forEach(child => child.delete());
         Util.clearHTML(this.htmlContainer);
         this.render();
     }

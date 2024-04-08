@@ -120,15 +120,10 @@ class SentryProperties extends Properties {
                 const newContextRef = dragData.item.id;
                 this.change(this.cmmnElement.definition.getIfPart(), 'contextRef', newContextRef);
             });
-            this.cmmnElement.case.typeEditor.typeEditor.setDropHandler(dragData => {
-                const newContextRef = dragData.path;
-                this.change(this.cmmnElement.definition.getIfPart(), 'contextRef', newContextRef);
-            });
         });
         html.find('.zoomRow').on('pointerout', e => {
             this.cmmnElement.case.cfiEditor.removeDropHandler();
-            this.cmmnElement.case.typeEditor.typeEditor.removeDropHandler();
-        })
+        });
         this.htmlContainer.append(html);
         return html;
     }
@@ -419,11 +414,9 @@ class SentryProperties extends Properties {
         html.find('.zoomRow').on('pointerover', e => {
             e.stopPropagation();
             this.cmmnElement.case.cfiEditor.setDropHandler(dragData => this.changeCaseFileItemOnPart(onPart, connector, html, dragData.item));
-            this.cmmnElement.case.typeEditor.typeEditor.setDropHandler(dragData => this.changeCaseFileItemOnPart(onPart, connector, html, dragData.item, dragData.path));
         });
         html.find('.zoomRow').on('pointerout', e => {
             this.cmmnElement.case.cfiEditor.removeDropHandler();
-            this.cmmnElement.case.typeEditor.typeEditor.removeDropHandler();
         });
         // Event handler for changing the standardEvent
         html.find('.standard-event').on('change', e => this.changeStandardEvent(e, onPart, connector));

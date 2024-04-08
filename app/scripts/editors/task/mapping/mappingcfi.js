@@ -30,9 +30,6 @@ class MappingCFI {
             </div>`);
 
         //add events for drag and drop
-        zoomRow.on('pointerover', e => row.editor.case.typeEditor.typeEditor.setDropHandler(dragData => this.changeBindingRef(dragData.item, dragData.path, row)));
-        zoomRow.on('pointerleave', e => row.editor.case.typeEditor.typeEditor.removeDropHandler());
-
         zoomRow.on('pointerover', e => row.editor.case.cfiEditor.setDropHandler(dragData => this.changeBindingRef(dragData.item, null, row)));
         zoomRow.on('pointerleave', e => row.editor.case.cfiEditor.removeDropHandler());
         zoomRow.find('.removeReferenceButton').on('click', e => {

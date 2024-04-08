@@ -3,20 +3,31 @@
 class TypeEditor {
     /**
      * Edit the Type definition
-     * @param {IDE} ide 
-     * @param {TypeFile} file 
+     * @param {CaseTypeEditor|TypeModelEditor} owner
      * @param {JQuery<HTMLElement>} htmlParent 
      * @param {CaseView} cs 
      */
-    constructor(ide, file, htmlParent, cs = undefined) {
-        this.ide = ide;
+    constructor(owner, htmlParent, cs = undefined) {
+        this.owner = owner;
+        this.ide = owner.ide;
         this.htmlContainer = htmlParent;
         this.case = cs;
         this.biTooltip = 'Cases and Tasks can be queried on business identifiers.\nThe identifiers are tracked in a separate index, but adding identifiers does have a performance impact';
+        this.generateHTML();
+    }
+
+    /**
+     * 
+     * @param {TypeFile} file 
+     */
+    setMainType(file) {
+        if (! file) return;
         this.file = file;
         this.files = {};
-        this.mainType = this.registerLocalDefinition(file);
-        this.generateHTML();
+        file.load(() => {
+            this.mainType = this.registerLocalDefinition(file);
+            this.render();    
+        });
     }
 
     get label() {
@@ -149,11 +160,30 @@ class TypeEditor {
         this.jsonSchemaEditor.on('change', () => { this._changed = true; });
     }
 
+    delete() {
+        if (this.renderer) {
+            this.renderer.delete();
+        }
+        Util.removeHTML(this.htmlContainer);
+    }
+
     render() {
         // Render name and definitionType
         this.htmlContainer.find('.inputDefinitionName').val(this.mainType.definition.name);
         this.renderer = new SchemaRenderer(this, this.mainType, this.mainType.definition.schema, this.htmlTypeSchemaContainer);
         this.renderer.render();
+    }
+
+    refresh() {
+        if (this.renderer) {
+            // console.log("Refreshing main type renderer in " + this.renderer.prefix)
+            this.renderer.delete();
+            Util.clearHTML(this.htmlTypeSchemaContainer);
+            this.setMainType(this.file);
+        } else {
+            console.log("No renderer available to refresh")
+            this.render()
+        }
     }
 
     /**
@@ -176,6 +206,7 @@ class TypeEditor {
 
     loadModel() {
         this.file.load(() => this.renderModel());
+        // this.renderModel();
     }
 
     renderModel() {
@@ -189,7 +220,7 @@ class TypeEditor {
     loadSource(newSource) {
         this.file.source = newSource;
         this.renderModel();
-        this.saveModel(this.file);
+        this.mainType.save(undefined);
     }
 
     /**

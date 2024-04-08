@@ -139,13 +139,9 @@ class ApplicabilityRuleProperties {
             this.cmmnElement.case.cfiEditor.setDropHandler(dragData => {
                 this.change(this.getRule(), 'contextRef', dragData.item.id);
             });
-            this.cmmnElement.case.typeEditor.typeEditor.setDropHandler(dragData => {
-                this.change(this.getRule(), 'contextRef', dragData.path);
-            });
         });
         html.find('.zoomRow').on('pointerout', e => {
             this.cmmnElement.case.cfiEditor.removeDropHandler();
-            this.cmmnElement.case.typeEditor.typeEditor.removeDropHandler();
         });
         html.find('.clearContextRef').on('click', e => {
             if (this.rule) {
