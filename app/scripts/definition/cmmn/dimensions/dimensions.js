@@ -12,10 +12,12 @@ const TARGETCMMNELEMENTREF = 'targetCMMNElementRef';
 class Dimensions extends ModelDefinition {
     /**
      * Parses the content of the XML document into dimension structures that can be accessed via this class.
-     * @param {Element} importNode
+     * @param {DimensionsFile} file
+     * @param {Element} importNode 
      */
-    constructor(importNode) {
-        super(importNode);
+    constructor(file, importNode = file.content.xml) {
+        super(file, importNode);
+        this.file = file;
         this.errors = [];
     }
 

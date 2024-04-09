@@ -4,11 +4,14 @@
 class ModelDefinition extends ReferableElementDefinition {
     /**
      * Imports an XML element and parses it into a in-memory definition structure.
+     * @param {ServerFile} file
      * @param {Element} importNode 
      */
-    constructor(importNode) {
+    constructor(file, importNode) {
+        // Need to pass undefined in the super, and then set the modelDefinition manually.
         super(importNode, undefined, undefined);
-        super.modelDefinition = this;
+        this.modelDefinition = this;
+        this.file = file;
         this.typeCounters = new TypeCounter(this);
         /** @type {Array<XMLElementDefinition>} */
         this.elements = [];
@@ -24,7 +27,7 @@ class ModelDefinition extends ReferableElementDefinition {
 
     /**
      * A ModelDefinition must have input parameters.
-     * @returns {Array<ImplementationParameterDefinition>}
+     * @returns {Array<ImplementationParameterDefinition|ParameterDefinition>}
      */
     get inputParameters() {
         throw new Error('This method must be implemented in ' + this.constructor.name);
@@ -32,7 +35,7 @@ class ModelDefinition extends ReferableElementDefinition {
 
     /**
      * A ModelDefinition must have output parameters.
-     * @returns {Array<ImplementationParameterDefinition>}
+     * @returns {Array<ImplementationParameterDefinition|ParameterDefinition>}
      */
     get outputParameters() {
         throw new Error('This method must be implemented in ' + this.constructor.name);
@@ -41,7 +44,7 @@ class ModelDefinition extends ReferableElementDefinition {
     /**
      * 
      * @param {String} identifier 
-     * @returns {ImplementationParameterDefinition}
+     * @returns {ImplementationParameterDefinition|ParameterDefinition}
      */
     findInputParameter(identifier) {
         return this.inputParameters.find(p => p.hasIdentifier(identifier));
@@ -50,7 +53,7 @@ class ModelDefinition extends ReferableElementDefinition {
     /**
      * 
      * @param {String} identifier 
-     * @returns {ImplementationParameterDefinition}
+     * @returns {ImplementationParameterDefinition|ParameterDefinition}
      */
     findOutputParameter(identifier) {
         return this.outputParameters.find(p => p.hasIdentifier(identifier));

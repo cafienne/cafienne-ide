@@ -1,6 +1,6 @@
 class CFIDFile extends ServerFile {
     createDefinition() {
-        return new CaseFileDefinitionDefinition(this.content.xml);
+        return new CaseFileDefinitionDefinition(this);
     }
 
     /** @returns {CaseFileDefinitionDefinition} */

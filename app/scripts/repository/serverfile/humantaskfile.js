@@ -4,7 +4,7 @@ class HumanTaskFile extends ServerFileWithEditor {
     }
 
     createDefinition() {
-        return new HumanTaskModelDefinition(this.content.xml);
+        return new HumanTaskModelDefinition(this);
     }
 
     /** @returns {HumanTaskModelDefinition} */

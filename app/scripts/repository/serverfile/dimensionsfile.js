@@ -1,6 +1,6 @@
 class DimensionsFile extends ServerFile {
     createDefinition() {
-        return new Dimensions(this.content.xml);
+        return new Dimensions(this);
     }
 
     /** @returns {Dimensions} */

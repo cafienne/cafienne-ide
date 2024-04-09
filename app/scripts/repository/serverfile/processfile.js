@@ -4,7 +4,7 @@ class ProcessFile extends ServerFileWithEditor {
     }
 
     createDefinition() {
-        return new ProcessModelDefinition(this.content.xml);
+        return new ProcessModelDefinition(this);
     }
 
     /** @returns {ProcessModelDefinition} */

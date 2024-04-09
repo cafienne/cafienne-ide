@@ -4,7 +4,7 @@ class CaseFile extends ServerFileWithEditor {
     }
 
     createDefinition() {
-        return new CaseDefinition(this.content.xml);
+        return new CaseDefinition(this);
     }
 
     /** @returns {CaseDefinition} */
