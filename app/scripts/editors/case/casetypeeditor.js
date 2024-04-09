@@ -15,8 +15,12 @@ class CaseTypeEditor {
         this.generateHTML();
         this.file =  /** @type {TypeFile} */ (this.ide.repository.get(this.case.caseDefinition.caseFile.typeRef));
         this.typeEditor = new TypeEditor(this, this.divTypeEditor, this.case);
+<<<<<<< HEAD
         this.htmlContainer.find('.selectCaseFileModel').html(this.typeEditor.getOptionTypeHTML());
         this.htmlContainer.find('.selectCaseFileModel').val(this.typeRef);
+=======
+        this.typeSelector = new TypeSelector(this.typeEditor, this.htmlContainer.find('.selectCaseFileModel'), this.typeRef, v => this.typeRef = v);
+>>>>>>> 71c9375 (Make decent div in case type editor)
         if (this.file) {
             this.typeEditor.setMainType(this.file);
         }
@@ -32,7 +36,6 @@ class CaseTypeEditor {
                 <div class='type-editor-box'></div>
             </div>`);
         this.htmlParent.append(this.htmlContainer);
-        this.htmlContainer.find('.selectCaseFileModel').on('change', e => this.typeRef = e.currentTarget.value);
         this.divTypeEditor = this.htmlContainer.find('.type-editor-box');
     }
 
@@ -55,18 +58,9 @@ class CaseTypeEditor {
         Util.removeHTML(this.htmlContainer);
     }
 
-    generateTypeSelectorHTML() {
-        const html = $(`<div style="display:inline;position:absolute;right:9px;top:9px">
-            <label>Type:</label>
-            <select class="selectCaseFileModel"></select>
-        </div>`);
-        this.htmlContainer.append(html);
-        this.typeSelector = new TypeSelector(this.typeEditor, html.find('.selectCaseFileModel'), this.typeRef, v => this.typeRef = v);
-    }
-
     get typeRef() {
         return this.case.caseDefinition.caseFile.typeRef;
-    }    
+    }
 
     /**
      * @param {String} typeRef
@@ -77,9 +71,8 @@ class CaseTypeEditor {
         if (this.file) {
             this.typeEditor.setMainType(this.file);
         } else {
-            Util.clearHTML(this.htmlContainer);
+            Util.clearHTML(this.divTypeEditor);
             this.typeEditor.generateHTML();
-            this.generateTypeSelectorHTML();
         }
         this.case.editor.completeUserAction();
     }
