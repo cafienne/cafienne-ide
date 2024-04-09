@@ -3,10 +3,12 @@ class LocalTypeDefinition {
      * 
      * @param {TypeEditor} typeEditor 
      * @param {TypeFile} file 
+     * @param {MainTypeDefinition} root 
      */
-    constructor(typeEditor, file) {
+    constructor(typeEditor, file, root) {
         this.editor = typeEditor;
         this.file = file;
+        this.root = root;
         this.definition = file.definition;
     }
 
@@ -18,6 +20,15 @@ class LocalTypeDefinition {
         this.file.source = this.definition.toXML();
         this.file.save();
         TypeRenderer.refreshOthers(source);
+    }
+
+    /**
+     * 
+     * @param {TypeFile} file 
+     * @returns {LocalTypeDefinition}
+     */
+    registerLocalDefinition(file) {
+        return this.root.registerLocalDefinition(file);
     }
 
     /**

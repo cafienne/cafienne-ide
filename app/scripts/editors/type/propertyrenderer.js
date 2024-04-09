@@ -6,7 +6,7 @@ class PropertyRenderer extends TypeRenderer {
      * @param {SchemaPropertyDefinition} property 
      * @param {JQuery<HTMLElement>} htmlParent 
      */
-    constructor(parent, localType, property, htmlParent) {
+    constructor(parent, htmlParent, localType, property) {
         super(parent, localType, property, htmlParent);
         this.parent = parent;
         this.property = property;
@@ -99,7 +99,7 @@ class PropertyRenderer extends TypeRenderer {
         this.htmlContainer.find('.selectType').attr('title', '');
         if (this.property.isComplexType) {
             if (this.property.type === 'object' && this.property.schema) {
-                new SchemaRenderer(this, this.localType, this.property.schema, schemaContainer).render();
+                new SchemaRenderer(this, schemaContainer, this.localType, this.property.schema).render();
             } else {
                 const typeRef = this.property.typeRef;
                 const typeFile = this.ide.repository.getTypes().find(type => type.fileName === typeRef);
@@ -112,8 +112,8 @@ class PropertyRenderer extends TypeRenderer {
                         this.htmlContainer.find('.selectType').attr('title', 'Cycle detected\n\n' + cycleDetected);
                     } else {
                         this.ide.repository.load(typeRef, (/** @type {TypeFile} */file) => {
-                            const nestedLocalType = this.editor.registerLocalDefinition(file);
-                            new SchemaRenderer(this, nestedLocalType, nestedLocalType.definition.schema, schemaContainer).render();
+                            const nestedLocalType = this.localType.root.registerLocalDefinition(file);
+                            new SchemaRenderer(this, schemaContainer, nestedLocalType).render();
                         });
                     }
                 }

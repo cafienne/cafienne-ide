@@ -10,28 +10,10 @@ class TypeEditor {
     constructor(owner, htmlParent, cs = undefined) {
         this.owner = owner;
         this.ide = owner.ide;
-        this.htmlContainer = htmlParent;
+        this.htmlParent = htmlParent;
         this.case = cs;
         this.biTooltip = 'Cases and Tasks can be queried on business identifiers.\nThe identifiers are tracked in a separate index, but adding identifiers does have a performance impact';
         this.generateHTML();
-    }
-
-    /**
-     * 
-     * @param {TypeFile} file 
-     */
-    setMainType(file) {
-        if (! file) return;
-        this.file = file;
-        this.files = {};
-        file.load(() => {
-            this.mainType = this.registerLocalDefinition(file);
-            if (this.renderer) {
-                this.renderer.delete();
-                Util.clearHTML(this.htmlTypeSchemaContainer);    
-            }
-            this.render();    
-        });
     }
 
     get label() {
@@ -42,7 +24,7 @@ class TypeEditor {
      * adds the html of the entire page
      */
     generateHTML() {
-        const html = $(`
+        this.htmlContainer = $(`
             <div class="basicbox model-source-tabs">
                 <ul>
                     <li><a href="#modelEditor">Editor</a></li>
@@ -75,76 +57,44 @@ class TypeEditor {
                 <div class="json-schema-editor" id="jsonSchemaEditor"></div>
             </div>
         `);
+        this.htmlParent.append(this.htmlContainer);
 
-        // add the type editor html to the splitter area
-        this.htmlContainer.append(html);
+        this.inputName = this.htmlParent.find('.inputDefinitionName');
 
         // add change handler for the name of the root type
-        this.htmlContainer.find('.inputDefinitionName').on('change', e => {
+        this.inputName.on('change', e => {
             this.mainType.definition.name = e.currentTarget.value;
             this.mainType.save();
         });
 
-        this.htmlTypeSchemaContainer = this.htmlContainer.find('.typeschemacontainer')
+        this.htmlTypeSchemaContainer = this.htmlParent.find('.typeschemacontainer')
 
         // add the tab control
-        this.htmlContainer.find('.model-source-tabs').tabs({
+        this.htmlParent.find('.model-source-tabs').tabs({
             activate: (e, ui) => {
-                const activeDefinition = this.mainType.definition;
                 if (ui.newPanel.hasClass('model-source-editor')) {
-                    this.viewSourceEditor.render(XML.prettyPrint(activeDefinition.toXML()));
+                    const xml = this.mainType ? XML.prettyPrint(this.mainType.xml) : '';
+                    this.viewSourceEditor.render(xml);
                 }
                 if (ui.newPanel.hasClass('json-schema-editor')) {
-                    this.jsonSchemaEditor.setValue(JSON.stringify(activeDefinition.toJSONSchema(), null, 2));
+                    const json = this.mainType ? JSON.stringify(this.mainType.json, undefined, 2) : '';
+                    this.jsonSchemaEditor.setValue(json);
                 }
             }
         });
 
-        this.htmlContainer.find('.model-source-tabs').tabs('enable', 1);
+        this.htmlParent.find('.model-source-tabs').tabs('enable', 1);
 
         //add the source part
-        this.viewSourceEditor = new ModelSourceEditor(this.htmlContainer.find('.model-source-tabs .model-source-editor'), this);
+        this.viewSourceEditor = new ModelSourceEditor(this.htmlParent.find('.model-source-tabs .model-source-editor'), this);
 
         //add the JSON Schema part
         this.createJSONSchemaEditor();
     }
 
-    /**
-     * 
-     * @param {TypeFile} file 
-     * @returns {LocalTypeDefinition}
-     */
-    registerLocalDefinition(file) {
-        if (!file) {
-            return;
-        }
-        if (!this.files[file.fileName]) {
-            this.files[file.fileName] = new LocalTypeDefinition(this, file);
-        }
-        return this.files[file.fileName];
-    }
-
-    /**
-     * 
-     * @param {String} typeRef 
-     * @returns {TypeDefinition}
-     */
-    getActiveDefinition(typeRef) {
-        return this.getLocalTypeDefinition(typeRef).definition;
-    }
-
-    /**
-     * 
-     * @param {String} typeRef 
-     * @returns {LocalTypeDefinition}
-     */
-    getLocalTypeDefinition(typeRef) {
-        return this.files[typeRef];
-    }
-
     createJSONSchemaEditor() {
         //add code mirror JSON style
-        this.jsonSchemaEditor = CodeMirrorConfig.createJSONEditor(this.htmlContainer.find('.model-source-tabs .json-schema-editor'));
+        this.jsonSchemaEditor = CodeMirrorConfig.createJSONEditor(this.htmlParent.find('.model-source-tabs .json-schema-editor'));
 
         /* Events for saving and keeping track of changes in the task model editor
         The model should only be saved when there is a change and the codemirror is blurred.
@@ -156,87 +106,58 @@ class TypeEditor {
         this.jsonSchemaEditor.on('blur', () => {
             if (this._changed) {
                 //TODO Need to implement parsing changes in the JSON Schema:
-                // this.file['activeDefinition'].parseJSONSchema(JSON.parse(this.jsonSchemaEditor.getValue()));
-                // this.saveModel(this.file);
-                this.ide.warning('Parsing changes in JSON Schema not implemented');
+                this.ide.warning('Parsing changes in JSON Schema not implemented', 2000);
             }
         });
         this.jsonSchemaEditor.on('change', () => { this._changed = true; });
     }
 
-    delete() {
-        if (this.renderer) {
-            this.renderer.delete();
-        }
-        Util.removeHTML(this.htmlContainer);
-    }
-
-    render() {
-        // Render name and definitionType
-        this.htmlContainer.find('.inputDefinitionName').val(this.mainType.definition.name);
-        this.renderer = new SchemaRenderer(this, this.mainType, this.mainType.definition.schema, this.htmlTypeSchemaContainer);
-        this.renderer.render();
-    }
-
-    refresh() {
-        this.setMainType(this.file);
-    }
-
     onShow() {
         //always start with editor tab
-        this.htmlContainer.find('.model-source-tabs').tabs('option', 'active', 0);
-    }
-
-    loadModel() {
-        this.file.load(() => this.renderModel());
-        // this.renderModel();
-    }
-
-    renderModel() {
-        this.render();
-        this.visible = true;
-    }
-
-    /**
-     * handle the change of the source (in 2nd tab)
-     */
-    loadSource(newSource) {
-        this.file.source = newSource;
-        this.renderModel();
-        this.mainType.save(undefined);
+        this.htmlParent.find('.model-source-tabs').tabs('option', 'active', 0);
     }
 
     /**
      * 
      * @param {TypeFile} file 
      */
-    saveModel(file) {
-        file.source = this.getLocalTypeDefinition(file.fileName).definition.toXML();
-        file.save();
+    setMainType(file) {
+        // Clean current main type and renderer
+        this.mainType = undefined;
+        if (this.renderer) {
+            this.renderer.delete();
+            Util.clearHTML(this.htmlTypeSchemaContainer);
+            this.inputName.val('');
+        }
+
+        this.file = file;
+        if (file) {
+            this.mainType = new MainTypeDefinition(this, file);
+            // Render name and definitionType
+            this.htmlParent.find('.inputDefinitionName').val(this.mainType.definition.name);
+            this.renderer = new SchemaRenderer(this, this.htmlTypeSchemaContainer, this.mainType);
+            this.renderer.render();
+        }
+    }
+
+    delete() {
+        if (this.renderer) {
+            this.renderer.delete();
+        }
+        Util.removeHTML(this.htmlParent);
+    }
+
+    refresh() {
+        this.setMainType(this.file);
     }
 
     /**
-     * Registers a function handler that is invoked upon dropping an element.
-     * If an item from the editor is moved over the canvas, elements and form properties can register themselves as a drop handler
-     * @param {Function} dropHandler
-     * @param {Function} filter
+     * handle the change of the source (in 2nd tab)
      */
-    setDropHandler(dropHandler, filter = undefined) {
-        if (this.dragData) this.dragData.setDropHandler(dropHandler, filter);
-    }
-
-    /**
-     * Removes the active drop handler and filter
-     */
-    removeDropHandler() {
-        if (this.dragData) this.dragData.removeDropHandler();
-    }
-
-    /**
-     * 
-     * @param {DragData} dragData 
-     */
-    setDragData(dragData) {
-        this.dragData = dragData;
+    loadSource(newSource) {
+        if (this.file) {
+            this.file.source = newSource;
+            this.mainType.save(); // Saving the type will refresh the editor    
+        }
     }
 }

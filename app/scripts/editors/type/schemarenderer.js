@@ -7,7 +7,7 @@ class SchemaRenderer extends TypeRenderer {
      * @param {SchemaDefinition} schema 
      * @param {JQuery<HTMLElement>} htmlParent 
      */
-    constructor(parent, localType, schema, htmlParent) {
+    constructor(parent, htmlParent, localType, schema = localType.definition.schema) {
         super(parent, localType, schema, htmlParent);
         this.htmlContainer = htmlParent;
         this.schema = schema;
@@ -24,7 +24,7 @@ class SchemaRenderer extends TypeRenderer {
      * @param {SchemaPropertyDefinition} property 
      */
     addProperty(property) {
-        new PropertyRenderer(this, this.localType, property, this.htmlContainer).render();
+        new PropertyRenderer(this, this.htmlContainer, this.localType, property).render();
     }
 
     addEmptyProperty() {

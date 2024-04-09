@@ -66,14 +66,11 @@ class CaseTypeEditor {
      * @param {String} typeRef
      */
     set typeRef(typeRef) {
-        this.file =  /** @type {TypeFile} */ (this.ide.repository.get(typeRef));
-        this.case.caseDefinition.caseFile.typeRef = typeRef;
-        if (this.file) {
+        this.ide.repository.load(typeRef, file => {
+            this.file =  /** @type {TypeFile} */ (file);
+            this.case.caseDefinition.caseFile.typeRef = typeRef;
             this.typeEditor.setMainType(this.file);
-        } else {
-            Util.clearHTML(this.divTypeEditor);
-            this.typeEditor.generateHTML();
-        }
-        this.case.editor.completeUserAction();
+            this.case.editor.completeUserAction();    
+        });
     }
 }
