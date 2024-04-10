@@ -10,7 +10,8 @@ class CaseFileItemProperties extends Properties {
 
     renderData() {
         const caseFileItemId = this.cmmnElement.shape.cmmnElementRef ? this.cmmnElement.shape.cmmnElementRef : '';
-        const contextName = this.cmmnElement.case.getContextName(caseFileItemId);
+        const cfi = this.cmmnElement.case.caseDefinition.getElement(caseFileItemId);
+        const contextName = cfi ? cfi.name : '';
 
         const html = $(`<div class="zoomRow zoomDoubleRow" title="Drag/drop a case file item from the editor to change the reference">
                             <label class="zoomlabel">Case File Item</label>
@@ -19,19 +20,8 @@ class CaseFileItemProperties extends Properties {
                             <button class="removeReferenceButton" title="remove the reference to the case file item" />
                         </div>`);
         this.htmlContainer.append(html);
-                        
-        html.find('.zoombt').on('click', e => {
-            if (this.cmmnElement.case.caseDefinition.caseFile.typeRef) {
-                const zoomType = new ZoomTypeDialog(this.cmmnElement.case.editor.ide, this.cmmnElement.case.caseDefinition.caseFile.typeRef);
-                zoomType.showModalDialog(retVal => {
-                    if (retVal) {
-                        this.changeContextRef(html, retVal.property, retVal.path);
-                    }
-                });
-            } else {
-                this.cmmnElement.case.cfiEditor.open(cfi => this.changeContextRef(html, cfi));
-            }
-        });
+
+        html.find('.zoombt').on('click', e => this.cmmnElement.case.cfiEditor.open(cfi => this.changeContextRef(html, cfi)));
         html.find('.removeReferenceButton').on('click', e => this.changeContextRef(html));
         html.on('pointerover', e => {
             e.stopPropagation();
@@ -44,15 +34,13 @@ class CaseFileItemProperties extends Properties {
         this.addIdField();
     }
 
-    changeContextRef(html, newContextRef = undefined, path = undefined) {
-        // const cfiName = newContextRef ? newContextRef.name : '';
-        const cfiId = path ? path : (newContextRef ? newContextRef.id : undefined);
-        this.cmmnElement.setDefinition(newContextRef);
-        if (path) {
-            // Compatibility Workaround (as long we support both CaseFileItem and Type
-            this.cmmnElement.shape.cmmnElementRef = path;
-            this.cmmnElement.refreshText();
-        }
-        html.find('.valuelabel').html(this.cmmnElement.case.getContextName(cfiId));
+    /**
+     * @param {JQuery<HTMLElement>} html 
+     * @param {CaseFileItemDef} cfi 
+     */
+    changeContextRef(html, cfi = undefined) {
+        const cfiName = cfi ? cfi.name : '';
+        this.cmmnElement.setDefinition(cfi);
+        html.find('.valuelabel').html(cfiName);
     }
 }

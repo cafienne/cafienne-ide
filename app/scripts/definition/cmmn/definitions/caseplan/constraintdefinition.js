@@ -5,6 +5,11 @@ class ConstraintDefinition extends UnnamedCMMNElementDefinition {
         this.contextRef = this.parseAttribute('contextRef');
     }
 
+    get contextName() {
+        const context = this.caseDefinition.getElement(this.contextRef);
+        return context ? context.name : '';
+    }
+
     createExportNode(parentNode, tagName) {
         super.createExportNode(parentNode, tagName, 'contextRef');
         if (this.expression) {

@@ -20,6 +20,14 @@ class CaseTypeEditor {
     }
 
     /**
+     * 
+     * @param {(CaseFileItemDef) => void} callback 
+     */
+    openDialog(callback) {
+        new ZoomTypeDialog(this).showModalDialog(cfi => cfi && callback(cfi));
+    }
+
+    /**
      * Deletes this editor
      */
     delete() {

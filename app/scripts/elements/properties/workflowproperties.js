@@ -41,8 +41,7 @@ class WorkflowProperties extends TaskProperties {
         const assignmentExpression = this.humanTaskDefinition.assignment;
         const ruleAvailable = assignmentExpression ? true : false;
         const contextRef = assignmentExpression ? assignmentExpression.contextRef : '';
-        //TODO: Fix async binding to external SchemaPropertyDefinition;  For now display a '> '
-        const contextName = this.case.getContextName(contextRef);
+        const contextName = contextRef ? this.cmmnElement.definition.caseDefinition.getElement(contextRef).name : '';
         const expressionBody = assignmentExpression ? assignmentExpression.body : '';
         const assignmentPresenceIdentifier = Util.createID();
         // const checked = ;
@@ -77,18 +76,9 @@ class WorkflowProperties extends TaskProperties {
         });
         html.find('textarea').on('change', e => this.change(this.humanTaskDefinition.assignment, 'body', e.target.value));
         html.find('.zoombt').on('click', e => {
-            if (this.cmmnElement.case.caseDefinition.caseFile.typeRef) {
-                const zoomType = new ZoomTypeDialog(this.cmmnElement.editor.ide, this.cmmnElement.case.caseDefinition.caseFile.typeRef);
-                zoomType.showModalDialog(retVal => {
-                    if (retVal) {
-                        this.change(this.humanTaskDefinition.assignment, 'contextRef', retVal.path);
-                    }
-                });
-            } else {
-                this.cmmnElement.case.cfiEditor.open(cfi => {
-                    this.change(this.humanTaskDefinition.assignment, 'contextRef', cfi.id);
-                });
-             }
+            this.cmmnElement.case.cfiEditor.open(cfi => {
+                this.change(this.humanTaskDefinition.assignment, 'contextRef', cfi.id);
+            });
         });
         html.find('.removeReferenceButton').on('click', e => {
             this.change(this.humanTaskDefinition.assignment, 'contextRef', undefined);
@@ -114,8 +104,7 @@ class WorkflowProperties extends TaskProperties {
         const dueDateExpression = this.humanTaskDefinition.dueDate;
         const ruleAvailable = dueDateExpression ? true : false;
         const contextRef = dueDateExpression ? dueDateExpression.contextRef : '';
-        //TODO: Fix async binding to external SchemaPropertyDefinition;  For now display a '> '
-        const contextName = this.case.getContextName(contextRef);
+        const contextName = contextRef ? this.cmmnElement.definition.caseDefinition.getElement(contextRef).name : '';
         const expressionBody = dueDateExpression ? dueDateExpression.body : '';
         const assignmentPresenceIdentifier = Util.createID();
         // const checked = ;
@@ -150,18 +139,9 @@ class WorkflowProperties extends TaskProperties {
         });
         html.find('textarea').on('change', e => this.change(this.humanTaskDefinition.dueDate, 'body', e.target.value));
         html.find('.zoombt').on('click', e => {
-            if (this.cmmnElement.case.caseDefinition.caseFile.typeRef) {
-                const zoomType = new ZoomTypeDialog(this.cmmnElement.editor.ide, this.cmmnElement.case.caseDefinition.caseFile.typeRef);
-                zoomType.showModalDialog(retVal => {
-                    if (retVal) {
-                        this.change(this.humanTaskDefinition.dueDate, 'contextRef', retVal.path);
-                    }
-                });
-            } else {
-                this.cmmnElement.case.cfiEditor.open(cfi => {
-                    this.change(this.humanTaskDefinition.dueDate, 'contextRef', cfi.id);
-                });
-             }
+            this.cmmnElement.case.cfiEditor.open(cfi => {
+                this.change(this.humanTaskDefinition.dueDate, 'contextRef', cfi.id);
+            });
         });
         html.find('.removeReferenceButton').on('click', e => {
             this.change(this.humanTaskDefinition.dueDate, 'contextRef', undefined);

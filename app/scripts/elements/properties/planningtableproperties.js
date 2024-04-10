@@ -87,7 +87,7 @@ class ApplicabilityRuleProperties {
         const name = rule ? rule.name : '';
         const body = rule ? rule.body : '';
 
-        const context = rule ? this.cmmnElement.case.getContextName(rule.contextRef) : '';
+        const context = rule ? rule.contextName : '';
         const html = $(`<tr class="applicability-rule">
             <td title="Delete this rule from the table">
                 <button class="btnDelete delete-rule"><img src="images/delete_32.png" /></button>
@@ -121,18 +121,9 @@ class ApplicabilityRuleProperties {
         });
 
         html.find('.zoombt').on('click', e => {
-            if (this.cmmnElement.case.caseDefinition.caseFile.typeRef) {
-                const zoomType = new ZoomTypeDialog(this.cmmnElement.editor.ide, this.cmmnElement.case.caseDefinition.caseFile.typeRef);
-                zoomType.showModalDialog(retVal => {
-                    if (retVal) {
-                        this.change(this.getRule(), 'contextRef', retVal.path);
-                    }
-                });
-            } else {
-                this.cmmnElement.case.cfiEditor.open(cfi => {
-                    this.change(this.getRule(), 'contextRef', cfi.id);
-                });
-            }
+            this.cmmnElement.case.cfiEditor.open(cfi => {
+                this.change(this.getRule(), 'contextRef', cfi.id);
+            });
         });
         html.find('.zoomRow').on('pointerover', e => {
             e.stopPropagation();

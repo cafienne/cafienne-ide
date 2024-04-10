@@ -66,7 +66,7 @@
 
     /**
      * 
-     * @param {CaseFileItemDef|SchemaPropertyDefinition} definition 
+     * @param {CaseFileItemDef} definition 
      */
     setDefinition(definition) {
         this.definition = definition ? definition : CaseFileItemDef.createEmptyDefinition(this.case.caseDefinition);
@@ -84,7 +84,7 @@
     }
 
     get text() {
-        return this.case.getContextName(this.shape.cmmnElementRef);
+        return this.definition ? this.definition.name : '';
     }
 
     /**

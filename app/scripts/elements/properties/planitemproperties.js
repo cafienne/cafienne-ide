@@ -23,7 +23,7 @@ class PlanItemProperties extends Properties {
         const rule = element.planItemControl ? element.planItemControl[ruleName] : undefined;
         const ruleAvailable = rule ? true : false;
         const contextRef = rule ? rule.contextRef : '';
-        const contextName = contextRef ? this.case.getContextName(contextRef) : '';
+        const contextName = contextRef ? this.cmmnElement.definition.caseDefinition.getElement(contextRef).name : '';
         const ruleBody = rule ? rule.body : defaultValue;
         const ruleLanguage = rule && rule.hasCustomLanguage ? rule.language : '';
         const nonDefaultLanguage = rule && rule.hasCustomLanguage ? ' custom-language' : '';
@@ -92,18 +92,9 @@ class PlanItemProperties extends Properties {
         });
         html.find('textarea').on('change', e => this.change(this.cmmnElement.definition.itemControl.getRule(ruleName), 'body', e.target.value))
         html.find('.zoombt').on('click', e => {
-            if (this.cmmnElement.case.caseDefinition.caseFile.typeRef) {
-                const zoomType = new ZoomTypeDialog(this.case.editor.ide, this.case.caseDefinition.caseFile.typeRef);
-                zoomType.showModalDialog(retVal => {
-                    if (retVal) {
-                        this.change(this.cmmnElement.definition.itemControl.getRule(ruleName), 'contextRef', retVal.path);
-                    }
-                });
-            } else {
-                this.cmmnElement.case.cfiEditor.open(cfi => {
-                    this.change(this.cmmnElement.definition.itemControl.getRule(ruleName), 'contextRef', cfi.id);
-                });
-            }
+            this.cmmnElement.case.cfiEditor.open(cfi => {
+                this.change(this.cmmnElement.definition.itemControl.getRule(ruleName), 'contextRef', cfi.id);
+            });
         });
         html.find('.removeReferenceButton').on('click', e => {
             this.change(this.cmmnElement.definition.itemControl.getRule(ruleName), 'contextRef', undefined);

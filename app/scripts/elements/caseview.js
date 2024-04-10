@@ -78,7 +78,7 @@
 
 
             const getDefinition = shape => {
-                const element = this.getContextDefinition(shape.cmmnElementRef);
+                const element = caseDefinition.getElement(shape.cmmnElementRef);
                 if (element) {
                     return element;
                 } else {
@@ -91,15 +91,14 @@
                     return emptyCaseFileItem;
                 }
             }
-            // Now render the "loose" shapes (textboxes and casefileitems) in the appropriate parent stage
-            /** @type {Array<StageView>} */
-            const stages = this.items.filter(element => element instanceof StageView);
+            // Now render the "loose" shapes (textboxes and casefileitems) in the appropriate parent stage            
+            const stages = /** @type {Array<StageView>} */ (this.items.filter(element => element instanceof StageView));
             this.diagram.shapes.forEach(shape => {
                 const definitionElement = getDefinition(shape);
                 // Only take the textboxes and case file items, not the other elements, as they are rendered from caseplanmodel constructor.
-                if (definitionElement instanceof CaseFileItemDef || definitionElement instanceof TextAnnotationDefinition || definitionElement instanceof SchemaPropertyDefinition) {
+                if (definitionElement instanceof CaseFileItemDef || definitionElement instanceof TextAnnotationDefinition) {
                     const parent = this.getSurroundingStage(stages, shape);
-                    if (definitionElement instanceof CaseFileItemDef || definitionElement instanceof SchemaPropertyDefinition) {
+                    if (definitionElement instanceof CaseFileItemDef) {
                         parent.__addCMMNChild(new CaseFileItemView(parent, definitionElement, shape));
                     } else if (definitionElement instanceof TextAnnotationDefinition) {
                         parent.__addCMMNChild(new TextAnnotationView(parent, definitionElement, shape)); 
@@ -575,32 +574,6 @@
      */
     getCaseFileItemElement(caseFileItemID) {
         return this.items.find(item => item instanceof CaseFileItemView && item.id == caseFileItemID);
-    }
-
-    /**
-     * Data binding definition to internal or external type definition
-     * @param {string} ref id(internal refs) or path (external refs)
-     * @returns {CaseFileItemDef|SchemaPropertyDefinition} internal {CaseFileItemDef} or external {SchemaPropertyDefinition}
-     */
-    getContextDefinition(ref) {
-        return /** @type {CaseFileItemDef} */ (this.caseDefinition.getElement(ref));
-    }
-
-    /**
-     * Data binding name to internal or external type definition
-     * @param {string} ref id(internal refs) or path (external refs)
-     * @returns {string} name of internal {CaseFileItemDef} or external {SchemaPropertyDefinition}
-     */
-    getContextName(ref) {
-        const definition = this.getContextDefinition(ref);
-        if (definition instanceof CaseFileItemDef) {
-            return definition.name;
-        } else if (definition instanceof SchemaPropertyDefinition) {
-            return `> ${definition.name}`; // for valid refs
-        } else if (ref) {
-            return `* ${ref}`; // for invalid refs
-        }
-        return '';
     }
 
     switchLabels() {

@@ -37,12 +37,13 @@ class CaseFileEditor {
     }
 
     /**
-     * Opens the editor form.
-     * @param {Function} callback 
+     * @param {(CaseFileItemDef) => void} callback 
      */
     open(callback = undefined) {
         if (this.usesOldEditor) {
             this.classicEditor.open(callback);
+        } else {
+            this.typeEditor.openDialog(callback);
         }
     }
 
