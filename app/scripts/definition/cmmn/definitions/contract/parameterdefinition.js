@@ -8,10 +8,10 @@ class ParameterDefinition extends CMMNElementDefinition {
     }
 
     /**
-     * @returns {CaseFileItemDef|SchemaPropertyDefinition}
+     * @returns {CaseFileItemDef}
      */
     get binding() {
-        return /** @type {CaseFileItemDef} */ (this.caseDefinition.getElement(this.bindingRef, CaseFileItemDef)) || SchemaPropertyDefinition.getSchemaPropertyFromCache(this.bindingRef);
+        return /** @type {CaseFileItemDef} */ (this.caseDefinition.getElement(this.bindingRef, CaseFileItemDef));
     }
 
     get bindingName() {

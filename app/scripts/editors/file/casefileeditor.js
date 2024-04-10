@@ -30,10 +30,6 @@ class CaseFileEditor {
         return this.case.caseDefinition.caseFile.isOldStyle;
     }
 
-    getElement(path) {
-        return this.typeEditor.typeEditor.getSchemaPropertyDefinitionWithPath(path);
-    }
-
     showUsedIn() {
         if (this.usesOldEditor) {
             this.classicEditor.showUsedIn();

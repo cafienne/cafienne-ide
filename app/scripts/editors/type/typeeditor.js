@@ -256,13 +256,4 @@ class TypeEditor {
     setDragData(dragData) {
         this.dragData = dragData;
     }
-
-    /**
-     * 
-     * @param {string} path
-     * @returns {SchemaPropertyDefinition} 
-     */
-    getSchemaPropertyDefinitionWithPath(path) {
-        return SchemaPropertyDefinition.getSchemaPropertyFromCache(path);
-    }
 }

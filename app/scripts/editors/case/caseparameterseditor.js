@@ -155,7 +155,7 @@ class ParameterRow extends RowRenderer {
 
     /**
      * 
-     * @param {CaseFileItemDef|SchemaPropertyDefinition} newBinding 
+     * @param {CaseFileItemDef} newBinding 
      */
     changeBindingRef(newBinding, id = newBinding.id) {
         if (! this.parameterName) {

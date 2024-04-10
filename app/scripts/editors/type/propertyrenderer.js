@@ -132,7 +132,6 @@ class PropertyRenderer extends TypeRenderer {
             this.property.isNew = false;
             const schema = /** @type {SchemaDefinition} */ (this.property.parent);
             schema.properties.push(this.property);
-            SchemaPropertyDefinition.setSchemaPropertyCache(this.property, this.path);
             this.parent.addEmptyProperty();
         }
         if (oldPropertyValue != propertyValue) {

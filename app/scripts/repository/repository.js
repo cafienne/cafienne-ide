@@ -107,6 +107,35 @@ class Repository {
         return new HumanTaskFile(this, fileName, source);        
     }
 
+    getDefinition(fileName) {
+        const file = this.list.find(file => file.fileName === fileName);
+        if (file) {
+            return file.definition;
+        } else {
+            return undefined;
+        }
+    }
+
+    getTypeDefinition(fileName) {
+        return /** @type {TypeDefinition} */ (this.getDefinition(fileName));
+    }
+
+    getCaseDefinition(fileName) {
+        return /** @type {CaseDefinition} */ (this.getDefinition(fileName));
+    }
+
+    getDimensionsFileDefinition(fileName) {
+        return /** @type {Dimensions} */ (this.getDefinition(fileName));
+    }
+
+    getProcessDefinition(fileName) {
+        return /** @type {ProcessModelDefinition} */ (this.getDefinition(fileName));
+    }
+
+    getHumanTaskDefinition(fileName) {
+        return /** @type {HumanTaskModelDefinition} */ (this.getDefinition(fileName));
+    }
+
     /**
      * Returns the list of case file item definitions in the repository
      * @returns {Array<CFIDFile>}

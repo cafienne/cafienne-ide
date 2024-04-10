@@ -27,7 +27,7 @@
     /**
      * Creates a new CaseFileItemView
      * @param {StageView} parent 
-     * @param {CaseFileItemDef|SchemaPropertyDefinition} definition 
+     * @param {CaseFileItemDef} definition 
      * @param {ShapeDefinition} shape 
      */
     constructor(parent, definition, shape) {
@@ -42,11 +42,7 @@
     }
 
     get id() {
-        if (this.definition instanceof CaseFileItemDef) {
-            return this.definition.id;
-        } else if (this.definition instanceof SchemaPropertyDefinition) {
-            return this.shape.cmmnElementRef;
-        }
+        return this.definition.id;
     }
 
     createProperties() {

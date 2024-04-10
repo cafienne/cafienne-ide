@@ -583,7 +583,7 @@
      * @returns {CaseFileItemDef|SchemaPropertyDefinition} internal {CaseFileItemDef} or external {SchemaPropertyDefinition}
      */
     getContextDefinition(ref) {
-        return (/** @type {CaseFileItemDef} */ (this.caseDefinition.getElement(ref)) || this.cfiEditor.getElement(ref));
+        return /** @type {CaseFileItemDef} */ (this.caseDefinition.getElement(ref));
     }
 
     /**

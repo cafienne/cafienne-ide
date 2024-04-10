@@ -1,19 +1,4 @@
 class SchemaPropertyDefinition extends ReferableElementDefinition {
-    /**
-     * @returns {Array<String>} List of the possible events/transitions on a schema property
-     */
-    static get transitions() {
-        return ['', 'addChild', 'addReference', 'create', 'delete', 'removeChild', 'removeReference', 'replace', 'update'];
-    }
-
-    /**
-    * Returns the default transition for this schema property.
-    * @returns {String}
-    */
-    get defaultTransition() {
-        return 'create';
-    }
-
     constructor(importNode, modelDefinition, parent) {
         super(importNode, modelDefinition, parent);
         this.name = this.parseAttribute('name', '');
@@ -25,7 +10,6 @@ class SchemaPropertyDefinition extends ReferableElementDefinition {
             /** @type {SchemaDefinition} */
             this.schema = this.parseElement(SchemaDefinition.TAG, SchemaDefinition);
         }
-        SchemaPropertyDefinition.setSchemaPropertyCache(this, this.id);
     }
 
     hasExternalReferences() {
@@ -49,28 +33,6 @@ class SchemaPropertyDefinition extends ReferableElementDefinition {
 
     static get prefix() {
         return 'sp';
-    }
-
-    static schemaPropertyCache = new Map();
-
-    /**
-     * 
-     * @param {string} id 
-     * @returns {SchemaPropertyDefinition}
-     */
-    static getSchemaPropertyFromCache(id) {
-        return SchemaPropertyDefinition.schemaPropertyCache.get(id);
-    }
-
-    /**
-     * 
-     * @param {SchemaPropertyDefinition} property 
-     * @param {string} id 
-     */
-    static setSchemaPropertyCache(property, id) {
-        if (property && id) {
-            this.schemaPropertyCache.set(id, property);
-        }
     }
 
     /** @param {string} newType */
