@@ -8,12 +8,7 @@ class CaseModelEditor extends ModelEditor {
     constructor(file) {
         super(file);
         this.file = file;
-        this.caseFile = file;
-        this.caseFileName = this.fileName;
-        this.dimensionsFile = this.ide.repository.getDimensions().find(file => file.name === this.file.name);
-        this.dimensionsFileName = this.file.name + '.dimensions';
         this.ideCaseFooter = $('.ideCaseFooter');
-
         this.undoManager = new UndoManager(this);
 
         // Upon clicking the case footer's validation label, render the validateform of the case (if a case is there)
@@ -24,27 +19,28 @@ class CaseModelEditor extends ModelEditor {
         return 'Edit Case Model - ' + this.fileName;
     }
 
+    get caseFile() {
+        return this.file;
+    }
+
+    get dimensionsFile() {
+        return this.file.definition.dimensions.file;
+    }
+
     /**
      * Loads the model and makes the editor visible
      */
     loadModel() {
-        this.ide.repository.load(this.fileName, file => {
-            const caseDefinition = file.definition;
-            this.ide.repository.load(this.dimensionsFileName, file => {
-                const dimensions = file.definition;
-                this.open(caseDefinition, dimensions)
-            });
-        });
+        this.open(this.file.definition);
     }
 
     /**
      * 
      * @param {CaseDefinition} caseDefinition 
-     * @param {Dimensions} dimensions 
      */
-    open(caseDefinition, dimensions) {
+    open(caseDefinition) {
         // Reset the undo manager.
-        this.undoManager.resetActionBuffer(caseDefinition, dimensions);
+        this.undoManager.resetActionBuffer(caseDefinition);
 
         // Now that the visualization information is available, we can start the import.
         this.loadDefinition();
@@ -55,13 +51,12 @@ class CaseModelEditor extends ModelEditor {
     /**
      * Imports the source and tries to visualize it
      * @param {CaseDefinition} caseDefinition 
-     * @param {Dimensions} dimensions 
      */
-    loadDefinition(caseDefinition = this.caseFile.definition, dimensions = this.dimensionsFile.definition) {
+    loadDefinition(caseDefinition = this.caseFile.definition) {
         // During import no live validation and storage of changes
         this.trackChanges = false;
 
-        this.migrateDefinitions(caseDefinition, dimensions);
+        this.migrateDefinitions(caseDefinition);
 
         // First, remove current case content; but without tracking changes...
         if (this.case) {
@@ -69,7 +64,7 @@ class CaseModelEditor extends ModelEditor {
         }
 
         // Create a new case renderer on the definition and dimensions
-        this.case = new CaseView(this, this.htmlContainer, caseDefinition, dimensions);
+        this.case = new CaseView(this, this.htmlContainer, caseDefinition);
 
         if (this.__migrated) {
             this.saveModel();
@@ -85,11 +80,10 @@ class CaseModelEditor extends ModelEditor {
     /**
      * Imports the source and tries to visualize it
      * @param {CaseDefinition} caseDefinition 
-     * @param {Dimensions} dimensions 
      */
-    migrateDefinitions(caseDefinition, dimensions) {
+    migrateDefinitions(caseDefinition) {
         this.__migrated = false;
-
+        const dimensions = caseDefinition.dimensions;
         dimensions.diagram.deprecatedCaseFileItems.forEach(casefileshape => {
             casefileshape.migrate();
             this.migrated(`Migrating casefileshape ${casefileshape.cmmnElementRef}`);
@@ -238,7 +232,7 @@ class CaseModelEditor extends ModelEditor {
     saveModel() {
         // Validate all models currently active in the ide
         if (this.case) this.case.runValidation();
-        this.undoManager.saveCaseModel(this.case.caseDefinition, this.case.dimensions);
+        this.undoManager.saveCaseModel(this.case.caseDefinition);
     }
 
     onShow() {

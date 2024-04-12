@@ -10,7 +10,7 @@ class HumanTaskDefinition extends TaskDefinition {
         /** @type {CafienneWorkflowDefinition} */
         this.workflow = this.parseImplementation(CafienneWorkflowDefinition);
     }
-    
+
     createExportNode(parentNode) {
         super.createExportNode(parentNode, 'humanTask', 'planningTable', 'performerRef', 'workflow');
     }
@@ -42,7 +42,7 @@ class HumanTaskDefinition extends TaskDefinition {
     }
 
     get mappings() {
-        if (! this.workflow) {
+        if (!this.workflow) {
             return [];
         }
         return this.workflow.mappings;

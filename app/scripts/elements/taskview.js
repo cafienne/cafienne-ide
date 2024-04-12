@@ -14,12 +14,12 @@
         //Define the mapping form to link task parameters with model parameters (case process humantask) 
         this.mappingsEditor = new TaskMappingsEditor(this);
 
-        // Now read the parameters of the model implementing this task
-        if (this.planItemDefinition.implementationRef) this.fetchTaskImplementation();
+        if (planItemDefinition.implementationRef && !planItemDefinition.implementationModel) {
+            this.editor.ide.warning(`Task ${this.definition.name} refers to '${planItemDefinition.implementationRef}', but that file does not exist`, 20000);
+        }
     }
 
     showMappingsEditor() {
-        this.fetchTaskImplementation();
         this.mappingsEditor.show();
     }
 
@@ -89,22 +89,12 @@
      * @param {Boolean} updateTaskName 
      */
     changeTaskImplementation(model, updateTaskName = false) {
-        if (this.planItemDefinition.implementationRef == model.fileName) {
+        const fileName = model.fileName;
+        if (this.planItemDefinition.implementationRef == fileName) {
             // no need to change. Perhaps re-generate parameters??? Better give a separate button for that ...
             return;
         }
-        this.fetchTaskImplementation(true, model.fileName, updateTaskName, true);
-    }
 
-    /**
-     * Fetches the file with the specified name from the repository, and associates it with this task through
-     * the specified callback function
-     * @param {Boolean} saveChanges - Indicates whether any newly generated information must be stored immediately or not. 
-     * @param {String} fileName The (relative) URL to the file to be loaded
-     * @param {Boolean} updateTaskName Indicates whether the TaskView name should be modified to match the information inside the implementation.
-     * @param {Boolean} showProperties Indicates to open the properties view after the new information is rendered and received.
-     */
-    fetchTaskImplementation(saveChanges = false, fileName = this.planItemDefinition.implementationRef, updateTaskName = false, showProperties = false) {
         // Now, read the file, and update the information in the task parameters.
         this.case.editor.ide.repository.load(fileName, file => {
             const model = file.definition;
@@ -127,11 +117,11 @@
             this.planItemDefinition.setImplementation(fileName, model);
 
             // Make sure to save changes if any.
-            if (saveChanges) this.case.editor.completeUserAction();
+            this.case.editor.completeUserAction();
 
             // Now refresh the renderers and optionally the propertiesmenu.
             this.mappingsEditor.refresh();
-            if (showProperties) this.propertiesView.show(true);
+            this.propertiesView.show(true);
         });
     }
 

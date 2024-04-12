@@ -235,7 +235,6 @@ class ModelEditor {
     }
 
     refresh() {
-        this.file.clear();
-        this.loadModel();
+        this.file.reloadEditor();
     }
 }

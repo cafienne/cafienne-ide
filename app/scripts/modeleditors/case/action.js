@@ -3,17 +3,16 @@ class Action {
      * 
      * @param {UndoManager} undoManager 
      * @param {CaseDefinition} caseDefinition 
-     * @param {Dimensions} dimensions 
      * @param {Action} previousAction
      */
-    constructor(undoManager, caseDefinition, dimensions, previousAction) {
+    constructor(undoManager, caseDefinition, previousAction) {
         // console.log("Creating new action with dimensions: ", dimensions)
         this.undoManager = undoManager;
         this.repository = undoManager.editor.ide.repository;
         this.caseString = XML.prettyPrint(caseDefinition.toXML());
-        this.dimensionsString = XML.prettyPrint(dimensions.toXML());
-        this.caseFile = undoManager.editor.caseFile;
-        this.dimensionsFile = undoManager.editor.dimensionsFile;
+        this.dimensionsString = XML.prettyPrint(caseDefinition.dimensions.toXML());
+        this.caseFile = caseDefinition.file;
+        this.dimensionsFile = caseDefinition.dimensions.file;
         this.caseChanged = false;
         this.dimensionsChanged = false;
         this.previousAction = previousAction;
@@ -91,13 +90,17 @@ class Action {
         // console.log("Performing "+direction+" on action "+this.undoCount )
         this.undoManager.performingBufferAction = true;
         // Parse the sources again into a definition and load that in the editor.
+        this.caseFile.clear();        
         this.caseFile.source = this.caseString;
         this.dimensionsFile.source = this.dimensionsString;
-        this.undoManager.editor.loadDefinition(this.caseFile.definition, this.dimensionsFile.definition);
-        // Reset the "saved" flag.
-        this.saved = false;
-        this.save(caseChanged, dimensionsChanged);
-        this.undoManager.performingBufferAction = false;
+        this.caseFile.parse(() => {
+            this.undoManager.editor.loadDefinition(this.caseFile.definition);
+            // Reset the "saved" flag.
+            this.saved = false;
+            this.save(caseChanged, dimensionsChanged);
+            this.undoManager.performingBufferAction = false;
+        })
+
         return this;
     }
 

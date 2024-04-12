@@ -12,6 +12,7 @@ class ServerFile {
         this.repository = repository;
         this.ide = this.repository.ide;
         this.fileName = fileName;
+        this.references = new ServerFileReferences(this);
         this.content = new Content(this);
         this.source = source;
     }
@@ -24,16 +25,44 @@ class ServerFile {
         return false;
     }
 
-    /** @returns {ModelDefinition} */
+    /**
+     * Note: this method is private/protected
+     *  @returns {ModelDefinition}
+     */
     createDefinition() {
         throw new Error('This method must be implemented in ' + this.constructor.name);
     }
 
     /**
+     * Note: this method is private/protected
      * @returns {ModelEditor}
      */
     createEditor() {
         throw new Error('This method must be implemented in ' + this.constructor.name);
+    }
+
+    loadEditor() {
+        this.loading = true;
+        this.load(() => {
+            console.groupCollapsed(`Creating editor for ${this.fileName}`);
+            this.editor = this.createEditor();
+            console.groupEnd();
+            console.groupCollapsed(`Loading model ${this.fileName} in editor`);
+            this.editor.loadModel();
+            console.groupEnd();
+        });
+    }
+
+    reloadEditor() {
+        console.groupCollapsed(`Reloading editor of ${this.fileName}`);
+        this.clear();
+        this.load(() => {
+            console.groupCollapsed("After clearing and loading now asking editor to loadModel " + this.fileName)
+            this.editor.loadModel();
+            console.groupEnd();
+            console.log(`Finished reload editor of ${this.fileName}`);
+            console.groupEnd();
+        });
     }
 
     get fileName() {
@@ -80,6 +109,9 @@ class ServerFile {
     }
 
     set source(source) {
+        if (source === undefined) {
+            console.log("Clearing source " + this.fileName)
+        }
         this.content.source = source;
     }
 
@@ -109,10 +141,16 @@ class ServerFile {
      * Removes local content caches, in order to enforce reloading of the file when it's content is read.
      */
     clear() {
-        if (this.source) {
-            console.warn(`Clearing the contents of ${this.fileName}`);
+        if (this.clearing) {
+            return;
         }
+        console.group(`Clearing the contents of ${this.fileName} and ${this.references.size} referenced files`);
+        this.clearing = true;
         this.source = undefined;
+        this.references.clear();
+        console.log("Completed clearing, now having only " + this.references.size + " references")
+        this.clearing = false;
+        console.groupEnd();
     }
 
     /**
@@ -141,7 +179,8 @@ class ServerFile {
                     this.ide.info(msg);
                 } else {
                     this.source = data;
-                    callback(this);
+                    console.log(`Parsing ${this.fileName} during fetch`)
+                    this.parse(() => callback(this));
                 }
             },
             error: (xhr, error, eThrown) => {
@@ -153,16 +192,38 @@ class ServerFile {
         });
     }
 
-    load(callback) {
+    parse(callback) {
         const file = this;
+        const definition = this.createDefinition();
+        this.content.definition = definition;
+        definition.parseDocument();
+        definition.validateDocument();
+        if (file.definition.hasMigrated()) {
+            console.log(`Definition of ${file.definition.constructor.name} '${file.fileName}' has migrated; uploading result`);
+            file.source = file.definition.toXML();
+            file.save();
+        }
+
+        console.groupCollapsed("Loading dependencies of " + this.fileName);
+        definition.loadDependencies(() => {
+            console.groupEnd();
+            callback()
+        });
+    }
+
+    /**
+     * 
+     * @param {(file: ServerFile) => void} callback 
+     */
+    load(callback) {
         this.fetch(_ => {
-            if (file.definition.hasMigrated()) {
-                console.log(`Definition of ${file.definition.constructor.name} '${file.fileName}' has migrated; uploading result`);
-                file.source = file.definition.toXML();
-                file.save();
+            if (!this.definition) {
+                console.log(`Parsing ${this.fileName} upon loading`)
+                this.parse(() => callback(this))
+            } else {
+                callback(this);
             }
-            callback(file);
-        })
+        });
     }
 
     /**
@@ -257,10 +318,60 @@ class ServerFile {
             }
         });
     }
+
+    /**
+     * 
+     * @param {String} fileName 
+     * @param {(file: ServerFile|undefined) => void} callback
+     */
+    loadReference(fileName, callback) {
+        this.references.load(fileName, callback);
+    }
 }
 
 class ServerFileWithEditor extends ServerFile {
     get hasModelEditor() {
         return true;
+    }
+}
+
+class ServerFileReferences {
+    /**
+     * 
+     * @param {ServerFile} file 
+     */
+    constructor(file) {
+        this.source = file;
+        /** @type {Array<ServerFile>} */
+        this.references = [];
+    }
+
+    get size() {
+        return this.references.length;
+    }
+
+    clear() {
+        this.references.forEach(file => file.clear());
+        this.references = [];
+    }
+
+    /**
+     * 
+     * @param {String} fileName 
+     * @param {(file: ServerFile|undefined) => void} callback
+     * @returns 
+     */
+    load(fileName, callback) {
+        const file = this.references.find(file => file.fileName === fileName);
+        if (file) {
+            callback(file);
+        } else {
+            this.source.repository.load(fileName, file => {
+                if (file) {
+                    this.references.push(file);
+                }
+                callback(file);
+            });    
+        }
     }
 }

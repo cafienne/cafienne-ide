@@ -22,7 +22,30 @@ class ModelDefinition extends ReferableElementDefinition {
         this.parseElementProperties();
     }
 
-    validateDocument() {        
+    validateDocument() {
+    }
+
+    /**
+     * Asynchronously load all external references that this definition has.
+     * @param {() => void} callback 
+     */
+    loadDependencies(callback) {
+        const referencingElements = this.elements.filter(element => element.hasExternalReferences());
+        const referencesPending = [...referencingElements];
+        if (referencesPending.length === 0) {
+            console.log(`${this.file.fileName} has no external dependencies`);
+            callback();
+        } else {
+            console.log(`${this.file.fileName} has ${referencingElements.length} elements with external dependencies (out of ${this.elements.length} elements)`);
+            referencingElements.forEach(element => {
+                element.loadExternalReferences(() => {
+                    Util.removeFromArray(referencesPending, element);
+                    if (referencesPending.length === 0) {
+                        callback();
+                    }
+                })
+            });                
+        }
     }
 
     /**

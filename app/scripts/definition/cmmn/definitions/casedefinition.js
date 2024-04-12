@@ -28,6 +28,17 @@ class CaseDefinition extends ModelDefinition {
         this.defaultExpressionLanguage = this.parseAttribute('expressionLanguage', 'spel');
     }
 
+    hasExternalReferences() {
+        return true;
+    }
+
+    loadExternalReferences(callback) {
+        this.resolveExternalDefinition(this.file.name + ".dimensions", definition => {            
+            this.dimensions = /** @type {Dimensions} */ (definition);
+            callback();
+        });
+    }
+
     validateDocument() {
         this.elements.forEach(element => element.resolveReferences());
     }

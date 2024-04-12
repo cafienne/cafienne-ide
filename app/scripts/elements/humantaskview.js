@@ -31,7 +31,7 @@ class HumanTaskView extends TaskView {
     }
 
     getImplementationList() {
-        return ide.repository.getHumanTasks();
+        return this.case.editor.ide.repository.getHumanTasks();
     }
 
     createProperties() {

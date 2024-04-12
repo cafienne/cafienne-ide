@@ -11,10 +11,11 @@ class Content {
     }
 
     set source(source) {
+        this._source = source;
         // If we get a new source, flatten and parse it, and also remove the existing definition
         const serializedNewSource = this.serialize(source);
         if (serializedNewSource !== this.serialized) { // It's a real change
-            this._source = source;
+            console.log("Clearing definition " + this.file.fileName)
             this._definition = undefined;
             this._serialized = serializedNewSource;
             this._deserialized = undefined;
@@ -77,11 +78,6 @@ class Content {
 
     /** @type {ModelDefinition} */
     get definition() {
-        if (!this._definition) {
-            this._definition = this.file.createDefinition();
-            this._definition.parseDocument();
-            this._definition.validateDocument();
-        }
         return this._definition;
     }
 

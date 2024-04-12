@@ -22,10 +22,34 @@ class TaskDefinition extends TaskStageDefinition {
     }
 
     /**
+     * @returns {ModelDefinition}
+     */
+    get implementationModel() {
+        return this._implementationModel;
+    }
+
+    set implementationModel(taskImplementation) {
+        this._implementationModel = taskImplementation;
+    }
+
+    hasExternalReferences() {
+        return this.implementationRef !== undefined && this.implementationRef !== '';
+    }
+
+    loadExternalReferences(callback) {
+        this.resolveExternalDefinition(this.implementationRef, definition => {
+            if (definition) {
+                this.setImplementation(this.implementationRef, definition);
+            }
+            callback();
+        });
+    }
+
+    /**
      * @returns {Array<ParameterMappingDefinition>}
      */
     get mappings() {
-        if (! this._mappings) {
+        if (!this._mappings) {
             this._mappings = [];
         }
         return this._mappings;
@@ -202,7 +226,7 @@ class TaskDefinition extends TaskStageDefinition {
         this.implementationModel.outputParameters.forEach(parameter => this.createOutputMapping(parameter));
         // Show a message if we've generated new parameters
         if (this.mappings.length > 0) {
-            ide.info('Generated task parameters for ' + this.name, 2000);
+            this.modelDefinition.file.repository.ide.info('Generated task parameters for ' + this.name, 2000);
 
         }
     }
@@ -213,6 +237,7 @@ class TaskDefinition extends TaskStageDefinition {
      * @param {ModelDefinition} implementationModel 
      */
     setImplementation(implementationRef, implementationModel) {
+        console.log("Setting IM to : " + implementationModel.constructor.name)
         this.hasImplementation = true;
         this.implementationModel = implementationModel;
 

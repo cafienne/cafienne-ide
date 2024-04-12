@@ -368,9 +368,30 @@ class XMLElementDefinition {
     /**
      * Basic method invoked on an element after the entire XML tree has been parsed.
      * Can be used to resolve string based references to other elements.
-     * @deprecated - belongs in elements/view layer, rather than in definitions layer
      */
     resolveReferences() { }
+
+    hasExternalReferences() {
+        return false;
+    }
+
+    loadExternalReferences(callback) {
+        callback();
+    }
+
+    /**
+     * Asynchronously load a ModelDefinition
+     * @param {String} fileName 
+     * @param {(definition: ModelDefinition|undefined) => void} callback
+     */
+    resolveExternalDefinition(fileName, callback) {
+        console.groupCollapsed(`${this.constructor.name}${this.name ? '[' + this.name + ']' : ''} needs to load '${fileName}'`);
+
+        this.modelDefinition.file.loadReference(fileName, file => {
+            console.groupEnd();
+            callback(file ? file.definition : undefined)
+        });
+    }
 
     /**
      * Exports the IDs of all elements in the list (that have an id) into a space-separated string

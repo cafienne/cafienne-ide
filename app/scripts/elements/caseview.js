@@ -4,18 +4,17 @@
      * @param {CaseModelEditor} editor
      * @param {JQuery<HTMLElement>} htmlParent
      * @param {CaseDefinition} caseDefinition 
-     * @param {Dimensions} dimensions 
      */
-    constructor(editor, htmlParent, caseDefinition, dimensions) {
+    constructor(editor, htmlParent, caseDefinition) {
         const now = new Date();
         this.editor = editor;
         this.editor.case = this; // Quick hack to have inline editors have access to the case in their constructor
-        this.dimensions = dimensions;
-        this.diagram = dimensions.diagram;
         this.caseDefinition = caseDefinition;
         this.id = this.caseDefinition.id;
         this.name = this.caseDefinition.name;
         this.case = this;
+        this.dimensions = caseDefinition.dimensions;
+        this.diagram = this.dimensions.diagram;
         this.htmlParent = htmlParent;
 
         this.html = $(
@@ -134,7 +133,7 @@
         });
 
         const end = new Date();
-        console.log('Case loaded in ' + ((end - now) / 1000) + ' seconds')
+        console.log(`Case '${this.caseDefinition.file.fileName}' loaded in ${((end - now) / 1000)} seconds`)
     }
 
     onShow() {

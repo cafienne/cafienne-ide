@@ -217,13 +217,6 @@ class HumantaskModelEditor extends ModelEditor {
     }
 
     loadModel() {
-        this.file.load(() => this.renderModel());
-    }
-
-    /**
-     * 
-     */
-    renderModel() {
         this._model = this.file.definition;
         this.render();
         this.visible = true;
@@ -234,7 +227,7 @@ class HumantaskModelEditor extends ModelEditor {
      */
     loadSource(source) {
         this.file.source = source;
-        this.renderModel();
+        this.loadModel();
         this.saveModel();
     }
 

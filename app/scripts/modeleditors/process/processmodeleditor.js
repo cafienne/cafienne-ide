@@ -202,12 +202,6 @@ class ProcessModelEditor extends ModelEditor {
     }
 
     loadModel() {
-        this.file.load(() => this.renderModel());
-    }
-
-    /**
-     */
-    renderModel() {
         this._model = this.file.definition;
         this.render();
         this.visible = true;
@@ -218,7 +212,7 @@ class ProcessModelEditor extends ModelEditor {
      */
     loadSource(newSource) {
         this.file.source = newSource;
-        this.renderModel();
+        this.loadModel();
         this.saveModel();
     }
 

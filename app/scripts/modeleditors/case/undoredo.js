@@ -15,14 +15,13 @@ class UndoManager {
      * Clears the action buffer, and prepares it for the new content.
      * This typically only happens when we open a new case model
      * @param {CaseDefinition} caseDefinition 
-     * @param {Dimensions} dimensions 
      */
-    resetActionBuffer(caseDefinition, dimensions) {
+    resetActionBuffer(caseDefinition) {
         this.performingBufferAction = false;
         this.currentAction = null;
 
         // First action is to add what we have to the undo/redo buffer.
-        this.addCaseAction(caseDefinition, dimensions);
+        this.addCaseAction(caseDefinition);
     }
 
     get currentAction() {
@@ -39,11 +38,10 @@ class UndoManager {
     /**
      * Save model and upload to server; but only if there are new changes.
      * @param {CaseDefinition} caseDefinition 
-     * @param {Dimensions} dimensions 
      * @param {Boolean} forceSave Saving case model is only done on the changes with respect to the previous save action. For creating a new model we have to forcefully save.
      */
-    saveCaseModel(caseDefinition, dimensions, forceSave = false) {
-        const newAction = this.addCaseAction(caseDefinition, dimensions);
+    saveCaseModel(caseDefinition, forceSave = false) {
+        const newAction = this.addCaseAction(caseDefinition);
         if (newAction) {
             if (forceSave) {
                 newAction.forceSave();
@@ -59,9 +57,8 @@ class UndoManager {
     /**
      * 
      * @param {CaseDefinition} caseDefinition 
-     * @param {Dimensions} dimensions 
      */
-    addCaseAction(caseDefinition, dimensions) {
+    addCaseAction(caseDefinition) {
         if (this.performingBufferAction) {
             // This is not supposed to happen. But order of events and invocations is not so easy, so keeping it for safety reasons if you start changing this code
             console.warn('Adding case action while performing buffer action');
@@ -70,7 +67,7 @@ class UndoManager {
 
         // Creating a new action makes it also the current action.
         //  Note that the actual action may not resolve in changes, and in such a case, the currentAction will return itself and remain the same.
-        this.currentAction = new Action(this, caseDefinition, dimensions, this.currentAction);
+        this.currentAction = new Action(this, caseDefinition, this.currentAction);
         this.updateUndoRedoButtons();
         return this.currentAction;
     }

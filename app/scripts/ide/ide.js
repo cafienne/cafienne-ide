@@ -168,8 +168,8 @@ class IDE {
         //  the cover panel will be closed.
         this.coverPanel.show('Opening ' + fileName);
 
-        const editor = serverFile.createEditor();
-        editor.loadModel();
+        // Now create and load the new editor
+        serverFile.loadEditor();
     }
 
     /**
