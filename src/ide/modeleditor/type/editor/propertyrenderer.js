@@ -6,6 +6,7 @@ import Util from "@util/util";
 import { CaseFileItemDragData } from "@ide/dragdata";
 import TypeFile from "@repository/serverfile/typefile";
 import SchemaDefinition from "@repository/definition/type/schemadefinition";
+import TypeSelector from "./typeselector";
 
 export default class PropertyRenderer extends TypeRenderer {
     /**
@@ -23,8 +24,18 @@ export default class PropertyRenderer extends TypeRenderer {
         this.htmlParent.append(this.html);
     }
 
+    delete() {
+        if (this.typeSelector) {
+            this.typeSelector.delete();
+        }
+        super.delete();
+    }
+
     refresh() {
         Util.clearHTML(this.htmlContainer);
+        if (this.typeSelector) {
+            this.typeSelector.delete();
+        }
         this.render();
     }
 
@@ -35,15 +46,8 @@ export default class PropertyRenderer extends TypeRenderer {
                 <input class="inputPropertyName" value="${this.property.name}" />
                 <button tabindex="-1" class="buttonRemoveProperty" title="Delete property"></button>
             </div>
-            <div><select class="selectType">
-                    <option value=""></option>
-                    <option value="string">string</option>
-                    <option value="number">number</option>
-                    <option value="integer">integer</option>
-                    <option value="boolean">boolean</option>
-                    <option value="object">object</option>
-                    ${this.editor.getOptionTypeHTML()}
-                </select>
+            <div>
+                <select class="selectType"></select>
             </div>
             <div>
                 <select class="selectMultiplicity">
@@ -60,13 +64,11 @@ export default class PropertyRenderer extends TypeRenderer {
             </div>
             <div class="propertyschemacontainer schemacontainer"></div>
         </div>`);
-        // this.    html.find('.propertyContainer');
         this.html.append(this.htmlContainer);
 
         this.htmlContainer.find('.buttonRemoveProperty').on('click', e => this.removeProperty());
         this.htmlContainer.find('.inputPropertyName').on('change', e => this.changeName(e.currentTarget.value));
-        this.htmlContainer.find('.selectType').on('change', e => this.changeType(e.currentTarget.value));
-        this.htmlContainer.find('.selectType').val(this.property.cmmnType);
+        this.typeSelector = new TypeSelector(this.editor.ide.repository, this.htmlContainer.find('.selectType'), this.property.cmmnType, typeRef => this.changeType(typeRef), true);
         this.htmlContainer.find('.selectMultiplicity').on('change', e => this.changeProperty('multiplicity', e.currentTarget.value));
         this.htmlContainer.find('.selectMultiplicity').val(this.property.multiplicity);
         this.htmlContainer.find('.inputBusinessIdentifier').on('change', e => this.changeProperty('isBusinessIdentifier', e.currentTarget.checked));
