@@ -1,5 +1,6 @@
 ﻿'use strict';
 
+
 class CaseTypeEditor {
     /**
      * Renders the caseFileModel definition
@@ -10,13 +11,29 @@ class CaseTypeEditor {
         this.caseFileEditor = caseFileEditor;
         this.case = caseFileEditor.case;
         this.ide = this.case.editor.ide;
-        this.htmlContainer = htmlParent;
+        this.htmlParent = htmlParent;
+        this.generateHTML();
         this.file =  /** @type {TypeFile} */ (this.ide.repository.get(this.case.caseDefinition.caseFile.typeRef));
-        this.typeEditor = new TypeEditor(this, this.htmlContainer, this.case);
-        this.generateTypeSelectorHTML();
+        this.typeEditor = new TypeEditor(this, this.divTypeEditor, this.case);
+        this.htmlContainer.find('.selectCaseFileModel').html(this.typeEditor.getOptionTypeHTML());
+        this.htmlContainer.find('.selectCaseFileModel').val(this.typeRef);
         if (this.file) {
             this.typeEditor.setMainType(this.file);
         }
+    }
+
+    generateHTML() {
+        this.htmlContainer = $(
+            `<div class='casetype-editor'>
+                <div class='casetype-editor-header' style="z-index:1000;position:absolute;right:9px;top:9px">
+                    <label>Type:</label>
+                    <select class="selectCaseFileModel"></select>
+                </div>
+                <div class='type-editor-box'></div>
+            </div>`);
+        this.htmlParent.append(this.htmlContainer);
+        this.htmlContainer.find('.selectCaseFileModel').on('change', e => this.typeRef = e.currentTarget.value);
+        this.divTypeEditor = this.htmlContainer.find('.type-editor-box');
     }
 
     /**
@@ -35,23 +52,23 @@ class CaseTypeEditor {
         Util.removeHTML(this.htmlContainer);
     }
 
-    generateTypeSelectorHTML() {
-        const html = $(`<div style="display:inline;position:absolute;right:9px;top:9px">
-            <label>Type:</label>
-            <select class="selectCaseFileModel">${this.typeEditor.getOptionTypeHTML()}</select>
-        </div>`);
-        this.htmlContainer.append(html);
-        html.find('.selectCaseFileModel').val(this.case.caseDefinition.caseFile.typeRef);
-        html.find('.selectCaseFileModel').on('change', e => {
-            const typeRef = e.currentTarget.value;
-            this.file =  /** @type {TypeFile} */ (this.ide.repository.get(typeRef));
+    get typeRef() {
+        return this.case.caseDefinition.caseFile.typeRef;
+    }
+
+    /**
+     * @param {String} typeRef
+     */
+    set typeRef(typeRef) {
+        this.ide.repository.load(typeRef, file => {
+            this.file =  /** @type {TypeFile} */ (file);
             this.case.caseDefinition.caseFile.typeRef = typeRef;
             if (this.file) {
                 this.typeEditor.setMainType(this.file);
             } else {
                 Util.clearHTML(this.htmlContainer);
                 this.typeEditor.generateHTML();
-                this.generateTypeSelectorHTML();
+                this.generateHTML();
             }
             this.case.editor.completeUserAction();
         });
