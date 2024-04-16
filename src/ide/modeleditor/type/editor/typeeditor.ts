@@ -125,18 +125,6 @@ export default class TypeEditor {
         });
     }
 
-    /**
-     * return a string that defines the <option>'s for the type select
-     * The select has an empty option and the already available type's
-     */
-    getOptionTypeHTML() {
-        // First create 1 options for "empty" then add all type files
-        return (
-            ['<option value=""></option>']
-                .concat(this.ide.repository.getTypes().map(type => `<option value="${type.fileName}">${type.name}</option>`))
-                .join(''));
-    };
-
     onShow() {
         //always start with editor tab
         this.htmlParent.find('.model-source-tabs').tabs('option', 'active', 0);
@@ -159,7 +147,7 @@ export default class TypeEditor {
             // Render name and definitionType
             this.htmlParent.find('.inputDefinitionName').val(this.mainType.definition.name);
             this.renderer = new SchemaRenderer(this, this.htmlTypeSchemaContainer, this.mainType);
-            this.renderer.render();    
+            this.renderer.render();
         }
     }
 

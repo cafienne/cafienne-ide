@@ -1,6 +1,7 @@
 ﻿import IDE from "@ide/ide";
-import TypeEditor from "@ide/modeleditor/type/editor/typeeditor";
 import TypeDefinition from "@repository/definition/type/typedefinition";
+﻿import TypeEditor from "@ide/modeleditor/type/editor/typeeditor";
+import TypeSelector from "@ide/modeleditor/type/editor/typeselector";
 import TypeFile from "@repository/serverfile/typefile";
 import Util from "@util/util";
 import $ from "jquery";
@@ -14,6 +15,7 @@ export default class CaseTypeEditor {
     typeEditor: TypeEditor;
     divTypeEditor: any;
     htmlContainer: JQuery<HTMLElement>;
+    typeSelector: TypeSelector;
     /**
      * Renders the caseFileModel definition
      * @param {CaseFileEditor} caseFileEditor 
@@ -25,8 +27,7 @@ export default class CaseTypeEditor {
         this.htmlContainer = this.generateHTML();
         this.file = <TypeFile>this.ide.repository.get(this.case.caseDefinition.caseFile.typeRef);
         this.typeEditor = new TypeEditor(this, this.divTypeEditor, this.case);
-        this.htmlContainer.find('.selectCaseFileModel').html(this.typeEditor.getOptionTypeHTML());
-        this.htmlContainer.find('.selectCaseFileModel').val(this.typeRef);
+        this.typeSelector = new TypeSelector(this.typeEditor.ide.repository, this.htmlContainer.find('.selectCaseFileModel'), this.typeRef, (v: string) => this.typeRef = v);
         if (this.file) {
             this.typeEditor.setMainType(this.file);
         }
@@ -42,7 +43,6 @@ export default class CaseTypeEditor {
                 <div class='type-editor-box'></div>
             </div>`);
         this.htmlParent.append(this.htmlContainer);
-        this.htmlContainer.find('.selectCaseFileModel').on('change', e => this.typeRef = (<any>e.target).value);
         this.divTypeEditor = this.htmlContainer.find('.type-editor-box');
         return this.htmlContainer;
     }
@@ -52,7 +52,10 @@ export default class CaseTypeEditor {
      */
     delete() {
         this.typeEditor.delete();
-        if (this.htmlContainer) Util.removeHTML(this.htmlContainer);
+        if (this.typeSelector) {
+            this.typeSelector.delete();
+        }
+        if (this.htmlContainer) Util.clearHTML(this.htmlContainer);
     }
 
     get typeRef() {
