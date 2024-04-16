@@ -1,4 +1,5 @@
 ﻿import TypeEditor from "@ide/modeleditor/type/editor/typeeditor";
+import TypeSelector from "@ide/modeleditor/type/editor/typeselector";
 import TypeFile from "@repository/serverfile/typefile";
 import { andThen } from "@util/promise/followup";
 import Util from "@util/util";
@@ -19,8 +20,7 @@ export default class CaseTypeEditor {
         this.generateHTML();
         this.file =  /** @type {TypeFile} */ (this.ide.repository.get(this.case.caseDefinition.caseFile.typeRef));
         this.typeEditor = new TypeEditor(this, this.divTypeEditor, this.case);
-        this.htmlContainer.find('.selectCaseFileModel').html(this.typeEditor.getOptionTypeHTML());
-        this.htmlContainer.find('.selectCaseFileModel').val(this.typeRef);
+        this.typeSelector = new TypeSelector(this.typeEditor.ide.repository, this.htmlContainer.find('.selectCaseFileModel'), this.typeRef, v => this.typeRef = v);
         if (this.file) {
             this.typeEditor.setMainType(this.file);
         }
@@ -36,7 +36,6 @@ export default class CaseTypeEditor {
                 <div class='type-editor-box'></div>
             </div>`);
         this.htmlParent.append(this.htmlContainer);
-        this.htmlContainer.find('.selectCaseFileModel').on('change', e => this.typeRef = e.currentTarget.value);
         this.divTypeEditor = this.htmlContainer.find('.type-editor-box');
     }
 
@@ -45,6 +44,9 @@ export default class CaseTypeEditor {
      */
     delete() {
         this.typeEditor.delete();
+        if (this.typeSelector) {
+            this.typeSelector.delete();
+        }
         Util.removeHTML(this.htmlContainer);
     }
 
@@ -62,9 +64,8 @@ export default class CaseTypeEditor {
             if (this.file) {
                 this.typeEditor.setMainType(this.file);
             } else {
-                Util.clearHTML(this.htmlContainer);
+                Util.clearHTML(this.divTypeEditor);
                 this.typeEditor.generateHTML();
-                this.generateHTML();
             }
             this.case.editor.completeUserAction();
         }));
