@@ -15,12 +15,7 @@ class CaseTypeEditor {
         this.generateHTML();
         this.file =  /** @type {TypeFile} */ (this.ide.repository.get(this.case.caseDefinition.caseFile.typeRef));
         this.typeEditor = new TypeEditor(this, this.divTypeEditor, this.case);
-<<<<<<< HEAD
-        this.htmlContainer.find('.selectCaseFileModel').html(this.typeEditor.getOptionTypeHTML());
-        this.htmlContainer.find('.selectCaseFileModel').val(this.typeRef);
-=======
         this.typeSelector = new TypeSelector(this.typeEditor, this.htmlContainer.find('.selectCaseFileModel'), this.typeRef, v => this.typeRef = v);
->>>>>>> 71c9375 (Make decent div in case type editor)
         if (this.file) {
             this.typeEditor.setMainType(this.file);
         }
