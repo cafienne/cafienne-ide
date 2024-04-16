@@ -137,6 +137,10 @@ export default class Repository extends RepositoryBase {
         this.listeners.push(listener);
     }
 
+    removeListRefreshCallback(listener: Function) {
+        Util.removeFromArray(this.listeners, listener);
+    }
+
     /**
      * Invokes the backend to return a new copy of the list of models.
      * Optional callback that will be invoked after model list has been retrieved
