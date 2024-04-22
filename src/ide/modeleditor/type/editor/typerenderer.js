@@ -355,7 +355,74 @@ export class PropertyRenderer extends TypeRenderer {
     }
 
     changeName(newName) {
-        this.changeProperty('name', newName);
+        // First track both the old and new name.
+        const oldName = this.property.name;
+        const oldPath = this.path;
+        // Set the new name on the property, but do not yet save the definition
+        this.property.name = newName;
+        const newPath = this.path;
+
+        // Now process all case models that have a reference to this property.
+        //  Step 1: change the case file item that wraps the property
+        //  Step 2: check if the change leads to changes in CaseDefinition or Dimensions (only if the cfi is used in the model)
+        //  Step 3: save those changes, in a sequential order, and keep track of the files that have been changed
+        //  Step 4: save the local type
+        //  Step 5: refresh the editors
+
+        console.groupCollapsed("Processing name change");
+        const references = /** @type {Array<CaseFileItemTypeDefinition> } */ (this.property.searchInboundReferences().filter(element => element instanceof CaseFileItemTypeDefinition));
+        const filesToReload = /** @type Array<CaseFile> */[];
+        const list = new SequentialFollowupList(andThen(() => {
+            console.groupEnd();
+            // filesToReload.filter(file => file instanceof DimensionsFile).forEach(file => file.reload());
+            filesToReload.filter(file => file instanceof CaseFile).forEach(file => {
+                const editor = this.editor.ide.editors.find(editor => editor.file.fileName === file.fileName)
+                if (editor) {
+                    if (editor.visible) {
+                        editor.refresh();
+                    } else {
+                        editor.destroy();
+                    }
+                } else {
+                    console.log("Reloading file " + file.fileName)
+                    file.reload();
+                }
+            });
+            this.localType.save(this);
+        }));
+        references.forEach(cfi => {
+            const caseFile = cfi.caseDefinition.file;
+            const dimensionsFile = caseFile.definition.dimensions.file;
+
+            const caseXMLBefore = XML.prettyPrint(caseFile.definition.toXML());
+            const dimXMLBefore = XML.prettyPrint(dimensionsFile.definition.toXML());
+
+            cfi.updatePaths(this.property, oldName, newName);
+
+            const caseXML = XML.prettyPrint(caseFile.definition.toXML());
+            const dimXML = XML.prettyPrint(dimensionsFile.definition.toXML());
+
+            const hasCaseDefinitionChanges = caseXMLBefore !== caseXML;
+            const hasDimensionChanges = dimXMLBefore !== dimXML;
+
+            if (hasCaseDefinitionChanges || hasDimensionChanges) {
+                filesToReload.push(caseFile);
+            }
+
+            if (hasDimensionChanges) {
+                list.add(callback => {
+                    dimensionsFile.source = dimXML;
+                    dimensionsFile.save(andThen(() => callback()));
+                });
+            }
+            if (hasCaseDefinitionChanges) {
+                list.add(callback => {
+                    caseFile.source = caseXML;
+                    caseFile.save(andThen(() => callback()));
+                });
+            }
+        });
+        list.run();
     }
 
     changeType(newType) {
@@ -369,7 +436,6 @@ export class PropertyRenderer extends TypeRenderer {
      * @param {String} propertyValue 
      */
     changeProperty(propertyName, propertyValue) {
-        const oldPropertyValue = this.property[propertyName];
         this.property[propertyName] = propertyValue;
         if (this.property.isNew) {
             // No longer transient parameter
@@ -378,9 +444,7 @@ export class PropertyRenderer extends TypeRenderer {
             schema.properties.push(this.property);
             this.parent.addEmptyProperty();
         }
-        if (oldPropertyValue != propertyValue) {
-            this.localType.save(this);
-        }
+        this.localType.save(this);
     }
 
     /**

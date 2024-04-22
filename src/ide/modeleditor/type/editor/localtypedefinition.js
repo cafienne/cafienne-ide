@@ -1,4 +1,5 @@
 import TypeFile from "@repository/serverfile/typefile";
+import { andThen } from "@util/promise/followup";
 import TypeEditor from "./typeeditor";
 import TypeRenderer from "./typerenderer";
 
@@ -19,11 +20,12 @@ export default class LocalTypeDefinition {
     /**
      * 
      * @param {TypeRenderer} source 
+     * @param {() => void} callback
      */
-    save(source = undefined) {
+    save(source = undefined, callback = () => {}) {
         this.file.source = this.definition.toXML();
-        this.file.save();
         TypeRenderer.refreshOthers(source);
+        this.file.save(andThen(callback));
     }
 
     /**
