@@ -17,7 +17,7 @@ class CaseFileItemDef extends CaseFileItemCollection {
      */
     static createEmptyDefinition(parent, id = undefined) {
         const definition = parent.createDefinition(CaseFileItemDef, id, '');
-        definition.isEmpty = true;        
+        definition.isEmpty = true;
         return definition;
     }
 

@@ -15,11 +15,12 @@ class LocalTypeDefinition {
     /**
      * 
      * @param {TypeRenderer} source 
+     * @param {() => void} callback
      */
-    save(source = undefined) {
+    save(source = undefined, callback = () => {}) {
         this.file.source = this.definition.toXML();
-        this.file.save();
         TypeRenderer.refreshOthers(source);
+        this.file.save(andThen(callback));
     }
 
     /**
