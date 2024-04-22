@@ -3,6 +3,8 @@ import ExpressionDefinition from "./expressiondefinition";
 import CaseDefinition from "../casedefinition";
 import CMMNElementDefinition from "@repository/definition/cmmnelementdefinition";
 import XMLSerializable from "@repository/definition/xmlserializable";
+import ModelDefinition from "@repository/definition/modeldefinition";
+import ElementDefinition from "@repository/definition/elementdefinition";
 
 /**
  * Simple class that does basic expression parsing 
@@ -19,6 +21,12 @@ export default class ExpressionContainer extends UnnamedCMMNElementDefinition {
 
     referencesElement(element: XMLSerializable) {
         return element.id === this.contextRef;
+    }
+
+    updateReferences<X extends ModelDefinition>(element: ElementDefinition<X>, oldId: string, newId: string, oldName: string, newName: string) {
+        if (this.contextRef === oldId) {
+            this.contextRef = newId;
+        }
     }
 
     get contextName() {

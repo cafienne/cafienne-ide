@@ -9,7 +9,7 @@ import ProcessModelEditor from "./process/processmodeleditor";
 import TypeModelEditor from "./type/typemodeleditor";
 
 export default class ModelEditorRegistry {
-    private editors: Array<ModelEditor> = [];
+    editors: Array<ModelEditor> = [];
 
     /**
      * 

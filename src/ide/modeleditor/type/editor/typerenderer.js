@@ -1,13 +1,18 @@
 import CaseFileItemDragData from "@ide/dragdrop/casefileitemdragdata";
 import CaseFileItemDef from "@repository/definition/cmmn/casefile/casefileitemdef";
+import CaseFileItemTypeDefinition from "@repository/definition/cmmn/casefile/casefileitemtypedefinition";
 import SchemaDefinition from "@repository/definition/type/schemadefinition";
 import SchemaPropertyDefinition from "@repository/definition/type/schemapropertydefinition";
 import TypeDefinition from "@repository/definition/type/typedefinition";
+import CaseFile from "@repository/serverfile/casefile";
 import Util from "@util/util";
+import XML from "@util/xml";
 import $ from "jquery";
 import LocalTypeDefinition from "./localtypedefinition";
 import TypeEditor from "./typeeditor";
 import TypeSelector from "./typeselector";
+import CaseDefinition from "@repository/definition/cmmn/casedefinition";
+import XMLSerializable from "@repository/definition/xmlserializable";
 
 export default class TypeRenderer {
 
@@ -354,8 +359,97 @@ export class PropertyRenderer extends TypeRenderer {
         this.localType.save(this);
     }
 
-    changeName(newName) {
-        this.changeProperty('name', newName);
+    async changeName(newName) {
+        // First track both the old and new name.
+        const oldName = this.property.name;
+        const oldPath = this.path;
+        // Set the new name on the property, but do not yet save the definition
+        this.property.name = newName;
+        const newPath = this.path;
+
+        // Now process all case models that have a reference to this property.
+        //  Step 1: change the case file item that wraps the property
+        //  Step 2: check if the change leads to changes in CaseDefinition or Dimensions (only if the cfi is used in the model)
+        //  Step 3: save those changes, in a sequential order, and keep track of the files that have been changed
+        //  Step 4: save the local type
+        //  Step 5: refresh the editors
+
+        console.groupCollapsed(`Processing name change in ${this.property.modelDefinition.file.fileName}: '${oldPath}' ==> '${newPath}'`);
+        const references = /** @type {Array<CaseFileItemTypeDefinition> } */ (this.property.searchInboundReferences().filter(element => element instanceof CaseFileItemTypeDefinition));
+
+        const referencesByCaseDefinition = /** @type {Map<CaseDefinition, CaseFileItemTypeDefinition[]>}*/ (new Map());
+        references.forEach(ref => {
+            const mapEntry = referencesByCaseDefinition.get(ref.caseDefinition);
+            if (! mapEntry) {
+                referencesByCaseDefinition.set(ref.caseDefinition, [ref]);
+            } else {
+                mapEntry.push(ref);
+            }
+        });
+
+        console.log(`Found ${referencesByCaseDefinition.size} cases that use this property`)
+        const filesToReload = /** @type {Array<CaseFile>} */[];
+        const list = Array.from(referencesByCaseDefinition.entries()).filter(([d, refs]) => refs.length > 0).map(([caseDefinition, refs]) => {
+            const caseFileItemReferences = refs.map(cfi => cfi.searchInboundReferences().filter(ref => ref.modelDefinition.file.name === cfi.modelDefinition.file.name)).flat();
+            if (caseFileItemReferences.length === 0) {
+                return () => Promise.resolve();
+            }
+            console.groupCollapsed(`Updating ${caseFileItemReferences.length} references to a case file item inside case ${caseDefinition.file.fileName}`);
+            const caseFile = caseDefinition.file;
+            const dimensionsFile = caseFile.definition.dimensions.file;
+
+            const caseXMLBefore = XML.prettyPrint(caseFile.definition.toXML());
+            const dimXMLBefore = XML.prettyPrint(dimensionsFile.definition.toXML());
+
+            refs.forEach(cfi => cfi.updatePaths(this.property));
+
+            const caseXML = XML.prettyPrint(caseFile.definition.toXML());
+            const dimXML = XML.prettyPrint(dimensionsFile.definition.toXML());
+
+            const hasCaseDefinitionChanges = caseXMLBefore !== caseXML;
+            const hasDimensionChanges = dimXMLBefore !== dimXML;
+
+            if (hasCaseDefinitionChanges || hasDimensionChanges) {
+                filesToReload.push(caseFile);
+                if (hasDimensionChanges) {
+                    dimensionsFile.source = dimXML;
+                    if (hasCaseDefinitionChanges) {
+                        console.groupEnd();
+                        return () => dimensionsFile.save().then(() => caseFile.save());
+                    } else {
+                        console.groupEnd();
+                        return () => dimensionsFile.save();
+                    }
+                } else /** if (hasCaseDefinitionChanges) */ {
+                    caseFile.source = caseXML;
+                    console.groupEnd();
+                    return () => caseFile.save();
+                }
+            }
+            console.groupEnd();
+            return () => Promise.resolve();
+        });
+
+        Util.PromiseAllSequential(list).then(() => {
+            this.localType.save(this, (() => {
+                filesToReload.filter(file => file instanceof CaseFile).forEach(file => {
+                    const editor = this.editor.ide.editorRegistry.editors.find(editor => editor.file.fileName === file.fileName)
+                    if (editor) {
+                        if (editor.visible) {
+                            console.log(`Refreshing editor ${file.fileName}`);
+                            editor.refresh();
+                        } else {
+                            console.log(`Destroying editor ${file.fileName}`);
+                            editor.destroy();
+                        }
+                    } else {
+                        console.log(`Reloading editor ${file.fileName}`);
+                        file.reload();
+                    }
+                });
+                console.groupEnd();
+            }));
+        });
     }
 
     changeType(newType) {
@@ -369,7 +463,6 @@ export class PropertyRenderer extends TypeRenderer {
      * @param {String} propertyValue 
      */
     changeProperty(propertyName, propertyValue) {
-        const oldPropertyValue = this.property[propertyName];
         this.property[propertyName] = propertyValue;
         if (this.property.isNew) {
             // No longer transient parameter
@@ -378,9 +471,7 @@ export class PropertyRenderer extends TypeRenderer {
             schema.properties.push(this.property);
             this.parent.addEmptyProperty();
         }
-        if (oldPropertyValue != propertyValue) {
-            this.localType.save(this);
-        }
+        this.localType.save(this);
     }
 
     /**

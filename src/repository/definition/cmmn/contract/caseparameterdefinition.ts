@@ -25,6 +25,16 @@ export default class CaseParameterDefinition extends ParameterDefinition<CaseDef
         return element.id === this.bindingRef;
     }
 
+    updateReferences<X extends ModelDefinition>(element: ElementDefinition<X>, oldId: string, newId: string, oldName: string, newName: string) {
+        if (this.bindingRef === oldId) {
+            this.bindingRef = newId;
+            // Check if we also need to update the parameter name (assuming that a same name)
+            if (this.name === oldName) {
+                this.name = newName;
+            }
+        }
+    }
+
     get binding(): CaseFileItemDef {
         return this.caseDefinition.getElement(this.bindingRef, CaseFileItemDef);
     }

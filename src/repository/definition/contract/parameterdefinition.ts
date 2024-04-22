@@ -12,9 +12,9 @@ export default class ParameterDefinition<M extends ModelDefinition> extends Refe
         this.isNew = false; // This property is used in the HumanTaskEditor and ProcessTaskEditor
     }
 
-    createExportNode(parentNode: Element, tagName: string, ...properties: any[]) {
+    createExportNode(parentNode: Element, tagName: string, ...propertyNames: any[]) {
         // Parameters have different tagnames depending on their type, so this must be passed.
-        super.createExportNode(parentNode, tagName, properties);
+        super.createExportNode(parentNode, tagName, propertyNames);
         if (this.required) { // Required is a customization to the spec, put in an extension element
             this.createImplementationNode().setAttribute('required', 'true');
         }
