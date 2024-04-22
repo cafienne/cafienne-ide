@@ -1,11 +1,10 @@
-import CaseFileItemDragData from "@ide/dragdrop/casefileitemdragdata";
 import CaseFileItemDef from "@repository/definition/cmmn/casefile/casefileitemdef";
 import SchemaDefinition from "@repository/definition/type/schemadefinition";
 import SchemaPropertyDefinition from "@repository/definition/type/schemapropertydefinition";
-import TypeDefinition from "@repository/definition/type/typedefinition";
 import Util from "@util/util";
 import $ from "jquery";
 import LocalTypeDefinition from "./localtypedefinition";
+import PropertyUsage from "./propertyusage";
 import TypeEditor from "./typeeditor";
 import TypeSelector from "./typeselector";
 
@@ -354,8 +353,9 @@ export class PropertyRenderer extends TypeRenderer {
         this.localType.save(this);
     }
 
-    changeName(newName) {
-        this.changeProperty('name', newName);
+    async changeName(newName) {
+        await PropertyUsage.updateNameChangeInOtherModels(this, newName);
+        await this.localType.save(this);
     }
 
     changeType(newType) {
@@ -369,7 +369,6 @@ export class PropertyRenderer extends TypeRenderer {
      * @param {String} propertyValue 
      */
     changeProperty(propertyName, propertyValue) {
-        const oldPropertyValue = this.property[propertyName];
         this.property[propertyName] = propertyValue;
         if (this.property.isNew) {
             // No longer transient parameter
@@ -378,9 +377,7 @@ export class PropertyRenderer extends TypeRenderer {
             schema.properties.push(this.property);
             this.parent.addEmptyProperty();
         }
-        if (oldPropertyValue != propertyValue) {
-            this.localType.save(this);
-        }
+        this.localType.save(this);
     }
 
     /**

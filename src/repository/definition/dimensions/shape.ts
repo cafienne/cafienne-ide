@@ -1,3 +1,5 @@
+import ElementDefinition from "../elementdefinition";
+import ModelDefinition from "../modeldefinition";
 import XMLSerializable from "../xmlserializable";
 import Bounds from "./bounds";
 import Diagram from "./diagram";
@@ -29,6 +31,12 @@ export default class ShapeDefinition extends DiagramElement {
 
     referencesElement(element: XMLSerializable) {
         return element.id === this.cmmnElementRef;
+    }
+
+    updateReferences<X extends ModelDefinition>(element: ElementDefinition<X>, oldId: string, newId: string, oldName: string, newName: string) {
+        if (this.cmmnElementRef === oldId) {
+            this.cmmnElementRef = newId;
+        }
     }
 
     createExportNode(diagramNode: Element) {

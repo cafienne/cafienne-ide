@@ -7,6 +7,8 @@ import Vertex from "./vertex";
 import CMMNElementView from "@ide/modeleditor/case/elements/cmmnelementview";
 import XMLSerializable from "../xmlserializable";
 import XML from "@util/xml";
+import ModelDefinition from "../modeldefinition";
+import ElementDefinition from "../elementdefinition";
 
 export default class Edge extends DiagramElement {
     private _vertices: Vertex[];
@@ -49,6 +51,15 @@ export default class Edge extends DiagramElement {
 
     referencesElement(element: XMLSerializable) {
         return element.id === this.sourceId || element.id === this.targetId;
+    }
+
+    updateReferences<X extends ModelDefinition>(element: ElementDefinition<X>, oldId: string, newId: string, oldName: string, newName: string) {
+        if (this.sourceId === oldId) {
+            this.sourceId = newId;
+        }
+        if (this.targetId === oldId) {
+            this.targetId = newId;
+        }
     }
 
     get vertices() {
