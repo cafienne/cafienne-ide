@@ -91,13 +91,15 @@ export default class ElementDefinition<M extends ModelDefinition> extends XMLSer
     }
 
     /**
-     * Returns true if this ElementDefinition has a reference to the element.
-     * This method by default returns false, but can be overwritten to define actual comparison.
+     * Implement this method to update references this element has to the given element.
+     * The given element has changed its ID and NAME attribute to the new values.
      * @param {ElementDefinition} element 
-     * @returns 
+     * @param {String} oldId 
+     * @param {String} newId 
+     * @param {String} oldName 
+     * @param {String} newName 
      */
-    referencesElement<X extends ModelDefinition>(element: ElementDefinition<X>) {
-        return false;
+    updateReferences<X extends ModelDefinition>(element: ElementDefinition<X>, oldId: string, newId: string, oldName: string, newName: string) {
     }
 
     hasExternalReferences() {

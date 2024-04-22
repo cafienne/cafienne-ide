@@ -6,6 +6,7 @@ import TypeFile from "@repository/serverfile/typefile";
 import Util from "@util/util";
 import $ from "jquery";
 import LocalTypeDefinition from "./localtypedefinition";
+import PropertyUsage from "./propertyusage";
 import TypeEditor from "./typeeditor";
 import TypeSelector from "./typeselector";
 
@@ -318,8 +319,9 @@ export class PropertyRenderer extends TypeRenderer {
         this.localType.save(this);
     }
 
-    changeName(newName: string) {
-        this.changeProperty('name', newName);
+    async changeName(newName: string) {
+        await PropertyUsage.updateNameChangeInOtherModels(this, newName);
+        await this.localType.save(this);
     }
 
     changeType(newType: string) {
@@ -328,7 +330,6 @@ export class PropertyRenderer extends TypeRenderer {
     }
 
     changeProperty(propertyName: string, propertyValue: string) {
-        const oldPropertyValue = (this.property as any)[propertyName];
         (this.property as any)[propertyName] = propertyValue;
         if (this.property.isNew) {
             // No longer transient parameter
@@ -337,9 +338,7 @@ export class PropertyRenderer extends TypeRenderer {
             schema.properties.push(this.property);
             this.parent.addEmptyProperty();
         }
-        if (oldPropertyValue != propertyValue) {
-            this.localType.save(this);
-        }
+        this.localType.save(this);
     }
 
     /**
