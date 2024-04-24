@@ -159,29 +159,6 @@ export default class ModelListPanel {
      */
     async create(e: JQuery.ClickEvent<HTMLElement, undefined, HTMLElement, HTMLElement>) {
         e.stopPropagation();
-        const filetype = this.type.fileType;
-        const text = `Create a new ${this.type}`;
-        const dialog = new CreateNewModelDialog(this.ide, text);
-        dialog.showModalDialog(async (newModelInfo: {name: string, description: string}) => {
-            if (newModelInfo) {
-                const newModelName = newModelInfo.name;
-                const newModelDescription = newModelInfo.description;
-
-                //check if a valid name is used
-                if (!this.repositoryBrowser.isValidEntryName(newModelName)) {
-                    return;
-                }
-
-                const fileName = newModelName + '.' + filetype;
-
-                if (this.ide.repository.isExistingModel(fileName)) {
-                    this.ide.danger('A ' + filetype + ' with this name already exists and cannot be overwritten', 5000);
-                    return;
-                }
-
-                await this.ide.createNewModel(filetype, newModelName, newModelDescription);
-                window.location.hash = fileName;
-            };
-        });
+        return this.type.openCreateModelDialog();
     }
 }
