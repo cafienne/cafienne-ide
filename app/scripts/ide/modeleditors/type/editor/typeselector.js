@@ -7,15 +7,18 @@ class TypeSelector {
      * @param {Function} callback 
      * @param {Boolean} hasPrimitiveTypes 
      */
-    constructor(repository, htmlParent, typeRef, callback, hasPrimitiveTypes = false) {
+    constructor(repository, htmlParent, typeRef, callback, hasPrimitiveTypes = false, additionalOptions = []) {
         this.repository = repository
         this.htmlParent = htmlParent;
         this.typeRef = typeRef;
         this.callback = callback;
         this.hasPrimitiveTypes = hasPrimitiveTypes;
+        this.additionalOptions = additionalOptions;
         this.typeFiles = this.repository.getTypes();
         this.loadOptions();
-        this.listRefresher = () => {
+        this.listRefresher = (typeRef = this.typeRef, additionalOptions = []) => {
+            this.additionalOptions = additionalOptions
+            this.typeRef = typeRef;
             const newFiles = this.repository.getTypes();
             if (this.typeFiles.find(file => newFiles.findIndex(newFile => file.fileName === newFile.fileName) < 0)) {
                 // console.log("List is refreshed, one file is no longer in availalbe")
@@ -24,6 +27,9 @@ class TypeSelector {
             } else if (newFiles.find(file => this.typeFiles.findIndex(newFile => file.fileName === newFile.fileName) < 0)) {
                 // console.log("List is refreshed with a new file")
                 this.typeFiles = newFiles;
+                this.loadOptions();
+            } else if (additionalOptions.length) {
+                // console.log("List is refreshed with the additional options")
                 this.loadOptions();
             }
         };
@@ -80,6 +86,6 @@ class TypeSelector {
 
     getOptions() {
         // First create 1 options for "empty" then add all type files
-        return `${this.getPrimitiveOptions()}<option value=""></option>${this.typeFiles.map(type => `<option value="${type.fileName}">${type.name}</option>`)}`
+        return `${this.getPrimitiveOptions()}<option value=""></option>${this.additionalOptions.map(o => `<option value="${o.value}">${o.option}</option>`)}${this.typeFiles.map(type => `<option value="${type.fileName}">${type.name}</option>`)}`
     }
 }
