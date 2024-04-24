@@ -2,25 +2,20 @@ import Dialog from "./editors/dialog";
 import IDE from "@ide/ide";
 import $ from "jquery";
 
+type NewModelResult = {
+    name: string,
+    description: string
+}
+
 export default class CreateNewModelDialog extends Dialog {
-    defaultName: string;
-    constructor(ide: IDE, label: string, defaultName: string = '') {
+    constructor(ide: IDE, label: string) {
         super(ide, label);
-        this.defaultName = defaultName;
     }
 
-    get name() {
-        return this.dialogHTML?.find('.inputName').val();
-    }
-
-    get description() {
-        return this.dialogHTML?.find('.inputDescription').val();
-    }
-
-    renderDialog() {
+    renderDialog(dialogHTML: JQuery<HTMLElement>) {
         const htmlDialog = $(`
             <form>
-                <label style="width:150px">Name</label><input class = "inputName" value="${this.defaultName}">
+                <label style="width:150px">Name</label><input class = "inputName" value="">
                 <br>
                 <label style="width:150px">Description</label><input class = "inputDescription"/>
                 <br>
@@ -29,9 +24,15 @@ export default class CreateNewModelDialog extends Dialog {
                 <button class='buttonCancel'>Cancel</button>
             </form>
         `);
-        this.dialogHTML?.append(htmlDialog);
-        this.dialogHTML?.find('input').on('focus', e => e.target.select());
-        this.dialogHTML?.find('.buttonOk').on('click', e => this.closeModalDialog({ name: this.name, description: this.description }));
-        this.dialogHTML?.find('.buttonCancel').on('click', e => this.closeModalDialog(false));
+        dialogHTML.append(htmlDialog);
+        dialogHTML.find('input').on('focus', e => e.target.select());
+        dialogHTML.find('.buttonOk').on('click', e => this.closeModalDialog(this.readResult(dialogHTML)));
+        dialogHTML.find('.buttonCancel').on('click', e => this.closeModalDialog(false));
+    }
+
+    readResult(dialogHTML: JQuery<HTMLElement>): NewModelResult {
+        const name: string = '' + dialogHTML.find('.inputName').val();
+        const description: string = '' + dialogHTML.find('.inputDescription').val();
+        return { name, description }
     }
 }
