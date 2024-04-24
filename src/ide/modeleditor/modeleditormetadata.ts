@@ -1,8 +1,9 @@
+import CreateNewModelDialog from "@ide/createnewmodeldialog";
 import RepositoryBrowser from "@ide/repositorybrowser";
+import ModelDefinition from "@repository/definition/modeldefinition";
 import ServerFile from "@repository/serverfile/serverfile";
 import IDE from "../ide";
 import ModelEditor from "./modeleditor";
-import ModelDefinition from "@repository/definition/modeldefinition";
 
 export default class ModelEditorMetadata {
     public static types: Array<ModelEditorMetadata> = [];
@@ -37,7 +38,7 @@ export default class ModelEditorMetadata {
      * Create an editor for this file
      */
     createEditor(ide: IDE, file: ServerFile<ModelDefinition>): ModelEditor {
-        throw new Error('This method must be implemented in ' + this.constructor.name);        
+        throw new Error('This method must be implemented in ' + this.constructor.name);
     }
 
     get supportsDeploy() {
@@ -76,5 +77,32 @@ export default class ModelEditorMetadata {
      */
     async createNewModel(ide: IDE, newModelName: string, newModelDescription: string): Promise<string> {
         throw new Error('This method must be implemented in ' + this.constructor.name);
+    }
+
+    openCreateModelDialog() {
+        const filetype = this.modelType;
+        const text = `Create a new ${this.toString()}`;
+        if (!this.ide) return;
+        const dialog = new CreateNewModelDialog(this.ide, text);
+        dialog.showModalDialog((newModelInfo: any) => {
+            if (newModelInfo) {
+                const newModelName = newModelInfo.name;
+                const newModelDescription = newModelInfo.description;
+
+                // Check if a valid name is used
+                if (this.ide && !this.ide.repositoryBrowser.isValidEntryName(newModelName)) {
+                    return;
+                }
+
+                const fileName = newModelName + '.' + filetype;
+                if (this.ide && this.ide.repository.isExistingModel(fileName)) {
+                    this.ide.danger('A ' + filetype + ' with this name already exists and cannot be overwritten', 5000);
+                    return;
+                }
+                if (this.ide) this.ide.createNewModel(filetype, newModelName, newModelDescription).then(fileName => {
+                    window.location.hash = fileName;
+                });
+            };
+        });
     }
 }
