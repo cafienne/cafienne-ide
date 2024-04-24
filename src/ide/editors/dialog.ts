@@ -4,19 +4,17 @@ import "jquery-ui";
 import Util from "@util/util";
 
 export default class Dialog {
-    ide: IDE;
     callback: Function | undefined;
-    dialogHTML: JQuery<HTMLElement> | undefined;
+    private dialogHTML?: JQuery<HTMLElement>;
     private _label: string | undefined;
 
-    constructor(ide: IDE, label: string) {
-        this.ide = ide;
+    constructor(public ide: IDE, label: string) {
         this.label = label;
     }
 
     showModalDialog(callback: Function) {
-        this.renderHeader();
-        this.renderDialog();
+        const dialogHTML = this.renderHeader();
+        this.renderDialog(dialogHTML);
         this.callback = callback;
         if (this.dialogHTML) {
             const dialogHTML: HTMLDialogElement = this.dialogHTML[0] as HTMLDialogElement; // Save DOM pointer to HTMLElement (not jQuery as we don't have the showModal native method available in jQuery API)
@@ -42,7 +40,7 @@ export default class Dialog {
                 </div>
                 <br>
             </dialog>`);
-            this.ide.html?.append(this.dialogHTML);
+            this.ide.html.append(this.dialogHTML);
             this.dialogHTML.draggable({ handle: '.dialogHeader' });
             this.dialogHTML.on('selectstart', (e: { preventDefault: () => any; }) => e.preventDefault());
         }
@@ -65,11 +63,11 @@ export default class Dialog {
         }
     }
 
-    renderDialog() {
+    renderDialog(dialogHTML: JQuery<HTMLElement>) {
         const htmlDialog = $(`<div>
                 <button class='buttonOk'>OK</button>
                 </div>`);
-        this.dialogHTML?.append(htmlDialog);
+        dialogHTML.append(htmlDialog);
         htmlDialog.find('.buttonOk').on('click', e => this.closeModalDialog('Ok'));
     }
 }
