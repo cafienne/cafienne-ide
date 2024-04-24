@@ -1,6 +1,7 @@
 import ServerFile from "@repository/serverfile";
 import IDE from "../ide";
 import ModelEditor from "./modeleditor";
+import CreateNewModelDialog from "@ide/createnewmodeldialog";
 
 export default class ModelEditorMetadata {
     /**
@@ -73,5 +74,33 @@ export default class ModelEditorMetadata {
      */
     createNewModel(ide, newModelName, newModelDescription, callback) {
         throw new Error('This method must be implemented in ' + this.constructor.name);
+    }
+
+    openCreateModelDialog() {
+        const filetype = this.modelType;
+        const text = `Create a new ${this.toString()}`;
+        const dialog = new CreateNewModelDialog(this.ide, text);
+        dialog.showModalDialog((newModelInfo) => {
+            if (newModelInfo) {
+                const newModelName = newModelInfo.name;
+                const newModelDescription = newModelInfo.description;
+
+                //check if a valid name is used
+                if (!this.ide.repositoryBrowser.isValidEntryName(newModelName)) {
+                    return;
+                }
+
+                const fileName = newModelName + '.' + filetype;
+
+                if (this.ide.repository.isExistingModel(fileName)) {
+                    this.ide.danger('A ' + filetype + ' with this name already exists and cannot be overwritten', 5000);
+                    return;
+                }
+
+                this.createNewModel(this.ide, newModelName, newModelDescription, fileName => {
+                    window.location.hash = fileName;
+                });
+            };
+        });
     }
 }
