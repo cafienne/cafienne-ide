@@ -28,6 +28,7 @@ class Repository {
             case 'process': return this.createProcessFile(fileName, source);
             case 'humantask': return this.createHumanTaskFile(fileName, source);
             case 'cfid': return this.createCFIDFile(fileName, source);
+            case 'type': return this.createTypeFile(fileName, source);
             default: {
                 console.warn(`Extension '${fileType}' is not supported on the client for file ${fileName}`);
                 return undefined;
@@ -123,6 +124,24 @@ class Repository {
      */
     createCFIDFile(fileName, source) {
         return new CFIDFile(this, fileName, source);
+    }
+
+    /**
+     * Returns the list of types in the repository
+     * @returns {Array<TypeFile>}
+     */
+    getTypes() {
+        return /** @type {Array<TypeFile>} */ (this.list.filter(serverFile => serverFile instanceof TypeFile));
+    }
+
+    /**
+     * Create a new TypeFile that can parse and write server side .type files
+     * @param {String} fileName 
+     * @param {*} source 
+     * @returns {TypeFile}
+     */
+    createTypeFile(fileName, source) {
+        return new TypeFile(this, fileName, source);        
     }
 
     /**
