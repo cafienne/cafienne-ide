@@ -10,6 +10,7 @@ import HumanTaskFile from "./serverfile/humantaskfile";
 import Metadata from "./serverfile/metadata";
 import ProcessFile from "./serverfile/processfile";
 import ServerFile from "./serverfile/serverfile";
+import TypeFile from "./serverfile/typefile";
 
 export default class Repository extends RepositoryBase {
     listeners: (() => void)[] = [];
@@ -36,6 +37,7 @@ export default class Repository extends RepositoryBase {
             case 'process': return this.createProcessFile(fileName, source);
             case 'humantask': return this.createHumanTaskFile(fileName, source);
             case 'cfid': return this.createCFIDFile(fileName, source);
+            case 'type': return this.createTypeFile(fileName, source);
             default: {
                 console.warn(`Extension '${fileType}' is not supported on the client for file ${fileName}`);
                 return undefined;
@@ -111,6 +113,20 @@ export default class Repository extends RepositoryBase {
      */
     createCFIDFile(fileName: string, source: any) {
         return new CFIDFile(this, fileName, source);
+    }
+
+    /**
+     * Returns the list of types in the repository
+     */
+    getTypes() {
+        return <TypeFile[]>this.list.filter(serverFile => serverFile instanceof TypeFile);
+    }
+
+    /**
+     * Create a new TypeFile that can parse and write server side .type files
+     */
+    createTypeFile(fileName: string, source: any) {
+        return new TypeFile(this, fileName, source);
     }
 
     /**
