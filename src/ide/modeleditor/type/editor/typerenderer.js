@@ -98,6 +98,14 @@ export default class TypeRenderer {
     }
 
     /**
+     * 
+     * @returns {Array<TypeRenderer>}
+     */
+    getDescendents() {
+        return [this, ...this.children.map(child => child.getDescendents()).flat()];
+    }
+
+    /**
      * Returns true if the potential child has us as an ancestor;
      * @param {TypeRenderer} potentialChild 
      * @returns {Boolean}
@@ -342,11 +350,31 @@ export class PropertyRenderer extends TypeRenderer {
         }
     }
 
+    /**
+     * Remove the property (including nested objects)
+     * But first check if the property is still in use. If so, then it cannot be removed.
+     */
     removeProperty() {
-        // remove the attribute (and all nested embedded attriute from the activeDefinition and the html table
         if (this.property['isNew']) {
             return;
         }
+
+        // First check direct references, as that gives a different error message than child properties.
+        const references = this.property.getCaseReferences();
+        if (references.length > 0) {
+            const definitionsUsing = Util.removeDuplicates(references.map(ref => ref.modelDefinition.file.fileName));
+            this.editor.ide.warning("Cannot remove property, as it is in use in " + references.length + " places across the files " + definitionsUsing.map(fileName => `<br />- ${fileName}`).join(''));
+            return;
+        }
+
+        // Now check references to one of our descendents. Also they are not allowed.
+        const childRenderers = this.getDescendents().filter(child => child instanceof PropertyRenderer).map((/** @type {PropertyRenderer} */child) => child.property);
+        const childCaseReferences = Util.removeDuplicates(childRenderers.filter(p => p !== this.property && p.getCaseReferences().length > 0));
+        if (childCaseReferences.length > 0) {
+            this.editor.ide.warning("Cannot remove property, as it has child properties that are in use" + childCaseReferences.map(property => `<br />- ${property.name}`).join(''));
+            return;
+        }
+
         // remove from the definition
         Util.removeFromArray(/** @type {SchemaDefinition} */(this.property.parent).properties, this.property);
         // remove from the html
