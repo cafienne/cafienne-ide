@@ -1,3 +1,5 @@
+import Util from "@util/util";
+import CaseFileItemTypeDefinition from "../cmmn/casefile/casefileitemtypedefinition";
 import ReferableElementDefinition from "../referableelementdefinition";
 import SchemaDefinition from "./schemadefinition";
 import TypeDefinition from "./typedefinition";
@@ -21,6 +23,10 @@ export default class SchemaPropertyDefinition extends ReferableElementDefinition
         if (this._type === 'object') {
             this.schema = this.parseElement(SchemaDefinition.TAG, SchemaDefinition);
         }
+    }
+
+    getCaseReferences() {
+        return Util.removeDuplicates(this.searchInboundReferences().filter(element => element instanceof CaseFileItemTypeDefinition).map(cftd => cftd.searchInboundReferences()).flat());
     }
 
     hasExternalReferences(): boolean {
@@ -89,7 +95,7 @@ export default class SchemaPropertyDefinition extends ReferableElementDefinition
         } else {
             property.type = this.type;
             if (this.format) {
-                property.format = this.format; 
+                property.format = this.format;
             }
         }
         switch (this.multiplicity) {
@@ -149,7 +155,7 @@ export default class SchemaPropertyDefinition extends ReferableElementDefinition
         property.items = items;
         return property.items;
     }
-    
+
     // This is the visual type in the TypeSelector
     get cmmnType(): string {
         switch (this.format) {
