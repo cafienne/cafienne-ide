@@ -92,6 +92,14 @@ export default class TypeRenderer {
     }
 
     /**
+     * 
+     * @returns {Array<TypeRenderer>}
+     */
+    getDescendents() {
+        return [this, ...this.children.map(child => child.getDescendents()).flat()];
+    }
+
+    /**
      * Returns true if the potential child has us as an ancestor;
      * @param {TypeRenderer} potentialChild 
      * @returns {Boolean}

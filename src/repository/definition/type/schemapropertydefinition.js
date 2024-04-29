@@ -17,6 +17,10 @@ export default class SchemaPropertyDefinition extends ReferableElementDefinition
         }
     }
 
+    getCaseReferences() {
+        return Util.removeDuplicates(this.searchInboundReferences().filter(element => element instanceof CaseFileItemTypeDefinition).map(cftd => cftd.searchInboundReferences()).flat());
+    }
+
     hasExternalReferences() {
         return this.typeRef !== '';
     }
