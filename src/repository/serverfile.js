@@ -165,14 +165,14 @@ export default class ServerFile {
         // console.groupEnd();
         // console.log("Parsing " + this.fileName);
         const file = this;
-        const definition = this.createModelDefinition();
-        this.content.definition = definition;
         if (!file.content.xml) {
             // There is no xml definition available to parse ...
             this.metadata.error = 'This file does not contain a valid XML document to parse';
             then.run(file);
             return;
         }
+        const definition = this.createModelDefinition();
+        this.content.definition = definition;
         definition.parseDocument();
         definition.validateDocument();
         if (file.definition.hasMigrated()) {
