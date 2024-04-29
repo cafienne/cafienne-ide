@@ -1,8 +1,9 @@
 class XML {
     /**
      * Parses the given xml string into a Document object
+     * If there are parse failures, this will return undefined.
      * @param {String|Node} xml
-     * @returns {Document}
+     * @returns {Document|undefined}
      */
     static parseXML(xml) {
         if (xml instanceof Document) {
@@ -14,7 +15,7 @@ class XML {
         if (XML.getParseErrors(xmlDocument).length === 0) {
             return xmlDocument;
         } else {
-            return null;
+            return undefined;
         }
     }
 
