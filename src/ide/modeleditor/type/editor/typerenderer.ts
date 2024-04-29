@@ -9,6 +9,7 @@ import LocalTypeDefinition from "./localtypedefinition";
 import PropertyUsage from "./propertyusage";
 import TypeEditor from "./typeeditor";
 import TypeSelector from "./typeselector";
+import TypeFile from "@repository/serverfile/typefile";
 
 export default class TypeRenderer {
 
@@ -82,6 +83,10 @@ export default class TypeRenderer {
         this.children = [];
         TypeRenderer.remove(this);
         this.parent = undefined;
+    }
+
+    getDescendents(): TypeRenderer[] {
+        return [this, ...this.children.map(child => child.getDescendents()).flat()];
     }
 
     /**
@@ -307,11 +312,15 @@ export class PropertyRenderer extends TypeRenderer {
         }
     }
 
+    /**
+     * Remove the property (including nested objects)
+     * But first check if the property is still in use. If so, then it cannot be removed.
+     */
     removeProperty() {
-        // remove the attribute (and all nested embedded attriute from the activeDefinition and the html table
-        if (this.property['isNew']) {
+        if (!PropertyUsage.checkPropertyDeletionAllowed(this)) {
             return;
         }
+
         // remove from the definition
         Util.removeFromArray(this.property.parent.properties, this.property);
         // remove from the html
