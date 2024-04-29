@@ -3,8 +3,48 @@ import CaseDefinition from "@repository/definition/cmmn/casedefinition";
 import CaseFileItemTypeDefinition from "@repository/definition/cmmn/casefile/casefileitemtypedefinition";
 import XML from "@util/xml";
 import { PropertyRenderer } from "./typerenderer";
+import TypeFile from "@repository/serverfile/typefile";
+import CaseFile from "@repository/serverfile/casefile";
+import Util from "@util/util";
+import SchemaPropertyDefinition from "@repository/definition/type/schemapropertydefinition";
 
 export default class PropertyUsage {
+
+    static checkPropertyDeletionAllowed(renderer: PropertyRenderer) {
+        // Recursive lookup for all parent TypesFile's using the TypeFile of this property to be removed 
+        const getParentTypes = (typeFile: TypeFile): TypeFile[] => [typeFile, ...(<TypeFile[]>typeFile.usageFiles.filter(fileUsingType => fileUsingType instanceof TypeFile)).map(file => [...getParentTypes(file)]).flat()];
+
+        const referringTypeFiles = getParentTypes(renderer.property.modelDefinition.file);
+
+        // Lookup all referring .case fileNames (including corresponding .dimensions)
+        const referringCaseFileNames: string[] = referringTypeFiles.map(type => type.usageFiles.filter(file => file instanceof CaseFile)).flat().map(f => f ? f.fileName : '').filter(s => s.length > 0);
+        const dims = referringCaseFileNames.map(f => f.replace('.case', '.dimensions'));
+        referringCaseFileNames.push(...dims);
+        
+        // First check direct references, as that gives a different error message than child properties.
+        const caseFilter = (ref: any) => referringCaseFileNames.indexOf(ref.modelDefinition.file.fileName) >= 0;
+        const references = renderer.property.getCaseReferences().filter(caseFilter);
+        if (references.length > 0) {
+            const definitionsUsing = Util.removeDuplicates(references.map(ref => ref.modelDefinition.file.fileName));
+            renderer.editor?.ide.warning('Cannot remove property, as it is in use in ' + references.length + ' places across the files ' + definitionsUsing.map(fileName => `<br />- ${fileName}`).join(''));
+            return false;
+        }
+
+        // Now check references to one of our descendents. Also they are not allowed.
+        const childRenderers: SchemaPropertyDefinition[] = renderer.getDescendents().filter(child => child instanceof PropertyRenderer).map(child => (<PropertyRenderer>(child)).property);
+        const allChildCaseReferences = childRenderers.filter(p => p !== renderer.property && p.getCaseReferences().filter(caseFilter).length > 0);
+        const childCaseReferences = Util.removeDuplicates(allChildCaseReferences);
+        if (childCaseReferences.length > 0) {
+            let usedInWarning: string[] = [];
+            childRenderers.filter(p => p !== renderer.property && p.getCaseReferences().filter(caseFilter).forEach(p => usedInWarning.push(`<br />- ${p.modelDefinition.file.fileName}`)));
+            Util.removeDuplicates(usedInWarning);
+            renderer.editor?.ide.warning('Cannot remove property, as it has child properties that are in use' + childCaseReferences.map(property => `<br />- ${property.name}`).join('')  + '<br /> used in' + usedInWarning.join(''));   
+            return false;
+        }
+
+        return true;
+    }
+
 
     static async updateNameChangeInOtherModels(renderer: PropertyRenderer, newName: string) {
         // First track both the old and new name.

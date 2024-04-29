@@ -96,6 +96,14 @@ export default class TypeRenderer {
     }
 
     /**
+     * 
+     * @returns {Array<TypeRenderer>}
+     */
+    getDescendents() {
+        return [this, ...this.children.map(child => child.getDescendents()).flat()];
+    }
+
+    /**
      * Returns true if the potential child has us as an ancestor;
      * @param {TypeRenderer} potentialChild 
      * @returns {Boolean}
@@ -341,11 +349,15 @@ export class PropertyRenderer extends TypeRenderer {
         }
     }
 
+    /**
+     * Remove the property (including nested objects)
+     * But first check if the property is still in use. If so, then it cannot be removed.
+     */
     removeProperty() {
-        // remove the attribute (and all nested embedded attriute from the activeDefinition and the html table
-        if (this.property['isNew']) {
+        if (! PropertyUsage.checkPropertyDeletionAllowed(this)) {
             return;
         }
+
         // remove from the definition
         Util.removeFromArray(/** @type {SchemaDefinition} */(this.property.parent).properties, this.property);
         // remove from the html
