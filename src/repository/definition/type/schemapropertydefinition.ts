@@ -217,4 +217,13 @@ export default class SchemaPropertyDefinition extends ReferableElementDefinition
                 this.format = '';
         }
     }
+
+    fromCMMNType(realCMMNType: string) {
+        let strippedCMMNType = realCMMNType.replace('http://www.omg.org/spec/CMMN/PropertyType/', '');
+        // Correct an inconsistency in type   for JSON(type="number")      vs CMMN(type="float") 
+        // Correct an inconsistency in format for JSON(format="date-time") vs CMMN(type=".../dateTime")
+        // Correct an inconsistency in format for JSON(format="uri")       vs CMMN(type=".../anyURI")  
+        strippedCMMNType = strippedCMMNType === 'float' ? 'number' : strippedCMMNType === 'anyURI' ? 'uri' : strippedCMMNType === 'dateTime' ? 'date-time' : strippedCMMNType;
+        this.cmmnType = strippedCMMNType;
+    }
 }
