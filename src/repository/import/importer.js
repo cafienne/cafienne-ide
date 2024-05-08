@@ -1,3 +1,5 @@
+import TypeDefinition from "@repository/definition/type/typedefinition";
+import { andThen } from "@util/promise/followup";
 import XML from "@util/xml";
 import Tags from "../definition/dimensions/tags";
 import Repository from "../repository";
@@ -17,10 +19,13 @@ export default class Importer {
         const xmlDoc = XML.loadXMLString(this.text);
         if (XML.isValid(xmlDoc) && xmlDoc.documentElement.tagName == 'definitions') {
             console.log('Parsing and uploading definitions from copy/paste command ...');
+            const typeDefinitions = new Object();
+            const typeRefs = new Object();
             const allDimensionsXML = XML.getChildByTagName(xmlDoc.documentElement, Tags.CMMNDI);
             XML.getChildrenByTagName(xmlDoc.documentElement, 'case').forEach(xmlElement => {
                 // Create .case file
                 const fileName = xmlElement.getAttribute('id'); // assuming fileName always ends with .case ?!
+                const caseName = xmlElement.getAttribute('name');
 
                 // Try to recover IDE design time guid
                 const idAttributes = XML.allElements(xmlElement).map(element => element.getAttribute('id')).filter(id => id && id.startsWith('_')).map(id => id.split('_')[1]);
@@ -31,6 +36,7 @@ export default class Importer {
                 }
 
                 if (isNew(fileName)) {
+                    this.stripCaseNameFromReferences(caseName, xmlElement);
                     this.newFiles.push(new CaseImporter(this, fileName, xmlElement));
 
                     // Create .dimensions file
@@ -43,6 +49,7 @@ export default class Importer {
                     XML.getElementsByTagName(dimXML, Tags.CMMNEDGE).forEach(shape => elementMatcher(shape, shape.getAttribute('sourceCMMNElementRef'), shape.getAttribute('targetCMMNElementRef')));
                     const dimName = fileName.substring(0, fileName.length - 5) + '.dimensions';
                     if (isNew(dimName)) {
+                        this.stripCaseNameFromReferences(caseName, dimXML);
                         this.newFiles.push(new DimensionsImporter(this, dimName, dimXML));
                     }
                     // Create .humantask files
@@ -95,10 +102,125 @@ export default class Importer {
             XML.getChildrenByTagName(xmlDoc.documentElement, 'caseFileItemDefinition').forEach(xmlElement => {
                 const fileName = xmlElement.getAttribute('id');
                 if (isNew(fileName)) {
-                    xmlElement.removeAttribute('id')
-                    this.newFiles.push(new CFIDImporter(this, fileName, xmlElement));
+                    xmlElement.removeAttribute('id');
+                    if (fileName.endsWith('.cfid')) {
+                        this.newFiles.push(new CFIDImporter(this, fileName, xmlElement));
+                    } else {
+                        const typeFile = new TypeFile(this.repository, fileName, `<type id="${fileName}" name="${xmlElement.getAttribute('name')}"><schema/></type>`);
+                        typeFile.parse(andThen(() => {
+                            const typeDefinition = /** @type {TypeDefinition} */ (typeFile.content.definition);
+                            XML.getElementsByTagName(xmlElement, 'property').forEach((propertyElement) => {
+                                const schemaPropertyDefinition = typeDefinition.schema.createEmptyProperty();
+                                schemaPropertyDefinition.name = propertyElement.getAttribute('name');
+                                schemaPropertyDefinition.fromCMMNType(propertyElement.getAttribute('type'));
+                                schemaPropertyDefinition.multiplicity = 'ExactlyOne'; // CMMN doesn't specify multiplicity for primitive cfid properties
+                                XML.getElementsByTagName(propertyElement, 'cafienne:implementation').forEach(propertyExtensionElement => {
+                                    const isBusinessIdentifierAttribute = propertyExtensionElement.getAttribute('isBusinessIdentifier');
+                                    if (isBusinessIdentifierAttribute === 'true') {
+                                        schemaPropertyDefinition.isBusinessIdentifier = true;
+                                    }
+                                });
+                                typeDefinition.schema.properties.push(schemaPropertyDefinition);
+                            });
+                            if (fileName.endsWith('.type')) {
+                                this.newFiles.push(new TypeImporter(this, fileName, xmlElement, typeDefinition));
+                            }
+                            // Keep the embedded types for later usage during te import;
+                            typeDefinitions[fileName] = typeDefinition;
+                        }));
+                    }
                 }
             });
+            XML.getElementsByTagName(xmlDoc.documentElement, 'caseFileModel').forEach(caseFileModel => {
+                const typeRef = caseFileModel.getAttribute('cafienne:typeRef');
+                if (typeRef && typeRef.endsWith('.type')) {
+                    if (!typeRefs[typeRef]) {
+                        typeRefs[typeRef] = typeRef; // To avoid generating same typeRef again as they can appear in multiple (sub)case's
+                        let typeDefinition = /** @type {TypeDefinition} */ typeDefinitions[typeRef];
+                        if (!typeDefinition) {
+                            const typeFile = new TypeFile(this.repository, typeRef, TypeDefinition.createDefinitionSource(typeRef.replace(/\.type$/, '')));
+                            typeFile.parse(andThen(() => {
+                                // parsing is not a-sync code; so we are sure typeDefinition will be set with a new or already existing type from cache
+                                typeDefinition = typeDefinitions[typeRef] = typeFile.content.definition;
+                            }));
+                        }
+                        for (const caseFileItem of caseFileModel.children) {
+                            this.loadCaseFileItem(typeDefinition, typeDefinition.schema, caseFileItem, typeDefinitions);
+                        }
+                    }
+                    // Clear content as caseFileModel is definded by a typeRef
+                    caseFileModel.innerHTML = '';
+                    // without namespace prefix: typeRef="xxxx.type" in stead of cafienne:typeRef="xxxx.type"
+                    caseFileModel.removeAttribute('cafienne:typeRef');
+                    caseFileModel.removeAttribute('xmlns:cafienne');
+                    caseFileModel.setAttribute('typeRef', typeRef);
+                }
+            });
+        }
+    }
+
+    /**
+     * 
+     * @param {string} caseName 
+     * @param {Element} xmlElement 
+     */
+    stripCaseNameFromReferences(caseName, xmlElement) {
+        const caseNamePrefix = caseName + '/';
+        const caseNamePrefixLength = caseNamePrefix.length;
+        const updateReferences = (tagName, attributeName) =>
+            XML.getElementsByTagName(xmlElement, tagName) // Search for elements with the tagname
+                .filter((element) => element.getAttribute(attributeName) && element.getAttribute(attributeName).startsWith(caseNamePrefix))
+                .forEach((element) => {
+                    const oldRef = element.getAttribute(attributeName);
+                    element.setAttribute(attributeName, oldRef.substring(caseNamePrefixLength));
+                });
+
+        updateReferences('repetitionRule', 'contextRef');
+        updateReferences('requiredRule', 'contextRef');
+        updateReferences('manualActivationRule', 'contextRef');
+        updateReferences('applicabilityRule', 'contextRef');
+        updateReferences('ifPart', 'contextRef');
+        updateReferences('caseFileItemOnPart', 'sourceRef');
+        updateReferences('input', 'bindingRef');
+        updateReferences('output', 'bindingRef');
+        updateReferences('inputs', 'bindingRef');
+        updateReferences('outputs', 'bindingRef');
+        updateReferences('CMMNEdge', 'sourceCMMNElementRef');
+        updateReferences('CMMNEdge', 'targetCMMNElementRef');
+        updateReferences('CMMNShape', 'cmmnElementRef');
+    }
+
+    /**
+     * 
+     * @param {TypeDefinition} typeDefinition 
+     * @param {SchemaDefinition} schemaDefinition 
+     * @param {Element} caseFileItem 
+     * @param {Object} typeDefinitions 
+     */
+    loadCaseFileItem(typeDefinition, schemaDefinition, caseFileItem, typeDefinitions) {
+        if (caseFileItem.nodeName === 'caseFileItem') {
+            const property = /** @type {SchemaPropertyDefinition} */ (schemaDefinition.createEmptyProperty());
+            property.name = caseFileItem.getAttribute('name');
+            property.multiplicity = caseFileItem.getAttribute('multiplicity');
+            schemaDefinition.properties.push(property);
+
+            const definitionRef = caseFileItem.getAttribute('definitionRef');
+            if (definitionRef.endsWith('.object')) {
+                // It is an internal embedded object in type
+                property.type = 'object';
+                const embeddedTypeDefinition = typeDefinitions[definitionRef];
+                embeddedTypeDefinition.schema.properties.forEach((embeddedProperty) => { property.schema.properties.push(embeddedProperty) }); // Push all properties of the embedded caseFileItemDefinition to the typeDefinition;
+                const children = caseFileItem.getElementsByTagName('children');
+                if (children.length === 1) {
+                    for (const embeddedCaseFileItem of children[0].children) {
+                        this.loadCaseFileItem(typeDefinition, property.schema, embeddedCaseFileItem, typeDefinitions);
+                    }
+                }
+            }
+            if (definitionRef.endsWith('.type')) {
+                // It is an external referred type
+                property.type = definitionRef;
+            }
         }
     }
 
