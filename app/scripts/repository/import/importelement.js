@@ -18,7 +18,7 @@ class ImportElement {
 
     save() {
         const file = this.repository.get(this.fileName) || this.createFile();
-        file.source = this.content;
+        file.source = this.content.replace(/xmlns="http:\/\/www.omg.org\/spec\/CMMN\/20151109\/MODEL"/g, '');
         file.save();
     }
 
@@ -57,5 +57,27 @@ class HumanTaskImporter extends ImportElement {
 class CFIDImporter extends ImportElement {
     createFile() {
         return this.repository.createCFIDFile(this.fileName, this.content);
+    }
+}
+
+class TypeImporter extends ImportElement {
+    /**
+     * 
+     * @param {Importer} importer 
+     * @param {String} fileName 
+     * @param {Element} xmlElement 
+     * @param {TypeDefinition} typeDefinition 
+     */
+    constructor(importer, fileName, xmlElement, typeDefinition) {
+        super(importer, fileName, xmlElement);
+        this.typeDefinition = typeDefinition;
+    }
+
+    get content() {
+        return XML.prettyPrint(this.typeDefinition.toXML().documentElement);
+    }
+
+    createFile() {
+        return this.repository.createTypeFile(this.fileName, this.content);
     }
 }
