@@ -5,6 +5,7 @@ import XML from "@util/xml";
 import ModelDefinition from "@repository/definition/modeldefinition";
 import CaseDefinition from "@repository/definition/cmmn/casedefinition";
 import CaseFile from "@repository/serverfile/casefile";
+import TypeDefinition from "@repository/definition/type/typedefinition";
 
 export default class ImportElement {
     repository: Repository;
@@ -74,5 +75,26 @@ export class HumanTaskImporter extends ImportElement {
 export class CFIDImporter extends ImportElement {
     createFile() {
         return this.repository.createCFIDFile(this.fileName, this.content);
+    }
+}
+
+export class TypeImporter extends ImportElement {
+    /**
+     * 
+     * @param {Importer} importer 
+     * @param {String} fileName 
+     * @param {Element} xmlElement 
+     * @param {TypeDefinition} typeDefinition 
+     */
+    constructor(importer: Importer, fileName: string, xmlElement: Element, public typeDefinition: TypeDefinition) {
+        super(importer, fileName, xmlElement);
+    }
+
+    get content() {
+        return XML.prettyPrint(this.typeDefinition.toXML().documentElement);
+    }
+
+    createFile() {
+        return this.repository.createTypeFile(this.fileName, this.content);
     }
 }
