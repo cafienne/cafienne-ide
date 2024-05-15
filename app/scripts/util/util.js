@@ -115,6 +115,22 @@
     }
 
     /**
+     * 
+     * @param {Array} array 
+     * @param {*} element 
+     * @param {*} after 
+     */
+    static insertInArray(array, element, after = undefined) {
+        Util.removeFromArray(array, element);
+        const index = array.indexOf(after);
+        if (index >= 0 && index < array.length - 1) {
+            array.splice(index + 1, 0, element);
+        } else {
+            array.push(element);
+        }
+    }
+
+    /**
      * Remove duplicate elements from an array
      * @param {Array} array 
      * @returns {Array}

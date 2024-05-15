@@ -23,6 +23,15 @@ class CaseFileItemCollection extends CMMNElementDefinition {
     }
 
     /**
+     * 
+     * @param {CaseFileItemDef} child 
+     * @param {CaseFileItemDef | undefined} after 
+     */
+    insert(child, after = undefined) {
+        Util.insertInArray(this.children, child, after);
+    }
+
+    /**
      * Returns the case file item children of this element.
      * @returns {Array<CaseFileItemDef>}
      */
