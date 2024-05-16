@@ -247,10 +247,11 @@ class SimpleCaseFileBuilder {
 
     static getCaseFileItemDefinitionsUnspecified(cfiDefData) {
         const properties = [];
-        const propertyDatas = cfiDefData.defTypeObject[UNSPECIFIED_URI].tree.fancytree('getRootNode').children;
-        for (const propertyData of propertyDatas) {
-            properties.push(propertyData.data.name);
-        }
+        // TODO Reimplement with usage of CFINode tree
+        // const propertyDatas = cfiDefData.defTypeObject[UNSPECIFIED_URI].tree.happyTree('getRootNode').children;  f a n c y t r e e removed  :-)
+        // for (const propertyData of propertyDatas) {
+        //     properties.push(propertyData.data.name);
+        // }
         return properties;
     }
 }
