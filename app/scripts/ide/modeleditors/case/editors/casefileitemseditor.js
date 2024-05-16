@@ -2,7 +2,7 @@
 
 class CaseFileItemsEditor {
     /**
-     * Renders the CaseFile definition through fancytree
+     * Renders the CaseFile definition through CFINode
      * @param {CaseView} cs 
      * @param {JQuery<HTMLElement>} htmlParent 
      */
@@ -11,141 +11,21 @@ class CaseFileItemsEditor {
         this.ide = this.case.editor.ide;
         this.htmlParent = htmlParent;
         this.renderHTML();
+        /** @type {Array<CFINode>} */
+        this.cfiNodes = [];
+        /** @type {CFINode} */
+        this.selectedNode = null;
+        this.cfiBox = htmlParent.find('.cfi-details-container');
+
+        this.renderCaseFileModel();
 
         this.divCaseFileDefinitions = this.html.find('.divCaseFileDefinitions');
         this.caseFileItemDefinitionEditor = new CaseFileItemDefinitionEditor(this, this.divCaseFileDefinitions);
-        this.splitter = new BottomSplitter(htmlParent, '70%', 175);        
-        
-        //get the tree table which will contain the data from the html
-        this.tree = this.html.find('table');
-        //render the treetable. Add the data from the treeEditor object to the tree
-        this.tree.fancytree(this.getRenderStructure());
+        this.splitter = new BottomSplitter(htmlParent, '70%', 175);
 
         //add the event handles, for adding and removing data at top level
         this.attachEventHandlers();
-
-        //fancy tree has the tree object: the fancytree.js object (this.tree just points to html node)
-        this.fancyTree = this.tree.fancytree('getTree');
     }
-
-    /**
-     * returns the fancy tree definition for the case file items tree table.
-     * @returns {Fancytree.FancytreeOptions}
-     */
-    getRenderStructure() {
-        const treeRender = {
-            checkbox: false, //no checkboxes at the left of row
-            source: this.data,
-            titlesTabbable: true,
-            activeVisible: true,
-            //focusOnSelect: true,
-            extensions: ['edit', 'table', 'dnd'],
-            tables: {
-                nodeColumnIdx: 0,
-                indentation: 10
-            },
-            dnd: {
-                // Available options with their default:
-                autoExpandMS: 1000, // Expand nodes after n milliseconds of hovering
-                draggable: null, // Additional options passed to jQuery UI draggable
-                droppable: null, // Additional options passed to jQuery UI droppable
-                focusOnClick: false, // Focus, although draggable cancels mousedown event (#270)
-                preventRecursiveMoves: true, // Prevent dropping nodes on own descendants
-                preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
-                smartRevert: true, // set draggable.revert = true if drop was rejected
-
-                // Events that make tree nodes draggable
-                dragStart: (node, data) => this.handleDragStartCFIDataNode(node, data), // Callback(sourceNode, data), return true to enable dnd
-                dragStop: null, // Callback(sourceNode, data)
-                initHelper: null, // Callback(sourceNode, data)
-                updateHelper: null, // Callback(sourceNode, data)
-
-                // Events that make tree nodes accept draggables
-                dragEnter: null, // Callback(targetNode, data)
-                dragOver: null, // Callback(targetNode, data)
-                dragDrop: null, // Callback(targetNode, data)
-                dragLeave: null // Callback(targetNode, data)
-            },
-            //handle (de)activation of a dataNode
-            activate: (event, data) => this.selectRow(data.node),
-            deactivate: (event, data) => this.deselectRow(data.node),
-            renderColumns: (event, data) => {
-                //the first column is the title property
-                const node = data.node;
-                const $tdList = $(data.node.tr).find('>td');
-                const caseFileItem = this.getDefinitionElement(data.node);
-
-                // Set the fancy tree node title of the element.
-                $tdList.eq(0).find('.fancytree-title').html(caseFileItem.name); // Setting it in the HTML ensures that the name is also rendered for child items
-                data.node.title = caseFileItem.name; // Setting it in title ensures that it the text is not rendered as "undefined" for empty strings
-
-                $tdList.eq(0).off('change'); // Avoid adding duplicate handlers each time a node is rendered again.
-                $tdList.eq(0).on('change', (e) => {
-                    // Captures changes to name of case file item
-                    caseFileItem.name = e.target.value;
-                    if (!caseFileItem.definitionRef) {
-                        const cfid = this.ide.repository.getCaseFileItemDefinitions().find(definition => definition.name.toLowerCase() == caseFileItem.name.toLowerCase());
-                        if (cfid) {
-                            caseFileItem.definitionRef = cfid.fileName;
-                        }
-                    }
-                    this.case.refreshReferencingFields(caseFileItem);
-                    this.case.editor.completeUserAction();
-                })
-
-                const multiplicitySelect = `<select>
-                    <option value="ExactlyOne">[1]</option>
-                    <option value="ZeroOrOne">[0..1]</option>
-                    <option value="ZeroOrMore">[0..*]</option>
-                    <option value="OneOrMore">[1..*]</option>
-                    <option value="Unspecified">[*]</option>
-                    <option value="Unknown">[?]</option>
-               </select>`;
-
-                $tdList.eq(1).html(multiplicitySelect);
-
-                const multiplicityField = $tdList.eq(1)[0].firstChild;
-                multiplicityField.value = caseFileItem.multiplicity;
-
-                //attach the onchange select here
-                $(multiplicityField).on('change', () => {
-                    caseFileItem.multiplicity = multiplicityField.value;
-                    this.case.editor.completeUserAction();
-                });
-
-                // Set the case file item definition field
-                // Create the dropdown with the models (including __NEW__ and __EMPTY__)
-                $tdList.eq(2).html(this.getSelectHTML());
-
-                // Select the right CaseFileItemDefinition with our current value
-                const cfidefField = $tdList.eq(2)[0].firstChild;
-                cfidefField.value = caseFileItem.definitionRef;
-                // And make sure we can handle change of the value
-                $(cfidefField).on('change', e => this.changeCaseFileItemDefinition(caseFileItem, e.currentTarget));
-
-                const UsedInTooltip =
-                    `The Case File Item is used by:
-
-                    s = sentry
-                    T = Task
-                    E = Event
-                    M = Milestone
-                    S = Stage
-                    P = PlanningTable
-                    C = Case File Item (element)
-                    I = Input Case Parameters
-                    O = Output Case Parameters`;
-
-                $tdList.eq(3).attr('title', UsedInTooltip);
-
-                $tdList.eq(3).html('<span class="treetextfield"></span>')
-                const usedInField = $tdList.eq(3)[0].firstChild;
-                usedInField.innerHTML = caseFileItem.usedIn;
-            }
-        };
-        return treeRender;
-    }
-
 
     /**
      * Raises an issue found during validation. The context in which the issue has occured and the issue number must be passed, 
@@ -159,14 +39,7 @@ class CaseFileItemsEditor {
     }
 
     /**
-     * @returns {Array<CaseFileItemDef>}
-     */
-    get data() {
-        return this.case.caseDefinition.caseFile.children;
-    }
-
-    /**
-     * Returns the CMMNElementDefinition associated with the fancy tree node.
+     * Returns the CMMNElementDefinition associated with the tree node.
      * @returns {CaseFileItemDef}
      */
     getDefinitionElement(node) {
@@ -197,89 +70,69 @@ class CaseFileItemsEditor {
      * define the events of the data manipulation buttons, tree click event and other buttons
      */
     attachEventHandlers() {
-        this.html.find('.btnAddChild').on('click', e => this.clickAddButton('child'));
-        this.html.find('.btnAddSibling').on('click', e => this.clickAddButton('after'));
-        this.html.find('.btnRemoveItem').on('click', e => this.clickRemoveButton(e));
-
-        //add event for mouse leaving the tree editor -> unmark elements
-        this.html.on('pointerleave', (e, data) => {
-            this.changeMarking(false);
-            const activeNode = this.fancyTree.getActiveNode();
-            if (activeNode) {
-                activeNode.setActive(false);
+        this.html.find('.btnAddChild').on('click', e => this.clickAddButton(e, false));
+        this.html.find('.btnAddSibling').on('click', e => this.clickAddButton(e, true));
+        this.html.find('.btnRemoveItem').on('click', e => this.removeNode());
+        this.html.on('keydown', e => {
+            if (e.which == 27) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.deselectElements();
             }
         });
+    }
 
-        //add event for the [edit row] button (f2)
-        this.html.find('.treeeditoreditrowbt').on('click', e => {
-            e.stopPropagation();
-            e.preventDefault();
-            const activeNode = this.fancyTree.getActiveNode();
-            if (activeNode) {
-                activeNode.editStart();
-            }
-        });
+    clickAddButton(e, insert = false) {
+        e.preventDefault();
+        e.stopPropagation();
+        const newNode = this.addNode(insert);
+        this.selectCFINode(newNode);
+        newNode.inputNameFocusHandler();
     }
 
     /**
-     * Adds a node to the fancy tree, either as sibling or child of the current node (depends on the value of the position string)
-     * @param {String} position Must be either 'child' or 'after' for either adding a child or a sibling.
+     * 
+     * @param {Boolean} insert 
+     * @returns {CFINode}
      */
-    clickAddButton(position) {
-        const anchorNode = this.fancyTree.getActiveNode() || this.fancyTree.getRootNode();
-        // Parent node is used for determining the new case file item definition's parent.
-        const parentNode = position == 'after' ? anchorNode.parent : anchorNode;
-        const caseDefinition = this.case.caseDefinition;
-        const parentCaseFileItemID = parentNode && parentNode.data ? parentNode.data.__id : undefined;
-        /** @type {CaseFileItemCollection} */
-        const parentDefinition = parentCaseFileItemID ? caseDefinition.getElement(parentCaseFileItemID) : caseDefinition.getCaseFile();
-        const newCaseFileItemDefinition = parentDefinition.createChildDefinition()
-
-        // Fancy tree likes to get his new nodes in an array...
-        const newDataNode = [newCaseFileItemDefinition];
-
-        // Adding a sibling to the root will result in a fancytree error. Here we check for that case, and convert it to adding a child instead of a sibling
-        if (position == 'after' && !parentNode) {
-            position = 'child';
-        }
-        const newNode = anchorNode.addNode(newDataNode, position);
-        this.editStart(newNode);
-        this.case.editor.completeUserAction();                
-    }
-
-    clickRemoveButton(e) {
-        // Get the user selected node. Can be null if none is seleted
-        const activeNode = this.fancyTree.getActiveNode();
-        if (activeNode) {
-            const definitionElement = this.getDefinitionElement(activeNode);
-            if (this.hasReferences(definitionElement)) {
-                // Only remove the node if it is not in use
-                this.ide.danger('The item (or one of its children) is in use, it cannot be deleted');
+    addNode(insert = false) {
+        let newNode = null;
+        if (this.selectedNode) {
+            if (insert) {
+                if (this.selectedNode.parentNode) {
+                    newNode = this.selectedNode.parentNode.createChild(this.selectedNode);
+                } else {
+                    // Insert a node at root level
+                    const parentDefinition = this.case.caseDefinition.getCaseFile();
+                    newNode = this.createNode(parentDefinition.createChildDefinition());
+                    parentDefinition.insert(newNode.definition, this.selectedNode.definition);
+                    newNode.html.insertAfter(this.selectedNode.html);
+                }
             } else {
-                // Remove the node and the corresponding definition element.
-                definitionElement.removeDefinition();
-                activeNode.remove();
-                this.caseFileItemDefinitionEditor.hideEditor();
+                newNode = this.selectedNode.createChild();
             }
         } else {
-            ide.warning('Select a node to be removed', 1000);
+            newNode = this.createNode(this.case.caseDefinition.getCaseFile().createChildDefinition());
         }
-        this.case.editor.completeUserAction();        
+        this.case.editor.completeUserAction();
+        return newNode;
     }
 
-    /**
-     * return a string that defines the content of the select defintion field in the case file items editor
-     * Select has an empty field, a <new> for creating a new cfidef, and the already available cfidef's
-     * @returns {String}
-     */
-    getSelectHTML() {
-        // First create 2 options for "empty" and "_new_", then add all casefileitem definition files
-        return (
-            [`<select class="cfidefselect"><option value=""></option> <option value="${NEWDEF}">&lt;new&gt;</option>`]
-            .concat(this.ide.repository.getCaseFileItemDefinitions().map(definition => `<option value="${definition.fileName}">${definition.name}</option>`))
-            .concat('</select>')
-            .join(''));
-    };
+    removeNode() {
+        // Get the user selected cfi. Can be null if none is seleted
+        if (this.selectedNode) {
+            if (this.hasReferences(this.selectedNode.definition)) {
+                // Only remove the node if it is not in use
+                this.ide.danger('The Case File Item (or one of its children) is in use, it cannot be deleted');
+            } else {
+                // Remove the cfi
+                this.selectedNode.delete();
+                this.case.editor.completeUserAction();
+            }
+        } else {
+            this.ide.warning('Select a Case File Item to be removed', 1000);
+        }
+    }
 
     /**
      * Creates a non-existing name for the new case file item definition node,
@@ -309,8 +162,8 @@ class CaseFileItemsEditor {
             return proposedName + '_1';
         } else {
             const front = proposedName.substring(0, underscoreLocation + 1);
-            const num = new Number(proposedName.substring(underscoreLocation + 1));
-            const newName = front + (num + 1);
+            const num = new Number(proposedName.substring(underscoreLocation + 1)).valueOf() + 1;
+            const newName = front + num;
             return newName;
         }
     }
@@ -345,17 +198,12 @@ class CaseFileItemsEditor {
     /**
      * Fills the usedIn column, shows which type of elements use this cfi
      * Values can be: sTEMSPOCIO (sentry, Task, Event, Milestone, Stage, PlanningTable, input output CaseParameters, CFIElement
-     * - dataNode      : (optional) shows the usedIn just for this dataNode
      */
-    showUsedIn(dataNode) {
-        const allCaseFileItems = this.case.caseDefinition.getCaseFile().getDescendants();
-        //loop all dataNodes
-        allCaseFileItems.forEach(cfi => {
-            //get objects using this case file item
-            const objectsUsingDN = this.getReferences(cfi);
-            cfi.usedIn = this.getUsedInValueFromObjects(objectsUsingDN);
-        });
-        this.fancyTree.rootNode.render(true, true);
+    showUsedIn() {
+        // called from mappingcfi.js
+        // called from caseview.js
+        // Just render again to refresh the UsedIn
+        this.renderCaseFileModel();
     }
 
     /**
@@ -384,46 +232,10 @@ class CaseFileItemsEditor {
         return references;
     }
 
-    /** 
-     * returns a string of characters, these represent the object types used by a dataNode
-     * sTEMSPOCIO
-     */
-    getUsedInValueFromObjects(objects) {
-        //loop objects
-        const chars = [];
-        for (let i = 0; i < 9; i++) {
-            chars[i] = '&nbsp;';
-        }
-
-        objects.forEach(object => {
-            if (object instanceof CaseParametersEditor) {
-                // TODO: this can be made more precise through navigating the definition structure instead of the visualization structure.
-                chars[7] = 'I';
-                chars[8] = 'O';
-            } else if (object instanceof TaskView) {
-                chars[1] = 'T'
-            } else if (object instanceof StageView) {
-                chars[4] = 'S';
-            } else if (object instanceof MilestoneView) {
-                chars[3] = 'M';
-            } else if (object instanceof EventListenerView) {
-                chars[2] = 'E';
-            } else if (object instanceof SentryView) {
-                chars[0] = 's';
-            } else if (object instanceof PlanningTableView) {
-                chars[5] = 'P';
-            } else if (object instanceof CaseFileItemView) {
-                chars[6] = 'C';
-            }
-        })
-        return chars.join('');
-    }
-
     /**
      * Handles the dragging of a case file item from the cfi editor to a zoom field (cfi field)
      */
-    handleDragStartCFIDataNode(node, data) {
-        const cfi = this.getDefinitionElement(node);
+    handleDragStartCFIDataNode(cfi) {
         this.dragData = new CaseFileItemDragData(this, cfi);
     }
 
@@ -445,27 +257,27 @@ class CaseFileItemsEditor {
     }
 
     /**
-     * specific function for when a row in the cfiEditor is selected
+     * 
+     * @param {CFINode} node 
      */
-    selectRow(activeNode) {
-        const cfi = this.getDefinitionElement(activeNode);
-        // Show the right item in the definitions editor
-        this.caseFileItemDefinitionEditor.loadDefinition(cfi.definitionRef);
-        //get all objects using the dataNode = all objects using the case file item
-        this.markedObjects = this.getReferences(cfi);
-        this.changeMarking(true);
+    selectCFINode(node) {
+        if (node === this.selectedNode) {
+            return;
+        }
+        this.changeMarking(false); // Remove old markers
+        this.cfiNodes.forEach(node => node.deselect());
+        this.selectedNode = node;
+        if (node) {
+            node.select();
+
+            //get all objects using the dataNode = all objects using the case file item
+            this.markedObjects = this.getReferences(node.definition);
+            this.changeMarking(true);
+        }
     }
 
-    /**
-     * Function invoked when row is deselected; should clean up the existing markings.
-     */
-    deselectRow(activeNode) {
-        this.changeMarking(false);
-    }
-
-    editStart(newNode) {
-        newNode.setActive();
-        newNode.editStart();
+    deselectElements() {
+        this.selectCFINode(undefined);
     }
 
     /**
@@ -502,53 +314,61 @@ class CaseFileItemsEditor {
     }
 
     /**
+     * 
+     * @param {CaseFileItemDef} cfi 
+     */
+    createNode(cfi) {
+        return new CFINode(this, undefined, this.cfiBox, cfi);
+    }
+
+    renderCaseFileModel() {
+        Util.clearHTML(this.html.find('.cfi-details-container'));
+        this.case.caseDefinition.caseFile.children.forEach(cfi => this.createNode(cfi));
+    }
+
+    /**
      * create the html element of a treeEditor form
      */
     renderHTML() {
         //create the main element add to document
         this.html = $(
-`<div class="schemadatabox">
-    <div id="divCaseFileItems">
-        <div class="treeeditorform basicbox basicform">
-            <div class="casefile-header formheader">
-                <label>Case File Items</label>
-            </div>
-            <div id="treeeditorcontainerid">
-                <button class="btnAddChild" type="addchild">Add Child</button>
-                <button class="btnAddSibling" type="addsibling">Add Sibling</button>
-                <button class="btnRemoveItem" type="remove">Remove</button>
-                <div class="containerbox">
-                    <table>
-                        <colgroup>
-                            <col width="420px"></col>
-                            <col width="80px"></col>
-                            <col width="80px"></col>
-                            <col width="80px"></col>
-                        </colgroup>
-                        <thead>
-                            <tr>
-                                <th>Case File Item</th>
-                                <th>Multiplicity</th>
-                                <th>Definition</th>
-                                <th>UsedIn</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
+            `<div class="schemadatabox" tabindex="0">
+                <div>
+                    <div class="cfi-editorform basicbox basicform">
+                        <div class="casefile-header formheader">
+                            <label>Case File Items</label>
+                        </div>
+                        <div class="containerbox">
+                            <div class="cfi-buttons">
+                                <button class="btnAddChild" type="addchild">Add Child</button>
+                                <button class="btnAddSibling" type="addsibling">Add Sibling</button>
+                                <button class="btnRemoveItem" type="remove">Remove</button>
+                            </div>
+                            <div class="cfi-container">
+                                <div class="cfi-header cfi-details">
+                                    <div>Name</div>
+                                    <div>Multiplicity</div>
+                                    <div>Definition</div>
+                                    <div>UsedIn</div>
+                                </div>
+                                <div class="cfi-details-container">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="treeeditorfooter">
-                <div class="treeeditorfootereditrow">
-                    <button class="treeeditoreditrowbt">Edit Row</button>
-                    <span> or [F2], Drag To Properties</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="schemadatabox">
-    <div class="divCaseFileDefinitions basicbox"></div>
-</div>`);
+            <div class="schemadatabox">
+                <div class="divCaseFileDefinitions basicbox"></div>
+            </div>`);
+        this.html.on('click', () => this.deselectElements());
+        this.html.on('keydown', e => {
+            if (e.which == 113) {  // F2 pressed for edit
+                if (this.selectedNode) {
+                    this.selectedNode.inputNameFocusHandler();
+                }
+            }
+        });
         this.htmlParent.append(this.html);
     }
 }
