@@ -361,13 +361,8 @@
     <!-- endbuild -->
 </head>
 <body>
+    <script src="bundle.js"></script>
     <div class="iIDE" />
-    <script>                
-        // For now create a global IDE pointer.
-        const ide = new IDE();
-        //Start initialization after the entire page is loaded
-        $(window).on('load', e => ide.init());
-    </script>
 </body>
 </html>
 

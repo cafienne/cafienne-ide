@@ -1,26 +1,33 @@
-FROM nginx:alpine
+FROM node:19-bullseye-slim
 
-RUN apk update && apk --no-cache add nodejs npm
+WORKDIR /usr/app/src
 
-# Create app directory
-RUN mkdir -p /usr/src/app /usr/src/app/repository_deploy
-WORKDIR /usr/src/app
+COPY package.json yarn.lock ./
 
-# Install app dependencies
-COPY package.json /usr/src/app/
-RUN npm install --production
+COPY . .
 
-# copy nginx config
-COPY config/nginx.conf /etc/nginx/nginx.conf
+RUN yarn install
 
-# Bundle app source
-COPY . /usr/src/app
+RUN yarn clean-build
 
-# clean the repository
-RUN rm -rf /usr/src/app/repository/*
+RUN rm -r app
+RUN rm -r config
+RUN rm -r repository
+RUN rm -r repository_deploy
+RUN rm -r server
+RUN rm -r src
+RUN rm -r Dockerfile
+RUN rm -r package.json
+RUN rm -r tsconfig.json
+RUN rm -r webpack.config.js
+RUN rm -r yarn.lock
 
-# ENV NODE_ENV=docker (is now set in entrypoint.sh)
-EXPOSE 2081
-RUN dos2unix /usr/src/app/bin/entrypoint.sh
-RUN dos2unix /usr/src/app/bin/www
-ENTRYPOINT /usr/src/app/bin/entrypoint.sh
+EXPOSE 2040
+
+WORKDIR /usr/app/src/dist
+
+# Create directories inside the "dist" folder for storing models
+RUN mkdir repository
+RUN mkdir repository_deploy
+
+CMD ["node", "server/server.js" ]

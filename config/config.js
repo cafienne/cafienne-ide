@@ -11,7 +11,7 @@ const repositoryPath = process.env.MODELER_REPOSITORY_PATH ? process.env.MODELER
 const deployPath = process.env.MODELER_DEPLOY_PATH ? process.env.MODELER_DEPLOY_PATH : './repository_deploy';
 
 const config = {
-    serverPort: 3318
+    serverPort: 2081
 
 //*
     ,repository: repositoryPath
