@@ -11,7 +11,8 @@ const repositoryPath = process.env.MODELER_REPOSITORY_PATH ? process.env.MODELER
 const deployPath = process.env.MODELER_DEPLOY_PATH ? process.env.MODELER_DEPLOY_PATH : './repository_deploy';
 
 const config = {
-    serverPort: 2081
+    serverPort: 2081,
+    log_traffic: true // Set to false to only log failing HTTP calls.
 
 //*
     ,repository: repositoryPath

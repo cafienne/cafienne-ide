@@ -12,7 +12,14 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
-app.use(logger('dev'));
+const logOptions = {};
+if (!config.log_traffic) {
+  logOptions.skip = (req, res) => {
+    // Only log failures
+    return res.statusCode < 400
+  }
+}
+app.use(logger('dev', logOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 // Do not add static content when running in a docker container.
