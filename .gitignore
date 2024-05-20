@@ -1,11 +1,9 @@
 cmmn-modeler.iml
 .idea
 node_modules
-dist
+/dist
 .tmp
 .sass-cache
-bower_components
-test/bower_components
 .project
 .settings
 **/*.sln
