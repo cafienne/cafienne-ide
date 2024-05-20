@@ -1,42 +1,30 @@
 ﻿<!doctype html>
 
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <title>Cafienne IDE</title>
     <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
 
-    <!-- build:css styles/vendor.css -->
-    <!-- bower:css -->
+    <link rel="stylesheet" href="node_modules/jointjs/dist/joint.css" />
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="node_modules/jquery-ui/dist/themes/base/jquery-ui.css" />
+    <link rel="stylesheet" href="node_modules/codemirror/lib/codemirror.css" />
+    <link rel="stylesheet" href="node_modules/codemirror/addon/fold/foldgutter.css" />
+    <link rel="stylesheet" href="node_modules/codemirror/addon/hint/show-hint.css" />
+    <link rel="stylesheet" href="node_modules/alpaca/dist/alpaca/bootstrap/alpaca.min.css" />
 
-    <link rel="stylesheet" href="bower_components/joint/dist/joint.css" />
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-    <link rel="stylesheet" href="bower_components/jquery-ui/themes/base/jquery-ui.css" />
-    <link rel="stylesheet" href="bower_components/codemirror/lib/codemirror.css">
-    <link rel="stylesheet" href="bower_components/codemirror/addon/fold/foldgutter.css" />
-    <link rel="stylesheet" href="bower_components/codemirror/addon/hint/show-hint.css">
-    <!-- endbower -->
-    <!-- endbuild -->
-    <!-- build:css styles/ide.css -->
-    <!-- bower:css -->
     <link rel="stylesheet" href="styles/ide/ide.css" />
     <link rel="stylesheet" href="styles/ide/dragdata.css" />
     <link rel="stylesheet" href="styles/ide/splitter.css" />
     <link rel="stylesheet" href="styles/ide/repositorybrowser.css" />
-    <!-- endbower -->
-    <!-- endbuild -->
-    <!-- build:css styles/util.css -->
-    <!-- bower:css -->
     <link rel="stylesheet" href="styles/ide/editors/util/dialog.css" />
     <link rel="stylesheet" href="styles/ide/editors/util/zoomfield.css" />
     <link rel="stylesheet" href="styles/ide/editors/util/messagebox.css" />
     <link rel="stylesheet" href="styles/ide/editors/util/basicform.css" />
     <link rel="stylesheet" href="styles/ide/editors/util/generic_ui.css" />
     <link rel="stylesheet" href="styles/ide/editors/util/standardform.css" />
-    <!-- endbower -->
-    <!-- endbuild -->
-    <!-- build:css styles/scripts.css -->
-    <!-- bower:css -->
     <link rel="stylesheet" href="styles/ide/modeleditors/case/elements/properties/properties.css" />
     <link rel="stylesheet" href="styles/ide/modeleditors/case/elements/properties/planitemproperties.css" />
     <link rel="stylesheet" href="styles/ide/modeleditors/case/elements/properties/caseplanproperties.css" />
@@ -71,41 +59,33 @@
     <link rel="stylesheet" href="styles/validate/validate.css" />
     <link rel="stylesheet" href="styles/ide/modeleditors/cfid/casefileitemdefinition.css" />
     <link rel="stylesheet" href="styles/ide/settings/settingseditor.css" />
-    <!-- endbower -->
-    <!-- endbuild -->
-    <!-- build:js scripts/vendor.js -->
-    <!-- bower:js -->
-    <script src="bower_components/jquery/dist/jquery.js"></script>
-    <script src="bower_components/lodash/lodash.js"></script>
-    <script src="bower_components/backbone/backbone.js"></script>
-    <script src="bower_components/joint/dist/joint.js"></script>
-    <script src="bower_components/jquery-ui/jquery-ui.js"></script>
-    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="bower_components/codemirror/lib/codemirror.js"></script>
-    <script src="bower_components/codemirror/addon/hint/show-hint.js"></script>
-    <script src="bower_components/codemirror/addon/fold/foldcode.js"></script>
-    <script src="bower_components/codemirror/addon/fold/foldgutter.js"></script>
-    <script src="bower_components/codemirror/addon/fold/brace-fold.js"></script>
-    <script src="bower_components/codemirror/addon/fold/xml-fold.js"></script>
-    <script src="bower_components/codemirror/addon/hint/xml-hint.js"></script>
-    <script src="bower_components/codemirror/mode/xml/xml.js"></script>
-    <script src="bower_components/jsonpath-plus/lib/jsonpath-min.js"></script>
-    <script src="bower_components/codemirror/mode/javascript/javascript.js"></script>
-    <script src="bower_components/codemirror/addon/edit/matchbrackets.js"></script>
-    <script src="bower_components/codemirror/addon/edit/closebrackets.js"></script>
-    <script src="bower_components/codemirror/addon/fold/brace-fold.js"></script>
-    <script src="bower_components/codemirror/addon/fold/foldcode.js"></script>
-    <script src="bower_components/codemirror/addon/fold/xml-fold.js"></script>
-    <script src="bower_components/codemirror/addon/fold/foldgutter.js"></script>
-    <script src="bower_components/codemirror/addon/hint/javascript-hint.js"></script>
-    <script src="bower_components/codemirror/mode/javascript/javascript.js"></script>
-    <script src="bower_components/col-resizable/colResizable-1.6.js"></script>
-    <!-- endbower -->
-    <!-- endbuild -->
 
-    
-    <!-- build:js scripts/ide.js -->
-    <!-- bower:js -->
+    <script src="node_modules/jquery/dist/jquery.js"></script>
+    <script src="node_modules/lodash/lodash.js"></script>
+    <script src="node_modules/backbone/backbone.js"></script>
+    <script src="node_modules/jointjs/dist/joint.js"></script>
+    <script src="node_modules/jquery-ui/dist/jquery-ui.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="node_modules/codemirror/lib/codemirror.js"></script>
+    <script src="node_modules/codemirror/addon/hint/show-hint.js"></script>
+    <script src="node_modules/codemirror/addon/fold/foldcode.js"></script>
+    <script src="node_modules/codemirror/addon/fold/foldgutter.js"></script>
+    <script src="node_modules/codemirror/addon/fold/brace-fold.js"></script>
+    <script src="node_modules/codemirror/addon/fold/xml-fold.js"></script>
+    <script src="node_modules/codemirror/addon/hint/xml-hint.js"></script>
+    <script src="node_modules/codemirror/mode/xml/xml.js"></script>
+    <script src="node_modules/codemirror/mode/javascript/javascript.js"></script>
+    <script src="node_modules/codemirror/addon/edit/matchbrackets.js"></script>
+    <script src="node_modules/codemirror/addon/edit/closebrackets.js"></script>
+    <script src="node_modules/codemirror/addon/fold/brace-fold.js"></script>
+    <script src="node_modules/codemirror/addon/fold/foldcode.js"></script>
+    <script src="node_modules/codemirror/addon/fold/xml-fold.js"></script>
+    <script src="node_modules/codemirror/addon/fold/foldgutter.js"></script>
+    <script src="node_modules/codemirror/addon/hint/javascript-hint.js"></script>
+    <script src="node_modules/codemirror/mode/javascript/javascript.js"></script>
+    <script src="node_modules/handlebars/dist/handlebars.min.js"></script>
+    <script src="node_modules/alpaca/dist/alpaca/bootstrap/alpaca.min.js"></script>
+
     <script src="scripts/util/codemirrorconfig.js"></script>
     <script src="scripts/util/promise/followup.js"></script>
     <script src="scripts/util/promise/followuplist.js"></script>
@@ -128,20 +108,14 @@
     <script src="scripts/ide/settings/settings.js"></script>
     <script src="scripts/ide/settings/settingseditor.js"></script>
     <script src="scripts/ide/settings/settingsstorage.js"></script>
-    <!-- endbower -->
-    <!-- endbuild -->
-    <!-- build:js scripts/splitter.js -->
-    <!-- bower:js -->
+
     <script src="scripts/ide/splitter/splittersettings.js"></script>
     <script src="scripts/ide/splitter/splitter.js"></script>
     <script src="scripts/ide/splitter/horizontalsplitter.js"></script>
     <script src="scripts/ide/splitter/leftsplitter.js"></script>
     <script src="scripts/ide/splitter/rightsplitter.js"></script>
     <script src="scripts/ide/splitter/verticalsplitter.js"></script>
-    <!-- endbower -->
-    <!-- endbuild -->
-    <!-- build:js scripts/cmmn-lib.js -->
-    <!-- bower:js -->
+
     <script src="scripts/repository/definition/xmlelementdefinition.js"></script>
     <script src="scripts/repository/definition/cmmn/definitions/cmmndocumentationdefinition.js"></script>
     <script src="scripts/repository/definition/referableelementdefinition.js"></script>
@@ -184,15 +158,19 @@
     <script src="scripts/repository/definition/cmmn/definitions/caseplan/planningtabledefinition.js"></script>
     <script src="scripts/repository/definition/cmmn/definitions/caseplan/stagedefinition.js"></script>
     <script src="scripts/repository/definition/cmmn/definitions/caseplan/task/taskdefinition.js"></script>
-    <script src="scripts/repository/definition/cmmn/definitions/caseplan/task/workflow/cafienneworkflowdefinition.js"></script>
+    <script
+        src="scripts/repository/definition/cmmn/definitions/caseplan/task/workflow/cafienneworkflowdefinition.js"></script>
     <script src="scripts/repository/definition/cmmn/definitions/caseplan/task/casetaskdefinition.js"></script>
     <script src="scripts/repository/definition/cmmn/definitions/caseplan/task/humantaskdefinition.js"></script>
     <script src="scripts/repository/definition/cmmn/definitions/caseplan/task/planitemreference.js"></script>
-    <script src="scripts/repository/definition/cmmn/definitions/caseplan/task/workflow/assignmentdefinition.js"></script>
+    <script
+        src="scripts/repository/definition/cmmn/definitions/caseplan/task/workflow/assignmentdefinition.js"></script>
     <script src="scripts/repository/definition/cmmn/definitions/caseplan/task/workflow/duedatedefinition.js"></script>
-    <script src="scripts/repository/definition/cmmn/definitions/caseplan/task/workflow/taskpairingdefinition.js"></script>
+    <script
+        src="scripts/repository/definition/cmmn/definitions/caseplan/task/workflow/taskpairingdefinition.js"></script>
     <script src="scripts/repository/definition/cmmn/definitions/caseplan/task/workflow/foureyesdefinition.js"></script>
-    <script src="scripts/repository/definition/cmmn/definitions/caseplan/task/workflow/rendezvousdefinition.js"></script>
+    <script
+        src="scripts/repository/definition/cmmn/definitions/caseplan/task/workflow/rendezvousdefinition.js"></script>
     <script src="scripts/repository/definition/cmmn/definitions/caseplan/task/processtaskdefinition.js"></script>
     <script src="scripts/repository/definition/cmmn/definitions/caseplan/caseplandefinition.js"></script>
     <script src="scripts/repository/definition/cmmn/definitions/caseplan/milestonedefinition.js"></script>
@@ -213,38 +191,29 @@
     <script src="scripts/repository/repository.js"></script>
     <script src="scripts/repository/import/importelement.js"></script>
     <script src="scripts/repository/import/importer.js"></script>
-    <!-- endbower -->
-    <!-- endbuild -->    
-    <!-- build:js scripts/definitions.js -->
-    <!-- bower:js -->
+
     <script src="scripts/repository/definition/humantask/humantaskmodeldefinition.js"></script>
     <script src="scripts/repository/definition/humantask/humantaskmodelelementdefinition.js"></script>
     <script src="scripts/repository/definition/humantask/humantaskimplementationdefinition.js"></script>
     <script src="scripts/repository/definition/humantask/taskmodeldefinition.js"></script>
-    
+
     <script src="scripts/repository/definition/process/processmodeldefinition.js"></script>
     <script src="scripts/repository/definition/process/processimplementationdefinition.js"></script>
 
     <script src="scripts/repository/definition/cfid/casefileitemdefinitiondefinition.js"></script>
     <script src="scripts/repository/definition/cfid/propertydefinition.js"></script>
-    
+
     <script src="scripts/ide/modeleditors/cfid/casefileitemdefinitioneditor.js"></script>
     <script src="scripts/ide/modeleditors/cfid/cfidefinitionunspecified.js"></script>
     <script src="scripts/ide/modeleditors/cfid/cfidefinitionxmlelement.js"></script>
     <script src="scripts/ide/modeleditors/cfid/cfidefinitionunknown.js"></script>
-    <!-- endbower -->
-    <!-- endbuild -->
-    <!-- build:js scripts/validate.js -->
-    <!-- bower:js -->
+
     <script src="scripts/validate/problemtype.js"></script>
     <script src="scripts/validate/problem.js"></script>
     <script src="scripts/validate/validator.js"></script>
     <script src="scripts/validate/validationsettings.js"></script>
     <script src="scripts/validate/validateform.js"></script>
-    <!-- endbower -->
-    <!-- endbuild -->
-    <!-- build:js scripts/elements.js -->
-    <!-- bower:js -->
+
     <script src="scripts/ide/modeleditors/case/elements/elements.js"></script>
     <script src="scripts/ide/modeleditors/case/elements/canvaselement.js"></script>
     <script src="scripts/ide/modeleditors/case/elements/properties/properties.js"></script>
@@ -294,10 +263,7 @@
     <script src="scripts/ide/modeleditors/case/elements/planningtableview.js"></script>
     <script src="scripts/ide/modeleditors/case/elements/caseview.js"></script>
     <script src="scripts/ide/modeleditors/case/elements/connector.js"></script>
-    <!-- endbower -->
-    <!-- endbuild -->
-    <!-- build:js scripts/ide/editors.js -->
-    <!-- bower:js -->
+
     <script src="scripts/ide/modeleditors/case/editors/tableeditor/tableeditor.js"></script>
     <script src="scripts/ide/modeleditors/case/editors/tableeditor/tablerenderer.js"></script>
     <script src="scripts/ide/modeleditors/case/editors/tableeditor/rowrenderer.js"></script>
@@ -337,7 +303,7 @@
     <script src="scripts/ide/modeleditors/case/editors/roleseditor.js"></script>
     <script src="scripts/ide/modeleditors/case/editors/deploy.js"></script>
     <script src="scripts/ide/modeleditors/case/editors/startcaseeditor.js"></script>
-    
+
     <script src="scripts/ide/modeleditors/modeleditor.js"></script>
     <script src="scripts/ide/modeleditors/modeleditormetadata.js"></script>
     <script src="scripts/ide/modeleditors/xmleditor/modelsourceeditor.js"></script>
@@ -350,20 +316,11 @@
     <script src="scripts/ide/modeleditors/humantask/humantaskmodeleditormetadata.js"></script>
 
     <script src="scripts/ide/debugger/debugger.js"></script>
-
-    <!-- handlebars -->
-    <script type="text/javascript" src="bower_components/handlebars/handlebars.min.js"></script>
-   
-    <!-- alpaca -->
-    <link type="text/css" href="bower_components/alpaca/dist/alpaca/bootstrap/alpaca.min.css" rel="stylesheet"/>
-    <script type="text/javascript" src="bower_components/alpaca/dist/alpaca/bootstrap/alpaca.min.js"></script>
-    
-    <!-- endbower -->
-    <!-- endbuild -->
 </head>
+
 <body>
     <script type="module" src="bundle.js"></script>
     <div class="iIDE" />
 </body>
-</html>
 
+</html>

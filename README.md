@@ -8,16 +8,14 @@ This code is available under the [GNU AFFERO GENERAL PUBLIC LICENSE v3](LICENSE)
 
 ### Install pre-requesites
 
-* install nodejs >= 4.2.2 (see [nodejs.org](http://nodejs.org)) and npm (comes with nodejs)
-* install [gulp](http://gulpjs.com): `npm install -g gulp`
-* install [bower](http://bower.io): `npm install -g  bower`
+* install nodejs >= 22.3.0 (see [nodejs.org](http://nodejs.org)) and npm (comes with nodejs)
+* install yarn >= 1.22.22 ( run 'npm install -g yarn' ) (see https://classic.yarnpkg.com)
 
 ### Getting the code and building the modeler
 
 * Clone the Cafienne IDE and run index.html `git clone https://github.com/cafienne/cafienne-ide.git`
 * change into the `cafienne-ide` directory
 * run `npm install`
-* run `bower install`
 
 ### Building a docker image and running it
 
@@ -48,12 +46,14 @@ with this command:
 `docker run --rm --name modeler -p2081:2081 -v ~/models:/usr/src/app/repository -v ~/deploy:/usr/src/app/repository_deploy ide`
 
 
-### Running gulp commands
+### Running yarn commands
 
 To start developing, run:
 
 ```sh
-$ gulp serve
+$ yarn install
+$ yarn build
+$ yarn go
 ```
 
 This will fire up a local web server, open http://localhost:2081 in your default browser and watch files for changes, reloading the browser automatically via [LiveReload].
@@ -61,19 +61,16 @@ This will fire up a local web server, open http://localhost:2081 in your default
 To run the tests in the browser, run:
 
 ```sh
-$ gulp serve:test
 ```
 
 To make a production-ready build of the app, run:
 
 ```sh
-$ gulp
 ```
 
 To preview the production-ready build to check if everything is ok:
 
 ```sh
-$ gulp serve:dist
 ```
 
 ## Tasks
@@ -81,7 +78,6 @@ $ gulp serve:dist
 To get the list of available tasks, run:
 
 ```sh
-$ gulp --tasks
 ```
 
 ## Fixing linting errors
@@ -105,10 +101,3 @@ You can use this specification for creating case models in the IDE.
 Development and testing of the Cafienne IDE is mostly done with latest versions of Google Chrome.
 
 ### Other info
-
-This app was scaffolded using [yeoman](http://yeoman.io/) yeoman and the [gulp-webapp](https://github.com/yeoman/generator-gulp-webapp) generator.
-
-To install yeoman and the generator issue the following command:
-```sh
- $ npm install -g yo generator-gulp-webapp
-```
