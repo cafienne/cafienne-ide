@@ -9,9 +9,11 @@
 const backendUrl = process.env.BACKEND_API_URL ? process.env.BACKEND_API_URL : 'http://localhost:2027';
 const repositoryPath = process.env.MODELER_REPOSITORY_PATH ? process.env.MODELER_REPOSITORY_PATH : './repository';
 const deployPath = process.env.MODELER_DEPLOY_PATH ? process.env.MODELER_DEPLOY_PATH : './repository_deploy';
+const logTraffic = process.env.LOG_TRAFFIC ? process.env.LOG_TRAFFIC.trim().toLowerCase() !== 'false' : true;
 
 const config = {
-    serverPort: 3318
+    serverPort: 2081
+    ,log_traffic: logTraffic // defaults to true, set to false to only log failing HTTP calls.
 
 //*
     ,repository: repositoryPath

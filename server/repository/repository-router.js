@@ -1,15 +1,22 @@
 'use strict';
 
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const config = require('../../config/config');
+
 const Repository = require('@cafienne/repository').Repository;
-const repository = new Repository(config);
 const Backend = require('@cafienne/repository').Backend;
+
+const repository = new Repository(config);
 const caseService = new Backend(config.backendUrl);
 
 const router = express.Router();
 const xmlParser = bodyParser.text({ type: 'application/xml', limit: '50mb' });
+
+const RepositoryRouter = router;
+
+exports.RepositoryRouter = router;
 
 /**
  * Returns the repository contents by name, last modified timestamp and usage information
@@ -30,11 +37,12 @@ router.get('/load/*', function (req, res, next) {
         res.setHeader('x-sent', 'true');
         res.send(content);
     } catch (err) {
-        if (err.code === 'ENOENT') {
+        const error = err;
+        if (error.code === 'ENOENT') {
             // File does not exist, just return an empty string
             res.sendStatus(404);
         } else {
-            console.error(err);
+            console.error(error);
             res.sendStatus(500);
         }
     }
@@ -152,7 +160,7 @@ router.get('/validate/*', (req, res, next) => {
             res.setHeader('Content-Type', 'application/json');
             res.send('["The model is valid"]');
         })
-        .catch(err => {
+        .catch((err) => {
             if (err.response && err.response.status == 400) {
                 res.status(200);
                 res.setHeader('Content-Type', 'application/json');
@@ -170,11 +178,11 @@ router.get('/api/events/*', (req, res, next) => {
     const from = req.query['from'];
     const to = req.query['to'];
     const token = req.header('Authorization');
-    caseService.getEvents(caseInstanceId, from, to, token).then(response => {
+    caseService.getEvents(caseInstanceId, from, to, token).then((response) => {
         res.status(200);
         res.setHeader('Content-Type', 'application/json');
         res.send(response.data);
-    }).catch(err => {
+    }).catch((err) => {
         if (err.response) {
             res.status(err.response.status);
             res.send(`Failure while retrieving events<br/>${err.response.status}: ${err.response.data}`);
@@ -184,6 +192,4 @@ router.get('/api/events/*', (req, res, next) => {
             res.send(`Failure while retrieving events<br/>${err.message}`);
         }
     })
-})
-
-module.exports = router;
+});

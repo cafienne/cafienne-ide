@@ -1,5 +1,30 @@
 version: 2.1
 jobs:
+  webpack-build-to-dev:
+    resource_class: large
+    working_directory: ~/cafienne-ide
+    docker:
+      - image: cimg/node:22.2.0
+    steps:
+      - checkout
+      - run:
+          name: Installing dependencies
+          command: |
+            yarn install
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Build docker image
+          command: |
+            echo "Building docker image cafienne/ide:dev"
+            docker build -t cafienne/ide:dev .
+      - run:
+          name: Push docker image
+          command: |
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+            echo "Publishing image 'cafienne/ide:dev' to docker hub"
+            docker push cafienne/ide:dev
+
   branch-build-to-snapshot:
     working_directory: ~/cafienne-ide
     docker:
@@ -102,6 +127,13 @@ workflows:
             branches:
               ignore:
                 - main
+                - remove-bower-and-gulp
+      - webpack-build-to-dev:
+          context: automation-context
+          filters:
+            branches:
+              only:
+                - remove-bower-and-gulp
       - main-build-to-latest:
           context: automation-context
           filters:

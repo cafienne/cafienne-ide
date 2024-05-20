@@ -10,5 +10,3 @@ test/bower_components
 .settings
 **/*.sln
 **/*.suo
-repository/hcmtest*
-repository_deploy/hcmtest*
