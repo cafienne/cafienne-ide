@@ -1,7 +1,7 @@
 /**
  * Showing/hiding status messages on top of the fixed editors.
  */
-class CoverPanel {
+export default class CoverPanel {
     /**
      * This editor handles Case models
      * @param {IDE} ide 
