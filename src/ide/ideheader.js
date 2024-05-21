@@ -1,4 +1,4 @@
-class IDEHeader {
+export default class IDEHeader {
     /**
      * Constructs the footer of the IDE element.
      * @param {IDE} ide 

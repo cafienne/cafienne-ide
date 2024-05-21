@@ -1,4 +1,4 @@
-class SettingsEditor extends StandardForm {
+export default class SettingsEditor extends StandardForm {
     static asModelEditor(ide) {
         return {
                 divMovableEditors: ide.html,
