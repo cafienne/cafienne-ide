@@ -1,4 +1,4 @@
-﻿class MessageBox {
+﻿export default class MessageBox {
     /**
      * handles showing of alerts, confirms etc to user
      * @param {IDE} ide

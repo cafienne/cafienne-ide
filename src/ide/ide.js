@@ -1,6 +1,13 @@
 'use strict';
 
-class IDE {
+import CoverPanel from "./coverpanel";
+import IDEFooter from "./idefooter";
+import IDEHeader from "./ideheader";
+import IDEMain from "./idemain";
+import MessageBox from "./messagebox";
+import SettingsEditor from "./settings/settingseditor";
+
+export default class IDE {
     /** @type {Array<ModelEditorMetadata>} */
     static editorTypes = []
     constructor() {
@@ -228,3 +235,5 @@ class IDE {
         IDE.editorTypes.push(editorMetadata);
     }
 }
+
+window.IDE = IDE;
