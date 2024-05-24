@@ -1,3 +1,5 @@
+import IDE from "../ide";
+
 export default class Dialog {
     /**
      * @param {IDE} ide

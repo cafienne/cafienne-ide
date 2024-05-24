@@ -4,6 +4,11 @@ import IDE from "../ide";
 import SettingsStorage from "./settingsstorage";
 
 export default class SettingsEditor extends StandardForm {
+    /**
+     * 
+     * @param {IDE} ide 
+     * @returns 
+     */
     static asModelEditor(ide) {
         return {
                 divMovableEditors: ide.html,
