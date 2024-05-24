@@ -1,4 +1,6 @@
+import CodeMirrorConfig from "../../util/codemirrorconfig";
 import StandardForm from "../editors/standardform";
+import IDE from "../ide";
 import SettingsStorage from "./settingsstorage";
 
 export default class SettingsEditor extends StandardForm {
