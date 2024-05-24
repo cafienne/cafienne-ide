@@ -1,3 +1,4 @@
+import SplitterSettings from './ide/splitter/splittersettings';
 import CreateNewModelDialog from './ide/createnewmodeldialog';
 import DragData, { CaseFileItemDragData } from './ide/dragdata';
 import Dialog from './ide/editors/dialog';
@@ -14,6 +15,13 @@ import FollowupList from './util/promise/followuplist';
 import SequentialFollowupList from './util/promise/sequentialfollowuplist';
 import Util from './util/util';
 import XML from './util/xml';
+import Splitter from './ide/splitter/splitter';
+import HorizontalSplitter from './ide/splitter/horizontalsplitter';
+import LeftSplitter from './ide/splitter/leftsplitter';
+import RightSplitter from './ide/splitter/rightsplitter';
+import VerticalSplitter from './ide/splitter/verticalsplitter';
+import BottomSplitter from './ide/splitter/bottomsplitter';
+import TopSplitter from './ide/splitter/topsplitter';
 
 const pointers = [
     IDE,
@@ -35,16 +43,23 @@ const pointers = [
     SettingsStorage,
     ModelListPanel,
     RepositoryBrowser,
+    SplitterSettings,
+    Splitter,
+    HorizontalSplitter,
+    LeftSplitter,
+    RightSplitter,
+    VerticalSplitter,
+    BottomSplitter,
+    TopSplitter,
 ]
 
 export default class Compatibility {
     static registerClasses() {
-
-        const registerPointer = (property) => {
+        console.groupCollapsed("Registering " + pointers.length +" exports");
+        pointers.forEach(property => {
             console.log("Registering window." + property.name);
             window[property.name] = property;
-        }
-
-        pointers.forEach(registerPointer);        
+        });        
+        console.groupEnd();
     }
 }
