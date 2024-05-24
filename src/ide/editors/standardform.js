@@ -1,5 +1,6 @@
 ﻿'use strict';
 
+import ModelEditor from "../modeleditors/modeleditor";
 import MovableEditor from "./movableeditor";
 
 export default class StandardForm extends MovableEditor {

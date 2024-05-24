@@ -1,3 +1,6 @@
+import IDE from "./ide";
+import RepositoryBrowser from "./repositorybrowser";
+
 export default class IDEMain {
     /**
      * Constructs the footer of the IDE element.

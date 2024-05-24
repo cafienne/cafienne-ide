@@ -1,5 +1,7 @@
+import { andThen, onFail } from "../util/promise/followup";
 import DragData from "./dragdata";
 import IDE from "./ide";
+import ModelEditorMetadata from "./modeleditors/modeleditormetadata";
 import ModelListPanel from "./modellistpanel";
 
 export default class RepositoryBrowser {

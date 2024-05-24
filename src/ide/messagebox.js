@@ -1,4 +1,6 @@
-﻿export default class MessageBox {
+﻿import IDE from "./ide";
+
+export default class MessageBox {
     /**
      * handles showing of alerts, confirms etc to user
      * @param {IDE} ide

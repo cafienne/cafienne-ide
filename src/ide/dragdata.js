@@ -1,4 +1,5 @@
 import CaseFileItemDef from "../repository/definition/cmmn/definitions/casefile/casefileitemdef";
+import IDE from "./ide";
 import CaseFileItemView from "./modeleditors/case/elements/casefileitemview";
 
 export default class DragData {

@@ -1,3 +1,7 @@
+import CMMNElementDefinition from "../../repository/definition/cmmn/definitions/cmmnelementdefinition";
+import CaseModelEditor from "../modeleditors/case/casemodeleditor";
+import ModelEditor from "../modeleditors/modeleditor";
+
 export default class MovableEditor {
     /**
      * A movable editor resides typically within the context of a case.

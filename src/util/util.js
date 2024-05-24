@@ -189,7 +189,7 @@
     }
 }
 
-class ParseResult {
+export class ParseResult {
     constructor(source) {
         this.source = source;
     }

@@ -1,3 +1,10 @@
+import ServerFile from "../repository/serverfile";
+import { andThen } from "../util/promise/followup";
+import CreateNewModelDialog from "./createnewmodeldialog";
+import ModelEditor from "./modeleditors/modeleditor";
+import ModelEditorMetadata from "./modeleditors/modeleditormetadata";
+import RepositoryBrowser from "./repositorybrowser";
+
 export default class ModelListPanel {
     /**
      * 
@@ -165,7 +172,7 @@ export default class ModelListPanel {
 
     /**
      * Creates a new model based on name
-     * @param {*} e The click event
+     * @param {JQuery.ClickEvent} e The click event
      */
     create(e) {
         e.stopPropagation();
