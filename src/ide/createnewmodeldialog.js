@@ -1,4 +1,6 @@
-class CreateNewModelDialog extends Dialog {
+import Dialog from "./editors/dialog";
+
+export default class CreateNewModelDialog extends Dialog {
     /**
      * @param {IDE} ide
      * @param {string} label

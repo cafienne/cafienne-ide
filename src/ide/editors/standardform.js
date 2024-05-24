@@ -1,6 +1,8 @@
 ﻿'use strict';
 
-class StandardForm extends MovableEditor {
+import MovableEditor from "./movableeditor";
+
+export default class StandardForm extends MovableEditor {
 
     /**
      * @param {ModelEditor} modelEditor 
