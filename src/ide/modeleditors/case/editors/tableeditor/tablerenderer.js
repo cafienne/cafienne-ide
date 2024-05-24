@@ -1,3 +1,8 @@
+import CMMNElementDefinition from "../../../../../repository/definition/cmmn/definitions/cmmnelementdefinition";
+import CaseView from "../../elements/caseview";
+import ColumnRenderer from "./columnrenderer";
+import RowRenderer from "./rowrenderer";
+
 export default class TableRenderer {
     /**
      * Defines a generic control for collections of CMMNElementDefinition, to select and edit data in a table

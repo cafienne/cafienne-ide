@@ -1,3 +1,8 @@
+import TaskDefinition from "../../../../../../repository/definition/cmmn/definitions/caseplan/task/taskdefinition";
+import ParameterMappingDefinition, { InputMappingDefinition, OutputMappingDefinition } from "../../../../../../repository/definition/cmmn/definitions/contract/parametermappingdefinition";
+import RowRenderer from "../../tableeditor/rowrenderer";
+import MappingControl from "./mappingcontrol";
+
 export default class MappingRow extends RowRenderer {
     /**
      * @param {MappingControl} control 

@@ -1,3 +1,5 @@
+import MappingRow from "../mappingrow";
+
 export default class OperationSelector {
     static get label() {
         return 'Operation';

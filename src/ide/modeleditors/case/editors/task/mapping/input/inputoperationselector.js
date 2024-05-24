@@ -1,3 +1,5 @@
+import MappingRow from "../mappingrow";
+
 export default class InputOperationSelector {
     static get label() {
         return 'Operation';

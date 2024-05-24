@@ -1,3 +1,5 @@
+import MappingRow from "../mappingrow";
+
 export default class OutputParameterSelector {
     static get label() {
         return 'Model Output Parameter';

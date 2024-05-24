@@ -1,3 +1,9 @@
+import ParameterDefinition from "../../../../../../../repository/definition/cmmn/definitions/contract/parameterdefinition";
+import ParameterMappingDefinition from "../../../../../../../repository/definition/cmmn/definitions/contract/parametermappingdefinition";
+import ColumnRenderer from "../../../tableeditor/columnrenderer";
+import MappingControl from "../mappingcontrol";
+import { OutputMappingRow } from "../mappingrow";
+
 export default class OutputMappingControl extends MappingControl {
     constructor(editor, htmlParent) {
         super(editor, htmlParent);

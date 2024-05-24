@@ -1,3 +1,5 @@
+import { ParameterRow } from "./caseparameterseditor";
+
 export default class NameChanger {
     static get label() {
         return 'Name';

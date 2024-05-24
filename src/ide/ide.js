@@ -1,27 +1,27 @@
 'use strict';
 
+import ModelDefinition from "../repository/definition/modeldefinition";
+import Repository from "../repository/repository";
 import CoverPanel from "./coverpanel";
 import IDEFooter from "./idefooter";
 import IDEHeader from "./ideheader";
 import IDEMain from "./idemain";
 import MessageBox from "./messagebox";
+import CaseModelEditor from "./modeleditors/case/casemodeleditor";
+import ModelEditor from "./modeleditors/modeleditor";
+import ModelEditorMetadata from "./modeleditors/modeleditormetadata";
+import RepositoryBrowser from "./repositorybrowser";
 import SettingsEditor from "./settings/settingseditor";
 
 export default class IDE {
     /** @type {Array<ModelEditorMetadata>} */
     static editorTypes = []
     constructor() {
-        this._editors = [];
-    }
-
-    back() {
-        // Simplistic. Buggy. But nice and simple for now. Better would be to hash all locations we've been and go back properly
-        history.back();
-    }
-
-    init() {
         // Repository object handles the interaction with the server
         this.repository = new Repository();
+
+        /** @type {Array<ModelEditor>} */
+        this._editors = [];
 
         this.html = $('body');
 
@@ -43,6 +43,11 @@ export default class IDE {
 
 
         IDE.editorTypes.forEach(type => type.init(this));
+    }
+
+    back() {
+        // Simplistic. Buggy. But nice and simple for now. Better would be to hash all locations we've been and go back properly
+        history.back();
     }
 
     /**
@@ -229,5 +234,3 @@ export default class IDE {
         IDE.editorTypes.push(editorMetadata);
     }
 }
-
-window.IDE = IDE;

@@ -1,3 +1,7 @@
+import CMMNElementDefinition from "../../../../../repository/definition/cmmn/definitions/cmmnelementdefinition";
+import MovableEditor from "../../../../editors/movableeditor";
+import CaseModelEditor from "../../casemodeleditor";
+
 export default class TableEditor extends MovableEditor {
     /**
      * Defines a generic editor for collections of CMMNElementDefinition, to select and edit data in a table

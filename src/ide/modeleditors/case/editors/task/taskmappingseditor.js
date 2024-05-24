@@ -1,3 +1,9 @@
+import StandardForm from "../../../../editors/standardform";
+import BottomSplitter from "../../../../splitter/bottomsplitter";
+import TaskView from "../../elements/taskview";
+import InputMappingControl from "./mapping/input/inputmappingcontrol";
+import OutputMappingControl from "./mapping/output/outputmappingcontrol";
+
 export default class TaskMappingsEditor extends StandardForm {
     /**
      * @param {TaskView} task 

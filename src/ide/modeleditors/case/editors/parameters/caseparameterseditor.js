@@ -1,3 +1,10 @@
+import CaseFileItemDef from "../../../../../repository/definition/cmmn/definitions/casefile/casefileitemdef";
+import ParameterDefinition from "../../../../../repository/definition/cmmn/definitions/contract/parameterdefinition";
+import StandardForm from "../../../../editors/standardform";
+import CaseModelEditor from "../../casemodeleditor";
+import ColumnRenderer from "../tableeditor/columnrenderer";
+import TableRenderer from "../tableeditor/tablerenderer";
+
 export default class CaseParametersEditor extends StandardForm {
     /**
      * 

@@ -1,3 +1,5 @@
+import MappingRow from "../mappingrow";
+
 export default class OutputMappingDeleter {
     static get label() {
         return '';

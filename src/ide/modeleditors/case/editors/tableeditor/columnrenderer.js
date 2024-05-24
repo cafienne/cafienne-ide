@@ -1,3 +1,5 @@
+import RowRenderer from "./rowrenderer";
+
 export default class ColumnRenderer {
     /**
      * Base class for describing a column in a row in the table renderer

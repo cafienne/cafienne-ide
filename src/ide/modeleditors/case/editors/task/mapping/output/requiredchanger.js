@@ -1,3 +1,5 @@
+import MappingRow from "../mappingrow";
+
 export default class RequiredChanger {
     static get label() {
         return 'R';

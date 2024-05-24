@@ -1,3 +1,5 @@
+import MappingRow from "../mappingrow";
+
 export default class InputParameterSelector {
     static get label() {
         return 'Model Input Parameter';

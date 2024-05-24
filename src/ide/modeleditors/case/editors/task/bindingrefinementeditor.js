@@ -1,5 +1,10 @@
 'use strict';
 
+import CMMNElementDefinition from "../../../../../repository/definition/cmmn/definitions/cmmnelementdefinition";
+import ParameterDefinition from "../../../../../repository/definition/cmmn/definitions/contract/parameterdefinition";
+import TableEditor, { RowEditor, TableEditorColumn } from "../tableeditor/tableeditor";
+import MappingRow from "./mapping/mappingrow";
+
 export default class BindingRefinementEditor extends TableEditor {
     /**
      * This editor enables manipulation of bindingRef and bindingRefinement of task parameters.

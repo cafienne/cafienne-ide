@@ -1,3 +1,5 @@
+import MappingRow from "./mappingrow";
+
 export default class MappingExpression {
     static get label() {
         return 'Transformation';
@@ -65,7 +67,7 @@ export default class MappingExpression {
     }
 }
 
-class InputMappingExpression extends MappingExpression {
+export class InputMappingExpression extends MappingExpression {
 
     static get tooltip() {
         return `Expression executed when the task becomes active
@@ -74,7 +76,7 @@ The (optional) case file item is passed as input to the epxression`;
     }
 }
 
-class OutputMappingExpression extends MappingExpression {
+export class OutputMappingExpression extends MappingExpression {
 
     static get tooltip() {
         return `Expression executed when the task completes or fails

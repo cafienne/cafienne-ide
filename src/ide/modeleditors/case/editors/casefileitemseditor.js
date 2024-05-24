@@ -1,5 +1,7 @@
 ﻿import CaseFileItemDef from "../../../../repository/definition/cmmn/definitions/casefile/casefileitemdef";
 import { CaseFileItemDragData } from "../../../dragdata";
+import BottomSplitter from "../../../splitter/bottomsplitter";
+import CaseFileItemDefinitionEditor from "../../cfid/casefileitemdefinitioneditor";
 import CaseView from "../elements/caseview";
 import CFINode from "./file/cfinode";
 
