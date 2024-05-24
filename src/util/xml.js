@@ -1,4 +1,4 @@
-class XML {
+export default class XML {
     /**
      * Parses the given xml string into a Document object
      * @param {String|Node} xml

@@ -1,4 +1,4 @@
-class Followup {
+export default class Followup {
     static None = new Followup();
 
     /**
@@ -47,7 +47,7 @@ class Followup {
  * @param {(...args: *) => void} next 
  * @param {(msg: String) => void} fail
  */
-function andThen(next = (...args) => { }, fail = msg => { }) {
+export function andThen(next = (...args) => { }, fail = msg => { }) {
     return new Followup(next, fail);
 }
 
@@ -55,6 +55,6 @@ function andThen(next = (...args) => { }, fail = msg => { }) {
  * 
  * @param {(msg: String) => void} fail
  */
-function onFail(fail = msg => { }) {
+export function onFail(fail = msg => { }) {
     return new Followup(() => {}, fail);
 }

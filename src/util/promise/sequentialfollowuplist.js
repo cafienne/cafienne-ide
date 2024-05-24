@@ -1,4 +1,7 @@
-class SequentialFollowupList extends FollowupList {
+import Followup from "./followup";
+import FollowupList from "./followuplist";
+
+export default class SequentialFollowupList extends FollowupList {
     /**
      * 
      * @param {Followup} then 
