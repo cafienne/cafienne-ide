@@ -1,0 +1,53 @@
+import ModelDefinition from "../../modeldefinition";
+
+export const DIMENSIONS = 'dimensions';
+export const CMMNDI = 'CMMNDI';
+export const CMMNDIAGRAM = 'CMMNDiagram';
+export const CMMNSHAPE = 'CMMNShape';
+export const CMMNEDGE = 'CMMNEdge';
+export const BOUNDS = 'Bounds';
+export const WAYPOINT = 'waypoint';
+export const CMMNELEMENTREF = 'cmmnElementRef';
+export const SOURCECMMNELEMENTREF = 'sourceCMMNElementRef';
+export const TARGETCMMNELEMENTREF = 'targetCMMNElementRef';
+
+export default class Dimensions extends ModelDefinition {
+    /**
+     * Parses the content of the XML document into dimension structures that can be accessed via this class.
+     * @param {DimensionsFile} file
+     */
+    constructor(file) {
+        super(file);
+        this.file = file;
+        this.errors = [];
+    }
+
+    createShape(x, y, width, height, cmmnElementRef = undefined) {
+        return this.diagram.createShape(x, y, width, height, cmmnElementRef);
+    }
+
+    parseDocument() {
+        super.parseDocument();
+        this.diagram = this.parseElement(CMMNDIAGRAM, Diagram);
+    }
+    
+    /**
+     * While parsing the XML, an error may occur. This is stored in the overall list of parse errors.
+     * @param {String} msg 
+     */
+    addParseError(msg) {
+        this.errors.push(msg);
+    }
+
+    /**
+     * While parsing the XML, we may encounter valid but incomplete content, for which a warning will be generated.
+     * @param {String} msg 
+     */
+    addParseWarning(msg) {
+        this.errors.push(msg);
+    }
+
+    toXML() {
+        return super.exportModel(CMMNDI, 'diagram');
+    }
+}
