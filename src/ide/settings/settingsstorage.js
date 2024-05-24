@@ -1,4 +1,6 @@
-class SettingsStorage {
+const STORAGE = 'cmmn-modeler-settings';
+
+export default class SettingsStorage {
     /**
      * SettingsStorage is a global static class that holds a "plain" javascript object
      * and stores changes to it in localStorage.
