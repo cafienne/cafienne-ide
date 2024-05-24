@@ -1,4 +1,4 @@
-class SplitterSettings {
+export default class SplitterSettings {
     constructor() {
         this.splitters = {};
     }
