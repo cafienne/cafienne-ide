@@ -1,4 +1,4 @@
-class MovableEditor {
+export default class MovableEditor {
     /**
      * A movable editor resides typically within the context of a case.
      * Usually it is something that pops up upon button click (e.g., Properties of an element, Roles Editor, Parameters Editor, etc)

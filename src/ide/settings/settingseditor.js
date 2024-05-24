@@ -1,3 +1,5 @@
+import StandardForm from "../editors/standardform";
+
 export default class SettingsEditor extends StandardForm {
     static asModelEditor(ide) {
         return {
