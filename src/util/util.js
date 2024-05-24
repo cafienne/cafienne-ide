@@ -1,4 +1,4 @@
-﻿class Util {
+﻿export default class Util {
     /**
      * Copies the text to clipboard
      * @param {string} text 

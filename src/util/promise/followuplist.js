@@ -1,4 +1,6 @@
-class FollowupList {
+import Followup from "./followup";
+
+export default class FollowupList {
     /**
      * 
      * @param {Followup} then 

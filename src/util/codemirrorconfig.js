@@ -1,4 +1,4 @@
-class CodeMirrorConfig {
+export default class CodeMirrorConfig {
     static get JSON() {
         return {
             mode: 'application/json',

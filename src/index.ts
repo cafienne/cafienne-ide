@@ -1,3 +1,4 @@
+import Compatibility from './compatibility';
 import IDE from './ide/ide';
 
 //Start initialization after the entire page is loaded
@@ -6,3 +7,5 @@ window.addEventListener('load', e => {
     const ide = new IDE();
     ide.init();
 });
+
+Compatibility.registerClasses();
