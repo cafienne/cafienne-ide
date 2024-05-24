@@ -9,9 +9,7 @@ import PlanItem from "./caseplan/planitem";
 import CaseTeamDefinition from "./caseteam/caseteamdefinition";
 import CMMNElementDefinition from "./cmmnelementdefinition";
 import ParameterDefinition from "./contract/parameterdefinition";
-import CMMNExtensionDefinition from "./extensions/cmmnextensiondefinition";
-
-const STARTCASEMODEL_TAG = 'cafienne:start-case-model';
+import StartCaseSchemaDefinition from "./startcaseschemadefinition";
 
 export default class CaseDefinition extends ModelDefinition {
     /**
@@ -24,6 +22,8 @@ export default class CaseDefinition extends ModelDefinition {
         this.input = [];
         /** @type {Array<ParameterDefinition>} */
         this.output = [];
+        /** @type {Array<TextAnnotationDefinition>} */
+        this.annotations = [];
         this.file = file;
     }
 
@@ -39,7 +39,7 @@ export default class CaseDefinition extends ModelDefinition {
         this.input = this.parseElements('input', ParameterDefinition, []);
         /** @type {Array<ParameterDefinition>} */
         this.output = this.parseElements('output', ParameterDefinition, []);
-        this.annotations = this.parseElements('textAnnotation', TextAnnotationDefinition);
+        this.annotations = this.parseElements('textAnnotation', TextAnnotationDefinition, []);
         this.startCaseSchema = this.parseExtension(StartCaseSchemaDefinition);
         this.defaultExpressionLanguage = this.parseAttribute('expressionLanguage', 'spel');
     }
@@ -110,7 +110,7 @@ export default class CaseDefinition extends ModelDefinition {
      */
     getCasePlan() {
         if (!this.casePlan) {
-            this.casePlan = super.createDefinition(CasePlanDefinition);
+            this.casePlan = /** @type {CasePlanDefinition} */ (super.createDefinition(CasePlanDefinition));
         }
         return this.casePlan;
     }
@@ -121,9 +121,9 @@ export default class CaseDefinition extends ModelDefinition {
      */
     getCaseFile() {
         if (!this.caseFile) {
-            this.caseFile = super.createDefinition(CaseFileDefinition);
-            this.caseFile.id = undefined;
-            this.caseFile.name = undefined;
+            this.caseFile = /** @type {CaseFileDefinition} */ (super.createDefinition(CaseFileDefinition));
+            this.caseFile.id = '';
+            this.caseFile.name = '';
         }
         return this.caseFile;
     }
@@ -138,7 +138,7 @@ export default class CaseDefinition extends ModelDefinition {
      * @param {String|undefined} id 
      */
     createTextAnnotation(id = undefined) {
-        const annotation = super.createDefinition(TextAnnotationDefinition, id);
+        const annotation = /** @type {TextAnnotationDefinition} */ (super.createDefinition(TextAnnotationDefinition, id));
         this.annotations.push(annotation);
         return annotation;
     }
@@ -161,41 +161,3 @@ export default class CaseDefinition extends ModelDefinition {
         return xmlDocument;
     }
 }
-
-export class StartCaseSchemaDefinition extends CMMNExtensionDefinition {
-    /**
-    * @param {Element} importNode 
-    * @param {CaseDefinition} caseDefinition
-    * @param {CMMNElementDefinition|undefined} parent optional
-    */
-    constructor(importNode, caseDefinition, parent = undefined) {
-        super(importNode, caseDefinition, parent);
-        this._value = importNode ? importNode.textContent ? importNode.textContent : '' : '';
-    }
-
-    get value() {
-        return this._value;
-    }
-
-    /**
-     * @param {String} value
-     */
-    set value(value) {
-        this._value = value;
-    }
-
-    /**
-     * 
-     * @param {Element} parentNode 
-     */
-    createExportNode(parentNode) {
-        if (this.value.trim()) {
-        // Now dump start case schema if there is one. Should we also do ampersand replacements??? Not sure. Perhaps that belongs in business logic??
-        // const startCaseSchemaValue = this.case.startCaseEditor.value.replace(/&/g, '&amp;');
-            super.createExportNode(parentNode, StartCaseSchemaDefinition.TAG)
-            this.exportNode.textContent = this.value;
-        }
-    }
-}
-
-StartCaseSchemaDefinition.TAG = STARTCASEMODEL_TAG;

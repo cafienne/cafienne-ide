@@ -1,0 +1,43 @@
+import CaseDefinition from "./casedefinition";
+import CMMNElementDefinition from "./cmmnelementdefinition";
+import CMMNExtensionDefinition from "./extensions/cmmnextensiondefinition";
+
+const STARTCASEMODEL_TAG = 'cafienne:start-case-model';
+
+export default class StartCaseSchemaDefinition extends CMMNExtensionDefinition {
+    /**
+    * @param {Element} importNode 
+    * @param {CaseDefinition} caseDefinition
+    * @param {CMMNElementDefinition|undefined} parent optional
+    */
+    constructor(importNode, caseDefinition, parent = undefined) {
+        super(importNode, caseDefinition, parent);
+        this._value = importNode ? importNode.textContent ? importNode.textContent : '' : '';
+    }
+
+    get value() {
+        return this._value;
+    }
+
+    /**
+     * @param {String} value
+     */
+    set value(value) {
+        this._value = value;
+    }
+
+    /**
+     * 
+     * @param {Element} parentNode 
+     */
+    createExportNode(parentNode) {
+        if (this.value.trim()) {
+        // Now dump start case schema if there is one. Should we also do ampersand replacements??? Not sure. Perhaps that belongs in business logic??
+        // const startCaseSchemaValue = this.case.startCaseEditor.value.replace(/&/g, '&amp;');
+            super.createExportNode(parentNode, StartCaseSchemaDefinition.TAG)
+            this.exportNode.textContent = this.value;
+        }
+    }
+}
+
+StartCaseSchemaDefinition.TAG = STARTCASEMODEL_TAG;

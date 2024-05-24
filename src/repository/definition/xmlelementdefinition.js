@@ -405,6 +405,10 @@ export default class XMLElementDefinition {
         return false;
     }
 
+    /**
+     * 
+     * @param {Function} callback 
+     */
     loadExternalReferences(callback) {
         callback();
     }
