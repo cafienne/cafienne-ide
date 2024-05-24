@@ -1,3 +1,6 @@
+import CaseFileItemDef from "../repository/definition/cmmn/definitions/casefile/casefileitemdef";
+import CaseFileItemView from "./modeleditors/case/elements/casefileitemview";
+
 export default class DragData {
     /**
      * Simple helper class for dragging/dropping elements from either RepositoryBrowser or ShapeBox to the CaseModelEditor canvas.
@@ -111,6 +114,11 @@ export default class DragData {
 }
 
 export class CaseFileItemDragData extends DragData {
+    /**
+     * 
+     * @param {*} editor 
+     * @param {CaseFileItemDef} cfi 
+     */
     constructor(editor, cfi) {
         super(editor.ide, editor, cfi.name, CaseFileItemView.name, CaseFileItemView.smallImage, cfi.id);
         this.item = cfi;

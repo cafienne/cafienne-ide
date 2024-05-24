@@ -100,6 +100,11 @@ import ProcessModelDefinition, { CALCULATION_DEFINITION, CALCULATION_DEFINITION_
 import ProcessImplementationDefinition from './repository/definition/process/processimplementationdefinition';
 import PropertyDefinition from './repository/definition/cfid/propertydefinition';
 import CaseFileDefinitionDefinition, { UNKNOWN, UNKNOWN_URI, UNSPECIFIED, UNSPECIFIED_URI, XMLELEMENT, XMLELEMENT_URI } from './repository/definition/cfid/casefileitemdefinitiondefinition';
+import ValidateForm from './validate/validateform';
+import ValidationSettings from './validate/validationsettings';
+import Validator from './validate/validator';
+import Problem from './validate/problem';
+import ProblemType from './validate/problemtype';
 
 const pointers = [
     IDE,
@@ -237,6 +242,11 @@ const pointers = [
     XMLELEMENT_URI,    
     UNKNOWN,
     UNKNOWN_URI,
+    ProblemType, 
+    Problem, 
+    Validator, 
+    ValidationSettings, 
+    ValidateForm, 
     
 ]
 
