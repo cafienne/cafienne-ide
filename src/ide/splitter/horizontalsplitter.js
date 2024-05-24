@@ -1,5 +1,6 @@
+import Splitter from "./splitter";
 
-class HorizontalSplitter extends Splitter {
+export default class HorizontalSplitter extends Splitter {
     /**
      * 
      * @param {JQuery<HTMLElement>} container 
@@ -122,4 +123,3 @@ class HorizontalSplitter extends Splitter {
         return this.restoreImg.css('display') == 'block';
     }
 }
-

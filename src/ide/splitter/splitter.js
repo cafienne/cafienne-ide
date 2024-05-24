@@ -1,4 +1,6 @@
-class Splitter {
+import SplitterSettings from "./splittersettings";
+
+export default class Splitter {
     /** @returns {SplitterSettings} */
     static get Settings() {
         if (!Splitter._settings) {
