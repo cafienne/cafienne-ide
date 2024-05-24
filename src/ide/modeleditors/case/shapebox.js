@@ -1,3 +1,4 @@
+import DragData from "../../dragdata";
 import CaseView from "./elements/caseview";
 
 export default class ShapeBox {
@@ -57,8 +58,8 @@ export default class ShapeBox {
     /**
      * Registers a drop handler with the repository browser.
      * If an item from the browser is moved over the canvas, elements can register a drop handler
-     * @param {Function} dropHandler
-     * @param {Function} filter
+     * @param {(d: DragData) => void} dropHandler
+     * @param {(d: DragData, e: JQuery.PointerMoveEvent | JQuery.PointerUpEvent) => boolean} filter
      */
     setDropHandler(dropHandler, filter = undefined) {
         if (this.dragData) this.dragData.setDropHandler(dropHandler, filter);

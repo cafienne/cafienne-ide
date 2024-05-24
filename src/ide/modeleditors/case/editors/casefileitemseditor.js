@@ -255,7 +255,7 @@ export default class CaseFileItemsEditor {
      * Registers a function handler that is invoked upon dropping an element.
      * If an item from the editor is moved over the canvas, elements and form properties can register themselves as a drop handler
      * @param {(cfi: CaseFileItemDragData) => void} dropHandler
-     * @param {Function} filter
+     * @param {(cfi: CaseFileItemDragData, e: JQuery.PointerMoveEvent | JQuery.PointerUpEvent) => boolean} filter
      */
     setDropHandler(dropHandler, filter = undefined) {
         if (this.dragData) this.dragData.setDropHandler(dropHandler, filter);

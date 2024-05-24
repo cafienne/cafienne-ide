@@ -46,6 +46,10 @@ export default class DragData {
         $(document).on('keydown', this.escapeKeyListener);
     }
 
+    /**
+     * 
+     * @param {JQuery.PointerMoveEvent} e 
+     */
     handleMousemoveModel(e) {
         this.ide.dragging = true;
         
@@ -68,8 +72,8 @@ export default class DragData {
     /**
      * Registers a drop handler with the repository browser.
      * If an item from the browser is moved over the canvas, elements can register a drop handler
-     * @param {Function} dropHandler
-     * @param {Function} filter
+     * @param {(d: DragData) => void} dropHandler
+     * @param {(d: DragData, e: JQuery.PointerMoveEvent | JQuery.PointerUpEvent) => boolean} filter
      */
     setDropHandler(dropHandler, filter = undefined) {
         // @ts-ignore
@@ -85,6 +89,11 @@ export default class DragData {
         this._dropFilter = undefined;
     }
 
+    /**
+     * 
+     * @param {JQuery.PointerMoveEvent | JQuery.PointerUpEvent} e 
+     * @returns 
+     */
     canDrop(e) {
         this.event = e;
         if (!this._dropHandler) {
@@ -94,6 +103,10 @@ export default class DragData {
         return result;
     }
 
+    /**
+     * 
+     * @param {JQuery.PointerUpEvent} e 
+     */
     handleMouseupModel(e) {
         this.event = e;
         if (this.canDrop(e)) {

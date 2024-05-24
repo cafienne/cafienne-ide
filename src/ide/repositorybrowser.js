@@ -77,8 +77,8 @@ export default class RepositoryBrowser {
     /**
      * Registers a drop handler with the repository browser.
      * If an item from the browser is moved over the canvas, elements can register a drop handler
-     * @param {Function} dropHandler
-     * @param {Function} filter
+     * @param {(d: DragData) => void} dropHandler
+     * @param {(d: DragData, e: JQuery.PointerMoveEvent | JQuery.PointerUpEvent) => boolean} filter
      */
     setDropHandler(dropHandler, filter = undefined) {
         if (this.dragData) this.dragData.setDropHandler(dropHandler, filter);
