@@ -1,6 +1,9 @@
+import { CAFIENNE_NAMESPACE, CAFIENNE_PREFIX, EXTENSIONELEMENTS, IMPLEMENTATION_TAG } from "../../../repository/definition/xmlelementdefinition";
 import ServerFile from "../../../repository/serverfile";
 import ProcessFile from "../../../repository/serverfile/processfile";
+import { andThen } from "../../../util/promise/followup";
 import IDE from "../../ide";
+import ProcessTaskView from "../case/elements/processtaskview";
 import ModelEditorMetadata from "../modeleditormetadata";
 import ProcessModelEditor from "./processmodeleditor";
 

@@ -4,8 +4,10 @@ import HumanTaskModelDefinition from "../../../repository/definition/humantask/h
 import XMLElementDefinition from "../../../repository/definition/xmlelementdefinition";
 import HumanTaskFile from "../../../repository/serverfile/humantaskfile";
 import CodeMirrorConfig from "../../../util/codemirrorconfig";
+import Util from "../../../util/util";
 import XML from "../../../util/xml";
 import IDE from "../../ide";
+import RightSplitter from "../../splitter/rightsplitter";
 import ModelEditor from "../modeleditor";
 import ModelParameters from "../xmleditor/modelparameters";
 import ModelSourceEditor from "../xmleditor/modelsourceeditor";

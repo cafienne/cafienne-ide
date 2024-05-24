@@ -1,4 +1,8 @@
 import IDE from "../ide/ide";
+import XML from "../util/xml";
+import { CMMNEDGE, CMMNSHAPE } from "./definition/cmmn/dimensions/dimensions";
+import Repository from "./repository";
+import ServerFile from "./serverfile";
 
 export default class Importer {
     /**
@@ -122,6 +126,7 @@ class ImportElement {
 
     /**
      * @returns {ServerFile}
+     * 
      */
     createFile() {
         throw new Error('This method must be implemented in ' + this.constructor.name);

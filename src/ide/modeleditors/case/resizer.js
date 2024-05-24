@@ -1,4 +1,7 @@
-﻿import CMMNElementView from "./elements/cmmnelementview";
+﻿import Util from "../../../util/util";
+import CMMNElementView from "./elements/cmmnelementview";
+import StageView from "./elements/stageview";
+import Grid from "./grid";
 
 const CONNECTOR = 'connector';
 

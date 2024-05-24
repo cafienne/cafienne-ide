@@ -60,12 +60,14 @@ export default class XML {
      */
     static loadXMLString(txt) {
         if (DOMParser) {
+            /** @type {Document} */
             return new DOMParser().parseFromString(txt, 'text/xml');
         } else {
             // code for IE
             const xmlDoc = new ActiveXObject('Microsoft.XMLDOM');
             xmlDoc.async = false;
             xmlDoc.loadXML(txt);
+            /** @type {Document} */
             return xmlDoc;
         }
     }

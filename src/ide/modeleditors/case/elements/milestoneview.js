@@ -1,9 +1,11 @@
 ﻿import MilestoneDefinition from "../../../../repository/definition/cmmn/definitions/caseplan/milestonedefinition";
 import PlanItem from "../../../../repository/definition/cmmn/definitions/caseplan/planitem";
 import ShapeDefinition from "../../../../repository/definition/cmmn/dimensions/shape";
+import CMMNElementView from "./cmmnelementview";
 import { MilestoneDecoratorBox } from "./decorator/decoratorbox";
 import PlanItemView from "./planitemview";
 import MilestoneProperties from "./properties/milestoneproperties";
+import { EntryCriterionView } from "./sentryview";
 import StageView from "./stageview";
 
 export default class MilestoneView extends PlanItemView {

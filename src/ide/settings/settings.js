@@ -1,5 +1,7 @@
 'use strict';
 
+import SettingsStorage from "./settingsstorage";
+
 const FILEPANEL_STATE = 'filepanel_state';
 const GRID_SIZE = 'grid_size';
 const GRID_VISIBILITY = 'grid_visible';

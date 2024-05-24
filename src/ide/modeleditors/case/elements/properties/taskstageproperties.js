@@ -1,4 +1,5 @@
 import { ApplicabilityRuleDefinition } from "../../../../../repository/definition/cmmn/definitions/caseplan/planningtabledefinition";
+import Util from "../../../../../util/util";
 import { EXPANDEDPLANNINGTABLE_IMG } from "../elements";
 import TaskStageView from "../taskstageview";
 import PlanItemProperties from "./planitemproperties";

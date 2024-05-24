@@ -1,4 +1,8 @@
+import CMMNElementView from "../../../../ide/modeleditors/case/elements/cmmnelementview";
+import Util from "../../../../util/util";
+import Diagram from "./diagram";
 import DiagramElement from "./diagramelement";
+import Dimensions, { CMMNEDGE, SOURCECMMNELEMENTREF, TARGETCMMNELEMENTREF, WAYPOINT } from "./dimensions";
 import Vertex from "./vertex";
 
 export default class Edge extends DiagramElement

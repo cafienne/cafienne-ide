@@ -1,4 +1,5 @@
 import CMMNElementDefinition from "../cmmnelementdefinition";
+import PlanningTableDefinition from "./planningtabledefinition";
 
 export default class PlanItemDefinitionDefinition extends CMMNElementDefinition {
     constructor(importNode, caseDefinition, parent) {
@@ -28,13 +29,13 @@ export default class PlanItemDefinitionDefinition extends CMMNElementDefinition 
 export class TaskStageDefinition extends PlanItemDefinitionDefinition {
     constructor(importNode, caseDefinition, parent) {
         super(importNode, caseDefinition, parent);
-        /** @type{PlanningTableDefinition} */
+        /** @type {PlanningTableDefinition} */
         this.planningTable = this.parseElement('planningTable', PlanningTableDefinition);
     }
 
     getPlanningTable() {
         if (!this.planningTable) {
-            /** @type{PlanningTableDefinition} */
+            /** @type {PlanningTableDefinition} */
             this.planningTable = super.createDefinition(PlanningTableDefinition); 
         }
         return this.planningTable;

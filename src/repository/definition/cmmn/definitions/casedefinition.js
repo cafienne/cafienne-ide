@@ -1,9 +1,12 @@
+import XML from "../../../../util/xml";
+import CaseFile from "../../../serverfile/casefile";
 import ModelDefinition from "../../modeldefinition";
 import Dimensions from "../dimensions/dimensions";
 import TextAnnotationDefinition from "./artifact/textannotation";
 import CaseFileDefinition from "./casefile/casefiledefinition";
 import CasePlanDefinition from "./caseplan/caseplandefinition";
 import PlanItem from "./caseplan/planitem";
+import CaseTeamDefinition from "./caseteam/caseteamdefinition";
 import CMMNElementDefinition from "./cmmnelementdefinition";
 import ParameterDefinition from "./contract/parameterdefinition";
 import CMMNExtensionDefinition from "./extensions/cmmnextensiondefinition";
@@ -17,6 +20,10 @@ export default class CaseDefinition extends ModelDefinition {
      */
     constructor(file) {
         super(file);
+        /** @type {Array<ParameterDefinition>} */
+        this.input = [];
+        /** @type {Array<ParameterDefinition>} */
+        this.output = [];
         this.file = file;
     }
 
@@ -29,9 +36,9 @@ export default class CaseDefinition extends ModelDefinition {
         /** @type {CaseTeamDefinition} */
         this.caseTeam = this.parseCaseTeam();
         /** @type {Array<ParameterDefinition>} */
-        this.input = this.parseElements('input', ParameterDefinition);
+        this.input = this.parseElements('input', ParameterDefinition, []);
         /** @type {Array<ParameterDefinition>} */
-        this.output = this.parseElements('output', ParameterDefinition);
+        this.output = this.parseElements('output', ParameterDefinition, []);
         this.annotations = this.parseElements('textAnnotation', TextAnnotationDefinition);
         this.startCaseSchema = this.parseExtension(StartCaseSchemaDefinition);
         this.defaultExpressionLanguage = this.parseAttribute('expressionLanguage', 'spel');
@@ -41,6 +48,10 @@ export default class CaseDefinition extends ModelDefinition {
         return true;
     }
 
+    /**
+     * 
+     * @param {Function} callback 
+     */
     loadExternalReferences(callback) {
         this.resolveExternalDefinition(this.file.name + ".dimensions", definition => {            
             this.dimensions = /** @type {Dimensions} */ (definition);
@@ -64,7 +75,7 @@ export default class CaseDefinition extends ModelDefinition {
             // Create a new element
             const caseTeamElement = XML.loadXMLString('<caseRoles />').documentElement;
             rolesElements.forEach(role => {
-                role.parentElement.removeChild(role);
+                role.parentElement && role.parentElement.removeChild(role);
                 caseTeamElement.appendChild(CaseTeamDefinition.convertRoleDefinition(role))
             });
             this.importNode.appendChild(caseTeamElement);
@@ -76,12 +87,12 @@ export default class CaseDefinition extends ModelDefinition {
      * Returns the element that has the specified identifier, or undefined.
      * If the constructor argument is specified, the element is checked against the constructor with 'instanceof'
      * @param {String} id 
-     * @param {Function} constructor
+     * @param {Function|undefined} constructor
      * @returns {CMMNElementDefinition}
      */
     getElement(id, constructor = undefined) {
         // Override, just to have a generic type cast
-        return super.getElement(id, constructor);
+        return /** @type {CMMNElementDefinition} */ (super.getElement(id, constructor));
     }
 
     get inputParameters() {
@@ -124,7 +135,7 @@ export default class CaseDefinition extends ModelDefinition {
 
     /**
      * Create a text annotation that can be child to this stage
-     * @param {String} id 
+     * @param {String|undefined} id 
      */
     createTextAnnotation(id = undefined) {
         const annotation = super.createDefinition(TextAnnotationDefinition, id);
@@ -155,11 +166,11 @@ export class StartCaseSchemaDefinition extends CMMNExtensionDefinition {
     /**
     * @param {Element} importNode 
     * @param {CaseDefinition} caseDefinition
-    * @param {CMMNElementDefinition} parent optional
+    * @param {CMMNElementDefinition|undefined} parent optional
     */
     constructor(importNode, caseDefinition, parent = undefined) {
         super(importNode, caseDefinition, parent);
-        this.value = importNode ? importNode.textContent : '';
+        this._value = importNode ? importNode.textContent ? importNode.textContent : '' : '';
     }
 
     get value() {
@@ -173,6 +184,10 @@ export class StartCaseSchemaDefinition extends CMMNExtensionDefinition {
         this._value = value;
     }
 
+    /**
+     * 
+     * @param {Element} parentNode 
+     */
     createExportNode(parentNode) {
         if (this.value.trim()) {
         // Now dump start case schema if there is one. Should we also do ampersand replacements??? Not sure. Perhaps that belongs in business logic??

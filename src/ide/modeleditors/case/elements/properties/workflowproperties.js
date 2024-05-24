@@ -1,5 +1,8 @@
 import PlanItem from "../../../../../repository/definition/cmmn/definitions/caseplan/planitem";
 import HumanTaskDefinition from "../../../../../repository/definition/cmmn/definitions/caseplan/task/humantaskdefinition";
+import AssignmentDefinition from "../../../../../repository/definition/cmmn/definitions/caseplan/task/workflow/assignmentdefinition";
+import DueDateDefinition from "../../../../../repository/definition/cmmn/definitions/caseplan/task/workflow/duedatedefinition";
+import Util from "../../../../../util/util";
 import HumanTaskView from "../humantaskview";
 import TaskProperties from "./taskproperties";
 
@@ -226,7 +229,7 @@ export default class WorkflowProperties extends TaskProperties {
     done() {
         super.done();
         // Also refresh other workflow properties ...
-        this.case.items.filter(item => item instanceof HumanTaskView).map((/** @type{HumanTaskView} */ item) => item.workflowProperties && item.workflowProperties.visible && item.workflowProperties.refresh());
+        this.case.items.filter(item => item instanceof HumanTaskView).map((/** @type {HumanTaskView} */ item) => item.workflowProperties && item.workflowProperties.visible && item.workflowProperties.refresh());
     }
 
     /**

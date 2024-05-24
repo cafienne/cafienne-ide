@@ -1,6 +1,7 @@
 import ProcessFile from "../../serverfile/processfile";
 import ParameterDefinition from "../cmmn/definitions/contract/parameterdefinition";
 import ModelDefinition from "../modeldefinition";
+import ProcessImplementationDefinition from "./processimplementationdefinition";
 
 export const HTTP_CALL_DEFINITION = 'HTTPCallDefinition';
 export const HTTP_CALL_DEFINITION_IMPLEMENTATION_CLASS = 'org.cafienne.processtask.implementation.http.HTTPCallDefinition';

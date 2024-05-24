@@ -1,6 +1,9 @@
 import ModelDefinition from "../../../../../modeldefinition";
+import ParameterMappingDefinition from "../../../contract/parametermappingdefinition";
 import CafienneImplementationDefinition from "../../../extensions/cafienneimplementationdefinition";
 import HumanTaskDefinition from "../humantaskdefinition";
+import AssignmentDefinition from "./assignmentdefinition";
+import DueDateDefinition from "./duedatedefinition";
 
 export default class CafienneWorkflowDefinition extends CafienneImplementationDefinition {
     /**

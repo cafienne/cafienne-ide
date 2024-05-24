@@ -1,8 +1,14 @@
 import ParameterDefinition from "../../../../../../../repository/definition/cmmn/definitions/contract/parameterdefinition";
 import ParameterMappingDefinition from "../../../../../../../repository/definition/cmmn/definitions/contract/parametermappingdefinition";
 import ColumnRenderer from "../../../tableeditor/columnrenderer";
+import MappingCFI from "../mappingcfi";
 import MappingControl from "../mappingcontrol";
+import { InputMappingExpression } from "../mappingexpression";
+import MappingOrderChanger from "../mappingorderchanger";
 import { InputMappingRow } from "../mappingrow";
+import InputMappingDeleter from "./inputmappingdeleter";
+import InputOperationSelector from "./inputoperationselector";
+import InputParameterSelector from "./inputparameterselector";
 
 export default class InputMappingControl extends MappingControl {
     constructor(editor, htmlParent) {

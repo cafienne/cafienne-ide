@@ -1,5 +1,8 @@
 'use strict';
 
+import CodeMirrorConfig from "../../util/codemirrorconfig";
+import CMMNElementView from "../modeleditors/case/elements/cmmnelementview";
+import SentryView from "../modeleditors/case/elements/sentryview";
 import { IntelliSenseSpel, SimpleCaseFileBuilder } from "./intellisense";
 
 let g_element = undefined;
@@ -16,7 +19,7 @@ export default class ExpressionEditor {
      */
     static init(textarea, element) {
         g_element = element;
-        return CodeMirror.fromTextArea(textarea, {
+        return CodeMirrorConfig.fromTextArea(textarea, {
             extraKeys: {'Ctrl-Space': 'autocomplete'},
             hintOptions: {hint: ExpressionEditor.synonyms, completeSingle:true
             }

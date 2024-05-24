@@ -1,3 +1,4 @@
+import XML from "../../../util/xml";
 import CaseDefinition from "../cmmn/definitions/casedefinition";
 import CMMNElementDefinition from "../cmmn/definitions/cmmnelementdefinition";
 import CafienneImplementationDefinition from "../cmmn/definitions/extensions/cafienneimplementationdefinition";

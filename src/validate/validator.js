@@ -1,18 +1,24 @@
+import CaseView from "../ide/modeleditors/case/elements/caseview";
+import Util from "../util/util";
 import Problem from "./problem";
 import ProblemType from "./problemtype";
 
 export default class Validator {
+    /**
+     * 
+     * @param {CaseView} cs 
+     */
     constructor(cs) {
         this.case = cs;
-        /** @type{Array<Problem>} */
+        /** @type {Array<Problem>} */
         this._problems = [];
-        /** @type{Array<Function>} */
+        /** @type {Array<Function>} */
         this.listeners = [];
     }
 
     /**
      * Adds a listener
-     * @param {Function} listener 
+     * @param {(v: Validator) => void} listener 
      */
     addListener(listener) {
         this.listeners.push(listener);

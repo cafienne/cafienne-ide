@@ -1,11 +1,13 @@
 ﻿import CaseFileItemDef from "../../../../repository/definition/cmmn/definitions/casefile/casefileitemdef";
+import Util from "../../../../util/util";
 import { CaseFileItemDragData } from "../../../dragdata";
 import BottomSplitter from "../../../splitter/bottomsplitter";
 import CaseFileItemDefinitionEditor from "../../cfid/casefileitemdefinitioneditor";
 import CaseView from "../elements/caseview";
 import CFINode from "./file/cfinode";
+import CFISelector from "./file/cfiselector";
 
-const NEWDEF = '__new__';
+export const NEWDEF = '__new__';
 
 export default class CaseFileItemsEditor {
     /**
@@ -58,7 +60,7 @@ export default class CaseFileItemsEditor {
 
     /**
      * Opens the editor as dialog.
-     * @param {(cfi: CaseFileItemDef) => void} callback 
+     * @param {(cfi: CaseFileItemDef) => void | undefined} callback 
      */
     open(callback = undefined) {
         new CFISelector(this.case).showModalDialog(cfi => cfi && callback(cfi));

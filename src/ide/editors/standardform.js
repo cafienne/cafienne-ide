@@ -1,5 +1,6 @@
 ﻿'use strict';
 
+import Util from "../../util/util";
 import ModelEditor from "../modeleditors/modeleditor";
 import MovableEditor from "./movableeditor";
 

@@ -1,5 +1,7 @@
 import { EntryCriterionView, ExitCriterionView } from "../sentryview";
 import Halo from "./halo";
+import { DeleteHaloItem, PropertiesHaloItem } from "./item/haloclickitems";
+import { ConnectorHaloItem, EntryCriterionHaloItem, ExitCriterionHaloItem } from "./item/halodragitems";
 
 export class EntryCriterionHalo extends Halo {
     /**

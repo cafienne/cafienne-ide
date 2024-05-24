@@ -1,5 +1,6 @@
 import CaseFileItemCollection from "../../../../../repository/definition/cmmn/definitions/casefile/casefileitemcollection";
 import CaseFileItemDef from "../../../../../repository/definition/cmmn/definitions/casefile/casefileitemdef";
+import Util from "../../../../../util/util";
 import CaseFileItemView from "../../elements/casefileitemview";
 import EventListenerView from "../../elements/eventlistenerview";
 import MilestoneView from "../../elements/milestoneview";
@@ -7,7 +8,7 @@ import PlanningTableView from "../../elements/planningtableview";
 import SentryView from "../../elements/sentryview";
 import StageView from "../../elements/stageview";
 import TaskView from "../../elements/taskview";
-import CaseFileItemsEditor from "../casefileitemseditor";
+import CaseFileItemsEditor, { NEWDEF } from "../casefileitemseditor";
 import CaseParametersEditor from "../parameters/caseparameterseditor";
 
 export default class CFINode {

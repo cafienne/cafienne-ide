@@ -1,3 +1,6 @@
+import Util from "../../util/util";
+import XML from "../../util/xml";
+import CafienneImplementationDefinition from "./cmmn/definitions/extensions/cafienneimplementationdefinition";
 import ModelDefinition from "./modeldefinition";
 
 // Some constants
@@ -201,9 +204,9 @@ export default class XMLElementDefinition {
      * attribute. If these are not given, the logic will generate id and name for it based
      * on the type of element and the other content inside the case definition.
      * @param {Function} constructor 
-     * @param {String} id 
-     * @param {String} name 
-     * @returns {*} an instance of the constructor that is expected to extend CMMNElementDefinition
+     * @param {String|undefined} id 
+     * @param {String|undefined} name 
+     * @returns {XMLElementDefinition} an instance of the constructor that is expected to extend CMMNElementDefinition
      */
     createDefinition(constructor, id = undefined, name = undefined) {
         const element = new constructor(undefined, this.modelDefinition, this);

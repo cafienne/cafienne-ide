@@ -4,6 +4,7 @@ import Edge from "../../../../repository/definition/cmmn/dimensions/edge";
 import CanvasElement from "./canvaselement";
 import CaseView from "./caseview";
 import CMMNElementView from "./cmmnelementview";
+import SentryView from "./sentryview";
 
 export default class Connector extends CanvasElement {
     /**

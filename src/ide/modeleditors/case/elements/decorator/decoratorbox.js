@@ -1,6 +1,9 @@
+import CasePlanView from "../caseplanview";
+import MilestoneView from "../milestoneview";
 import PlanItemView from "../planitemview";
 import StageView from "../stageview";
-import Decorator, { AutoCompleteDecorator, ManualActivationRuleDecorator, MinusDecorator, RepetitionRuleDecorator, RequiredRuleDecorator } from "./decorator";
+import TaskView from "../taskview";
+import Decorator, { AutoCompleteDecorator, DECORATORFROMBOTTOM, DECORATORSIZE, ManualActivationRuleDecorator, MinusDecorator, RepetitionRuleDecorator, RequiredRuleDecorator } from "./decorator";
 
 export default class DecoratorBox {
     /**

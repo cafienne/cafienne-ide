@@ -1,9 +1,16 @@
 import CaseFileItemDef from "../../../../../repository/definition/cmmn/definitions/casefile/casefileitemdef";
+import CMMNElementDefinition from "../../../../../repository/definition/cmmn/definitions/cmmnelementdefinition";
 import ParameterDefinition from "../../../../../repository/definition/cmmn/definitions/contract/parameterdefinition";
 import StandardForm from "../../../../editors/standardform";
+import BottomSplitter from "../../../../splitter/bottomsplitter";
 import CaseModelEditor from "../../casemodeleditor";
 import ColumnRenderer from "../tableeditor/columnrenderer";
+import RowRenderer from "../tableeditor/rowrenderer";
 import TableRenderer from "../tableeditor/tablerenderer";
+import CFIZoom from "./cfizoom";
+import ExpressionChanger from "./expressionchanger";
+import NameChanger from "./namechanger";
+import ParameterDeleter from "./parameterdeleter";
 
 export default class CaseParametersEditor extends StandardForm {
     /**
@@ -144,7 +151,7 @@ export class OutputParametersControl extends ParametersControl {
 export class ParameterRow extends RowRenderer {
     /**
      * @param {ParametersControl} control
-     * @param {ParameterDefinition} parameter
+     * @param {ParameterDefinition|undefined} parameter
      */
     constructor(control, parameter = undefined) {
         super(control, parameter);

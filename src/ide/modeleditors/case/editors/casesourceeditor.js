@@ -1,3 +1,8 @@
+import { CMMNDI, CMMNDIAGRAM } from "../../../../repository/definition/cmmn/dimensions/dimensions";
+import CodeMirrorConfig from "../../../../util/codemirrorconfig";
+import { andThen } from "../../../../util/promise/followup";
+import Util from "../../../../util/util";
+import XML from "../../../../util/xml";
 import CaseModelEditor from "../casemodeleditor";
 
 export default class CaseSourceEditor {

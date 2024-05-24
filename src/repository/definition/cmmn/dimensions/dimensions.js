@@ -1,4 +1,6 @@
+import DimensionsFile from "../../../serverfile/dimensionsfile";
 import ModelDefinition from "../../modeldefinition";
+import Diagram from "./diagram";
 
 export const DIMENSIONS = 'dimensions';
 export const CMMNDI = 'CMMNDI';

@@ -1,3 +1,4 @@
+import XML from "../util/xml";
 import ModelDefinition from "./definition/modeldefinition";
 import ServerFile from "./serverfile";
 

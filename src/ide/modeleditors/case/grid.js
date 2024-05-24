@@ -6,6 +6,7 @@
  */
 
 import Settings from "../../settings/settings";
+import CaseView from "./elements/caseview";
 
 /**
  * @type {Array<Grid>}

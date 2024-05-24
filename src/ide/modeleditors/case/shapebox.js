@@ -1,5 +1,16 @@
 import DragData from "../../dragdata";
+import CaseFileItemView from "./elements/casefileitemview";
+import CasePlanView from "./elements/caseplanview";
+import CaseTaskView from "./elements/casetaskview";
 import CaseView from "./elements/caseview";
+import HumanTaskView from "./elements/humantaskview";
+import MilestoneView from "./elements/milestoneview";
+import ProcessTaskView from "./elements/processtaskview";
+import { EntryCriterionView, ExitCriterionView, ReactivateCriterionView } from "./elements/sentryview";
+import StageView from "./elements/stageview";
+import TextAnnotationView from "./elements/textannotationview";
+import TimerEventView from "./elements/timereventview";
+import UserEventView from "./elements/usereventview";
 
 export default class ShapeBox {
     /**
@@ -59,7 +70,7 @@ export default class ShapeBox {
      * Registers a drop handler with the repository browser.
      * If an item from the browser is moved over the canvas, elements can register a drop handler
      * @param {(d: DragData) => void} dropHandler
-     * @param {(d: DragData, e: JQuery.PointerMoveEvent | JQuery.PointerUpEvent) => boolean} filter
+     * @param {((d: DragData, e: JQuery.PointerMoveEvent | JQuery.PointerUpEvent) => boolean) | undefined} filter
      */
     setDropHandler(dropHandler, filter = undefined) {
         if (this.dragData) this.dragData.setDropHandler(dropHandler, filter);

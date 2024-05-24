@@ -1,4 +1,5 @@
 import CMMNElementDefinition from "../../../../../repository/definition/cmmn/definitions/cmmnelementdefinition";
+import Util from "../../../../../util/util";
 import CaseView from "../../elements/caseview";
 import ColumnRenderer from "./columnrenderer";
 import RowRenderer from "./rowrenderer";

@@ -3,6 +3,7 @@ import PlanItem from "../../../../../repository/definition/cmmn/definitions/case
 import CaseFileItemOnPartDefinition from "../../../../../repository/definition/cmmn/definitions/sentry/casefileitemonpartdefinition";
 import OnPartDefinition from "../../../../../repository/definition/cmmn/definitions/sentry/onpartdefinition";
 import PlanItemOnPartDefinition from "../../../../../repository/definition/cmmn/definitions/sentry/planitemonpartdefinition";
+import Util from "../../../../../util/util";
 import Connector from "../connector";
 import SentryView from "../sentryview";
 import Properties from "./properties";

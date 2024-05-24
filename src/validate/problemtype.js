@@ -4,7 +4,8 @@ import ValidateForm from "./validateform";
 export default class ProblemType {
     /**
      * Returns the problem type with the specified number
-     * @returns {ProblemType}
+     * @returns {ProblemType|undefined}
+     * @param {Number} number 
      */
     static get(number) {
         return ProblemType.list.find(n => n.number == number);        
@@ -14,6 +15,12 @@ export default class ProblemType {
         ProblemType.list.forEach(n => n.isHidden = false);
     }
 
+    /**
+     * 
+     * @param {number} number 
+     * @param {string} descriptionTemplate 
+     * @param {string} image 
+     */
     constructor(number, descriptionTemplate, image) {
         this.number = number;
         this.descriptionTemplate = descriptionTemplate;
@@ -40,6 +47,13 @@ export default class ProblemType {
         return new Problem(contextId, this, parameters);
     }
 
+    /**
+     * 
+     * @param {string} description 
+     * @param {string} contextId 
+     * @param {string} problemId 
+     * @returns 
+     */
     getHTMLString(description, contextId, problemId) {
         const htmlString = `<div class="problemrow" problemId="${problemId}" contextId="${contextId}" problemType="${this.number}">
 	<div class="hideproblem">

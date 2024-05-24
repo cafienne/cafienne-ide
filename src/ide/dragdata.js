@@ -73,7 +73,7 @@ export default class DragData {
      * Registers a drop handler with the repository browser.
      * If an item from the browser is moved over the canvas, elements can register a drop handler
      * @param {(d: DragData) => void} dropHandler
-     * @param {(d: DragData, e: JQuery.PointerMoveEvent | JQuery.PointerUpEvent) => boolean} filter
+     * @param {((d: DragData, e: JQuery.PointerMoveEvent | JQuery.PointerUpEvent) => boolean) | undefined} filter
      */
     setDropHandler(dropHandler, filter = undefined) {
         // @ts-ignore

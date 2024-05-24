@@ -1,3 +1,4 @@
+import XML from "../../../../util/xml";
 import ModelDefinition from "../../modeldefinition";
 import XMLElementDefinition from "../../xmlelementdefinition";
 

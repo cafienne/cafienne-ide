@@ -1,6 +1,11 @@
+import { andThen } from "../../util/promise/followup";
+import SequentialFollowupList from "../../util/promise/sequentialfollowuplist";
+import Util from "../../util/util";
+import XML from "../../util/xml";
 import ServerFile from "../serverfile";
 import ParameterDefinition from "./cmmn/definitions/contract/parameterdefinition";
 import ReferableElementDefinition from "./referableelementdefinition";
+import TypeCounter from "./typecounter";
 import XMLElementDefinition from "./xmlelementdefinition";
 
 /**
@@ -71,7 +76,7 @@ export default class ModelDefinition extends ReferableElementDefinition {
     /**
      * 
      * @param {String} identifier 
-     * @returns {ParameterDefinition}
+     * @returns {ParameterDefinition|undefined}
      */
     findInputParameter(identifier) {
         return this.inputParameters.find(p => p.hasIdentifier(identifier));
@@ -80,7 +85,7 @@ export default class ModelDefinition extends ReferableElementDefinition {
     /**
      * 
      * @param {String} identifier 
-     * @returns {ParameterDefinition}
+     * @returns {ParameterDefinition|undefined}
      */
     findOutputParameter(identifier) {
         return this.outputParameters.find(p => p.hasIdentifier(identifier));
@@ -101,7 +106,7 @@ export default class ModelDefinition extends ReferableElementDefinition {
      * If the constructor argument is specified, the element is checked against the constructor with 'instanceof'
      * @param {String} id 
      * @param {Function} constructor
-     * @returns {XMLElementDefinition}
+     * @returns {XMLElementDefinition|undefined}
      */
     getElement(id, constructor = undefined) {
         const element = this.elements.find(element => id && element.id == id); // Filter first checks whether id is undefined;
@@ -117,10 +122,20 @@ export default class ModelDefinition extends ReferableElementDefinition {
         }
     }
 
+    /**
+     * 
+     * @param {Function} constructor 
+     * @returns {string}
+     */
     getNextIdOfType(constructor) {
         return this.typeCounters.getNextIdOfType(constructor);
     }
 
+    /**
+     * 
+     * @param {Function} constructor 
+     * @returns {string}
+     */
     getNextNameOfType(constructor) {
         return this.typeCounters.getNextNameOfType(constructor);
     }
@@ -130,7 +145,7 @@ export default class ModelDefinition extends ReferableElementDefinition {
      * string, limited by space. This function analyzes such a string, and adds all references that could be found into the array.
      * If constructor is specified, the found elements must match (element instanceof constructor).
      * @param {String} idString 
-     * @param {Array} collection 
+     * @param {Array<XMLElementDefinition>} collection 
      * @param {*} constructor
      */
     findElements(idString, collection, constructor) {

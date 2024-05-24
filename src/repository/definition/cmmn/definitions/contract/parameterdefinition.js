@@ -1,6 +1,7 @@
 import CaseFileItemDef from "../casefile/casefileitemdef";
 import TaskDefinition from "../caseplan/task/taskdefinition";
 import CMMNElementDefinition from "../cmmnelementdefinition";
+import ExpressionDefinition from "../expression/expressiondefinition";
 
 export default class ParameterDefinition extends CMMNElementDefinition {
     constructor(importNode, caseDefinition, parent) {

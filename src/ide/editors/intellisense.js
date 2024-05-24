@@ -1,5 +1,8 @@
 'use strict';
 
+import CaseFileDefinition from "../../repository/definition/cmmn/definitions/casefile/casefiledefinition";
+import CaseFileItemDef from "../../repository/definition/cmmn/definitions/casefile/casefileitemdef";
+
 export class ArrayToken {
     constructor(text) {
         this.text = text;

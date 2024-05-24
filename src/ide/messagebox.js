@@ -1,4 +1,5 @@
-﻿import IDE from "./ide";
+﻿import Util from "../util/util";
+import IDE from "./ide";
 
 export default class MessageBox {
     /**

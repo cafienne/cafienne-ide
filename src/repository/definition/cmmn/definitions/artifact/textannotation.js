@@ -1,3 +1,4 @@
+import XML from "../../../../../util/xml";
 import ArtifactDefinition from "./artifactdefinition";
 
 export default class TextAnnotationDefinition extends ArtifactDefinition {

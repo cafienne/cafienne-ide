@@ -1,9 +1,12 @@
+import Util from "../../../../../util/util";
+import CaseRoleDefinition from "../caseteam/caseroledefinition";
 import CaseRoleReference from "../caseteam/caserolereference";
 import CMMNElementDefinition from "../cmmnelementdefinition";
 import CriterionDefinition from "../sentry/criteriondefinition";
 import EntryCriterionDefinition from "../sentry/entrycriteriondefinition";
 import ExitCriterionDefinition from "../sentry/exitcriteriondefinition";
 import ReactivateCriterionDefinition from "../sentry/reactivatecriteriondefinition";
+import SentryDefinition from "../sentry/sentrydefinition";
 import ItemControlDefinition from "./itemcontroldefinition";
 import PlanItemDefinitionDefinition, { MilestoneEventListenerDefinition, TaskStageDefinition } from "./planitemdefinitiondefinition";
 import PlanningTableDefinition, { ApplicabilityRuleDefinition } from "./planningtabledefinition";
@@ -28,9 +31,9 @@ export default class PlanItem extends CMMNElementDefinition {
         this.applicabilityRuleRefs = this.parseAttribute('applicabilityRuleRefs');
         this.authorizedRoleRefs = this.parseAttribute('authorizedRoleRefs');
         this.isDiscretionary = parent instanceof PlanningTableDefinition;
-        /** @type{Array<ApplicabilityRuleDefinition>} */
+        /** @type {Array<ApplicabilityRuleDefinition>} */
         this.applicabilityRules = [];
-        /** @type{Array<CaseRoleReference>} */
+        /** @type {Array<CaseRoleReference>} */
         this.authorizedRoles = [];
         this.fourEyes = this.parseExtension(FourEyesDefinition);
         this.rendezVous = this.parseExtension(RendezVousDefinition);

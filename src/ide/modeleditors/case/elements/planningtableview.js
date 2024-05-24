@@ -1,6 +1,7 @@
 ﻿import PlanningTableDefinition from "../../../../repository/definition/cmmn/definitions/caseplan/planningtabledefinition";
 import ShapeDefinition from "../../../../repository/definition/cmmn/dimensions/shape";
 import CMMNElementView from "./cmmnelementview";
+import { EXPANDEDPLANNINGTABLE_IMG } from "./elements";
 import PlanningTableHalo from "./halo/planningtablehalo";
 import PlanItemView from "./planitemview";
 import PlanningTableProperties from "./properties/planningtableproperties";

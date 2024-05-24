@@ -1,6 +1,7 @@
 import CaseDefinition from "../casedefinition";
 import CaseFileItemDef from "../casefile/casefileitemdef";
 import TaskDefinition from "../caseplan/task/taskdefinition";
+import ExpressionDefinition from "../expression/expressiondefinition";
 import UnnamedCMMNElementDefinition from "../unnamedcmmnelementdefinition";
 import ParameterDefinition from "./parameterdefinition";
 

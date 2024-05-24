@@ -1,6 +1,7 @@
 import XMLElementDefinition from "../../xmlelementdefinition";
 import DiagramElement from "./diagramelement";
-import Dimensions from "./dimensions";
+import Dimensions, { WAYPOINT } from "./dimensions";
+import Edge from "./edge";
 
 export default class Vertex extends DiagramElement {
     /**

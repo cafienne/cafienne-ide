@@ -1,5 +1,6 @@
 import PlanningTableView from "../planningtableview";
 import Halo from "./halo";
+import { DeleteHaloItem, PropertiesHaloItem } from "./item/haloclickitems";
 
 export default class PlanningTableHalo extends Halo {
     /**

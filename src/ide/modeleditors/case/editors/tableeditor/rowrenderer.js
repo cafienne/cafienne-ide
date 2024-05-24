@@ -1,4 +1,5 @@
 import CMMNElementDefinition from "../../../../../repository/definition/cmmn/definitions/cmmnelementdefinition";
+import Util from "../../../../../util/util";
 import TableRenderer from "./tablerenderer";
 
 export default class RowRenderer {

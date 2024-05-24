@@ -1,4 +1,5 @@
 import HumanTaskDefinition from "../../../../../repository/definition/cmmn/definitions/caseplan/task/humantaskdefinition";
+import { DISCRETIONARYTASK_IMG } from "../elements";
 import HumanTaskView from "../humantaskview";
 import TaskProperties from "./taskproperties";
 

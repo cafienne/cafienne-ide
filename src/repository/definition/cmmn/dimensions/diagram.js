@@ -1,8 +1,10 @@
+import Util from "../../../../util/util";
 import CMMNElementDefinition from "../definitions/cmmnelementdefinition";
+import ConnectorStyle from "./connectorstyle";
 import DiagramElement from "./diagramelement";
-import Dimensions from "./dimensions";
+import Dimensions, { CMMNDIAGRAM, CMMNEDGE, CMMNSHAPE } from "./dimensions";
 import Edge from "./edge";
-import ShapeDefinition from "./shape";
+import ShapeDefinition, { CaseFileItemShape, TextBoxShape } from "./shape";
 
 export default class Diagram extends DiagramElement {
     /**

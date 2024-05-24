@@ -1,4 +1,5 @@
 import CMMNElementDefinition from "../../repository/definition/cmmn/definitions/cmmnelementdefinition";
+import Util from "../../util/util";
 import CaseModelEditor from "../modeleditors/case/casemodeleditor";
 import ModelEditor from "../modeleditors/modeleditor";
 

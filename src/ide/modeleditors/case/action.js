@@ -1,4 +1,6 @@
 import CaseDefinition from "../../../repository/definition/cmmn/definitions/casedefinition";
+import { andThen } from "../../../util/promise/followup";
+import XML from "../../../util/xml";
 import UndoManager from "./undoredo";
 
 export default class Action {

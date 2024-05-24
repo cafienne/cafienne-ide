@@ -1,3 +1,6 @@
+import DiagramElement from "./diagramelement";
+import { BOUNDS } from "./dimensions";
+
 export default class Bounds extends DiagramElement {
     /**
      * Indicates the bounds (x, y, width, height) of a shape.

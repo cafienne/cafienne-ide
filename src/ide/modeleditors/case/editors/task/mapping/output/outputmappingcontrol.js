@@ -1,8 +1,15 @@
 import ParameterDefinition from "../../../../../../../repository/definition/cmmn/definitions/contract/parameterdefinition";
 import ParameterMappingDefinition from "../../../../../../../repository/definition/cmmn/definitions/contract/parametermappingdefinition";
 import ColumnRenderer from "../../../tableeditor/columnrenderer";
+import MappingCFI from "../mappingcfi";
 import MappingControl from "../mappingcontrol";
+import { OutputMappingExpression } from "../mappingexpression";
+import MappingOrderChanger from "../mappingorderchanger";
 import { OutputMappingRow } from "../mappingrow";
+import OutputMappingDeleter from "./outputmappingdeleter";
+import OperationSelector from "./outputoperationselector";
+import OutputParameterSelector from "./outputparameterselector";
+import RequiredChanger from "./requiredchanger";
 
 export default class OutputMappingControl extends MappingControl {
     constructor(editor, htmlParent) {

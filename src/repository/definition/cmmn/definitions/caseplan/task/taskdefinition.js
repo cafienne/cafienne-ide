@@ -1,6 +1,7 @@
+import Util from "../../../../../../util/util";
 import ModelDefinition from "../../../../modeldefinition";
 import ParameterDefinition from "../../contract/parameterdefinition";
-import ParameterMappingDefinition from "../../contract/parametermappingdefinition";
+import ParameterMappingDefinition, { InputMappingDefinition, OutputMappingDefinition } from "../../contract/parametermappingdefinition";
 import { TaskStageDefinition } from "../planitemdefinitiondefinition";
 
 export default class TaskDefinition extends TaskStageDefinition {

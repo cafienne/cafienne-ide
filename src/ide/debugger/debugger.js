@@ -1,6 +1,10 @@
 'use strict';
 
+import CodeMirrorConfig from "../../util/codemirrorconfig";
+import Util from "../../util/util";
 import StandardForm from "../editors/standardform";
+import CaseModelEditor from "../modeleditors/case/casemodeleditor";
+import RightSplitter from "../splitter/rightsplitter";
 
 /**
  * This class implements the logic to call the repository REST service to debug a case instance.
@@ -341,7 +345,7 @@ export default class Debugger extends StandardForm {
     }
 
     getEventName(event) {
-        /** @type{String} */
+        /** @type {String} */
         const path = event.content.path;
         const paths = path ? path.split('/') : [];
 

@@ -1,5 +1,7 @@
 import PlanItemView from "../planitemview";
 import Halo from "./halo";
+import { DeleteHaloItem, PropertiesHaloItem } from "./item/haloclickitems";
+import { ConnectorHaloItem, EntryCriterionHaloItem, ExitCriterionHaloItem, ReactivateCriterionHaloItem } from "./item/halodragitems";
 
 export default class PlanItemHalo extends Halo {
     /**

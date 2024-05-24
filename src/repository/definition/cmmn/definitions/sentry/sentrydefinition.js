@@ -1,3 +1,4 @@
+import Util from "../../../../../util/util";
 import CaseDefinition from "../casedefinition";
 import StageDefinition from "../caseplan/stagedefinition";
 import UnnamedCMMNElementDefinition from "../unnamedcmmnelementdefinition";
@@ -16,7 +17,7 @@ export default class SentryDefinition extends UnnamedCMMNElementDefinition {
         super(importNode, caseDefinition, parent);
         /** @type {StageDefinition} */
         this.parent = parent;
-        /** @type{IfPartDefinition} */
+        /** @type {IfPartDefinition} */
         this.ifPart = this.parseElement('ifPart', IfPartDefinition);
         /** @type {Array<CaseFileItemOnPartDefinition>} */
         this.caseFileItemOnParts = this.parseElements('caseFileItemOnPart', CaseFileItemOnPartDefinition);
@@ -43,7 +44,7 @@ export default class SentryDefinition extends UnnamedCMMNElementDefinition {
 
     getIfPart() {
         if (!this.ifPart) {
-            /** @type{IfPartDefinition} */
+            /** @type {IfPartDefinition} */
             this.ifPart = super.createDefinition(IfPartDefinition);
             this.ifPart.language = 'spel'; // Default language
         }

@@ -1,6 +1,8 @@
 ﻿'use strict';
 
 import ParameterDefinition from "../../../repository/definition/cmmn/definitions/contract/parameterdefinition";
+import Util from "../../../util/util";
+import ModelEditor from "../modeleditor";
 
 export default class ModelParameters {
     /**

@@ -1,9 +1,13 @@
 import { BOUNDS, CMMNDI, CMMNDIAGRAM, CMMNELEMENTREF, CMMNSHAPE } from "../../../repository/definition/cmmn/dimensions/dimensions";
 import ServerFile from "../../../repository/serverfile";
 import CaseFile from "../../../repository/serverfile/casefile";
+import { andThen } from "../../../util/promise/followup";
+import Util from "../../../util/util";
 import IDE from "../../ide";
 import ModelEditorMetadata from "../modeleditormetadata";
 import CaseModelEditor from "./casemodeleditor";
+import CaseTaskView from "./elements/casetaskview";
+import Grid from "./grid";
 
 export default class CaseModelEditorMetadata extends ModelEditorMetadata {
     /** @returns {Array<ServerFile>} */
@@ -82,8 +86,8 @@ export default class CaseModelEditorMetadata extends ModelEditorMetadata {
 </${CMMNDI}>`;
 
         // Upload models to server, and call back
-        const caseFile = this.ide.repository.createCaseFile(caseFileName, caseString);
-        const dimensionsFile = this.ide.repository.createDimensionsFile(dimensionsFileName, dimensionsString);
+        const caseFile = ide.repository.createCaseFile(caseFileName, caseString);
+        const dimensionsFile = ide.repository.createDimensionsFile(dimensionsFileName, dimensionsString);
         dimensionsFile.save(andThen(() => caseFile.save(andThen(() => callback(caseFileName)))));
         return caseFileName;
     }

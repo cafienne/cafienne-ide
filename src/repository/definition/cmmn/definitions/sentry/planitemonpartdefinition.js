@@ -1,3 +1,4 @@
+import PlanItem from "../caseplan/planitem";
 import OnPartDefinition from "./onpartdefinition";
 
 export default class PlanItemOnPartDefinition extends OnPartDefinition {

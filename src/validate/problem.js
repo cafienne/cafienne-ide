@@ -1,3 +1,5 @@
+import ProblemType, { CMMNError, CMMNWarning } from "./problemtype";
+
 export default class Problem {
     /**
      * Creates a new problem that can render itself as HTML

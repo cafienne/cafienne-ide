@@ -7,7 +7,8 @@ import ProcessTaskDefinition from "../../../../repository/definition/cmmn/defini
 import TimerEventDefinition from "../../../../repository/definition/cmmn/definitions/caseplan/timereventdefinition";
 import UserEventDefinition from "../../../../repository/definition/cmmn/definitions/caseplan/usereventdefinition";
 import ShapeDefinition from "../../../../repository/definition/cmmn/dimensions/shape";
-import { CaseFileItemDragData } from "../../../dragdata";
+import Util from "../../../../util/util";
+import DragData, { CaseFileItemDragData } from "../../../dragdata";
 import CaseFileItemView from "./casefileitemview";
 import CaseTaskView from "./casetaskview";
 import CMMNElementView from "./cmmnelementview";

@@ -1,6 +1,7 @@
 import PlanItem from "../../../../repository/definition/cmmn/definitions/caseplan/planitem";
 import ProcessTaskDefinition from "../../../../repository/definition/cmmn/definitions/caseplan/task/processtaskdefinition";
 import ShapeDefinition from "../../../../repository/definition/cmmn/dimensions/shape";
+import CMMNElementView from "./cmmnelementview";
 import StageView from "./stageview";
 import TaskView from "./taskview";
 

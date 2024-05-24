@@ -1,3 +1,4 @@
+import Util from "../../util/util";
 import IDE from "../ide";
 
 export default class Dialog {

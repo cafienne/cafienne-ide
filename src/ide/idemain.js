@@ -1,5 +1,6 @@
 import IDE from "./ide";
 import RepositoryBrowser from "./repositorybrowser";
+import LeftSplitter from "./splitter/leftsplitter";
 
 export default class IDEMain {
     /**

@@ -1,6 +1,7 @@
+import Bounds from "./bounds";
 import Diagram from "./diagram";
 import DiagramElement from "./diagramelement";
-import Dimensions from "./dimensions";
+import Dimensions, { BOUNDS, CMMNELEMENTREF, CMMNSHAPE } from "./dimensions";
 
 export default class ShapeDefinition extends DiagramElement {
     /**

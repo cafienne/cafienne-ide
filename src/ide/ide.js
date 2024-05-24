@@ -1,6 +1,7 @@
 'use strict';
 
 import ModelDefinition from "../repository/definition/modeldefinition";
+import Importer from "../repository/importer";
 import Repository from "../repository/repository";
 import CoverPanel from "./coverpanel";
 import IDEFooter from "./idefooter";

@@ -1,5 +1,7 @@
 import HumanTaskView from "../humantaskview";
 import TaskView from "../taskview";
+import { DeleteHaloItem, InputParametersHaloItem, InvalidPreviewTaskFormHaloItem, NewTaskImplemenationHaloItem, OutputParametersHaloItem, PreviewTaskFormHaloItem, PropertiesHaloItem, WorkflowHaloItem, ZoomTaskImplementationHaloItem } from "./item/haloclickitems";
+import { ConnectorHaloItem, EntryCriterionHaloItem, ExitCriterionHaloItem, ReactivateCriterionHaloItem } from "./item/halodragitems";
 import PlanItemHalo from "./planitemhalo";
 
 export default class TaskHalo extends PlanItemHalo {

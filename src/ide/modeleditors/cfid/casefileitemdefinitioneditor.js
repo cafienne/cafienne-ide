@@ -1,6 +1,10 @@
 ﻿import CaseFileDefinitionDefinition, { UNKNOWN, UNKNOWN_URI, UNSPECIFIED, UNSPECIFIED_URI, XMLELEMENT, XMLELEMENT_URI } from "../../../repository/definition/cfid/casefileitemdefinitiondefinition";
+import { andThen } from "../../../util/promise/followup";
 import XML from "../../../util/xml";
 import CaseFileItemsEditor from "../case/editors/casefileitemseditor";
+import CFIDefinitionUnknown from "./cfidefinitionunknown";
+import CFIDefinitionUnspecified from "./cfidefinitionunspecified";
+import CFIDefinitionXMLElement from "./cfidefinitionxmlelement";
 
 export default class CaseFileItemDefinitionEditor {
     /** 

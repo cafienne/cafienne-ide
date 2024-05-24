@@ -3,6 +3,7 @@ import CaseDefinition from "../../../../repository/definition/cmmn/definitions/c
 import CaseFileItemDef from "../../../../repository/definition/cmmn/definitions/casefile/casefileitemdef";
 import CMMNElementDefinition from "../../../../repository/definition/cmmn/definitions/cmmnelementdefinition";
 import ShapeDefinition from "../../../../repository/definition/cmmn/dimensions/shape";
+import Util from "../../../../util/util";
 import ValidateForm from "../../../../validate/validateform";
 import Validator from "../../../../validate/validator";
 import Debugger from "../../../debugger/debugger";
@@ -14,6 +15,7 @@ import Deploy from "../editors/deploy";
 import CaseParametersEditor from "../editors/parameters/caseparameterseditor";
 import RolesEditor from "../editors/roleseditor";
 import StartCaseEditor from "../editors/startcaseeditor";
+import Grid from "../grid";
 import ShapeBox from "../shapebox";
 import { UndoRedoBox } from "../undoredo";
 import CaseFileItemView from "./casefileitemview";

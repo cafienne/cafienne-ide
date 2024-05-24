@@ -5,6 +5,7 @@ import CaseFileItemView from "./casefileitemview";
 import CasePlanView from "./caseplanview";
 import CMMNElementView from "./cmmnelementview";
 import Connector from "./connector";
+import { EntryCriterionHalo, ExitCriterionHalo, ReactivateCriterionHalo } from "./halo/sentryhalo";
 import PlanItemView from "./planitemview";
 import SentryProperties from "./properties/sentryproperties";
 import TaskStageView from "./taskstageview";

@@ -2,6 +2,7 @@
 import TaskDefinition from "../../../../repository/definition/cmmn/definitions/caseplan/task/taskdefinition";
 import ShapeDefinition from "../../../../repository/definition/cmmn/dimensions/shape";
 import ServerFile from "../../../../repository/serverfile";
+import { andThen } from "../../../../util/promise/followup";
 import DragData from "../../../dragdata";
 import TaskMappingsEditor from "../editors/task/taskmappingseditor";
 import CMMNElementView from "./cmmnelementview";

@@ -1,6 +1,9 @@
+import { CAFIENNE_NAMESPACE, CAFIENNE_PREFIX, IMPLEMENTATION_TAG } from "../../../repository/definition/xmlelementdefinition";
 import ServerFile from "../../../repository/serverfile";
 import HumanTaskFile from "../../../repository/serverfile/humantaskfile";
+import { andThen } from "../../../util/promise/followup";
 import IDE from "../../ide";
+import HumanTaskView from "../case/elements/humantaskview";
 import ModelEditorMetadata from "../modeleditormetadata";
 import HumantaskModelEditor from "./humantaskmodeleditor";
 

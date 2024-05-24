@@ -1,4 +1,12 @@
+import CaseView from "../ide/modeleditors/case/elements/caseview";
+import Settings from "../ide/settings/settings";
+import ProblemType from "./problemtype";
+
 class CaseValidationSettings {
+    /**
+     * 
+     * @param {Array<String>} hiddenProblemsList 
+     */
     constructor(hiddenProblemsList) {
         this.date = new Date();
         this.list = hiddenProblemsList;
@@ -7,8 +15,9 @@ class CaseValidationSettings {
 
 export default class ValidationSettings {
     constructor() {
-        this._hiddenProblemTypes = [];
-        this._hiddenProblems = {};
+        this._hiddenProblemTypes = /** @type {Array<Number>} */ ([]);
+        this._hiddenProblems = /** @type {*} */ ({});
+        this._visible = false;
     }
 
     /**
@@ -24,6 +33,11 @@ export default class ValidationSettings {
         }
     }
 
+    /**
+     * 
+     * @param {Number} number 
+     * @param {Boolean} bHide 
+     */
     hideProblemType(number, bHide) {
         if (bHide == true) {
             this._hiddenProblemTypes.push(number)

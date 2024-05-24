@@ -1,6 +1,7 @@
 ﻿import CasePlanDefinition from "../../../../repository/definition/cmmn/definitions/caseplan/caseplandefinition";
 import ShapeDefinition from "../../../../repository/definition/cmmn/dimensions/shape";
 import CaseView from "./caseview";
+import CMMNElementView from "./cmmnelementview";
 import { CasePlanDecoratorBox } from "./decorator/decoratorbox";
 import CasePlanHalo from "./halo/caseplanhalo";
 import CasePlanProperties from "./properties/caseplanproperties";

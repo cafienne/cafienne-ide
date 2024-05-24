@@ -1,4 +1,7 @@
 ﻿﻿import StandardForm from "../ide/editors/standardform";
+import CaseModelEditor from "../ide/modeleditors/case/casemodeleditor";
+import Util from "../util/util";
+import Problem from "./problem";
 import ProblemType from "./problemtype";
 import ValidationSettings from "./validationsettings";
 
@@ -6,7 +9,7 @@ export default class ValidateForm extends StandardForm {
     /** @returns {ValidationSettings} */
     static get Settings() {
         if (!ValidateForm._settings) {
-            ValidateForm._settings = Object.assign(new ValidationSettings, Settings.validations);
+            ValidateForm._settings = Object.assign(new ValidationSettings, this.Settings.validations);
         }
         return ValidateForm._settings;
     }

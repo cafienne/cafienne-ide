@@ -1,6 +1,7 @@
 import CasePlanView from "../caseplanview";
 import Halo from "./halo";
-import HaloClickItem from "./item/haloclickitems";
+import HaloClickItem, { DeleteHaloItem, PropertiesHaloItem } from "./item/haloclickitems";
+import HaloItem from "./item/haloitem";
 
 export default class CasePlanHalo extends Halo {
     /**
@@ -17,7 +18,7 @@ export default class CasePlanHalo extends Halo {
         this.topBar.addItems(
             PropertiesHaloItem, DeleteHaloItem,
             SeparatorHaloItem,
-            CaseInputParametersHaloItem, CaseOutputParametersHaloItem,StartCaseSchemaHaloItem, CaseRolesHaloItem,
+            CaseInputParametersHaloItem, CaseOutputParametersHaloItem, StartCaseSchemaHaloItem, CaseRolesHaloItem,
             SeparatorHaloItem,
             ViewSourceHaloItem, DeployHaloItem, DebuggerHaloItem
         );

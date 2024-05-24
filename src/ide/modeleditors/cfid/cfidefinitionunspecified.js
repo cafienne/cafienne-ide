@@ -2,6 +2,7 @@
 
 import CaseFileDefinitionDefinition from "../../../repository/definition/cfid/casefileitemdefinitiondefinition";
 import PropertyDefinition from "../../../repository/definition/cfid/propertydefinition";
+import Util from "../../../util/util";
 import CaseFileItemDefinitionEditor from "./casefileitemdefinitioneditor";
 
 export default class CFIDefinitionUnspecified {

@@ -1,9 +1,11 @@
+import Util from "../../../../../util/util";
+import { AUTOCOMPLETE_IMG, MANUALACTIVATION_IMG, MINUS_IMG, REPETITION_IMG, REQUIRED_IMG } from "../elements";
 import PlanItemView from "../planitemview";
 import StageView from "../stageview";
-import DecoratorBox from "./decoratorbox";
+import DecoratorBox, { StageDecoratorBox } from "./decoratorbox";
 
-const DECORATORFROMBOTTOM = 4;
-const DECORATORSIZE = 12;
+export const DECORATORFROMBOTTOM = 4;
+export const DECORATORSIZE = 12;
 
 export default class Decorator {
     /**

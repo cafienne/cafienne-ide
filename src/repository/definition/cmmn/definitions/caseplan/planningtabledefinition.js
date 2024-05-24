@@ -1,13 +1,14 @@
 import UnnamedCMMNElementDefinition from "../unnamedcmmnelementdefinition";
 import ConstraintDefinition from "./constraintdefinition";
+import PlanItem from "./planitem";
 import StageDefinition from "./stagedefinition";
 
 export default class PlanningTableDefinition extends UnnamedCMMNElementDefinition {
     constructor(importNode, caseDefinition, parent) {
         super(importNode, caseDefinition, parent);
-        /** @type{Array<PlanItem>} */
+        /** @type {Array<PlanItem>} */
         this.tableItems = this.parseElements('discretionaryItem', PlanItem);
-        /** @type{Array<ApplicabilityRuleDefinition>} */
+        /** @type {Array<ApplicabilityRuleDefinition>} */
         this.ruleDefinitions = this.parseElements('applicabilityRule', ApplicabilityRuleDefinition);
         // TODO: PlanningTables can be nested in themselves, according to the spec. But we will not implement that here.
     }
