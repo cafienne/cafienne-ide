@@ -1,4 +1,4 @@
-class ModelListPanel {
+export default class ModelListPanel {
     /**
      * 
      * @param {RepositoryBrowser} repositoryBrowser

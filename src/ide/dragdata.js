@@ -1,4 +1,4 @@
-class DragData {
+export default class DragData {
     /**
      * Simple helper class for dragging/dropping elements from either RepositoryBrowser or ShapeBox to the CaseModelEditor canvas.
      * @param {IDE} ide 
@@ -110,7 +110,7 @@ class DragData {
     }
 }
 
-class CaseFileItemDragData extends DragData {
+export class CaseFileItemDragData extends DragData {
     constructor(editor, cfi) {
         super(editor.ide, editor, cfi.name, CaseFileItemView.name, CaseFileItemView.smallImage, cfi.id);
         this.item = cfi;

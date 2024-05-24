@@ -1,4 +1,8 @@
-class RepositoryBrowser {
+import DragData from "./dragdata";
+import IDE from "./ide";
+import ModelListPanel from "./modellistpanel";
+
+export default class RepositoryBrowser {
     /**
      * This object handles the model browser pane on the left
      * @param {IDE} ide 

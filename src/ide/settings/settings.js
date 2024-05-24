@@ -5,9 +5,8 @@ const GRID_SIZE = 'grid_size';
 const GRID_VISIBILITY = 'grid_visible';
 const VALIDATION_SETTINGS = 'validation_settings';
 const SPLITTER_SETTINGS = 'splitter_settings';
-const STORAGE = 'cmmn-modeler-settings';
 
-class Settings {
+export default class Settings {
 
     constructor() {
     }
