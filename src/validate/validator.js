@@ -1,4 +1,7 @@
-class Validator {
+import Problem from "./problem";
+import ProblemType from "./problemtype";
+
+export default class Validator {
     constructor(cs) {
         this.case = cs;
         /** @type{Array<Problem>} */

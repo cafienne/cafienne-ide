@@ -1,11 +1,11 @@
-class CaseValidationSettings {
+export class CaseValidationSettings {
     constructor(hiddenProblemsList) {
         this.date = new Date();
         this.list = hiddenProblemsList;
     }
 }
 
-class ValidationSettings {
+export default class ValidationSettings {
     constructor() {
         this._hiddenProblemTypes = [];
         this._hiddenProblems = {};

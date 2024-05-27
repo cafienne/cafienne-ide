@@ -1,5 +1,9 @@
-﻿﻿
-class ValidateForm extends StandardForm {
+﻿﻿import StandardForm from "../ide/editors/standardform";
+import Util from "../util/util";
+import ProblemType from "./problemtype";
+import ValidationSettings from "./validationsettings";
+
+export default class ValidateForm extends StandardForm {
     /** @returns {ValidationSettings} */
     static get Settings() {
         if (!ValidateForm._settings) {
