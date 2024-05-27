@@ -1,11 +1,16 @@
 'use strict';
 
+import CodeMirrorConfig from "../../util/codemirrorconfig";
+import Util from "../../util/util";
+import StandardForm from "../editors/standardform";
+import RightSplitter from "../splitter/rightsplitter";
+
 /**
  * This class implements the logic to call the repository REST service to debug a case instance.
  *
  * @constructor
  */
-class Debugger extends StandardForm {
+export default class Debugger extends StandardForm {
     /**
      * 
      * @param {CaseModelEditor} editor 
