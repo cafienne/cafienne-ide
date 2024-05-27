@@ -22,6 +22,8 @@ import RightSplitter from './ide/splitter/rightsplitter';
 import VerticalSplitter from './ide/splitter/verticalsplitter';
 import BottomSplitter from './ide/splitter/bottomsplitter';
 import TopSplitter from './ide/splitter/topsplitter';
+import Validator from './validate/validator';
+import ValidateForm from './validate/validateform';
 
 const pointers = [
     IDE,
@@ -51,6 +53,8 @@ const pointers = [
     VerticalSplitter,
     BottomSplitter,
     TopSplitter,
+    Validator,
+    ValidateForm,
 ]
 
 export default class Compatibility {

@@ -1,4 +1,7 @@
-﻿class ProblemType {
+﻿import Problem from "./problem";
+import ValidateForm from "./validateform";
+
+export default class ProblemType {
     /**
      * Returns the problem type with the specified number
      * @returns {ProblemType}
@@ -106,13 +109,13 @@
     }
 }
 
-class CMMNWarning extends ProblemType {
+export class CMMNWarning extends ProblemType {
     constructor(number, description) {
         super(number, description, 'images/warningproblem_32.png');
     }
 }
 
-class CMMNError extends ProblemType {
+export class CMMNError extends ProblemType {
     constructor(number, description) {
         super(number, description, 'images/errorproblem_32.png');
     }
