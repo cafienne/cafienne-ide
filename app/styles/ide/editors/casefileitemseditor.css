@@ -78,11 +78,11 @@
 
 .cfi-editorform .cfi-details .inputName {
     height: 18px;
-    width: 120px;
+    /* width: 120px; */
     margin: 1px 0px 1px 0px;
     border: 0px;
     left: 4px;
-    text-overflow: ellipsis;
+    /* text-overflow: ellipsis; */
     background-color: inherit;
     border: 0px;
     outline: none;
