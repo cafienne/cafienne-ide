@@ -99,6 +99,10 @@
     margin-left: 5px;
 }
 
+.cfi-editorform .cfi-details .selectDefinitionRef {
+    width: 100px;
+}
+
 .cfi-editorform .cfi-details:hover .action-icon {
     display: block;
     float: right;
