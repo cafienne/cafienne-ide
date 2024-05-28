@@ -1,26 +1,34 @@
-FROM nginx:alpine
+FROM node:22.2.0 as build
 
-RUN apk update && apk --no-cache add nodejs npm
+# Build everything as a non-root user (the default 'node' user)
+USER 1000
+WORKDIR /home/node
 
-# Create app directory
-RUN mkdir -p /usr/src/app /usr/src/app/repository_deploy
+COPY --chown=1000:1000 package.json yarn.lock ./
+COPY --chown=1000:1000 . .
+
+RUN yarn --verbose install
+RUN yarn --verbose build
+
+# Uninstall dev/build dependencies
+RUN yarn --verbose install --production
+
+# Create runtime image
+FROM node:22.2.0-slim
+
+# Switch workdir - this specific directory is used in standard configurations of e.g. getting-started to mount the repository folder
 WORKDIR /usr/src/app
 
-# Install app dependencies
-COPY package.json /usr/src/app/
-RUN npm install --production
+# Create folders for case model repository and deployment
+RUN mkdir ./repository && mkdir ./repository_deploy && chown -R 1000:1000 ./repository*
 
-# copy nginx config
-COPY config/nginx.conf /etc/nginx/nginx.conf
+# Copy all runtime node modules and build result to runtime image
+COPY --from=build --chown=1000:1000 /home/node/node_modules ./node_modules
+COPY --from=build --chown=1000:1000 /home/node/dist ./dist
 
-# Bundle app source
-COPY . /usr/src/app
-
-# clean the repository
-RUN rm -rf /usr/src/app/repository/*
-
-# ENV NODE_ENV=docker (is now set in entrypoint.sh)
+# Expose ide port and run as non-root user
 EXPOSE 2081
-RUN dos2unix /usr/src/app/bin/entrypoint.sh
-RUN dos2unix /usr/src/app/bin/www
-ENTRYPOINT /usr/src/app/bin/entrypoint.sh
+USER 1000
+
+# Start the IDE
+CMD ["node", "dist/server/server.js" ]
