@@ -25,6 +25,7 @@ import TopSplitter from './ide/splitter/topsplitter';
 import Validator from './validate/validator';
 import ValidateForm from './validate/validateform';
 import Debugger from './ide/debugger/debugger';
+import ClassicScripts from './classicscripts';
 
 const pointers = [
     IDE,
@@ -67,5 +68,7 @@ export default class Compatibility {
             window[property.name] = property;
         });        
         console.groupEnd();
+
+        ClassicScripts.include();
     }
 }
