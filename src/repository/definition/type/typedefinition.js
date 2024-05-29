@@ -3,6 +3,11 @@ import SchemaDefinition from "./schemadefinition";
 import ModelDefinition from "../modeldefinition";
 
 export default class TypeDefinition extends ModelDefinition {
+    static createDefinitionSource(name) {
+        const fileName = name + '.type';
+        return `<type id="${fileName}" name="${name}"><schema/></type>`;
+    }
+
     /**
      * @param {TypeFile} file
      */
