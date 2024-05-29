@@ -10,6 +10,10 @@ class SchemaDefinition extends XMLElementDefinition {
         this.properties = this.parseElements('property', SchemaPropertyDefinition);       
     }
 
+    /**
+     * 
+     * @returns {SchemaPropertyDefinition}
+     */
     createEmptyProperty() {
         const property = this.createDefinition(SchemaPropertyDefinition);
         property.name = '';

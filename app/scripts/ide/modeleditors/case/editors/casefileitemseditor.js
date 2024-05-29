@@ -129,7 +129,11 @@ class CaseFileItemsEditor {
     }
 
     convertToType(e) {
-        new CFIDConverter(this.case).convert();
+        try {
+            new CFIDConverter(this.case).convert();
+        } catch (error) {
+            this.ide.danger(`Failure during conversion:<p/>${error.message}`)
+        }
     }
 
     /**
