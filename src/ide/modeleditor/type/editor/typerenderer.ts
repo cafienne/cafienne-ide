@@ -178,7 +178,7 @@ export class SchemaRenderer extends TypeRenderer {
     }
 
     addEmptyProperty() {
-        this.addProperty(this.schema.createEmptyProperty());
+        this.addProperty(this.schema.createChildProperty());
     }
 
     refresh() {
