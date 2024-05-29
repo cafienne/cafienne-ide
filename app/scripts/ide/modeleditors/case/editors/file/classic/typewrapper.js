@@ -15,6 +15,12 @@ class TypeWrapper {
         }
     }
 
+    /**
+     * 
+     * @param {CFIDConverter} converter 
+     * @param {CaseFileDefinitionDefinition} cfid 
+     * @param {String} typeFileName 
+     */
     constructor(converter, cfid, typeFileName) {
         this.converter = converter;
         this.repository = this.converter.repository;

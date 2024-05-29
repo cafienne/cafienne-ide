@@ -40,17 +40,6 @@ class CaseFileItemsEditor {
     }
 
     /**
-     * Returns the CMMNElementDefinition associated with the tree node.
-     * @returns {CaseFileItemDef}
-     */
-    getDefinitionElement(node) {
-        if (!node) {
-            throw new Error('Node must be given to this function');
-        }
-        return this.case.caseDefinition.getElement(node.data.__id);
-    }
-
-    /**
      * Deletes this editor
      */
     delete() {
@@ -132,6 +121,7 @@ class CaseFileItemsEditor {
         try {
             new CFIDConverter(this.case).convert();
         } catch (error) {
+            console.error(error);
             this.ide.danger(`Failure during conversion:<p/>${error.message}`)
         }
     }

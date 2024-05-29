@@ -17,6 +17,7 @@ class CFIWrapper {
         this.loadUsage();
         this.loadCFID();
         this.resolveType();
+        this.loadChildren();
     }
 
     loadUsage() {
@@ -41,5 +42,9 @@ class CFIWrapper {
 
     resolveType() {
         this.typeWrapper = TypeWrapper.getType(this.converter, this.cfidFile);
+    }
+
+    loadChildren() {
+        this.cfi.children.forEach(child => new CFIWrapper(this.converter, child, this));
     }
 }

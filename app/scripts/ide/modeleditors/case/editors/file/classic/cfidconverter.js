@@ -12,6 +12,9 @@ class CFIDConverter {
     }
 
     convert() {
+        // First create the list of CFIWrappers (is actually a hierarchical structure).
         this.case.caseDefinition.getCaseFile().children.forEach(child => new CFIWrapper(this, child, undefined));
+
+        // const topType = TypeWrapper.getType(this, undefined)
     }
 }
