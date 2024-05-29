@@ -103,17 +103,14 @@ class Importer {
                         typeFile.parse(andThen(() => {
                             const typeDefinition = /** @type {TypeDefinition} */ (typeFile.content.definition);
                             XML.getElementsByTagName(xmlElement, 'property').forEach((propertyElement) => {
-                                const schemaPropertyDefinition = typeDefinition.schema.createEmptyProperty();
-                                schemaPropertyDefinition.name = propertyElement.getAttribute('name');
+                                const schemaPropertyDefinition = typeDefinition.schema.createChildProperty(propertyElement.getAttribute('name'));
                                 schemaPropertyDefinition.fromCMMNType(propertyElement.getAttribute('type'));
-                                schemaPropertyDefinition.multiplicity = 'ExactlyOne'; // CMMN doesn't specify multiplicity for primitive cfid properties
                                 XML.getElementsByTagName(propertyElement, 'cafienne:implementation').forEach(propertyExtensionElement => {
                                     const isBusinessIdentifierAttribute = propertyExtensionElement.getAttribute('isBusinessIdentifier');
                                     if (isBusinessIdentifierAttribute === 'true') {
                                         schemaPropertyDefinition.isBusinessIdentifier = true;
                                     }
                                 });
-                                typeDefinition.schema.properties.push(schemaPropertyDefinition);
                             });
                             if (fileName.endsWith('.type')) {
                                 this.newFiles.push(new TypeImporter(this, fileName, xmlElement, typeDefinition));
@@ -192,11 +189,8 @@ class Importer {
      */
     loadCaseFileItem(typeDefinition, schemaDefinition, caseFileItem, typeDefinitions) {
         if (caseFileItem.nodeName === 'caseFileItem') {
-            const property = /** @type {SchemaPropertyDefinition} */ (schemaDefinition.createEmptyProperty());
-            property.name = caseFileItem.getAttribute('name');
-            property.multiplicity = caseFileItem.getAttribute('multiplicity');
-            schemaDefinition.properties.push(property);
-
+            const property = schemaDefinition.createChildProperty(caseFileItem.getAttribute('name'), '', caseFileItem.getAttribute('multiplicity'))
+            // Check whether it is an inline type or a standalone child type
             const definitionRef = caseFileItem.getAttribute('definitionRef');
             if (definitionRef.endsWith('.object')) {
                 // It is an internal embedded object in type

@@ -23,6 +23,20 @@ class SchemaDefinition extends XMLElementDefinition {
         return property;
     }
 
+    /**
+     * 
+     * @returns {SchemaPropertyDefinition}
+     */
+    createChildProperty(name, type = '', multiplicity = 'ExactlyOne', isBusinessIdentifier = false) {
+        const property = this.createEmptyProperty();
+        property.name = name;
+        property.type = type;
+        property.multiplicity = multiplicity;
+        property.isBusinessIdentifier = isBusinessIdentifier;
+        this.properties.push(property);
+        return property;
+    }
+
     createExportNode(parentNode, tagName = SchemaDefinition.TAG, ...propertyNames) {
         super.createExportNode(parentNode, tagName, 'properties', propertyNames);
     }
