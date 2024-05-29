@@ -35,8 +35,7 @@ class TypeModelEditorMetadata extends ModelEditorMetadata {
      */
     createNewModel(ide, name, description, callback = (/** @type {String} */ fileName) => { }) {
         const fileName = name + '.type';
-        const newModelContent = `<type id="${fileName}" name="${name}"><schema/></type>`;
-        ide.repository.createTypeFile(fileName, newModelContent).save(andThen(() => callback(fileName)));
+        ide.repository.createTypeFile(fileName, TypeDefinition.createDefinitionSource(name)).save(andThen(() => callback(fileName)));
         return fileName;
     }
 }

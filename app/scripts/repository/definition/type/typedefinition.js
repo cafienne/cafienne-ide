@@ -1,8 +1,7 @@
 class TypeDefinition extends ModelDefinition {
 
     static createDefinitionSource(name) {
-        const fileName = name + '.type';
-        return `<type id="${fileName}" name="${name}"><schema/></type>`;
+        return `<type id="${name + '.type'}" name="${name}"><schema/></type>`;
     }
 
     /**

@@ -128,7 +128,7 @@ class Importer {
                         typeRefs[typeRef] = typeRef; // To avoid generating same typeRef again as they can appear in multiple (sub)case's
                         let typeDefinition = /** @type {TypeDefinition} */ typeDefinitions[typeRef];
                         if (!typeDefinition) {
-                            const typeFile = new TypeFile(this.repository, typeRef, `<type id="${typeRef}" name="${typeRef.replace(/\.type$/, '')}"><schema/></type>`);
+                            const typeFile = new TypeFile(this.repository, typeRef, TypeDefinition.createDefinitionSource(typeRef.replace(/\.type$/, '')));
                             typeFile.parse(andThen(() => {
                                 // parsing is not a-sync code; so we are sure typeDefinition will be set with a new or already existing type from cache
                                 typeDefinition = typeDefinitions[typeRef] = typeFile.content.definition;
