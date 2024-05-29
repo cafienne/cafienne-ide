@@ -2,8 +2,10 @@
 import { CaseFileItemDragData } from "@ide/dragdata";
 import CaseFileItemDefinitionEditor from "@ide/modeleditor/cfid/casefileitemdefinitioneditor";
 import BottomSplitter from "@ide/splitter/bottomsplitter";
+import { andThen } from "@util/promise/followup";
 import Util from "@util/util";
 import $ from "jquery";
+import CFIDConverter from "./cfidconverter";
 import CFINode from "./cfinode";
 
 export const NEWDEF = '__new__';
@@ -45,6 +47,7 @@ export default class CaseFileItemsEditor {
                                 <button class="btnAddChild" type="addchild">Add Child</button>
                                 <button class="btnAddSibling" type="addsibling">Add Sibling</button>
                                 <button class="btnRemoveItem" type="remove">Remove</button>
+                                <button class="btnConvertToType">Convert to Type structure</button>
                             </div>
                             <div class="cfi-container">
                                 <div class="cfi-header cfi-details">
@@ -86,6 +89,7 @@ export default class CaseFileItemsEditor {
         this.html.find('.btnAddChild').on('click', e => this.addChild(e));
         this.html.find('.btnAddSibling').on('click', e => this.addSibling(e));
         this.html.find('.btnRemoveItem').on('click', e => this.removeNode(e));
+        this.html.find('.btnConvertToType').on('click', e => this.convertToType(e));
 
         // Create a splitter and put cfid editor at the bottom.
         this.splitter = new BottomSplitter(this.htmlParent, '70%', 175);
@@ -216,6 +220,18 @@ export default class CaseFileItemsEditor {
             }
         } else {
             this.ide.warning('Select a Case File Item to be removed', 1000);
+        }
+    }
+
+    convertToType(e) {
+        try {
+            new CFIDConverter(this.case).convert(andThen(() => {
+                console.log("\n\nCOMPLETED CONVERSION, RELOADING CASE");
+                this.case.editor.refresh();
+            }));
+        } catch (error) {
+            console.error(error);
+            this.ide.danger(`Failure during conversion:<p/>${error.message}`)
         }
     }
 
