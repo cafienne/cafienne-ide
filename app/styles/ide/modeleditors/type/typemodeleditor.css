@@ -1,82 +1,160 @@
 /* Styling for TypeModelEditor */
-.type-model-editor {
-    background-color: #f5f5f5 !important;
+.ui-widget.ui-widget-content {
+    border: 1px solid rgb(221, 221, 221);
+}
+
+.type-editor-box {
     position: absolute;
+    top: 18px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    border: 0px;    
+}
+
+.type-editor {
     /* needed for tabs: | Editor | Source | */
-    top: 33px; 
+    position: absolute;
+    top: 33px;
     bottom: 0px;
     left: 0px;
     right: 0px;
     border: 0px;
+    background-color: #f5f5f5 !important;
 }
 
-.type-model-editor>div {
+.type-editor>div {
     position: absolute;
-    top: 10px;
-    left: 10px;
+    top: 5px;
+    left: 0px;
     right: 0px;
     bottom: 0px;
+    background-color: white;
+    border: 1px solid rgb(221, 221, 221);
 }
 
-.type-model-editor .modelgenericfields
-{
-    padding-bottom: 5px;
+.casetype-editor {
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 0px;
+    bottom: 0px;
+    right: 1px;
+    height: auto;
+    width: auto;
+}
+
+.casetype-editor .casetype-header {
+    height: 20px;
+    background-color: rgb(66, 68, 70);
+    color: white;
     border-bottom: 1px solid #DDDDDD;
+    width: 100%;
+    white-space: nowrap;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 0px;
+    font-size: 0.8em;
+    padding-left: 8px;
+    padding-top: 2px;
 }
 
-.type-model-editor .modelgenericfields label {
-    width: 150px;
+.casetype-editor .casetype-header label {
+    cursor: default;
 }
 
-.type-model-editor .modelgenericfields input {
+.casetype-editor .casetype-selector {
+    position: absolute;
+    top: 3px;
+    right: 2px;
+    height: 20px;
+}
+
+.casetype-editor .casetype-selector select {
+    height: 21px;
+}
+
+.casetype-editor .type-editor-box .model-source-tabs {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    border-radius: 0px;
+}
+
+/** In the context of the case type editor we hide the model generic fields */
+.casetype-editor .type-editor .modelgenericfields {
+    display: none;
+}
+
+/** In the type model editor the model generic fields can be modified */
+.type-editor .modelgenericfields {
+    display: block;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+
+.type-editor .modelgenericfields input {
     width: 200px;
 }
 
-.type-model-editor .modelgenericfields select {
-    height: 22px;
+.model-source-editor>div {
+    position: absolute;
+    top: 5px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    border: 1px solid rgb(221, 221, 221);
 }
 
-.type-model-editor .type-model-source {
+.type-editor .type-model-source {
     top: 255px;
     bottom: 10px;
 }
 
-.type-model-editor .type-model-source>div {
+.type-editor .type-model-source>div {
     position: absolute;
     top: 15px;
     left: 0px;
     right: 0px;
     bottom: 0px;
-    border: 1px solid rgb(169, 169, 169);
+    border: 1px solid rgb(221, 221, 221);
 }
 
-.type-model-editor .type-model-source>div>div {
+.type-editor .type-model-source>div>div {
     height: 100%;
 }
 
-.type-model-editor .typecontainer {
+.type-editor .type-container {
     position: absolute;
-    top: 50px;
-    left: 0px;
+    top: 27px;
+    left: 3px;
     right: 0px;
     bottom: 0px;
     overflow: auto;
-    background-color: #f5f5f5;
 }
 
-.type-model-editor .schemacontainer {
-    grid-column: span 4;
+.type-editor .schema-container {
     display: none;
 }
 
 /* Header will not scroll with content container */
-.type-model-editor .propertyheadercontainer {
+.type-editor .property-header-container {
     position: sticky;
     top: 0px;
-    background-color: inherit;
+    background-color: #f5f5f5;
+    height: 38px;
+    padding-top: 3px;
+    z-index: 1;
 }
 
-.type-model-editor .property-renderer {
+.type-editor .property-header-container div {
+    padding-left: 3px;
+    border-left: 1px solid white;
+}
+
+.type-editor .property-renderer {
     position: relative;
     top: 0px;
     left: 0px;
@@ -87,44 +165,15 @@
     background-color: inherit;
 }
 
-.type-model-editor .propertycontainer {
-    display: grid;
-    grid-column-gap: 15px;
-    grid-template-columns: auto 90px 60px 60px;
-}
-
 /* (nested) properyschemascontainer will be indented with 20px */
-.type-model-editor .propertyschemacontainer {
+.type-editor .property-children-container {
     border-left: 1px dotted #BBB;
     padding-left: 12px;
     margin-left: 7px;
 }
 
-.type-model-editor input, .type-model-editor select {
-    height: 22px;
-    width: 100%;
-    border: 1px solid rgb(169, 169, 169)
-}
-
-.type-model-editor .schemacontainer .inputPropertyName {
-    width: calc(100% - 45px);
-}
-
-.type-model-editor .schemacontainer input[type='checkbox']
-{
+.type-editor .schema-container input[type='checkbox'] {
     width: initial;
-}
-
-.type-model-editor .schemacontainer .buttonRemoveProperty {
-    padding: 4px;
-    margin-right: 4px;
-    width: 16px;
-    height: 16px;
-    background-image: url(_images_/delete_32.png);
-    background-position: 4px;
-    background-repeat: no-repeat;
-    background-size: 13px 13px;
-    border: 0px;
 }
 
 .json-schema-editor {
@@ -142,11 +191,154 @@
 }
 
 .json-schema-editor>div {
-    border: 1px solid rgb(169, 169, 169);
     position: absolute;
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
-    top: 10px;
-    height: auto;
+    top: 5px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    border: 1px solid rgb(221, 221, 221);
+    ;
+}
+
+.type-editor .menu-container {
+    position: absolute;
+    top: 3px;
+    left: 0px;
+    padding: 3px;
+}
+
+.type-editor .menu-container .action-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.type-editor .formheader {
+    border-top-right-radius: 0px !important;
+}
+
+.type-editor .formheader label {
+    cursor: default;
+}
+
+/* Header will not scroll with content container */
+.type-editor .property-container {
+    display: grid;
+    grid-column-gap: 10px;
+    grid-template-columns: auto 100px 50px 50px;
+    border-bottom: 1px solid #eee;
+}
+
+.type-editor .select-container,
+.type-editor .checkbox-container {
+    border-left: 1px solid #eee;
+}
+
+.type-editor .type-container select {
+    height: 18px;
+    width: 100%;
+    margin-top: 1px;
+    background-color: inherit;
+    border: 0px;
+    outline: none;
+}
+
+.type-editor .property-container .input-name-container {
+    position: relative;
+    overflow: hidden;
+    text-wrap: nowrap;
+}
+
+.type-editor .property-container .inputPropertyName {
+    height: 18px;
+    width: calc(100% - 22px);
+    min-width: 80px;
+    margin: 1px 0px 1px 0px;
+    text-overflow: ellipsis;
+    background-color: inherit;
+    border: 0px;
+    padding: 2px;
+    outline: none;
+}
+
+.type-editor .cfi-icon {
+    height: 18px;
+    padding: 2px;
+}
+
+.type-editor .property-container .action-icon {
+    display: none;
+}
+
+.type-editor .property-container .action-icon-container {
+    padding: 1px;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+
+.type-editor .property-container:hover .action-icon-container {
+    padding-left: 10px;
+    background-color: #f6f6f6;
+}
+
+.type-editor .property-container.property-selected:hover .action-icon-container {
+    background-color: rgb(156, 175, 226);
+}
+
+.type-editor .property-container.property-selected:hover .action-icon-container {
+    background-color: rgb(156, 175, 226);
+}
+
+/* When inputName has the input focus then hide the action-icon-container to save space for typing text */
+.type-editor .property-container .inputPropertyName:not(:read-only):focus+.action-icon-container {
+    display: none;
+}
+
+/* When inputName or select has focus background should be white */
+.type-editor .property-container .inputPropertyName:not(:read-only),
+.type-editor .property-container select:focus {
+    background-color: white;
+    outline: auto;
+}
+
+.type-editor .property-container:hover .action-icon {
+    display: block;
+    float: right;
+    width: 18px;
+    height: 18px;
+}
+
+.type-editor .property-container:hover {
+    background-color: #f6f6f6;
+}
+
+.type-editor .property-container.property-selected {
+    background-color: rgb(156, 175, 226);
+}
+
+.type-editor .property-container img:hover,
+.type-editor .menu-container img:hover {
+    background-color: #ddd;
+}
+
+.type-editor .menu-container .delete-icon,
+.type-editor .menu-container .add-child-icon,
+.type-editor .menu-container.primitive-type .add-child-icon,
+.type-editor .property-container.primitive-type .cfi-icon {
+    opacity: 0.2;
+}
+
+.type-editor .menu-container.complex-type .add-child-icon,
+.type-editor .menu-container.complex-type .delete-icon,
+.type-editor .menu-container.primitive-type .delete-icon,
+.type-editor .property-container.complex-type .cfi-icon {
+    opacity: 1;
+}
+
+.type-editor .property-container.primitive-type .add-child-icon {
+    visibility: hidden;
+}
+
+.type-editor .property-container.complex-type .add-child-icon {
+    visibility: visible;
 }
