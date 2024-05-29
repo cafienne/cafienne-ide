@@ -66,6 +66,7 @@ class CaseFileItemsEditor {
         this.html.find('.btnAddChild').on('click', e => this.clickAddButton(e, false));
         this.html.find('.btnAddSibling').on('click', e => this.clickAddButton(e, true));
         this.html.find('.btnRemoveItem').on('click', e => this.removeNode());
+        this.html.find('.btnConvertToType').on('click', e => this.convertToType(e));
         this.html.on('keydown', e => {
             if (e.which == 27) {
                 e.preventDefault();
@@ -125,6 +126,10 @@ class CaseFileItemsEditor {
         } else {
             this.ide.warning('Select a Case File Item to be removed', 1000);
         }
+    }
+
+    convertToType(e) {
+        new CFIDConverter(this.case).convert();
     }
 
     /**
@@ -319,6 +324,7 @@ class CaseFileItemsEditor {
                                 <button class="btnAddChild" type="addchild">Add Child</button>
                                 <button class="btnAddSibling" type="addsibling">Add Sibling</button>
                                 <button class="btnRemoveItem" type="remove">Remove</button>
+                                <button class="btnConvertToType">Convert to Type structure</button>
                             </div>
                             <div class="cfi-container">
                                 <div class="cfi-header cfi-details">
