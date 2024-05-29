@@ -19,6 +19,16 @@ export default class SchemaDefinition extends ElementDefinition<TypeDefinition> 
         return property;
     }
 
+    createChildProperty(name: string, type = '', multiplicity = 'ExactlyOne', isBusinessIdentifier = false): SchemaPropertyDefinition {
+        const property = this.createEmptyProperty();
+        property.name = name;
+        property.type = type;
+        property.multiplicity = multiplicity;
+        property.isBusinessIdentifier = isBusinessIdentifier;
+        this.properties.push(property);
+        return property;
+    }
+
     createExportNode(parentNode: Element, tagName: string = SchemaDefinition.TAG, ...propertyNames: any[]) {
         super.createExportNode(parentNode, tagName, 'properties', propertyNames);
     }
