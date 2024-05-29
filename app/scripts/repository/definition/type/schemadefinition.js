@@ -11,24 +11,15 @@ class SchemaDefinition extends XMLElementDefinition {
     }
 
     /**
-     * 
+     * create a child SchemaPropertyDefinition and push it to the schemaDefinition properties collection
+     * @param {string} name 
+     * @param {string} type 
+     * @param {string} multiplicity 
+     * @param {boolean} isBusinessIdentifier 
      * @returns {SchemaPropertyDefinition}
      */
-    createEmptyProperty() {
+    createChildProperty(name = '', type = '', multiplicity = 'ExactlyOne', isBusinessIdentifier = false) {
         const property = this.createDefinition(SchemaPropertyDefinition);
-        property.name = '';
-        property.type = '';
-        property.isBusinessIdentifier = false;
-        property.multiplicity = 'ExactlyOne';
-        return property;
-    }
-
-    /**
-     * 
-     * @returns {SchemaPropertyDefinition}
-     */
-    createChildProperty(name, type = '', multiplicity = 'ExactlyOne', isBusinessIdentifier = false) {
-        const property = this.createEmptyProperty();
         property.name = name;
         property.type = type;
         property.multiplicity = multiplicity;
@@ -39,6 +30,15 @@ class SchemaDefinition extends XMLElementDefinition {
 
     createExportNode(parentNode, tagName = SchemaDefinition.TAG, ...propertyNames) {
         super.createExportNode(parentNode, tagName, 'properties', propertyNames);
+    }
+
+    /**
+     * 
+     * @param {SchemaPropertyDefinition} child 
+     * @param {SchemaPropertyDefinition | undefined} after 
+     */
+    insert(child, after = undefined) {
+        Util.insertInArray(this.properties, child, after);
     }
 
     toJSONSchema(parent) {

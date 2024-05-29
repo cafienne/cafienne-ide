@@ -10,8 +10,29 @@ class PropertyRenderer extends TypeRenderer {
         super(parent, localType, property, htmlParent);
         this.parent = parent;
         this.property = property;
-        this.html = $(`<div class="property-renderer" />`);
+        this.editor.propertyRenderers.push(this);
+        this.html = $('<div class="property-renderer" />');
         this.htmlParent.append(this.html);
+        /** @type {SchemaRenderer} */
+        this.schemaRenderer = null;
+    }
+
+    select() {
+        this.propertyContainer.addClass('property-selected');
+    }
+
+    deselect() {
+        this.propertyContainer.removeClass('property-selected');
+    }
+
+    renderComplexOrPrimitiveTypeStyle() {
+        if (this.property.isComplexType) {
+            this.propertyContainer.addClass('complex-type');
+            this.propertyContainer.removeClass('primitive-type');
+        } else {
+            this.propertyContainer.addClass('primitive-type');
+            this.propertyContainer.removeClass('complex-type');
+        }
     }
 
     delete() {
@@ -30,39 +51,56 @@ class PropertyRenderer extends TypeRenderer {
     }
 
     render() {
-        this.htmlContainer = $(`<div class='propertycontainer' title="${this.path}">
-            <div>
-                <img class="schemaPropertyIcon" style="width:14px;margin:2px;opacity:${this.property.isComplexType ? '1' : '0.2'}" src="/images/svg/casefileitem.svg"></img>
-                <input class="inputPropertyName" value="${this.property.name}" />
-                <button tabindex="-1" class="buttonRemoveProperty" title="Delete property"></button>
-            </div>
-            <div>
-                <select class="selectType"></select>
-            </div>
-            <div>
-                <select class="selectMultiplicity">
-                    <option value="ExactlyOne">[1]</option>
-                    <option value="ZeroOrOne">[0..1]</option>
-                    <option value="ZeroOrMore">[0..*]</option>
-                    <option value="OneOrMore">[1..*]</option>
-                    <option value="Unspecified">[*]</option>
-                    <option value="Unknown">[?]</option>
-                </select>
-            </div>
-            <div style="text-align:center">
-                <input type="checkbox" class="inputBusinessIdentifier" ${this.property.isBusinessIdentifier ? ' checked' : ''} />
-            </div>
-            <div class="propertyschemacontainer schemacontainer"></div>
-        </div>`);
+        this.htmlContainer = $(
+            `<div>
+                <div class='property-container' title="${this.path}">
+                    <div class="input-name-container">
+                        <img class="cfi-icon" src="/images/svg/casefileitem.svg"></img>
+                        <input class="inputPropertyName"  type="text" readonly value="${this.property.name}" />
+                        <div class="action-icon-container">
+                            <img class="action-icon delete-icon" src="images/delete_32.png" title="Delete ..."/>
+                            <img class="action-icon add-sibling-icon" src="images/svg/add-sibling-node.svg" title="Add sibling ..."/>
+                            <img class="action-icon add-child-icon" src="images/svg/add-child-node.svg" title="Add child ..."/>
+                        </div>
+                    </div>
+                    <div class="select-container">
+                        <select class="selectType"></select>
+                    </div>
+                    <div class="select-container">
+                        <select class="selectMultiplicity">
+                            <option value="ExactlyOne">[1]</option>
+                            <option value="ZeroOrOne">[0..1]</option>
+                            <option value="ZeroOrMore">[0..*]</option>
+                            <option value="OneOrMore">[1..*]</option>
+                            <option value="Unspecified">[*]</option>
+                            <option value="Unknown">[?]</option>
+                        </select>
+                    </div>
+                    <div class="checkbox-container" style="text-align:center">
+                        <input type="checkbox" class="checkboxBusinessIdentifier" ${this.property.isBusinessIdentifier ? ' checked' : ''} />
+                    </div>
+                </div>
+                <div class="property-children-container schema-container"></div>
+            </div>`
+        );
         this.html.append(this.htmlContainer);
+        this.inputPropertyName = this.htmlContainer.find('.inputPropertyName');
+        this.propertyContainer = this.htmlContainer.find('.property-container');
 
-        this.htmlContainer.find('.buttonRemoveProperty').on('click', e => this.removeProperty());
-        this.htmlContainer.find('.inputPropertyName').on('change', e => this.changeName(e.currentTarget.value));
-        this.typeSelector = new TypeSelector(this.editor.ide.repository, this.htmlContainer.find('.selectType'), this.property.cmmnType, typeRef => this.changeType(typeRef), true);
+        this.attachEventHandlers();
+        this.renderComplexTypeProperty();
+    }
+
+    attachEventHandlers() {
+        this.htmlContainer.find('.add-child-icon').on('click', e => this.editor.addChild(e, this));
+        this.htmlContainer.find('.add-sibling-icon').on('click', e => this.editor.addSibling(e, this));
+        this.htmlContainer.find('.delete-icon').on('click', e => this.removeProperty());
+
+        this.typeSelector = new TypeSelector(this.editor.ide.repository, this.htmlContainer.find('.selectType'), this.property.cmmnType, typeRef => this.changeType(typeRef), true, [{ option: '&lt;new&gt;', value: '<new>' }]);
         this.htmlContainer.find('.selectMultiplicity').on('change', e => this.changeProperty('multiplicity', e.currentTarget.value));
         this.htmlContainer.find('.selectMultiplicity').val(this.property.multiplicity);
-        this.htmlContainer.find('.inputBusinessIdentifier').on('change', e => this.changeProperty('isBusinessIdentifier', e.currentTarget.checked));
-        this.htmlContainer.find('.schemaPropertyIcon').on('pointerdown', e => {
+        this.htmlContainer.find('.checkboxBusinessIdentifier').on('change', e => this.changeProperty('isBusinessIdentifier', e.currentTarget.checked));
+        this.htmlContainer.find('.cfi-icon').on('pointerdown', e => {
             if (this.property.isComplexType && this.editor.case) {
                 // Only support drag/drop for complex type
                 e.preventDefault();
@@ -73,22 +111,49 @@ class PropertyRenderer extends TypeRenderer {
                 this.ide.warning('Cannot drag items here', 1000)
             }
         });
-        this.htmlContainer.on('keydown', e => e.stopPropagation());
+        // ??? Why is this here? this.htmlContainer.on('keydown', e => e.stopPropagation());
+        this.inputPropertyName.on('change', e => this.changeName(e.currentTarget.value));
+        this.inputPropertyName.on('keyup', e => {
+            if (e.which === 9) { // Tab to get inputName focus
+                this.editor.selectPropertyRenderer(this);
+                this.inputNameFocusHandler();
+            }
+        });
+        this.inputPropertyName.on('leave', () => this.inputNameBlurHandler());
+        this.inputPropertyName.on('blur', () => this.inputNameBlurHandler());
+        this.inputPropertyName.on('dblclick', () => this.inputNameFocusHandler());
+        this.inputPropertyName.on('click', () => this.inputNameFocusHandler());
+        this.propertyContainer.on('click', e => {
+            e.stopPropagation();
+            this.editor.selectPropertyRenderer(this);
+        });
+    }
 
-        this.renderComplexTypeProperty();
+    inputNameBlurHandler() {
+        this.inputPropertyName.attr('readonly', true);
+        document.getSelection().empty();
+    }
+
+    inputNameFocusHandler() {
+        if (this.editor.selectedPropertyRenderer === this) {
+            this.inputPropertyName.attr('readonly', false);
+            this.inputPropertyName.select();
+        }
     }
 
     renderComplexTypeProperty() {
         // Clear previous content of the schema container (if present)
-        const schemaContainer = this.htmlContainer.find('>.schemacontainer');
+        const schemaContainer = this.htmlContainer.find('>.schema-container');
         Util.clearHTML(schemaContainer);
         schemaContainer.css('display', 'none');
         // Clear previous cycle detected message (if present)
         this.htmlContainer.find('.selectType').css('border', '');
         this.htmlContainer.find('.selectType').attr('title', '');
+        this.renderComplexOrPrimitiveTypeStyle();
         if (this.property.isComplexType) {
             if (this.property.type === 'object' && this.property.schema) {
-                new SchemaRenderer(this, schemaContainer, this.localType, this.property.schema).render();
+                this.schemaRenderer = new SchemaRenderer(this, schemaContainer, this.localType, this.property.schema);;
+                this.schemaRenderer.render();
             } else {
                 const typeRef = this.property.typeRef;
                 const typeFile = this.ide.repository.getTypes().find(type => type.fileName === typeRef);
@@ -102,7 +167,8 @@ class PropertyRenderer extends TypeRenderer {
                     } else {
                         this.ide.repository.load(typeRef, andThen((/** @type {TypeFile} */file) => {
                             const nestedLocalType = this.localType.root.registerLocalDefinition(file);
-                            new SchemaRenderer(this, schemaContainer, nestedLocalType).render();
+                            this.schemaRenderer = new SchemaRenderer(this, schemaContainer, nestedLocalType);
+                            this.schemaRenderer.render();
                         }));
                     }
                 }
@@ -115,15 +181,11 @@ class PropertyRenderer extends TypeRenderer {
      * But first check if the property is still in use. If so, then it cannot be removed.
      */
     removeProperty() {
-        if (this.property['isNew']) {
-            return;
-        }
-
         // First check direct references, as that gives a different error message than child properties.
         const references = this.property.getCaseReferences();
         if (references.length > 0) {
             const definitionsUsing = Util.removeDuplicates(references.map(ref => ref.modelDefinition.file.fileName));
-            this.editor.ide.warning("Cannot remove property, as it is in use in " + references.length + " places across the files " + definitionsUsing.map(fileName => `<br />- ${fileName}`).join(''));
+            this.editor.ide.warning('Cannot remove property, as it is in use in ' + references.length + ' places across the files ' + definitionsUsing.map(fileName => `<br />- ${fileName}`).join(''));
             return;
         }
 
@@ -131,7 +193,7 @@ class PropertyRenderer extends TypeRenderer {
         const childRenderers = this.getDescendents().filter(child => child instanceof PropertyRenderer).map((/** @type {PropertyRenderer} */child) => child.property);
         const childCaseReferences = Util.removeDuplicates(childRenderers.filter(p => p !== this.property && p.getCaseReferences().length > 0));
         if (childCaseReferences.length > 0) {
-            this.editor.ide.warning("Cannot remove property, as it has child properties that are in use" + childCaseReferences.map(property => `<br />- ${property.name}`).join(''));
+            this.editor.ide.warning('Cannot remove property, as it has child properties that are in use' + childCaseReferences.map(property => `<br />- ${property.name}`).join(''));
             return;
         }
 
@@ -157,7 +219,7 @@ class PropertyRenderer extends TypeRenderer {
         //  Step 4: save the local type
         //  Step 5: refresh the editors
 
-        console.groupCollapsed("Processing name change");
+        console.groupCollapsed('Processing name change');
         const references = /** @type {Array<CaseFileItemTypeDefinition> } */ (this.property.searchInboundReferences().filter(element => element instanceof CaseFileItemTypeDefinition));
         const filesToReload = /** @type Array<CaseFile> */[];
         const list = new SequentialFollowupList(andThen(() => {
@@ -172,7 +234,7 @@ class PropertyRenderer extends TypeRenderer {
                         editor.destroy();
                     }
                 } else {
-                    console.log("Reloading file " + file.fileName)
+                    console.log('Reloading file ' + file.fileName);
                     file.reload();
                 }
             });
@@ -211,11 +273,71 @@ class PropertyRenderer extends TypeRenderer {
             }
         });
         list.run();
+
+        if (!this.property.type) {
+            // Auto detect type  (Eg.: if name is changed into "greeting" search and propoese existing type "Greeting.type")
+            const type = this.editor.ide.repository.getTypes().find(definition => definition.name.toLowerCase() == this.property.name.toLowerCase());
+            if (type) {
+                this.changeType(type.fileName);
+                this.htmlContainer.find('.selectType').first().val(type.fileName);
+            }
+        }
     }
 
     changeType(newType) {
-        this.changeProperty('cmmnType', newType);
-        this.renderComplexTypeProperty();
+        if (newType === '<new>') {
+            // If <new> is selected create a new Type in repository
+            const newTypeModelName = this.__getUniqueTypeName(this.property.name);
+            const typeModelEditorMetadata = IDE.editorTypes.find(type => type.modelType === 'type');
+            if (typeModelEditorMetadata) {
+                typeModelEditorMetadata.createNewModel(this.ide, newTypeModelName, '', newTypeFileName => {
+                    this.htmlContainer.find('.selectType').first().val(newTypeFileName);
+                    this.typeSelector.typeRef = newTypeFileName;
+                    this.changeProperty('cmmnType', newTypeFileName);
+                    this.renderComplexTypeProperty();
+                    // Trigger adding a new (empty) child for easy data entry
+                    this.editor.addChild(jQuery.Event(''), this);
+                });
+            }
+        } else {
+            this.typeSelector.typeRef = newType;
+            this.changeProperty('cmmnType', newType);
+            this.renderComplexTypeProperty();
+            if ( newType === 'object') {
+                // Trigger adding a new (empty) child for easy data entry
+                this.editor.addChild(jQuery.Event(''), this);
+            }
+        }
+    }
+
+    /**
+     * Creates a non-existing name for the new type,
+     * i.e., one that does not conflict with the existing list of type models.
+     * @param {string} typeModelName the name of the type model without the .type filename extension 
+     * @returns {string}
+     */
+    __getUniqueTypeName(typeModelName) {
+        while (this.ide.repository.isExistingModel(typeModelName + '.type')) {
+            typeModelName = this.__nextName(typeModelName);
+        }
+        return typeModelName;
+    }
+
+    /**
+     * Returns the next name for the specified string; it checks the last
+     * characters. For a name like 'abc' it will return 'abc_1', for 'abc_1' it returns 'abc_2', etc.
+     * @returns {String}
+     */
+    __nextName(proposedName) {
+        const underscoreLocation = proposedName.indexOf('_');
+        if (underscoreLocation < 0) {
+            return proposedName + '_1';
+        } else {
+            const front = proposedName.substring(0, underscoreLocation + 1);
+            const num = new Number(proposedName.substring(underscoreLocation + 1)).valueOf() + 1;
+            const newName = front + num;
+            return newName;
+        }
     }
 
     /**
@@ -226,11 +348,14 @@ class PropertyRenderer extends TypeRenderer {
     changeProperty(propertyName, propertyValue) {
         this.property[propertyName] = propertyValue;
         if (this.property.isNew) {
-            // No longer transient parameter
+            // The property is no longer a new transient placeholder property because the value is changed and it can become persistent
             this.property.isNew = false;
             const schema = /** @type {SchemaDefinition} */ (this.property.parent);
-            schema.properties.push(this.property);
-            this.parent.addEmptyProperty();
+            const indexOfProperty = schema.properties.indexOf(this.property);
+            if (indexOfProperty === schema.properties.length - 1 || !schema.properties[indexOfProperty + 1].isNew) {
+                // if not yet there: insert an empty transient placeholder property (this is for users convenience while adding multiple new properties) 
+                this.parent.addEmptyPropertyRenderer(this);
+            }
         }
         this.localType.save(this);
     }

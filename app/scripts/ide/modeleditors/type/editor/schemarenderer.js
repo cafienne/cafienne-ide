@@ -15,20 +15,33 @@ class SchemaRenderer extends TypeRenderer {
 
     render() {
         this.htmlContainer.css('display', 'block');
-        this.schema.properties.forEach(property => this.addProperty(property));
-        this.addEmptyProperty();
+        this.schema.properties.forEach(property => this.createPropertyRenderer(property));
     }
 
     /**
      * 
      * @param {SchemaPropertyDefinition} property 
+     * @returns {PropertyRenderer}
      */
-    addProperty(property) {
-        new PropertyRenderer(this, this.htmlContainer, this.localType, property).render();
+    createPropertyRenderer(property) {
+        const newPropertyRenderer = new PropertyRenderer(this, this.htmlContainer, this.localType, property);
+        newPropertyRenderer.render();
+        return newPropertyRenderer;
     }
 
-    addEmptyProperty() {
-        this.addProperty(this.schema.createEmptyProperty());    
+    /**
+     * 
+     * @param {PropertyRenderer} sibling 
+     * @returns {PropertyRenderer}
+     */
+    addEmptyPropertyRenderer(sibling = null) {
+        const newPropertyRenderer = this.createPropertyRenderer(this.schema.createChildProperty());
+        if (sibling) {
+            const definition = newPropertyRenderer.property;
+            this.schema.insert(newPropertyRenderer.property, sibling.property);
+            newPropertyRenderer.html.insertAfter(sibling.html);
+        }
+        return newPropertyRenderer;    
     }
 
     refresh() {

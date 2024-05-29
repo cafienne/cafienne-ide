@@ -16,7 +16,7 @@ class TypeSelector {
         this.additionalOptions = additionalOptions;
         this.typeFiles = this.repository.getTypes();
         this.loadOptions();
-        this.listRefresher = (typeRef = this.typeRef, additionalOptions = []) => {
+        this.listRefresher = (typeRef = this.typeRef, additionalOptions = this.additionalOptions) => {
             this.additionalOptions = additionalOptions
             this.typeRef = typeRef;
             const newFiles = this.repository.getTypes();
@@ -25,11 +25,9 @@ class TypeSelector {
                 this.typeFiles = newFiles;
                 this.loadOptions();
             } else if (newFiles.find(file => this.typeFiles.findIndex(newFile => file.fileName === newFile.fileName) < 0)) {
-                // console.log("List is refreshed with a new file")
                 this.typeFiles = newFiles;
                 this.loadOptions();
             } else if (additionalOptions.length) {
-                // console.log("List is refreshed with the additional options")
                 this.loadOptions();
             }
         };

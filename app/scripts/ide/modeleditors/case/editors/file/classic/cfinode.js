@@ -22,7 +22,7 @@ class CFINode {
             `<div>
                 <div class="cfi-details">
                 </div>
-                <div style="padding-left: 11px" class="cfi-children-container"></div>
+                <div class="cfi-children-container"></div>
             </div>`
         );
         this.htmlParent.append(this.html);
@@ -36,7 +36,7 @@ class CFINode {
     renderDetails() {
         Util.clearHTML(this.divCFIDetails);
         this.divCFIDetails.html(
-            `<div class="inputNameContainer">
+            `<div class="input-name-container">
                 <img class="cfi-icon" src="/images/svg/casefileitem.svg" title="Drag item on case model ..."/>
                 <input class="inputName" type="text" readonly></input>
                 <div class="action-icon-container">
@@ -45,7 +45,7 @@ class CFINode {
                     <img class="action-icon add-child-icon" src="images/svg/add-child-node.svg" title="Add child ..."/>
                 </div>
             </div>
-            <div class="selectContainer">
+            <div class="select-container">
                 <select class="selectMultiplicity">
                     <option value="ExactlyOne">[1]</option>
                     <option value="ZeroOrOne">[0..1]</option>
@@ -55,7 +55,7 @@ class CFINode {
                     <option value="Unknown">[?]</option>
                 </select>
             </div>
-            <div class="selectContainer">
+            <div class="select-container">
                 ${this.getSelectDefinitionRefHTML()}
             </div>
             <div class="divUsedIn">

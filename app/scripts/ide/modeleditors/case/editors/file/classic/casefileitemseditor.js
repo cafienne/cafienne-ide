@@ -209,7 +209,7 @@ class CaseFileItemsEditor {
                 this.case.editor.completeUserAction();
             }
         } else {
-            this.ide.warning('Select a Case File Item to be removed', 1000);
+            this.ide.warning('Select a Case File Item to be removed', 3000);
         }
     }
 
