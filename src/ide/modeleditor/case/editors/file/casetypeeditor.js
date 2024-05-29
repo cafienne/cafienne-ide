@@ -29,8 +29,11 @@ export default class CaseTypeEditor {
     generateHTML() {
         this.htmlContainer = $(
             `<div class='casetype-editor'>
-                <div class='casetype-editor-header' style="z-index:1000;position:absolute;right:9px;top:9px">
-                    <label>Type:</label>
+                <div class="casetype-header">
+                    <label>Case File Items</label>
+                </div>
+                <div class='casetype-selector'>
+                    <label>Type</label>
                     <select class="selectCaseFileModel"></select>
                 </div>
                 <div class='type-editor-box'></div>

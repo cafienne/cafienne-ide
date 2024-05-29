@@ -341,7 +341,7 @@ export default class XMLSerializable {
      */
     searchInboundReferences() {
         if (this.modelDefinition && this.modelDefinition.file) {
-            const definitions = this.modelDefinition.file.repository.list.map(file => file.definition);
+            const definitions = this.modelDefinition.file.repository.list.filter(file => file.definition).map(file => file.definition);
             const elements = definitions.map(definition => definition.elements).flat();
             const references = elements.filter(element => element.referencesElement(this));
             return references;
