@@ -16,6 +16,7 @@ export default class CaseTypeEditor {
     divTypeEditor: any;
     htmlContainer: JQuery<HTMLElement>;
     typeSelector: TypeSelector;
+    caseTypeSelector: JQuery<HTMLElement>;
     /**
      * Renders the caseFileModel definition
      * @param {CaseFileEditor} caseFileEditor 
@@ -27,6 +28,7 @@ export default class CaseTypeEditor {
         this.htmlContainer = this.generateHTML();
         this.file = <TypeFile>this.ide.repository.get(this.case.caseDefinition.caseFile.typeRef);
         this.typeEditor = new TypeEditor(this, this.divTypeEditor, this.case);
+        this.caseTypeSelector = this.generateCaseTypeSelectorHTML();
         this.typeSelector = new TypeSelector(this.typeEditor.ide.repository, this.htmlContainer.find('.selectCaseFileModel'), this.typeRef, (v: string) => this.typeRef = v);
         if (this.file) {
             this.typeEditor.setMainType(this.file);
@@ -35,16 +37,27 @@ export default class CaseTypeEditor {
 
     generateHTML() {
         this.htmlContainer = $(
-            `<div class='casetype-editor'>
-                <div class='casetype-editor-header' style="z-index:1000;position:absolute;right:9px;top:9px">
-                    <label>Type:</label>
-                    <select class="selectCaseFileModel"></select>
+            `<div class="casetype-editor">
+                <div class="casetype-header">
+                    <label>Case File Items</label>
                 </div>
-                <div class='type-editor-box'></div>
-            </div>`);
+                <div class="type-editor-box"></div>
+            </div>`
+        );
         this.htmlParent.append(this.htmlContainer);
         this.divTypeEditor = this.htmlContainer.find('.type-editor-box');
         return this.htmlContainer;
+    }
+
+    generateCaseTypeSelectorHTML() {
+        this.caseTypeSelector = $(
+            `<div class="casetype-selector">
+                <label>Case File Type</label>
+                <select class="selectCaseFileModel"></select>
+            </div>`
+        );
+        this.htmlContainer?.find('#typeeditorcontent').append(this.caseTypeSelector);
+        return this.caseTypeSelector;
     }
 
     /**

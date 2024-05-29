@@ -69,6 +69,10 @@ export default class SchemaPropertyDefinition extends ReferableElementDefinition
     }
 
     createExportNode(parent: Element) {
+        if (this.isNew && !this.name && !this.type) {
+            // do not export a new empty property;
+            return;
+        }
         super.createExportNode(parent, 'property', 'type', SchemaDefinition.TAG, 'multiplicity');
         // console.log("createExportNode " + " type: " + this.type + " format: " + this.format + this.cmmnType + this.cmmnType );
         if (this.format) {
