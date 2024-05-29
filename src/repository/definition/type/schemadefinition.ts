@@ -10,12 +10,13 @@ export default class SchemaDefinition extends ElementDefinition<TypeDefinition> 
         this.properties = this.parseElements('property', SchemaPropertyDefinition);       
     }
 
-    createEmptyProperty(): SchemaPropertyDefinition {
+    createChildProperty(name: string = '', type = '', multiplicity = 'ExactlyOne', isBusinessIdentifier = false): SchemaPropertyDefinition {
         const property: SchemaPropertyDefinition = this.createDefinition(SchemaPropertyDefinition);
-        property.name = '';
-        property.type = '';
-        property.isBusinessIdentifier = false;
-        property.multiplicity = 'ExactlyOne';
+        property.name = name;
+        property.type = type;
+        property.multiplicity = multiplicity;
+        property.isBusinessIdentifier = isBusinessIdentifier;
+        this.properties.push(property);
         return property;
     }
 
