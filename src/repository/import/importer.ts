@@ -109,24 +109,20 @@ export default class Importer {
                     } else {
                         const typeFile = new TypeFile(this.repository, fileName, `<type id="${fileName}" name="${xmlElement.getAttribute('name')}"><schema/></type>`);
                         typeFile.parse().then(() => {
-                            if (! typeFile.definition) return;
+                            if (!typeFile.definition) return;
                             const typeDefinition: TypeDefinition = typeFile.definition;
                             const typeSchema = typeDefinition.schema;
                             if (typeSchema) {
                                 XML.getElementsByTagName(xmlElement, 'property').forEach((propertyElement) => {
-                                    const schemaPropertyDefinition = typeSchema.createEmptyProperty();
-                                    schemaPropertyDefinition.name = propertyElement.getAttribute('name') || '';
+                                    const schemaPropertyDefinition = typeSchema.createChildProperty(propertyElement.getAttribute('name') || '');
                                     schemaPropertyDefinition.fromCMMNType(propertyElement.getAttribute('type') || '');
-                                    schemaPropertyDefinition.multiplicity = 'ExactlyOne'; // CMMN doesn't specify multiplicity for primitive cfid properties
                                     XML.getElementsByTagName(propertyElement, 'cafienne:implementation').forEach(propertyExtensionElement => {
                                         const isBusinessIdentifierAttribute = propertyExtensionElement.getAttribute('isBusinessIdentifier');
                                         if (isBusinessIdentifierAttribute === 'true') {
                                             schemaPropertyDefinition.isBusinessIdentifier = true;
                                         }
                                     });
-                                    typeSchema.properties.push(schemaPropertyDefinition);
                                 });
-    
                             }
                             if (fileName.endsWith('.type')) {
                                 this.newFiles.push(new TypeImporter(this, fileName, xmlElement, typeDefinition));
@@ -201,11 +197,8 @@ export default class Importer {
      */
     loadCaseFileItem(typeDefinition: TypeDefinition, schemaDefinition: SchemaDefinition, caseFileItem: Element, typeDefinitions: any) {
         if (caseFileItem.nodeName === 'caseFileItem') {
-            const property: SchemaPropertyDefinition = schemaDefinition.createEmptyProperty();
-            property.name = caseFileItem.getAttribute('name') || '';
-            property.multiplicity = caseFileItem.getAttribute('multiplicity') || '';
-            schemaDefinition.properties.push(property);
-
+            const property = schemaDefinition.createChildProperty(caseFileItem.getAttribute('name') || '', '', caseFileItem.getAttribute('multiplicity') || '');
+            // Check whether it is an inline type or a standalone child type
             const definitionRef = caseFileItem.getAttribute('definitionRef') || '';
             if (definitionRef.endsWith('.object')) {
                 // It is an internal embedded object in type
