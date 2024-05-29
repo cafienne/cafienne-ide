@@ -1,3 +1,4 @@
+import Util from "@util/util";
 import ElementDefinition from "../elementdefinition";
 import SchemaPropertyDefinition from "./schemapropertydefinition";
 import TypeDefinition from "./typedefinition";
@@ -20,7 +21,7 @@ export default class SchemaDefinition extends ElementDefinition<TypeDefinition> 
     }
 
     createChildProperty(name: string, type = '', multiplicity = 'ExactlyOne', isBusinessIdentifier = false): SchemaPropertyDefinition {
-        const property = this.createEmptyProperty();
+        const property: SchemaPropertyDefinition = this.createDefinition(SchemaPropertyDefinition);
         property.name = name;
         property.type = type;
         property.multiplicity = multiplicity;
@@ -31,6 +32,15 @@ export default class SchemaDefinition extends ElementDefinition<TypeDefinition> 
 
     createExportNode(parentNode: Element, tagName: string = SchemaDefinition.TAG, ...propertyNames: any[]) {
         super.createExportNode(parentNode, tagName, 'properties', propertyNames);
+    }
+
+    /**
+     * 
+     * @param {SchemaPropertyDefinition} child 
+     * @param {SchemaPropertyDefinition | undefined} after 
+     */
+    insert(child: SchemaPropertyDefinition, after?: SchemaPropertyDefinition) {
+        Util.insertInArray(this.properties, child, after);
     }
 
     toJSONSchema(parent: any): Object {
