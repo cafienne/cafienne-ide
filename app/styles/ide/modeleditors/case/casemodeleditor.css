@@ -46,18 +46,20 @@
 .divCaseFileEditor {
     position: absolute;
     top: 0px;
-    left: 4px;
+    left: 0px;
     right: 0px;
     bottom: 0px;
 }
 
-.divClassicCaseFileEditor, .divCaseTypeEditor {
+.divClassicCaseFileEditor,
+.divCaseTypeEditor {
     position: absolute;
     top: 0px;
     left: 0px;
     right: 0px;
     bottom: 0px;
-    overflow:hidden; /* to avoid buttons to show when splitter is minimized */
+    overflow: hidden;
+    /* to avoid buttons to show when splitter is minimized */
 }
 
 .divClassicCaseFileEditor .schemadatabox {

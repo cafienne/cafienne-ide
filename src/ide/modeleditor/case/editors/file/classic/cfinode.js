@@ -1,8 +1,8 @@
 import CaseFileItemCollection from "@definition/cmmn/casefile/casefileitemdef";
 import CaseFileItemDef from "@definition/cmmn/casefile/casefileitemdef";
-import Util from "@util/util";
 import $ from "jquery";
 import CaseFileItemsEditor, { NEWDEF } from "./casefileitemseditor";
+import Util from "@util/util";
 
 export default class CFINode {
     /**
@@ -28,7 +28,7 @@ export default class CFINode {
             `<div>
                 <div class="cfi-details">
                 </div>
-                <div style="padding-left: 11px" class="cfi-children-container"></div>
+                <div class="cfi-children-container"></div>
             </div>`
         );
         this.htmlParent.append(this.html);
@@ -42,7 +42,7 @@ export default class CFINode {
     renderDetails() {
         Util.clearHTML(this.divCFIDetails);
         this.divCFIDetails.html(
-            `<div class="inputNameContainer">
+            `<div class="input-name-container">
                 <img class="cfi-icon" src="/images/svg/casefileitem.svg" title="Drag item on case model ..."/>
                 <input class="inputName" type="text" readonly></input>
                 <div class="action-icon-container">
@@ -51,7 +51,7 @@ export default class CFINode {
                     <img class="action-icon add-child-icon" src="images/svg/add-child-node.svg" title="Add child ..."/>
                 </div>
             </div>
-            <div class="selectContainer">
+            <div class="select-container">
                 <select class="selectMultiplicity">
                     <option value="ExactlyOne">[1]</option>
                     <option value="ZeroOrOne">[0..1]</option>
@@ -61,7 +61,7 @@ export default class CFINode {
                     <option value="Unknown">[?]</option>
                 </select>
             </div>
-            <div class="selectContainer">
+            <div class="select-container">
                 ${this.getSelectDefinitionRefHTML()}
             </div>
             <div class="divUsedIn">

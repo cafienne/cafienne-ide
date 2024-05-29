@@ -23,7 +23,7 @@ export default class TypeRenderer {
             if (renderer.constructor.name !== other.constructor.name) return false;
             if (renderer.editor !== other.editor) return false;
             if (renderer.localType !== other.localType) return false;
-            return renderer.path === other.path;    
+            return renderer.path === other.path;
         }
 
         if (this.renderers.find(similar)) {
@@ -57,7 +57,7 @@ export default class TypeRenderer {
             // If we have a source renderer, we should only refresh the other renderers on the same definition.
             const otherRenderersOnThisType = this.renderers.filter(other => other.editor === source.editor && other !== source && other.definition === source.definition);
             // We refresh the parent, because the refresh logic appends it's own property again, instead of re-using the property container inside the parent.
-            otherRenderersOnThisType.forEach(r => r.refresh());    
+            otherRenderersOnThisType.forEach(r => r.refresh());
         }
     }
 
@@ -120,7 +120,7 @@ export default class TypeRenderer {
                 return this.parent.hasAncestor(potentialAncestor);
             }
         }
-            return false;
+        return false;
     }
 
     /**
@@ -174,4 +174,5 @@ export default class TypeRenderer {
     toString() {
         return `${this.path} in ${this.prefix} on main type ${this.localType.file.fileName}`
     }
+
 }

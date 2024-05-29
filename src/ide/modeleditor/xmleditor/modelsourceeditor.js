@@ -8,7 +8,7 @@ export default class ModelSourceEditor {
     /**
      * 
      * @param {JQuery<HTMLElement>} html 
-     * @param {ModelEditor} editor 
+     * @param {ModelEditor|TypeEditor} editor 
      */
     constructor(html, editor) {
         this.editor = editor;

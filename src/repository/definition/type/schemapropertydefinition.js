@@ -75,6 +75,10 @@ export default class SchemaPropertyDefinition extends ReferableElementDefinition
     }
 
     createExportNode(parent) {
+        if (this.isNew && !this.name && !this.type) {
+            // do not export a new empty property;
+            return;
+        }
         super.createExportNode(parent, 'property', 'type', SchemaDefinition.TAG, 'multiplicity');
         // console.log("createExportNode " + " type: " + this.type + " format: " + this.format + this.cmmnType + this.cmmnType );
         if (this.format) {
@@ -100,7 +104,7 @@ export default class SchemaPropertyDefinition extends ReferableElementDefinition
         } else {
             property.type = this.type;
             if (this.format) {
-                property.format = this.format; 
+                property.format = this.format;
             }
         }
         switch (this.multiplicity) {
@@ -160,7 +164,7 @@ export default class SchemaPropertyDefinition extends ReferableElementDefinition
         property.items = items;
         return property.items;
     }
-    
+
     // This is the visual type in the TypeSelector
     get cmmnType() {
         switch (this.format) {
