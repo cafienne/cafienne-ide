@@ -1,4 +1,7 @@
-class ImportElement {
+import ServerFile from "../serverfile";
+import Importer from "./importer";
+
+export default class ImportElement {
     /**
      * 
      * @param {Importer} importer 
@@ -30,31 +33,31 @@ class ImportElement {
     }
 }
 
-class CaseImporter extends ImportElement {
+export class CaseImporter extends ImportElement {
     createFile() {
         return this.repository.createCaseFile(this.fileName, this.content);
     }
 }
 
-class DimensionsImporter extends ImportElement {
+export class DimensionsImporter extends ImportElement {
     createFile() {
         return this.repository.createDimensionsFile(this.fileName, this.content);
     }
 }
 
-class ProcessImporter extends ImportElement {
+export class ProcessImporter extends ImportElement {
     createFile() {
         return this.repository.createProcessFile(this.fileName, this.content);
     }
 }
 
-class HumanTaskImporter extends ImportElement {
+export class HumanTaskImporter extends ImportElement {
     createFile() {
         return this.repository.createHumanTaskFile(this.fileName, this.content);
     }
 }
 
-class CFIDImporter extends ImportElement {
+export class CFIDImporter extends ImportElement {
     createFile() {
         return this.repository.createCFIDFile(this.fileName, this.content);
     }

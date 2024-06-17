@@ -1,10 +1,12 @@
-// Some constants
-const EXTENSIONELEMENTS = 'extensionElements';
-const CAFIENNE_NAMESPACE = 'org.cafienne';
-const CAFIENNE_PREFIX = 'xmlns:cafienne';
-const IMPLEMENTATION_TAG = 'cafienne:implementation';
+// import ModelDefinition from "./modeldefinition";
 
-class XMLElementDefinition {
+// Some constants
+export const EXTENSIONELEMENTS = 'extensionElements';
+export const CAFIENNE_NAMESPACE = 'org.cafienne';
+export const CAFIENNE_PREFIX = 'xmlns:cafienne';
+export const IMPLEMENTATION_TAG = 'cafienne:implementation';
+
+export default class XMLElementDefinition {
     /**
      * Creates a new XMLElementDefinition that belongs to the Definition object.
      * @param {Element} importNode 
@@ -154,7 +156,7 @@ class XMLElementDefinition {
      * @param {Function} constructor 
      * @returns {*}
      */
-    parseImplementation(constructor = CafienneImplementationDefinition) {
+    parseImplementation(constructor) {
         return this.parseExtension(constructor, IMPLEMENTATION_TAG);
     }
 

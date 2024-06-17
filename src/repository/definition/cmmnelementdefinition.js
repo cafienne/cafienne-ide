@@ -1,4 +1,6 @@
-class CMMNElementDefinition extends ReferableElementDefinition {
+import ReferableElementDefinition from "./referableelementdefinition";
+
+export default class CMMNElementDefinition extends ReferableElementDefinition {
     /**
      * Creates a new, abstract CMMNElementDefinition object based on the given XML element 'importNode'.
      * Also parses 'id', 'name' and 'documentation' attributes, and adds the element to the case definition.

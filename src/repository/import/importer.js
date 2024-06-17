@@ -1,4 +1,8 @@
-class Importer {
+import XML from "../../util/xml";
+import Repository from "../repository";
+import ImportElement, { CFIDImporter, CaseImporter, DimensionsImporter, HumanTaskImporter, ProcessImporter } from "./importelement";
+
+export default class Importer {
     /**
      * 
      * @param {Repository} repository 

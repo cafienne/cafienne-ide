@@ -1,4 +1,6 @@
-class CFIDFile extends ServerFile {
+import ServerFile from "../serverfile";
+
+export default class CFIDFile extends ServerFile {
     createDefinition() {
         return new CaseFileDefinitionDefinition(this);
     }

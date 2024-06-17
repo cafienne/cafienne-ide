@@ -1,4 +1,6 @@
-class DimensionsFile extends ServerFile {
+import ServerFile from "../serverfile";
+
+export default class DimensionsFile extends ServerFile {
     createDefinition() {
         return new Dimensions(this);
     }
