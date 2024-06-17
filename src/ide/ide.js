@@ -1,5 +1,7 @@
 'use strict';
 
+import Importer from "../repository/import/importer";
+import Repository from "../repository/repository";
 import CoverPanel from "./coverpanel";
 import IDEFooter from "./idefooter";
 import IDEHeader from "./ideheader";

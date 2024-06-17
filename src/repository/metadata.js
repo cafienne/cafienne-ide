@@ -1,4 +1,4 @@
-class Metadata {
+export default class Metadata {
     constructor(json) {
         this.fileName = json.fileName;
         this.lastModified = json.lastModified;

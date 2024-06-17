@@ -1,4 +1,9 @@
-class ReferableElementDefinition extends XMLElementDefinition {
+import XML from "../../util/xml";
+import CMMNDocumentationDefinition from "./cmmndocumentationdefinition";
+import ModelDefinition from "./modeldefinition";
+import XMLElementDefinition from "./xmlelementdefinition";
+
+export default class ReferableElementDefinition extends XMLElementDefinition {
     /**
      * Creates an XML element that can be referred to by the value of the name or id attribute of the underlying XML element.
      * 

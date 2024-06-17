@@ -3,7 +3,7 @@ class PropertyDefinition extends XMLElementDefinition {
         super(importNode, modelDefinition, parent);
         this.name = this.parseAttribute('name', '');
         this.type = this.parseAttribute('type', '');
-        this.isBusinessIdentifier = this.parseImplementation().parseBooleanAttribute('isBusinessIdentifier', false);
+        this.isBusinessIdentifier = this.parseImplementation(CafienneImplementationDefinition).parseBooleanAttribute('isBusinessIdentifier', false);
     }
 
     createExportNode(parent) {

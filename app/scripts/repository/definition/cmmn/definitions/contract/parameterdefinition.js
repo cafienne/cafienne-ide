@@ -4,7 +4,7 @@ class ParameterDefinition extends CMMNElementDefinition {
         super(importNode, caseDefinition, parent);
         this.bindingRef = this.parseAttribute('bindingRef');
         this.bindingRefinement = this.parseElement('bindingRefinement', ExpressionDefinition);
-        this.required = this.parseImplementation().parseBooleanAttribute('required', false);
+        this.required = this.parseImplementation(CafienneImplementationDefinition).parseBooleanAttribute('required', false);
         this.isNew = false; // This property is used in the HumanTaskEditor and ProcessTaskEditor
     }
 

@@ -1,4 +1,7 @@
-class CMMNDocumentationDefinition extends XMLElementDefinition {
+import ModelDefinition from "./modeldefinition";
+import XMLElementDefinition from "./xmlelementdefinition";
+
+export default class CMMNDocumentationDefinition extends XMLElementDefinition {
     /**
      * 
      * @param {Element} importNode 
@@ -12,7 +15,7 @@ class CMMNDocumentationDefinition extends XMLElementDefinition {
     }
 
     createExportNode(parentNode, tagName) {
-        if (! this.text) {
+        if (!this.text) {
             return;
         }
         super.createExportNode(parentNode, tagName, 'textFormat');
@@ -21,4 +24,3 @@ class CMMNDocumentationDefinition extends XMLElementDefinition {
         textElement.appendChild(textCDataNode);
     }
 }
-

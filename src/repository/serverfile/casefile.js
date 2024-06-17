@@ -1,4 +1,6 @@
-class CaseFile extends ServerFile {
+import ServerFile from "../serverfile";
+
+export default class CaseFile extends ServerFile {
     createDefinition() {
         return new CaseDefinition(this);
     }

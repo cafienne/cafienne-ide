@@ -1,4 +1,6 @@
-class HumanTaskFile extends ServerFile {
+import ServerFile from "../serverfile";
+
+export default class HumanTaskFile extends ServerFile {
     createDefinition() {
         return new HumanTaskModelDefinition(this);
     }

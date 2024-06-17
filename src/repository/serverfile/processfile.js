@@ -1,4 +1,6 @@
-class ProcessFile extends ServerFile {
+import ServerFile from "../serverfile";
+
+export default class ProcessFile extends ServerFile {
     createDefinition() {
         return new ProcessModelDefinition(this);
     }

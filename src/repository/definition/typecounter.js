@@ -1,7 +1,7 @@
 /**
  * Helper class for creating new names and/or IDs within a given ModelDefinition.
  */
-class TypeCounter {
+export default class TypeCounter {
     /**
      * Simple type counter class for counting types of cmmn element definitions
      * @param {ModelDefinition} modelDefinition 

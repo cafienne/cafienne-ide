@@ -1,4 +1,14 @@
-class Repository {
+import Followup from "../util/promise/followup";
+import FollowupList from "../util/promise/followuplist";
+import Metadata from "./metadata";
+import ServerFile from "./serverfile";
+import CaseFile from "./serverfile/casefile";
+import CFIDFile from "./serverfile/cfidfile";
+import DimensionsFile from "./serverfile/dimensionsfile";
+import HumanTaskFile from "./serverfile/humantaskfile";
+import ProcessFile from "./serverfile/processfile";
+
+export default class Repository {
     /**
      * This object handles the interaction with the backend to load and save the various types of models.
      * It keeps a local copy of all models present in the server. This local copy is updated after each

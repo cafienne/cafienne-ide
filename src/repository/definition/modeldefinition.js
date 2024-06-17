@@ -1,7 +1,13 @@
+import Util from "../../util/util";
+import XML from "../../util/xml";
+import ServerFile from "../serverfile";
+import ReferableElementDefinition from "./referableelementdefinition";
+import XMLElementDefinition from "./xmlelementdefinition";
+
 /**
  * A ModelDefinition is the base class of a model, such as CaseDefinition, ProcessDefinition, HumanTaskDefinition, CaseFileDefinitionDefinition 
  */
-class ModelDefinition extends ReferableElementDefinition {
+export default class ModelDefinition extends ReferableElementDefinition {
     /**
      * Imports an XML element and parses it into a in-memory definition structure.
      * @param {ServerFile} file

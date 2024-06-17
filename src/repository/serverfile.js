@@ -1,4 +1,6 @@
-class ServerFile {
+import Content from "./content";
+
+export default class ServerFile {
     /**
      * Creates a new local reference of the server file, based on the json structure given
      * by the server (serverData).

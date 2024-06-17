@@ -1,4 +1,7 @@
-class Content {
+import XML from "../util/xml";
+import ServerFile from "./serverfile";
+
+export default class Content {
     /**
      * @param {ServerFile} file 
      */
