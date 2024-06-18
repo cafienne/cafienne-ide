@@ -1,4 +1,7 @@
-class DiagramElement extends XMLElementDefinition {
+import XMLElementDefinition from "../xmlelementdefinition";
+import Dimensions from "./dimensions";
+
+export default class DiagramElement extends XMLElementDefinition {
     /**
      * Creates a new XMLElementDefinition that belongs to the Definition object.
      * @param {Element} importNode 

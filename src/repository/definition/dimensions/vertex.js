@@ -1,4 +1,9 @@
-class Vertex extends DiagramElement {
+import DiagramElement from "./diagramelement";
+import Dimensions from "./dimensions";
+import Edge from "./edge";
+import Tags from "./tags";
+
+export default class Vertex extends DiagramElement {
     /**
      * Returns a new Vertex object for the given Edge, containing the x and y in the v object as properties.
      * (They come as x,y props through the joint library)
@@ -14,7 +19,7 @@ class Vertex extends DiagramElement {
      * Simple (x,y) wrapper indicating a point in a line.
      * @param {Element} importNode 
      * @param {Dimensions} dimensions 
-     * @param {XMLElementDefinition} parent 
+     * @param {Edge} parent 
      * @param {Number} x
      * @param {Number} y
      */
@@ -25,6 +30,6 @@ class Vertex extends DiagramElement {
     }
 
     createExportNode(parentNode) {
-        super.createExportNode(parentNode, WAYPOINT, 'x', 'y');
+        super.createExportNode(parentNode, Tags.WAYPOINT, 'x', 'y');
     }
 }

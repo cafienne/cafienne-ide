@@ -1,4 +1,5 @@
 import XML from "../../util/xml";
+import Tags from "../definition/dimensions/tags";
 import Repository from "../repository";
 import ImportElement, { CFIDImporter, CaseImporter, DimensionsImporter, HumanTaskImporter, ProcessImporter } from "./importelement";
 
@@ -16,7 +17,7 @@ export default class Importer {
         const xmlDoc = XML.loadXMLString(this.text);
         if (XML.isValid(xmlDoc) && xmlDoc.documentElement.tagName == 'definitions') {
             console.log('Parsing and uploading definitions from copy/paste command ...');
-            const allDimensionsXML = XML.getChildByTagName(xmlDoc.documentElement, 'CMMNDI');
+            const allDimensionsXML = XML.getChildByTagName(xmlDoc.documentElement, Tags.CMMNDI);
             XML.getChildrenByTagName(xmlDoc.documentElement, 'case').forEach(xmlElement => {
                 // Create .case file
                 const fileName = xmlElement.getAttribute('id'); // assuming fileName always ends with .case ?!
@@ -36,10 +37,10 @@ export default class Importer {
                     // Copy and clean up dimensions from anything that does not occur inside this case's xmlElement
                     const dimXML = /** @type {Element} */ (allDimensionsXML.cloneNode(true));
                     const elementMatcher = (element, id1, id2 = '') => XML.allElements(xmlElement).find(e => e.getAttribute('id') == id1 || e.getAttribute('id') == id2) || element.parentNode.removeChild(element);
-                    XML.getElementsByTagName(dimXML, CMMNSHAPE).forEach(shape => elementMatcher(shape, shape.getAttribute('cmmnElementRef')));
+                    XML.getElementsByTagName(dimXML, Tags.CMMNSHAPE).forEach(shape => elementMatcher(shape, shape.getAttribute('cmmnElementRef')));
                     XML.getElementsByTagName(dimXML, 'textbox').forEach(shape => elementMatcher(shape, shape.getAttribute('parentId')));
                     XML.getElementsByTagName(dimXML, 'casefileitem').forEach(shape => elementMatcher(shape, shape.getAttribute('parentId')));
-                    XML.getElementsByTagName(dimXML, CMMNEDGE).forEach(shape => elementMatcher(shape, shape.getAttribute('sourceCMMNElementRef'), shape.getAttribute('targetCMMNElementRef')));
+                    XML.getElementsByTagName(dimXML, Tags.CMMNEDGE).forEach(shape => elementMatcher(shape, shape.getAttribute('sourceCMMNElementRef'), shape.getAttribute('targetCMMNElementRef')));
                     const dimName = fileName.substring(0, fileName.length - 5) + '.dimensions';
                     if (isNew(dimName)) {
                         this.newFiles.push(new DimensionsImporter(this, dimName, dimXML));

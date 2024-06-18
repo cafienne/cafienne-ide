@@ -1,4 +1,12 @@
-class Diagram extends DiagramElement {
+import CMMNElementDefinition from "../cmmnelementdefinition";
+import ConnectorStyle from "./connectorstyle";
+import DiagramElement from "./diagramelement";
+import Dimensions from "./dimensions";
+import Edge from "./edge";
+import ShapeDefinition, { CaseFileItemShape, TextBoxShape } from "./shape";
+import Tags from "./tags";
+
+export default class Diagram extends DiagramElement {
     /**
      * Representation of a <CMMNDiagram> element
      * 
@@ -9,11 +17,11 @@ class Diagram extends DiagramElement {
         super(importNode, dimensions, dimensions);
 
         /** @type {Array<ShapeDefinition>} */
-        this.shapes = this.parseElements(CMMNSHAPE, ShapeDefinition);
+        this.shapes = this.parseElements(Tags.CMMNSHAPE, ShapeDefinition);
         this.deprecatedTextBoxes = this.parseElements('textbox', TextBoxShape, []);
         this.deprecatedCaseFileItems = this.parseElements('casefileitem', CaseFileItemShape, []);
         /** @type {Array<Edge>} */
-        this.edges = this.parseElements(CMMNEDGE, Edge);
+        this.edges = this.parseElements(Tags.CMMNEDGE, Edge);
         this.connectorStyle = new ConnectorStyle(this.parseCafienneAttribute('labels'));
     }
 
@@ -54,7 +62,7 @@ class Diagram extends DiagramElement {
     }
 
     createExportNode(dimensionsNode) {
-        super.createExportNode(dimensionsNode, CMMNDIAGRAM, 'shapes', 'edges');
+        super.createExportNode(dimensionsNode, Tags.CMMNDIAGRAM, 'shapes', 'edges');
         if (!this.connectorStyle.isDefault) {
             this.exportNode.setAttributeNS('org.cafienne', 'labels', this.connectorStyle.style);
         }

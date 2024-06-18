@@ -54,12 +54,12 @@ class CaseSourceEditor {
             return;
         };
 
-        if (!XML.getChildByTagName(dimensionsXML, CMMNDI)) {
-            this.editor.ide.danger(`Cannot import because definition does not contain a root &lt;${CMMNDI}&gt; tag`, 3000);
+        if (!XML.getChildByTagName(dimensionsXML, Tags.CMMNDI)) {
+            this.editor.ide.danger(`Cannot import because definition does not contain a root &lt;${Tags.CMMNDI}&gt; tag`, 3000);
             return;
         };
 
-        if (!dimensionsXML.getElementsByTagName(CMMNDIAGRAM).length) {
+        if (!dimensionsXML.getElementsByTagName(Tags.CMMNDIAGRAM).length) {
             this.editor.ide.danger(`Cannot import because definition does not contain a &lt;${CMMNDIAGRAM}&gt; tag`, 3000);
             return;
         };
