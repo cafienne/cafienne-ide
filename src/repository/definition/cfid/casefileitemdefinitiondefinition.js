@@ -1,13 +1,17 @@
-const UNSPECIFIED = 'Unspecified';
-const UNSPECIFIED_URI = 'http://www.omg.org/spec/CMMN/DefinitionType/Unspecified';
+import CFIDFile from "../../serverfile/cfidfile";
+import ModelDefinition from "../modeldefinition";
+import PropertyDefinition from "./propertydefinition";
 
-const XMLELEMENT = 'XMLElement';
-const XMLELEMENT_URI = 'http://www.omg.org/spec/CMMN/DefinitionType/XSDElement';
+export const UNSPECIFIED = 'Unspecified';
+export const UNSPECIFIED_URI = 'http://www.omg.org/spec/CMMN/DefinitionType/Unspecified';
 
-const UNKNOWN = 'Unknown';
-const UNKNOWN_URI = 'http://www.omg.org/spec/CMMN/DefinitionType/Unknown';
+export const XMLELEMENT = 'XMLElement';
+export const XMLELEMENT_URI = 'http://www.omg.org/spec/CMMN/DefinitionType/XSDElement';
 
-class CaseFileDefinitionDefinition extends ModelDefinition {
+export const UNKNOWN = 'Unknown';
+export const UNKNOWN_URI = 'http://www.omg.org/spec/CMMN/DefinitionType/Unknown';
+
+export default class CaseFileDefinitionDefinition extends ModelDefinition {
     /**
      * Imports an XML element and parses it into a in-memory definition structure.
      * @param {CFIDFile} file

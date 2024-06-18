@@ -1,11 +1,16 @@
-class ProcessImplementationDefinition extends CafienneImplementationDefinition {
+import XML from "../../../util/xml";
+import CMMNElementDefinition from "../cmmnelementdefinition";
+import CafienneImplementationDefinition from "../extensions/cafienneimplementationdefinition";
+import ProcessModelDefinition from "./processmodeldefinition";
+
+export default class ProcessImplementationDefinition extends CafienneImplementationDefinition {
     /**
     * @param {Element} importNode 
-    * @param {CaseDefinition} caseDefinition
+    * @param {ProcessModelDefinition} processDefinition
     * @param {CMMNElementDefinition} parent optional
     */
-    constructor(importNode, caseDefinition, parent = undefined) {
-        super(importNode, caseDefinition, parent);
+    constructor(importNode, processDefinition, parent = undefined) {
+        super(importNode, processDefinition, parent);
         this.subProcessClassName = this.parseAttribute('class');
         this._xml = XML.prettyPrint(this.importNode);
     }

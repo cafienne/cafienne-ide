@@ -1,4 +1,9 @@
-class HumanTaskModelDefinition extends ModelDefinition {
+import HumanTaskFile from "../../serverfile/humantaskfile";
+import ModelDefinition from "../modeldefinition";
+import { IMPLEMENTATION_TAG } from "../xmlelementdefinition";
+import HumanTaskImplementationDefinition from "./humantaskimplementationdefinition";
+
+export default class HumanTaskModelDefinition extends ModelDefinition {
     /**
      * Imports an XML element and parses it into a in-memory definition structure.
      * @param {HumanTaskFile} file
