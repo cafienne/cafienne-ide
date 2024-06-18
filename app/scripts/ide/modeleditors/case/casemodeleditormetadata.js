@@ -63,17 +63,17 @@ class CaseModelEditorMetadata extends ModelEditorMetadata {
 </case>`;
 
         const dimensionsString = 
-`<${CMMNDI}>
-    <${CMMNDIAGRAM}>
-        <${CMMNSHAPE} ${CMMNELEMENTREF}="${casePlanId}" name="${name}">
-            <${BOUNDS} x="${x}" y="${y}" width="${width}" height="${height}" />                    
-        </${CMMNSHAPE}>
-    </${CMMNDIAGRAM}>
+`<${Tags.CMMNDI}>
+    <${Tags.CMMNDIAGRAM}>
+        <${Tags.CMMNSHAPE} ${Tags.CMMNELEMENTREF}="${casePlanId}" name="${name}">
+            <${Tags.BOUNDS} x="${x}" y="${y}" width="${width}" height="${height}" />                    
+        </${Tags.CMMNSHAPE}>
+    </${Tags.CMMNDIAGRAM}>
     <validation>
         <hiddennotices />
         <hiddenproblems />
     </validation>
-</${CMMNDI}>`;
+</${Tags.CMMNDI}>`;
 
         // Upload models to server, and call back
         const caseFile = this.ide.repository.createCaseFile(caseFileName, caseString);

@@ -1,4 +1,10 @@
-class Edge extends DiagramElement {
+import Diagram from "./diagram";
+import DiagramElement from "./diagramelement";
+import Dimensions from "./dimensions";
+import Tags from "./tags";
+import Vertex from "./vertex";
+
+export default class Edge extends DiagramElement {
     /**
      * Create a new Edge shape that binds the two CMMNElements.
      * @param {CMMNElementView} source 
@@ -22,10 +28,10 @@ class Edge extends DiagramElement {
     constructor(importNode, dimensions, parent) {
         super(importNode, dimensions, parent);
         this.diagram = parent;
-        this.sourceId = this.parseAttribute(SOURCECMMNELEMENTREF);
-        this.targetId = this.parseAttribute(TARGETCMMNELEMENTREF);
+        this.sourceId = this.parseAttribute(Tags.SOURCECMMNELEMENTREF);
+        this.targetId = this.parseAttribute(Tags.TARGETCMMNELEMENTREF);
         /** @type {Array<Vertex>} */
-        this._vertices = this.parseElements(WAYPOINT, Vertex);
+        this._vertices = this.parseElements(Tags.WAYPOINT, Vertex);
         this.label = this.parseAttribute('label', '');
     }
 
@@ -49,8 +55,8 @@ class Edge extends DiagramElement {
     }
 
     createExportNode(diagramNode) {
-        super.createExportNode(diagramNode, CMMNEDGE, 'label', 'vertices');
-        super.exportProperty(SOURCECMMNELEMENTREF, this.sourceId);
-        super.exportProperty(TARGETCMMNELEMENTREF, this.targetId);
+        super.createExportNode(diagramNode, Tags.CMMNEDGE, 'label', 'vertices');
+        super.exportProperty(Tags.SOURCECMMNELEMENTREF, this.sourceId);
+        super.exportProperty(Tags.TARGETCMMNELEMENTREF, this.targetId);
     }
 }

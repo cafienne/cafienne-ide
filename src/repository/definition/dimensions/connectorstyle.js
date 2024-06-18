@@ -1,4 +1,4 @@
-class ConnectorStyle {
+export default class ConnectorStyle {
     static get NONE() {
         return 'none';
     }

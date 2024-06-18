@@ -1,4 +1,7 @@
-class Bounds extends DiagramElement {
+import DiagramElement from "./diagramelement";
+import Tags from "./tags";
+
+export default class Bounds extends DiagramElement {
     /**
      * Indicates the bounds (x, y, width, height) of a shape.
      */
@@ -49,6 +52,6 @@ class Bounds extends DiagramElement {
     }
 
     createExportNode(diagramNode) {
-        super.createExportNode(diagramNode, BOUNDS, 'x', 'y', 'width', 'height');
+        super.createExportNode(diagramNode, Tags.BOUNDS, 'x', 'y', 'width', 'height');
     }
 }

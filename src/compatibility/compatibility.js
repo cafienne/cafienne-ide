@@ -19,6 +19,10 @@ import TopSplitter from '../ide/splitter/topsplitter';
 import VerticalSplitter from '../ide/splitter/verticalsplitter';
 import CMMNDocumentationDefinition from '../repository/definition/cmmndocumentationdefinition';
 import CMMNElementDefinition from '../repository/definition/cmmnelementdefinition';
+import Dimensions from '../repository/definition/dimensions/dimensions';
+import Edge from '../repository/definition/dimensions/edge';
+import ShapeDefinition from '../repository/definition/dimensions/shape';
+import Tags from '../repository/definition/dimensions/tags';
 import CafienneImplementationDefinition from '../repository/definition/extensions/cafienneimplementationdefinition';
 import CMMNExtensionDefinition from '../repository/definition/extensions/cmmnextensiondefinition';
 import ModelDefinition from '../repository/definition/modeldefinition';
@@ -67,6 +71,11 @@ const pointers = [
     UnnamedCMMNElementDefinition,
     CMMNExtensionDefinition,
     CafienneImplementationDefinition,
+    
+    Dimensions,
+    Edge,
+    ShapeDefinition,
+    Tags,
 
     // IDE
     IDE,
@@ -91,7 +100,6 @@ const pointers = [
     Validator,
     ValidateForm,
     Debugger,
-    
 ]
 
 export default class Compatibility {

@@ -1,4 +1,10 @@
-class ShapeDefinition extends DiagramElement {
+import Bounds from "./bounds";
+import Diagram from "./diagram";
+import DiagramElement from "./diagramelement";
+import Dimensions from "./dimensions";
+import Tags from "./tags";
+
+export default class ShapeDefinition extends DiagramElement {
     /**
      * Representation of a <CMMNShape> element
      * 
@@ -9,11 +15,11 @@ class ShapeDefinition extends DiagramElement {
     constructor(importNode, dimensions, parent) {
         super(importNode, dimensions, parent);
         this.diagram = parent;
-        this.cmmnElementRef = this.parseAttribute(CMMNELEMENTREF);
+        this.cmmnElementRef = this.parseAttribute(Tags.CMMNELEMENTREF);
         if (!this.cmmnElementRef) {
             this.dimensions.addParseWarning('Encountered a shape node in dimensions without a reference to a CMMN element');
         }
-        this.bounds = this.parseElement(BOUNDS, Bounds);
+        this.bounds = this.parseElement(Tags.BOUNDS, Bounds);
         if (!this.bounds) {
             this.dimensions.addParseError('The Shape node for ' + this.cmmnElementRef + ' does not have a Bounds node; it cannot be used to draw element ' + this.cmmnElementRef);
         }
@@ -49,7 +55,7 @@ class ShapeDefinition extends DiagramElement {
     }
 
     createExportNode(diagramNode) {
-        super.createExportNode(diagramNode, CMMNSHAPE, 'cmmnElementRef', 'bounds');
+        super.createExportNode(diagramNode, Tags.CMMNSHAPE, 'cmmnElementRef', 'bounds');
     }
 
     get hasError() {
@@ -130,7 +136,7 @@ class CustomShape extends ShapeDefinition {
     }
 }
 
-class CaseFileItemShape extends CustomShape {
+export class CaseFileItemShape extends CustomShape {
     constructor(importNode, dimensions, parent) {
         super(importNode, dimensions, parent);
         this.contextRef = this.parseAttribute('contextRef');
@@ -155,7 +161,7 @@ class CaseFileItemShape extends CustomShape {
     }
 }
 
-class TextBoxShape extends CustomShape {
+export class TextBoxShape extends CustomShape {
     constructor(importNode, dimensions, parent) {
         super(importNode, dimensions, parent);
         this.content = this.parseAttribute('content', '');

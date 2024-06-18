@@ -1,15 +1,9 @@
-const DIMENSIONS = 'dimensions';
-const CMMNDI = 'CMMNDI';
-const CMMNDIAGRAM = 'CMMNDiagram';
-const CMMNSHAPE = 'CMMNShape';
-const CMMNEDGE = 'CMMNEdge';
-const BOUNDS = 'Bounds';
-const WAYPOINT = 'waypoint';
-const CMMNELEMENTREF = 'cmmnElementRef';
-const SOURCECMMNELEMENTREF = 'sourceCMMNElementRef';
-const TARGETCMMNELEMENTREF = 'targetCMMNElementRef';
+import DimensionsFile from "../../serverfile/dimensionsfile";
+import ModelDefinition from "../modeldefinition";
+import Diagram from "./diagram";
+import Tags from "./tags";
 
-class Dimensions extends ModelDefinition {
+export default class Dimensions extends ModelDefinition {
     /**
      * Parses the content of the XML document into dimension structures that can be accessed via this class.
      * @param {DimensionsFile} file
@@ -26,7 +20,7 @@ class Dimensions extends ModelDefinition {
 
     parseDocument() {
         super.parseDocument();
-        this.diagram = this.parseElement(CMMNDIAGRAM, Diagram);
+        this.diagram = this.parseElement(Tags.CMMNDIAGRAM, Diagram);
     }
     
     /**
@@ -46,6 +40,6 @@ class Dimensions extends ModelDefinition {
     }
 
     toXML() {
-        return super.exportModel(CMMNDI, 'diagram');
+        return super.exportModel(Tags.CMMNDI, 'diagram');
     }
 }
