@@ -1,4 +1,7 @@
-class HumanTaskModelElementDefinition extends ReferableElementDefinition {
+import ReferableElementDefinition from "../referableelementdefinition";
+import HumanTaskModelDefinition from "./humantaskmodeldefinition";
+
+export default class HumanTaskModelElementDefinition extends ReferableElementDefinition {
     /**
      * @param {Element} importNode 
      * @param {HumanTaskModelDefinition} modelDefinition

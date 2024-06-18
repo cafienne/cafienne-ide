@@ -17,6 +17,8 @@ import Splitter from '../ide/splitter/splitter';
 import SplitterSettings from '../ide/splitter/splittersettings';
 import TopSplitter from '../ide/splitter/topsplitter';
 import VerticalSplitter from '../ide/splitter/verticalsplitter';
+import CaseFileDefinitionDefinition, { UNKNOWN, UNKNOWN_URI, UNSPECIFIED, UNSPECIFIED_URI, XMLELEMENT, XMLELEMENT_URI } from '../repository/definition/cfid/casefileitemdefinitiondefinition';
+import PropertyDefinition from '../repository/definition/cfid/propertydefinition';
 import CMMNDocumentationDefinition from '../repository/definition/cmmndocumentationdefinition';
 import CMMNElementDefinition from '../repository/definition/cmmnelementdefinition';
 import Dimensions from '../repository/definition/dimensions/dimensions';
@@ -25,7 +27,9 @@ import ShapeDefinition from '../repository/definition/dimensions/shape';
 import Tags from '../repository/definition/dimensions/tags';
 import CafienneImplementationDefinition from '../repository/definition/extensions/cafienneimplementationdefinition';
 import CMMNExtensionDefinition from '../repository/definition/extensions/cmmnextensiondefinition';
+import HumanTaskModelDefinition from '../repository/definition/humantask/humantaskmodeldefinition';
 import ModelDefinition from '../repository/definition/modeldefinition';
+import ProcessModelDefinition from '../repository/definition/process/processmodeldefinition';
 import ReferableElementDefinition from '../repository/definition/referableelementdefinition';
 import TypeCounter from '../repository/definition/typecounter';
 import UnnamedCMMNElementDefinition from '../repository/definition/unnamedcmmnelementdefinition';
@@ -76,6 +80,13 @@ const pointers = [
     Edge,
     ShapeDefinition,
     Tags,
+
+    CaseFileDefinitionDefinition,
+    PropertyDefinition,
+
+    HumanTaskModelDefinition,
+
+    ProcessModelDefinition,
 
     // IDE
     IDE,
@@ -132,5 +143,12 @@ export default class Compatibility {
         window.CAFIENNE_NAMESPACE = CAFIENNE_NAMESPACE;
         window.CAFIENNE_PREFIX = CAFIENNE_PREFIX;
         window.IMPLEMENTATION_TAG = IMPLEMENTATION_TAG;
+
+        window.UNSPECIFIED = UNSPECIFIED;
+        window.UNSPECIFIED_URI = UNSPECIFIED_URI;
+        window.XMLELEMENT = XMLELEMENT;
+        window.XMLELEMENT_URI = XMLELEMENT_URI;
+        window.UNKNOWN = UNKNOWN;
+        window.UNKNOWN_URI = UNKNOWN_URI;
     }
 }

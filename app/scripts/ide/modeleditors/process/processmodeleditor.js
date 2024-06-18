@@ -1,5 +1,20 @@
 ﻿'use strict';
 
+const HTTP_CALL_DEFINITION = 'HTTPCallDefinition';
+const HTTP_CALL_DEFINITION_IMPLEMENTATION_CLASS = 'org.cafienne.processtask.implementation.http.HTTPCallDefinition';
+
+const CALCULATION_DEFINITION = 'CalculationDefinition';
+const CALCULATION_DEFINITION_IMPLEMENTATION_CLASS = 'org.cafienne.processtask.implementation.calculation.CalculationDefinition';
+
+const MAIL_DEFINITION = 'MailDefinition';
+const MAIL_DEFINITION_IMPLEMENTATION_CLASS = 'org.cafienne.processtask.implementation.mail.MailDefinition';
+
+const PDF_REPORT_DEFINITION = 'PDFReportDefinition';
+const PDF_REPORT_DEFINITION_IMPLEMENTATION_CLASS = 'org.cafienne.processtask.implementation.report.PDFReportDefinition';
+
+const CUSTOM_IMPLEMENTATION_DEFINITION = ' ';
+const CUSTOM_IMPLEMENTATION_DEFINITION_IMPLEMENTATION_CLASS = 'SPECIFY_IMPLEMENTATION_CLASS_HERE';
+
 class ProcessModelEditor extends ModelEditor {
     /** 
      * This editor handles process models; only validates the xml

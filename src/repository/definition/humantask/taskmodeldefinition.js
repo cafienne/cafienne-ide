@@ -1,4 +1,6 @@
-class TaskModelDefinition extends HumanTaskModelElementDefinition {
+import HumanTaskModelElementDefinition from "./humantaskmodelelementdefinition";
+
+export default class TaskModelDefinition extends HumanTaskModelElementDefinition {
     constructor(importNode, modelDefinition, parent) {
         super(importNode, modelDefinition, parent);
         this.taskModel = this.importNode ? this.importNode.textContent : '';

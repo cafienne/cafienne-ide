@@ -1,4 +1,9 @@
-class HumanTaskImplementationDefinition extends HumanTaskModelElementDefinition {
+import ParameterDefinition from "../cmmn/contract/parameterdefinition";
+import { CAFIENNE_NAMESPACE, CAFIENNE_PREFIX, IMPLEMENTATION_TAG } from "../xmlelementdefinition";
+import HumanTaskModelElementDefinition from "./humantaskmodelelementdefinition";
+import TaskModelDefinition from "./taskmodeldefinition";
+
+export default class HumanTaskImplementationDefinition extends HumanTaskModelElementDefinition {
     constructor(importNode, modelDefinition, parent) {
         super(importNode, modelDefinition, parent);
         /** @type {Array<ParameterDefinition>} */
