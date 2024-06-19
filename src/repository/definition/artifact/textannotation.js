@@ -1,4 +1,7 @@
-class TextAnnotationDefinition extends ArtifactDefinition {
+import XML from "../../../util/xml";
+import ArtifactDefinition from "./artifactdefinition";
+
+export default class TextAnnotationDefinition extends ArtifactDefinition {
     constructor(importNode, caseDefinition, parent) {
         super(importNode, caseDefinition, parent);
         this.textFormat = this.parseAttribute('textFormat');
