@@ -1,4 +1,6 @@
-class ArtifactDefinition extends UnnamedCMMNElementDefinition {
+import UnnamedCMMNElementDefinition from "../unnamedcmmnelementdefinition";
+
+export default class ArtifactDefinition extends UnnamedCMMNElementDefinition {
     constructor(importNode, caseDefinition, parent) {
         super(importNode, caseDefinition, parent);
     }

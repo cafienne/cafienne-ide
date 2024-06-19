@@ -48,6 +48,7 @@ import XML from '../util/xml';
 import ValidateForm from '../validate/validateform';
 import Validator from '../validate/validator';
 import ClassicScripts from './classicscripts';
+import TextAnnotationDefinition from '../repository/definition/artifact/textannotation';
 
 const pointers = [
     // Util
@@ -75,6 +76,7 @@ const pointers = [
     UnnamedCMMNElementDefinition,
     CMMNExtensionDefinition,
     CafienneImplementationDefinition,
+    TextAnnotationDefinition,
     
     Dimensions,
     Edge,
