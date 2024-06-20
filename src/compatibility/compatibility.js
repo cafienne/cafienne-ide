@@ -33,7 +33,8 @@ import ProcessModelDefinition from '../repository/definition/process/processmode
 import ReferableElementDefinition from '../repository/definition/referableelementdefinition';
 import TypeCounter from '../repository/definition/typecounter';
 import UnnamedCMMNElementDefinition from '../repository/definition/unnamedcmmnelementdefinition';
-import XMLElementDefinition, { CAFIENNE_NAMESPACE, CAFIENNE_PREFIX, EXTENSIONELEMENTS, IMPLEMENTATION_TAG } from '../repository/definition/xmlelementdefinition';
+import { CAFIENNE_NAMESPACE, CAFIENNE_PREFIX, EXTENSIONELEMENTS, IMPLEMENTATION_TAG } from '../repository/definition/xmlserializable';
+import ElementDefinition from '../repository/definition/elementdefinition';
 import CaseFile from '../repository/serverfile/casefile';
 import CFIDFile from '../repository/serverfile/cfidfile';
 import DimensionsFile from '../repository/serverfile/dimensionsfile';
@@ -67,7 +68,7 @@ const pointers = [
     DimensionsFile,
     HumanTaskFile,
     ProcessFile,
-    XMLElementDefinition,
+    ElementDefinition,
     TypeCounter,
     ModelDefinition,
     CMMNDocumentationDefinition,

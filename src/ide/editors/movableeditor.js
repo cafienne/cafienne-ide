@@ -1,3 +1,5 @@
+import CMMNElementDefinition from "../../repository/definition/cmmnelementdefinition";
+
 export default class MovableEditor {
     /**
      * A movable editor resides typically within the context of a case.

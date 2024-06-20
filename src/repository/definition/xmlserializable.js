@@ -1,4 +1,6 @@
-// import ModelDefinition from "./modeldefinition";
+import Util from "@util/util";
+import XML from "@util/xml";
+import ElementDefinition from "./elementdefinition";
 
 // Some constants
 export const EXTENSIONELEMENTS = 'extensionElements';
@@ -6,20 +8,17 @@ export const CAFIENNE_NAMESPACE = 'org.cafienne';
 export const CAFIENNE_PREFIX = 'xmlns:cafienne';
 export const IMPLEMENTATION_TAG = 'cafienne:implementation';
 
-export default class XMLElementDefinition {
+export default class XMLSerializable {
     /**
-     * Creates a new XMLElementDefinition that belongs to the Definition object.
+     * Creates a new XMLSerializeable that belongs to an optional parent.
      * @param {Element} importNode 
-     * @param {ModelDefinition} modelDefinition 
-     * @param {XMLElementDefinition} parent 
+     * @param {XMLSerializable} parent 
      */
-    constructor(importNode, modelDefinition, parent = undefined) {
+    constructor(importNode, parent) {
         this.importNode = importNode;
         this.extensionElement = XML.getChildByTagName(this.importNode, EXTENSIONELEMENTS);
-        this.modelDefinition = modelDefinition;
-        if (modelDefinition) {
-            this.modelDefinition.elements.push(this);
-        }
+        this.name = this.parseAttribute('name');
+        this.id = this.parseAttribute('id');
         this.parent = parent;
         this.childDefinitions = [];
         if (this.parent) {
@@ -161,7 +160,7 @@ export default class XMLElementDefinition {
     }
 
     /**
-     * Instantiates a new XMLElementDefinition based on the child node, or undefined if the childNode is undefined.
+     * Instantiates a new ElementDefinition based on the child node, or undefined if the childNode is undefined.
      * The new cmmn element will be optionally added to the collection, which can either be an Array or an Object.
      * In an Object it will be placed with the value of it's 'id' attribute.
      * @param {Node} childNode 
@@ -190,38 +189,23 @@ export default class XMLElementDefinition {
      * 
      * @param {Node} childNode 
      * @param {Function} constructor
-     * @returns {XMLElementDefinition} Returns an instance of XMLElementDefinition
+     * @returns {ElementDefinition} Returns an instance of ElementDefinition
      */
     createChild(childNode, constructor) {
         return new constructor(childNode, this.modelDefinition, this);
     }
 
     /**
-     * Creates a new instance of the constructor with an optional id and name
-     * attribute. If these are not given, the logic will generate id and name for it based
-     * on the type of element and the other content inside the case definition.
-     * @param {Function} constructor 
-     * @param {String} id 
-     * @param {String} name 
-     * @returns {*} an instance of the constructor that is expected to extend CMMNElementDefinition
+     * Invoked right before the property is being deleted from this object
+     * @param {String} propertyName 
      */
-    createDefinition(constructor, id = undefined, name = undefined) {
-        const element = new constructor(undefined, this.modelDefinition, this);
-        element.id = id ? id : this.modelDefinition.getNextIdOfType(constructor);
-        if (name !== undefined || element.isNamedElement()) {
-            element.name = name !== undefined ? name : this.modelDefinition.getNextNameOfType(constructor);
-        }
-        return element;
-    }
-
-    isNamedElement() {
-        return true;
+    removeProperty(propertyName) {
     }
 
     /**
      * Method invoked after deletion of some other definition element
      * Can be used to remove references to that other definition element.
-     * @param {XMLElementDefinition} removedElement 
+     * @param {XMLSerializable} removedElement 
      */
     removeDefinitionReference(removedElement) {
         for (const key in this) {
@@ -247,28 +231,6 @@ export default class XMLElementDefinition {
                 // console.log("Found property "+key+" which is of type "+typeof(value));
             }
         }
-    }
-
-    /**
-     * Invoked right before the property is being deleted from this object
-     * @param {String} propertyName 
-     */
-    removeProperty(propertyName) {
-    }
-
-    removeDefinition(log = true) {
-        if (log) console.group("Removing " + this);
-        // First, delete our children in the reverse order that they were created.
-        this.childDefinitions.slice().reverse().forEach(child => {
-            console.group('Removing ' + child);
-            child.removeDefinition(false);
-            // console.groupEnd();
-        });
-        // Next, inform the case definition about it.
-        this.modelDefinition.removeDefinitionElement(this);
-        // Finally remove all our properties.
-        for (const key in this) delete this[key];
-        console.groupEnd();
     }
 
     /**
@@ -308,7 +270,7 @@ export default class XMLElementDefinition {
         if (propertyValue.constructor.name == 'Array') {
             // Convert arrays into individual property-writes
             propertyValue.forEach(singularPropertyValue => this.exportProperty(propertyName, singularPropertyValue));
-        } else if (propertyValue instanceof XMLElementDefinition) {
+        } else if (propertyValue instanceof ElementDefinition) {
             // Write XML properties as-is, without converting them to string
             propertyValue.createExportNode(this.exportNode, propertyName);
         } else {
@@ -375,7 +337,7 @@ export default class XMLElementDefinition {
 
     /**
      * Returns all elements that have a reference to this element
-     * @returns {Array<XMLElementDefinition>}
+     * @returns {Array<ElementDefinition>}
      */
     searchInboundReferences() {
         if (this.modelDefinition && this.modelDefinition.file) {
@@ -388,9 +350,9 @@ export default class XMLElementDefinition {
     }
 
     /**
-     * Returns true if this XMLElementDefinition has a reference to the element.
+     * Returns true if this ElementDefinition has a reference to the element.
      * This method by default returns false, but can be overwritten to define actual comparison.
-     * @param {XMLElementDefinition} element 
+     * @param {ElementDefinition} element 
      * @returns 
      */
     referencesElement(element) {

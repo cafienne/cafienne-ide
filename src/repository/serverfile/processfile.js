@@ -1,7 +1,7 @@
 import ServerFile from "../serverfile";
 
 export default class ProcessFile extends ServerFile {
-    createDefinition() {
+    createModelDefinition() {
         return new ProcessModelDefinition(this);
     }
 

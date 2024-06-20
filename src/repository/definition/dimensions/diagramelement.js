@@ -1,12 +1,12 @@
-import XMLElementDefinition from "../xmlelementdefinition";
+import ElementDefinition from "../elementdefinition";
 import Dimensions from "./dimensions";
 
-export default class DiagramElement extends XMLElementDefinition {
+export default class DiagramElement extends ElementDefinition {
     /**
-     * Creates a new XMLElementDefinition that belongs to the Definition object.
+     * Creates a new ElementDefinition that belongs to the Definition object.
      * @param {Element} importNode 
      * @param {Dimensions} dimensions 
-     * @param {XMLElementDefinition} parent 
+     * @param {ElementDefinition} parent 
      */
     constructor(importNode, dimensions, parent) {
         super(importNode, dimensions, parent);

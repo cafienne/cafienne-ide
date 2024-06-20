@@ -1,7 +1,7 @@
 /**
  * Helper class to keep reference to the definition of a PlanItem
  */
-class PlanItemReference extends XMLElementDefinition {
+class PlanItemReference extends ElementDefinition {
     constructor(importNode, modelDefinition, parent) {
         super(importNode, modelDefinition, parent);
         this.taskRef = this.parseAttribute('taskRef');

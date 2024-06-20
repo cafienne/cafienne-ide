@@ -1,7 +1,7 @@
 import ServerFile from "../serverfile";
 
 export default class DimensionsFile extends ServerFile {
-    createDefinition() {
+    createModelDefinition() {
         return new Dimensions(this);
     }
 

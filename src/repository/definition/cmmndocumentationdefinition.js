@@ -1,7 +1,7 @@
 import ModelDefinition from "./modeldefinition";
-import XMLElementDefinition from "./xmlelementdefinition";
+import ElementDefinition from "./elementdefinition";
 
-export default class CMMNDocumentationDefinition extends XMLElementDefinition {
+export default class CMMNDocumentationDefinition extends ElementDefinition {
     /**
      * 
      * @param {Element} importNode 
