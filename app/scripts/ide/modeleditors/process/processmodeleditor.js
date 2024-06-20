@@ -130,7 +130,7 @@ class ProcessModelEditor extends ModelEditor {
      * 
      * @param {String} propertyName 
      * @param {String} propertyValue 
-     * @param {XMLElementDefinition} element
+     * @param {ElementDefinition} element
      */
     change(propertyName, propertyValue, element = this.model) {
         element[propertyName] = propertyValue;

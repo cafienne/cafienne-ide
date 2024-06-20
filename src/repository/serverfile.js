@@ -22,7 +22,7 @@ export default class ServerFile {
      * Note: this method is private/protected
      *  @returns {ModelDefinition}
      */
-    createDefinition() {
+    createModelDefinition() {
         throw new Error('This method must be implemented in ' + this.constructor.name);
     }
 
@@ -160,7 +160,7 @@ export default class ServerFile {
         // console.groupEnd();
         // console.log("Parsing " + this.fileName);
         const file = this;
-        const definition = this.createDefinition();
+        const definition = this.createModelDefinition();
         this.content.definition = definition;
         if (!file.content.xml) {
             // There is no xml definition available to parse ...

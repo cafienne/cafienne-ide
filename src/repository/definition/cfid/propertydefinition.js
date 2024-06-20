@@ -1,7 +1,7 @@
 import CafienneImplementationDefinition from "../extensions/cafienneimplementationdefinition";
-import XMLElementDefinition from "../xmlelementdefinition";
+import ElementDefinition from "../elementdefinition";
 
-export default class PropertyDefinition extends XMLElementDefinition {
+export default class PropertyDefinition extends ElementDefinition {
     constructor(importNode, modelDefinition, parent) {
         super(importNode, modelDefinition, parent);
         this.name = this.parseAttribute('name', '');

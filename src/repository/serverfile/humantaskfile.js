@@ -1,7 +1,7 @@
 import ServerFile from "../serverfile";
 
 export default class HumanTaskFile extends ServerFile {
-    createDefinition() {
+    createModelDefinition() {
         return new HumanTaskModelDefinition(this);
     }
 

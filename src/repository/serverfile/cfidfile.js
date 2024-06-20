@@ -1,7 +1,7 @@
 import ServerFile from "../serverfile";
 
 export default class CFIDFile extends ServerFile {
-    createDefinition() {
+    createModelDefinition() {
         return new CaseFileDefinitionDefinition(this);
     }
 

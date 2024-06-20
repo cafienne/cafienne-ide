@@ -1,6 +1,6 @@
 import HumanTaskFile from "../../serverfile/humantaskfile";
 import ModelDefinition from "../modeldefinition";
-import { IMPLEMENTATION_TAG } from "../xmlelementdefinition";
+import { IMPLEMENTATION_TAG } from "../xmlserializable";
 import HumanTaskImplementationDefinition from "./humantaskimplementationdefinition";
 
 export default class HumanTaskModelDefinition extends ModelDefinition {

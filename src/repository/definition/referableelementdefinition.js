@@ -1,15 +1,15 @@
 import XML from "../../util/xml";
 import CMMNDocumentationDefinition from "./cmmndocumentationdefinition";
 import ModelDefinition from "./modeldefinition";
-import XMLElementDefinition from "./xmlelementdefinition";
+import ElementDefinition from "./elementdefinition";
 
-export default class ReferableElementDefinition extends XMLElementDefinition {
+export default class ReferableElementDefinition extends ElementDefinition {
     /**
      * Creates an XML element that can be referred to by the value of the name or id attribute of the underlying XML element.
      * 
      * @param {Element} importNode 
      * @param {ModelDefinition} modelDefinition 
-     * @param {XMLElementDefinition} parent 
+     * @param {ElementDefinition} parent 
      */
     constructor(importNode, modelDefinition, parent) {
         super(importNode, modelDefinition, parent);
@@ -37,24 +37,6 @@ export default class ReferableElementDefinition extends XMLElementDefinition {
             this.modelDefinition.migrated(`Migrating CMMN1.0 description attribute to <cmmn:documentation> element in ${this.constructor.name} '${this.name}'`);
             this.documentation.text = description;
         }
-    }
-
-    /** @param {String} newId */
-    set id(newId) {
-        this.__id = newId;
-    }
-
-    get id() {
-        return this.__id;
-    }
-
-    get name() {
-        return this.__name;
-    }
-
-    /** @param {String} name */
-    set name(name) {
-        this.__name = name;
     }
 
     /**

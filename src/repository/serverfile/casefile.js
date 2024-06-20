@@ -1,7 +1,7 @@
 import ServerFile from "../serverfile";
 
 export default class CaseFile extends ServerFile {
-    createDefinition() {
+    createModelDefinition() {
         return new CaseDefinition(this);
     }
 

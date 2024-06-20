@@ -1,4 +1,4 @@
-import { IMPLEMENTATION_TAG } from "../xmlelementdefinition";
+import { IMPLEMENTATION_TAG } from "../xmlserializable";
 import CMMNExtensionDefinition from "./cmmnextensiondefinition";
 
 /**
