@@ -37,7 +37,7 @@ const scripts = [
     // "scripts/repository/definition/cmmn/dimensions/edge.js",
     // "scripts/repository/definition/cmmn/dimensions/shape.js",
     // "scripts/repository/definition/cmmn/dimensions/vertex.js",
-    "scripts/repository/definition/cmmn/definitions/casedefinition.js",
+    // "scripts/repository/definition/cmmn/definitions/casedefinition.js",
     "scripts/repository/definition/cmmn/definitions/expression/expressiondefinition.js",
     "scripts/repository/definition/cmmn/definitions/casefile/casefileitemcollection.js",
     "scripts/repository/definition/cmmn/definitions/casefile/casefiledefinition.js",
