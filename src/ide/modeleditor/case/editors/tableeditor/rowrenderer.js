@@ -1,4 +1,7 @@
-class RowRenderer {
+import CMMNElementDefinition from "../../../../../repository/definition/cmmnelementdefinition";
+import TableRenderer from "./tablerenderer";
+
+export default class RowRenderer {
     /**
      * Base class for rendering a row in a table control
      * @param {TableRenderer} control 

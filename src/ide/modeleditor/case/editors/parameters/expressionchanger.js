@@ -1,4 +1,6 @@
-class ExpressionChanger {
+import { ParameterRow } from "./caseparameterseditor";
+
+export default class ExpressionChanger {
     static get label() {
         return 'Expression';
     }

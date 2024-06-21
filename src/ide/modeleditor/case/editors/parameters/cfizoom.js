@@ -1,4 +1,6 @@
-class CFIZoom {
+import { ParameterRow } from "./caseparameterseditor";
+
+export default class CFIZoom {
     static get label() {
         return 'Case File Item';
     }

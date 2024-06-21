@@ -1,4 +1,8 @@
-class TableEditor extends MovableEditor {
+import CMMNElementDefinition from "../../../../../repository/definition/cmmnelementdefinition";
+import MovableEditor from "../../../../editors/movableeditor";
+import CaseModelEditor from "../../casemodeleditor";
+
+export default class TableEditor extends MovableEditor {
     /**
      * Defines a generic editor for collections of CMMNElementDefinition, to select and edit data in a table
      * Defines a generic TableEditor, to select and edit data in a table
@@ -155,7 +159,7 @@ class TableEditor extends MovableEditor {
     }
 }
 
-class TableEditorColumn {
+export class TableEditorColumn {
     /**
      * Base class for describing a column in a row in the table editor
      * @param {String} label 
@@ -179,7 +183,7 @@ class TableEditorColumn {
     }
 }
 
-class RowEditor {
+export class RowEditor {
     /**
      * Base class for rendering a row in the table editor
      * @param {TableEditor} editor 

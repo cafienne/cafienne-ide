@@ -1,4 +1,17 @@
-class CaseParametersEditor extends StandardForm {
+import CaseFileItemDef from "../../../../../repository/definition/cmmn/casefile/casefileitemdef";
+import ParameterDefinition from "../../../../../repository/definition/cmmn/contract/parameterdefinition";
+import CMMNElementDefinition from "../../../../../repository/definition/cmmnelementdefinition";
+import StandardForm from "../../../../editors/standardform";
+import CaseModelEditor from "../../casemodeleditor";
+import ColumnRenderer from "../tableeditor/columnrenderer";
+import RowRenderer from "../tableeditor/rowrenderer";
+import TableRenderer from "../tableeditor/tablerenderer";
+import CFIZoom from "./cfizoom";
+import ExpressionChanger from "./expressionchanger";
+import NameChanger from "./namechanger";
+import ParameterDeleter from "./parameterdeleter";
+
+export default class CaseParametersEditor extends StandardForm {
     /**
      * 
      * @param {CaseModelEditor} editor 
@@ -128,7 +141,7 @@ class OutputParametersControl extends ParametersControl {
     }
 }
 
-class ParameterRow extends RowRenderer {
+export class ParameterRow extends RowRenderer {
     /**
      * @param {ParametersControl} control
      * @param {ParameterDefinition} parameter

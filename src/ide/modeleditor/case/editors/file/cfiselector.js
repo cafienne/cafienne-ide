@@ -1,4 +1,7 @@
-class CFISelector extends Dialog {
+import CaseFileItemDef from "../../../../../repository/definition/cmmn/casefile/casefileitemdef";
+import Dialog from "../../../../editors/dialog";
+
+export default class CFISelector extends Dialog {
     /**
      * @param {CaseView} cs
      */

@@ -1,4 +1,7 @@
-﻿class RolesEditor extends TableEditor {
+﻿import CaseRoleDefinition from "../../../../repository/definition/cmmn/caseteam/caseroledefinition";
+import TableEditor, { RowEditor, TableEditorColumn } from "./tableeditor/tableeditor";
+
+export default class RolesEditor extends TableEditor {
     get label() {
         return 'Roles';
     }
@@ -35,7 +38,7 @@
     }
 }
 
-class RoleRenderer extends RowEditor {
+export class RoleRenderer extends RowEditor {
     /**
      * @param {RolesEditor} editor 
      * @param {CaseRoleDefinition} role 

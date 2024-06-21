@@ -7,6 +7,16 @@ import StandardForm from '../ide/editors/standardform';
 import IDE from '../ide/ide';
 import CaseModelEditor from '../ide/modeleditor/case/casemodeleditor';
 import CaseModelEditorMetadata from '../ide/modeleditor/case/casemodeleditormetadata';
+import CaseFileItemsEditor from '../ide/modeleditor/case/editors/casefileitemseditor';
+import CaseSourceEditor from '../ide/modeleditor/case/editors/casesourceeditor';
+import Deploy from '../ide/modeleditor/case/editors/deploy';
+import CaseParametersEditor from '../ide/modeleditor/case/editors/parameters/caseparameterseditor';
+import RolesEditor from '../ide/modeleditor/case/editors/roleseditor';
+import StartCaseEditor from '../ide/modeleditor/case/editors/startcaseeditor';
+import ColumnRenderer from '../ide/modeleditor/case/editors/tableeditor/columnrenderer';
+import RowRenderer from '../ide/modeleditor/case/editors/tableeditor/rowrenderer';
+import TableEditor, { RowEditor } from '../ide/modeleditor/case/editors/tableeditor/tableeditor';
+import TableRenderer from '../ide/modeleditor/case/editors/tableeditor/tablerenderer';
 import Grid from '../ide/modeleditor/case/grid';
 import Marker from '../ide/modeleditor/case/marker';
 import Resizer from '../ide/modeleditor/case/resizer';
@@ -228,7 +238,20 @@ const pointers = [
     Grid,
     Marker,
     Resizer,
-    ShapeBox
+    ShapeBox,
+
+    CaseParametersEditor,
+    TableRenderer,
+    TableEditor,
+    ColumnRenderer,
+    RowRenderer,
+    CaseFileItemsEditor,
+    CaseSourceEditor,
+    Deploy,
+    RolesEditor,
+    RowEditor,
+    StartCaseEditor,
+
 
 
 ]
