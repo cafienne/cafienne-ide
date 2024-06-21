@@ -1,4 +1,6 @@
-class CaseTaskDefinition extends TaskDefinition {
+import TaskDefinition from "./taskdefinition";
+
+export default class CaseTaskDefinition extends TaskDefinition {
     static get prefix() {
         return 'ct';
     }

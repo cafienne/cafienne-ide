@@ -1,4 +1,6 @@
-class MilestoneDefinition extends MilestoneEventListenerDefinition {
+import { MilestoneEventListenerDefinition } from "./planitemdefinitiondefinition";
+
+export default class MilestoneDefinition extends MilestoneEventListenerDefinition {
     constructor(importNode, caseDefinition, parent) {
         super(importNode, caseDefinition, parent);
     }

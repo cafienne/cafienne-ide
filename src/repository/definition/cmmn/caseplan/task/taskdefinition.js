@@ -1,4 +1,6 @@
-class TaskDefinition extends TaskStageDefinition {
+import { TaskStageDefinition } from "../planitemdefinitiondefinition";
+
+export default class TaskDefinition extends TaskStageDefinition {
     constructor(importNode, caseDefinition, parent) {
         super(importNode, caseDefinition, parent);
         this.isBlocking = this.parseBooleanAttribute('isBlocking', true);

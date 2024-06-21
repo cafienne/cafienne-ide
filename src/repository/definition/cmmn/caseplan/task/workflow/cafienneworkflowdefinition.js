@@ -1,5 +1,10 @@
+import CafienneImplementationDefinition from "../../../../extensions/cafienneimplementationdefinition";
+import ModelDefinition from "../../../../modeldefinition";
+import HumanTaskDefinition from "../humantaskdefinition";
+import AssignmentDefinition from "./assignmentdefinition";
+import DueDateDefinition from "./duedatedefinition";
 
-class CafienneWorkflowDefinition extends CafienneImplementationDefinition {
+export default class CafienneWorkflowDefinition extends CafienneImplementationDefinition {
     /**
      * 
      * @param {Element} element 

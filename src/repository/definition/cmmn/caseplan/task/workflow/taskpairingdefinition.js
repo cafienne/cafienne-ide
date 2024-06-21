@@ -1,4 +1,8 @@
-class TaskPairingDefinition extends CMMNExtensionDefinition {
+import CMMNExtensionDefinition from "../../../../extensions/cmmnextensiondefinition";
+import PlanItem from "../../planitem";
+import PlanItemReference from "../planitemreference";
+
+export default class TaskPairingDefinition extends CMMNExtensionDefinition {
     /**
      * 
      * @param {*} importNode 

@@ -1,5 +1,10 @@
+import CaseRoleDefinition from "../../caseteam/caseroledefinition";
+import TaskDefinition from "./taskdefinition";
+import AssignmentDefinition from "./workflow/assignmentdefinition";
+import CafienneWorkflowDefinition from "./workflow/cafienneworkflowdefinition";
+import DueDateDefinition from "./workflow/duedatedefinition";
 
-class HumanTaskDefinition extends TaskDefinition {
+export default class HumanTaskDefinition extends TaskDefinition {
     static get prefix() {
         return 'ht';
     }

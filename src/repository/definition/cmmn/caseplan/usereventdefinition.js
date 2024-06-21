@@ -1,4 +1,8 @@
-class UserEventDefinition extends EventListenerDefinition {
+import CaseRoleDefinition from "../caseteam/caseroledefinition";
+import CaseRoleReference from "../caseteam/caserolereference";
+import EventListenerDefinition from "./eventlistenerdefinition";
+
+export default class UserEventDefinition extends EventListenerDefinition {
     constructor(importNode, caseDefinition, parent) {
         super(importNode, caseDefinition, parent);
         this.authorizedRoles = [];
