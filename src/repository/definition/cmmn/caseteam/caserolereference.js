@@ -1,4 +1,7 @@
-class CaseRoleReference {
+import CaseDefinition from "../casedefinition";
+import CaseRoleDefinition from "./caseroledefinition";
+
+export default class CaseRoleReference {
     /**
      * Simple wrapper around a case role, helps in holding a references instead of the actual role.
      * @param {CaseRoleDefinition} role 

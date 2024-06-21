@@ -1,4 +1,7 @@
-class CaseTeamDefinition extends UnnamedCMMNElementDefinition {
+import UnnamedCMMNElementDefinition from "../../unnamedcmmnelementdefinition";
+import CaseRoleDefinition from "./caseroledefinition";
+
+export default class CaseTeamDefinition extends UnnamedCMMNElementDefinition {
     constructor(importNode, caseDefinition, parent) {
         super(importNode, caseDefinition, parent);
         /** @type {Array<CaseRoleDefinition>} */
