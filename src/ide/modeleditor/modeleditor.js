@@ -1,6 +1,8 @@
-﻿'use strict';
+﻿import ServerFile from "../../repository/serverfile";
+import MovableEditor from "../editors/movableeditor";
+import IDE from "../ide";
 
-class ModelEditor {
+export default class ModelEditor {
     /**
      * Basic model editor
      * @param {IDE} ide 

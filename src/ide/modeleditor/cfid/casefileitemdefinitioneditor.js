@@ -1,4 +1,17 @@
-﻿class CaseFileItemDefinitionEditor {
+﻿import CFIDefinitionUnknown from "./cfidefinitionunknown";
+import CFIDefinitionUnspecified from "./cfidefinitionunspecified";
+import CFIDefinitionXMLElement from "./cfidefinitionxmlelement";
+
+export const UNSPECIFIED = 'Unspecified';
+export const UNSPECIFIED_URI = 'http://www.omg.org/spec/CMMN/DefinitionType/Unspecified';
+
+export const XMLELEMENT = 'XMLElement';
+export const XMLELEMENT_URI = 'http://www.omg.org/spec/CMMN/DefinitionType/XSDElement';
+
+export const UNKNOWN = 'Unknown';
+export const UNKNOWN_URI = 'http://www.omg.org/spec/CMMN/DefinitionType/Unknown';
+
+export default class CaseFileItemDefinitionEditor {
     /** 
      * This object handles the case file items definition (cfidef) form.
      * with a case file item.

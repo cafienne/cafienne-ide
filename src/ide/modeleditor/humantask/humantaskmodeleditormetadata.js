@@ -1,4 +1,10 @@
-class HumantaskModelEditorMetadata extends ModelEditorMetadata {
+import ServerFile from "../../../repository/serverfile";
+import HumanTaskFile from "../../../repository/serverfile/humantaskfile";
+import IDE from "../../ide";
+import ModelEditorMetadata from "../modeleditormetadata";
+import HumantaskModelEditor from "./humantaskmodeleditor";
+
+export default class HumantaskModelEditorMetadata extends ModelEditorMetadata {
     /** @returns {Array<ServerFile>} */
     get modelList() {
         return this.ide.repository.getHumanTasks();
@@ -45,5 +51,3 @@ class HumantaskModelEditorMetadata extends ModelEditorMetadata {
         return fileName;
     }
 }
-
-IDE.registerEditorType(new HumantaskModelEditorMetadata());

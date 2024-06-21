@@ -5,6 +5,9 @@ import Dialog from '../ide/editors/dialog';
 import MovableEditor from '../ide/editors/movableeditor';
 import StandardForm from '../ide/editors/standardform';
 import IDE from '../ide/ide';
+import CaseFileItemDefinitionEditor from '../ide/modeleditor/cfid/casefileitemdefinitioneditor';
+import ModelEditor from '../ide/modeleditor/modeleditor';
+import ModelEditorMetadata from '../ide/modeleditor/modeleditormetadata';
 import ModelListPanel from '../ide/modellistpanel';
 import RepositoryBrowser from '../ide/repositorybrowser';
 import Settings from '../ide/settings/settings';
@@ -18,7 +21,7 @@ import SplitterSettings from '../ide/splitter/splittersettings';
 import TopSplitter from '../ide/splitter/topsplitter';
 import VerticalSplitter from '../ide/splitter/verticalsplitter';
 import TextAnnotationDefinition from '../repository/definition/artifact/textannotation';
-import CaseFileDefinitionDefinition, { UNKNOWN, UNKNOWN_URI, UNSPECIFIED, UNSPECIFIED_URI, XMLELEMENT, XMLELEMENT_URI } from '../repository/definition/cfid/casefileitemdefinitiondefinition';
+import CaseFileDefinitionDefinition from '../repository/definition/cfid/casefileitemdefinitiondefinition';
 import PropertyDefinition from '../repository/definition/cfid/propertydefinition';
 import CaseDefinition from '../repository/definition/cmmn/casedefinition';
 import CaseFileDefinition from '../repository/definition/cmmn/casefile/casefiledefinition';
@@ -185,6 +188,9 @@ const pointers = [
     IDE,
     MovableEditor,
     StandardForm,
+    ModelEditor,
+    ModelEditorMetadata,
+    CaseFileItemDefinitionEditor,
     Dialog,
     CreateNewModelDialog,
     DragData,
@@ -236,12 +242,5 @@ export default class Compatibility {
         window.CAFIENNE_NAMESPACE = CAFIENNE_NAMESPACE;
         window.CAFIENNE_PREFIX = CAFIENNE_PREFIX;
         window.IMPLEMENTATION_TAG = IMPLEMENTATION_TAG;
-
-        window.UNSPECIFIED = UNSPECIFIED;
-        window.UNSPECIFIED_URI = UNSPECIFIED_URI;
-        window.XMLELEMENT = XMLELEMENT;
-        window.XMLELEMENT_URI = XMLELEMENT_URI;
-        window.UNKNOWN = UNKNOWN;
-        window.UNKNOWN_URI = UNKNOWN_URI;
     }
 }
