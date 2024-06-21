@@ -1,6 +1,9 @@
 ﻿'use strict';
 
-class ModelParameters {
+import ParameterDefinition from "../../../repository/definition/cmmn/contract/parameterdefinition";
+import ModelEditor from "../modeleditor";
+
+export default class ModelParameters {
     /**
      * This object handles the input and output parameters of task model editor.
      * 

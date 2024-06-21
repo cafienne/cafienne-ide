@@ -1,6 +1,8 @@
-﻿'use strict';
+﻿import CaseFileDefinitionDefinition from "../../../repository/definition/cfid/casefileitemdefinitiondefinition";
+import Util from "../../../util/util";
+import CaseFileItemDefinitionEditor from "./casefileitemdefinitioneditor";
 
-class CFIDefinitionXMLElement {
+export default class CFIDefinitionXMLElement {
     /**
      * 
      * @param {CaseFileItemDefinitionEditor} editor 

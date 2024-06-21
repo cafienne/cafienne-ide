@@ -1,6 +1,10 @@
 ﻿'use strict';
 
-class ModelSourceEditor {
+import CodeMirrorConfig from "../../../util/codemirrorconfig";
+import XML from "../../../util/xml";
+import ModelEditor from "../modeleditor";
+
+export default class ModelSourceEditor {
     /**
      * 
      * @param {JQuery<HTMLElement>} html 

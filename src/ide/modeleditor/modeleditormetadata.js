@@ -1,4 +1,8 @@
-class ModelEditorMetadata {
+import ServerFile from "../../repository/serverfile";
+import IDE from "../ide";
+import ModelEditor from "./modeleditor";
+
+export default class ModelEditorMetadata {
     /**
      * Initializes metadata for a type of ModelEditor within the IDE
      * @param {IDE} ide 

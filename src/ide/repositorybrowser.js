@@ -1,5 +1,6 @@
 import DragData from "./dragdata";
 import IDE from "./ide";
+import ModelEditorMetadata from "./modeleditor/modeleditormetadata";
 import ModelListPanel from "./modellistpanel";
 
 export default class RepositoryBrowser {

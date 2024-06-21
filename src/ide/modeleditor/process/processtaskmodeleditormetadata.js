@@ -1,4 +1,10 @@
-class ProcessModelEditorMetadata extends ModelEditorMetadata {
+import ServerFile from "../../../repository/serverfile";
+import ProcessFile from "../../../repository/serverfile/processfile";
+import IDE from "../../ide";
+import ModelEditorMetadata from "../modeleditormetadata";
+import ProcessModelEditor from "./processmodeleditor";
+
+export default class ProcessModelEditorMetadata extends ModelEditorMetadata {
     /** @returns {Array<ServerFile>} */
     get modelList() {
         return this.ide.repository.getProcesses();
@@ -51,5 +57,3 @@ class ProcessModelEditorMetadata extends ModelEditorMetadata {
         return fileName;
     }
 }
-
-IDE.registerEditorType(new ProcessModelEditorMetadata());

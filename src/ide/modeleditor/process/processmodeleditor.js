@@ -1,5 +1,13 @@
 ﻿'use strict';
 
+import ElementDefinition from "../../../repository/definition/elementdefinition";
+import ProcessModelDefinition from "../../../repository/definition/process/processmodeldefinition";
+import CodeMirrorConfig from "../../../util/codemirrorconfig";
+import XML from "../../../util/xml";
+import ModelEditor from "../modeleditor";
+import ModelParameters from "../xmleditor/modelparameters";
+import ModelSourceEditor from "../xmleditor/modelsourceeditor";
+
 const HTTP_CALL_DEFINITION = 'HTTPCallDefinition';
 const HTTP_CALL_DEFINITION_IMPLEMENTATION_CLASS = 'org.cafienne.processtask.implementation.http.HTTPCallDefinition';
 
@@ -15,7 +23,7 @@ const PDF_REPORT_DEFINITION_IMPLEMENTATION_CLASS = 'org.cafienne.processtask.imp
 const CUSTOM_IMPLEMENTATION_DEFINITION = ' ';
 const CUSTOM_IMPLEMENTATION_DEFINITION_IMPLEMENTATION_CLASS = 'SPECIFY_IMPLEMENTATION_CLASS_HERE';
 
-class ProcessModelEditor extends ModelEditor {
+export default class ProcessModelEditor extends ModelEditor {
     /** 
      * This editor handles process models; only validates the xml
      * @param {IDE} ide 
