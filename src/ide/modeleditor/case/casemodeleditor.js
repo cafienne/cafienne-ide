@@ -1,6 +1,11 @@
-'use strict';
+import CaseDefinition from "../../../repository/definition/cmmn/casedefinition";
+import CaseFile from "../../../repository/serverfile/casefile";
+import MovableEditor from "../../editors/movableeditor";
+import IDE from "../../ide";
+import ModelEditor from "../modeleditor";
+import UndoManager from "./undoredo/undoredo";
 
-class CaseModelEditor extends ModelEditor {
+export default class CaseModelEditor extends ModelEditor {
     /**
      * This editor handles Case models
      * @param {IDE} ide 

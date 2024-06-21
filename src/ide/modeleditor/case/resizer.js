@@ -1,6 +1,4 @@
-﻿const CONNECTOR = 'connector';
-
-class Resizer {
+﻿export default class Resizer {
     /**
      * implements the resizer object for the element
      * @param {CMMNElementView} element

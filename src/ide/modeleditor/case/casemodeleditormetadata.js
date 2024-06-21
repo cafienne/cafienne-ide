@@ -1,5 +1,10 @@
+import ServerFile from "../../../repository/serverfile";
+import CaseFile from "../../../repository/serverfile/casefile";
+import IDE from "../../ide";
+import ModelEditorMetadata from "../modeleditormetadata";
+import CaseModelEditor from "./casemodeleditor";
 
-class CaseModelEditorMetadata extends ModelEditorMetadata {
+export default class CaseModelEditorMetadata extends ModelEditorMetadata {
     /** @returns {Array<ServerFile>} */
     get modelList() {
         return this.ide.repository.getCases();
@@ -82,5 +87,3 @@ class CaseModelEditorMetadata extends ModelEditorMetadata {
         return caseFileName;
     }
 }
-
-IDE.registerEditorType(new CaseModelEditorMetadata());

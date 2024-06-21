@@ -10,7 +10,7 @@
  */
 const grids = []; // List of all grid objects; forms a memory leak, in anticipation of keeping only one canvas for all cases, instead of a canvas per case.
 
-class Grid {
+export default class Grid {
 
     /**
      * 

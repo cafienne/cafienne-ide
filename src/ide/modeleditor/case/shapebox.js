@@ -1,4 +1,4 @@
-class ShapeBox {
+export default class ShapeBox {
     /**
      * 
      * @param {CaseView} cs 

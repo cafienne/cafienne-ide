@@ -5,6 +5,15 @@ import Dialog from '../ide/editors/dialog';
 import MovableEditor from '../ide/editors/movableeditor';
 import StandardForm from '../ide/editors/standardform';
 import IDE from '../ide/ide';
+import CaseModelEditor from '../ide/modeleditor/case/casemodeleditor';
+import CaseModelEditorMetadata from '../ide/modeleditor/case/casemodeleditormetadata';
+import Grid from '../ide/modeleditor/case/grid';
+import Marker from '../ide/modeleditor/case/marker';
+import Resizer from '../ide/modeleditor/case/resizer';
+import ShapeBox from '../ide/modeleditor/case/shapebox';
+import Action from '../ide/modeleditor/case/undoredo/action';
+import UndoManager from '../ide/modeleditor/case/undoredo/undoredo';
+import UndoRedoBox from "../ide/modeleditor/case/undoredo/undoredobox";
 import CaseFileItemDefinitionEditor from '../ide/modeleditor/cfid/casefileitemdefinitioneditor';
 import ModelEditor from '../ide/modeleditor/modeleditor';
 import ModelEditorMetadata from '../ide/modeleditor/modeleditormetadata';
@@ -210,6 +219,18 @@ const pointers = [
     Validator,
     ValidateForm,
     Debugger,
+
+    UndoManager,
+    UndoRedoBox,
+    Action,
+    CaseModelEditor,
+    CaseModelEditorMetadata,
+    Grid,
+    Marker,
+    Resizer,
+    ShapeBox
+
+
 ]
 
 export default class Compatibility {

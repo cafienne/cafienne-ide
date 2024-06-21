@@ -1,4 +1,7 @@
-class Action {
+import CaseDefinition from "../../../../repository/definition/cmmn/casedefinition";
+import UndoManager from "./undoredo";
+
+export default class Action {
     /**
      * 
      * @param {UndoManager} undoManager 
