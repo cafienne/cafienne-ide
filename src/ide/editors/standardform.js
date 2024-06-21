@@ -1,5 +1,6 @@
 ﻿'use strict';
 
+import Util from "../../util/util";
 import MovableEditor from "./movableeditor";
 
 export default class StandardForm extends MovableEditor {

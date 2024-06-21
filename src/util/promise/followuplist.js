@@ -1,3 +1,4 @@
+import Util from "../util";
 import Followup from "./followup";
 
 export default class FollowupList {

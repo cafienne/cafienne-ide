@@ -1,3 +1,4 @@
+import XML from "../../../../util/xml";
 import CaseDefinition from "../casedefinition";
 import CaseFileItemCollection from "./casefileitemcollection";
 

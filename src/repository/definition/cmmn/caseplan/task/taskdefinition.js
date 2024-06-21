@@ -1,3 +1,4 @@
+import ParameterDefinition from "../../contract/parameterdefinition";
 import { TaskStageDefinition } from "../planitemdefinitiondefinition";
 
 export default class TaskDefinition extends TaskStageDefinition {
