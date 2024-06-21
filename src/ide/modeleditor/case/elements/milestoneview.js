@@ -1,6 +1,7 @@
 ﻿import MilestoneDefinition from "../../../../repository/definition/cmmn/caseplan/milestonedefinition";
 import PlanItem from "../../../../repository/definition/cmmn/caseplan/planitem";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+import MilestoneDecoratorBox from "./decorator/box/milestonedecoratorbox";
 import PlanItemView from "./planitemview";
 import StageView from "./stageview";
 
@@ -25,7 +26,7 @@ export default class MilestoneView extends PlanItemView {
      * @param {ShapeDefinition} shape 
      */
     constructor(parent, definition, planItemDefinition, shape) {
-        super(parent.case, definition, shape);
+        super(parent.case, parent, definition, shape);
         this.planItemDefinition = planItemDefinition;
     }
 

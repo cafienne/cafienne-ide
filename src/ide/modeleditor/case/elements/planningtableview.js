@@ -1,8 +1,9 @@
 ﻿import PlanningTableDefinition from "../../../../repository/definition/cmmn/caseplan/planningtabledefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import CMMNElementView from "./cmmnelementview";
-import { EXPANDEDPLANNINGTABLE_IMG } from "./elements";
 import TaskStageView from "./taskstageview";
+
+const EXPANDEDPLANNINGTABLE_IMG = 'images/expandedplanningtable_32.png';
 
 export default class PlanningTableView extends CMMNElementView {
 

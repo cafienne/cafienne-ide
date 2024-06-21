@@ -11,6 +11,7 @@ import DragData, { CaseFileItemDragData } from "../../../dragdata";
 import CaseFileItemView from "./casefileitemview";
 import CaseTaskView from "./casetaskview";
 import CMMNElementView from "./cmmnelementview";
+import StageDecoratorBox from "./decorator/box/stagedecoratorbox";
 import HumanTaskView from "./humantaskview";
 import MilestoneView from "./milestoneview";
 import PlanItemView from "./planitemview";

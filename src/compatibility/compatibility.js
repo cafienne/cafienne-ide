@@ -24,7 +24,6 @@ import CaseTaskView from '../ide/modeleditor/case/elements/casetaskview';
 import CaseView from '../ide/modeleditor/case/elements/caseview';
 import CMMNElementView from '../ide/modeleditor/case/elements/cmmnelementview';
 import Connector, { TemporaryConnector } from '../ide/modeleditor/case/elements/connector';
-import { AUTOCOMPLETE_IMG, DISCRETIONARYSTAGE_IMG, DISCRETIONARYTASK_IMG, EXPANDEDPLANNINGTABLE_IMG, ISBLOCKING_IMG, MANUALACTIVATION_IMG, MINUS_IMG, PLUS_IMG, REPETITION_IMG, REQUIRED_IMG } from '../ide/modeleditor/case/elements/elements';
 import EventListenerView from '../ide/modeleditor/case/elements/eventlistenerview';
 import HumanTaskView from '../ide/modeleditor/case/elements/humantaskview';
 import MilestoneView from '../ide/modeleditor/case/elements/milestoneview';
@@ -332,16 +331,5 @@ export default class Compatibility {
         window.CAFIENNE_NAMESPACE = CAFIENNE_NAMESPACE;
         window.CAFIENNE_PREFIX = CAFIENNE_PREFIX;
         window.IMPLEMENTATION_TAG = IMPLEMENTATION_TAG;
-
-        window.EXPANDEDPLANNINGTABLE_IMG = EXPANDEDPLANNINGTABLE_IMG;
-        window.REPETITION_IMG = REPETITION_IMG;
-        window.REQUIRED_IMG = REQUIRED_IMG;
-        window.AUTOCOMPLETE_IMG = AUTOCOMPLETE_IMG;
-        window.ISBLOCKING_IMG = ISBLOCKING_IMG;
-        window.MANUALACTIVATION_IMG = MANUALACTIVATION_IMG;
-        window.DISCRETIONARYTASK_IMG = DISCRETIONARYTASK_IMG;
-        window.DISCRETIONARYSTAGE_IMG = DISCRETIONARYSTAGE_IMG;
-        window.PLUS_IMG = PLUS_IMG;
-        window.MINUS_IMG = MINUS_IMG;
     }
 }

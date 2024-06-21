@@ -232,6 +232,11 @@ export default class SentryView extends CMMNElementView {
         // check if the planItem reference points to a planItem inside the parent of the parentElement
         const parentStage = cmmnParentElement.parent;
 
+        // But only if the parent is a stage inside the caseplan.
+        if (parentStage === this.case) {
+            return;
+        }
+
         //get the planItems from the onPart
         this.definition.planItemOnParts.forEach(onPart => {
             const sourceRef = onPart.sourceRef;

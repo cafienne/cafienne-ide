@@ -3,7 +3,7 @@ import TaskDefinition from "../../../../repository/definition/cmmn/caseplan/task
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import ServerFile from "../../../../repository/serverfile";
 import DragData from "../../../dragdata";
-import CMMNElementView from "./cmmnelementview";
+import { TaskDecoratorBox } from "./decorator/box/taskdecoratorbox";
 import TaskStageView from "./taskstageview";
 
 export default class TaskView extends TaskStageView {
