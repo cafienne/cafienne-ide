@@ -1,13 +1,21 @@
-class PlanItemView extends CMMNElementView {
+import ConstraintDefinition from "../../../../repository/definition/cmmn/caseplan/constraintdefinition";
+import PlanItem from "../../../../repository/definition/cmmn/caseplan/planitem";
+import PlanItemDefinitionDefinition from "../../../../repository/definition/cmmn/caseplan/planitemdefinitiondefinition";
+import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+import CMMNElementView from "./cmmnelementview";
+import { EntryCriterionView, ExitCriterionView, ReactivateCriterionView } from "./sentryview";
+
+export default class PlanItemView extends CMMNElementView {
     /**
      * This is a generic class for plan item rendering; it takes default properties of the definition
      * It holds a reference both to the PlanItem definition AND to the PlanItemDefinition definition (e.g., HumanTask, StageView, Milestone).
+     * @param {CaseView} cs 
      * @param {CMMNElementView} parent 
      * @param {PlanItem} definition
      * @param {ShapeDefinition} shape 
      */
-    constructor(parent, definition, shape) {
-        super(parent, definition, shape);
+    constructor(cs, parent, definition, shape) {
+        super(cs, parent, definition, shape);
         this.definition = definition;
 
         // Add the sentries
@@ -29,10 +37,10 @@ class PlanItemView extends CMMNElementView {
 
     /** @returns {PlanItemDefinitionDefinition} */
     get planItemDefinition() {
-        if (! this.__pid) {
-            this.__pid =  this.definition.definition;
+        if (!this.__pid) {
+            this.__pid = this.definition.definition;
         }
-        return this.__pid;        
+        return this.__pid;
     }
 
     createProperties() {
@@ -51,7 +59,7 @@ class PlanItemView extends CMMNElementView {
         super.__resize(w, h);
         this.decoratorBox.moveDecoratorsToMiddle();
         // reposition our sentries on the right and bottom
-        this.__childElements.filter(child => child instanceof SentryView).forEach(sentry => {
+        this.__childElements.filter(child => child.isCriterion).forEach(sentry => {
             //get the current position of sentry (the centre)
             const sentryX = sentry.shape.x + sentry.shape.width / 2;
             const sentryY = sentry.shape.y + sentry.shape.height / 2;
@@ -144,5 +152,9 @@ class PlanItemView extends CMMNElementView {
         if (rule && !rule.contextRef && rule.body !== 'true' && rule.body !== 'false') {
             this.raiseValidationIssue(39, [this.name, this.case.name, ruleType, 'context (case file item)']);
         }
+    }
+
+    get isPlanItem() {
+        return true;
     }
 }

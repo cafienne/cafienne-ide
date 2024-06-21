@@ -3,6 +3,7 @@ import CaseFile from "../../../repository/serverfile/casefile";
 import IDE from "../../ide";
 import ModelEditorMetadata from "../modeleditormetadata";
 import CaseModelEditor from "./casemodeleditor";
+import CaseTaskView from "./elements/casetaskview";
 
 export default class CaseModelEditorMetadata extends ModelEditorMetadata {
     /** @returns {Array<ServerFile>} */

@@ -1,5 +1,10 @@
-﻿
-class MilestoneView extends PlanItemView {
+﻿import MilestoneDefinition from "../../../../repository/definition/cmmn/caseplan/milestonedefinition";
+import PlanItem from "../../../../repository/definition/cmmn/caseplan/planitem";
+import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+import PlanItemView from "./planitemview";
+import StageView from "./stageview";
+
+export default class MilestoneView extends PlanItemView {
     /**
      * 
      * @param {StageView} stage 
@@ -9,21 +14,18 @@ class MilestoneView extends PlanItemView {
     static create(stage, x, y) {
         const definition = stage.planItemDefinition.createPlanItem(MilestoneDefinition);
         const shape = stage.case.diagram.createShape(x, y, 100, 40, definition.id);
-        if (definition.definition instanceof MilestoneDefinition) {
-            return new MilestoneView(stage, definition, definition.definition, shape);
-        }
-        console.error('Not supposed to reach this code');
+        return new MilestoneView(stage, definition, definition.definition, shape);
     }
 
     /**
-     * Creates a new HumanTaskView element.
-     * @param {CMMNElementView} parent 
+     * Creates a new MilestoneView element.
+     * @param {StageView} parent 
      * @param {PlanItem} definition
      * @param {MilestoneDefinition} planItemDefinition 
      * @param {ShapeDefinition} shape 
      */
     constructor(parent, definition, planItemDefinition, shape) {
-        super(parent, definition, shape);
+        super(parent.case, definition, shape);
         this.planItemDefinition = planItemDefinition;
     }
 
@@ -75,5 +77,8 @@ class MilestoneView extends PlanItemView {
     canHaveCriterion(criterionType) {
         return criterionType == EntryCriterionView.name;
     }
+
+    get isMilestone() {
+        return true;
+    }
 }
-CMMNElementView.registerType(MilestoneView, 'MilestoneView', 'images/svg/milestone.svg');

@@ -1,4 +1,9 @@
-﻿class Connector extends CanvasElement {
+﻿import Edge from "../../../../repository/definition/dimensions/edge";
+import CanvasElement from "./canvaselement";
+import CaseView from "./caseview";
+import CMMNElementView from "./cmmnelementview";
+
+export default class Connector extends CanvasElement {
     /**
      * 
      * @param {CaseView} cs 
@@ -9,22 +14,6 @@
             const id = edge[propertyName];
             const item = cs.getItem(id);
             if (item) return item;
-            // conversion of sentries
-            const definitionElement = cs.caseDefinition.getElement(id);
-            if (definitionElement && definitionElement instanceof SentryDefinition) {
-                console.log('Found old sentry ' + id);
-                const criterionDefinition = cs.caseDefinition.elements.find(element => element instanceof CriterionDefinition && element.sentryRef == id);
-                if (criterionDefinition) {
-                    console.log('Converting connector between sentry elements');
-                    const criterionView = cs.items.find(item => item.id == criterionDefinition.id);
-                    if (criterionView) {
-                        edge[propertyName] = criterionView.id;
-                    }
-                    return criterionView;
-                } else {
-                    console.log('Cannot convert old sentry; apparently it has not been migrated?!');
-                }
-            }
         }
 
         const source = findItem(cs, edge, 'sourceId');
@@ -63,7 +52,7 @@
         this.source = source;
         this.target = target;
         this.edge = edge;
-        this.sentry = source instanceof SentryView ? source : target instanceof SentryView ? target : undefined;
+        this.sentry = source.isCriterion ? source : target.isCriterion ? target : undefined;
 
         const arrowStyle = this.sentry ? '8 3 3 3 3 3' : '5 5'
 
@@ -161,7 +150,7 @@
     }
 }
 
-class TemporaryConnector extends CanvasElement {
+export class TemporaryConnector extends CanvasElement {
     /**
      * Creates a temporary connector (=link in jointJS) from the source to a set of target coordinates
      * @param {CMMNElementView} source 

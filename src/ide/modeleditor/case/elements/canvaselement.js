@@ -1,9 +1,12 @@
-class CanvasElement {
+import CaseView from "./caseview";
+import CMMNElementView from "./cmmnelementview";
+
+export default class CanvasElement {
     /**
-     * @param {CMMNElementView | CaseView} element 
+     * @param {CaseView} cs 
      */
-    constructor(element) {
-        this.case = element instanceof CaseView ? element : element.case;
+    constructor(cs) {
+        this.case = cs;
     }
 
     set xyz_joint(jointElement) {

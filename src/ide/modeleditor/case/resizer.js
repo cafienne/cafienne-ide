@@ -1,4 +1,6 @@
-﻿export default class Resizer {
+﻿import CMMNElementView from "./elements/cmmnelementview";
+
+export default class Resizer {
     /**
      * implements the resizer object for the element
      * @param {CMMNElementView} element
@@ -235,7 +237,7 @@
         // Bit ugly to do it here, but stage.__resize() during move should not immediately reset children,
         //  this logic should only happen at the end of the resize action. This avoids that resizing
         //  across nested and subnested items wrongly adopts e.g. tasks in substages.
-        if (this.element instanceof StageView) {
+        if (this.element.isStage) {
             this.element.resetChildren();
         }
 

@@ -1,14 +1,22 @@
-﻿class TaskView extends TaskStageView {
+﻿import PlanItem from "../../../../repository/definition/cmmn/caseplan/planitem";
+import TaskDefinition from "../../../../repository/definition/cmmn/caseplan/task/taskdefinition";
+import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+import ServerFile from "../../../../repository/serverfile";
+import DragData from "../../../dragdata";
+import CMMNElementView from "./cmmnelementview";
+import TaskStageView from "./taskstageview";
+
+export default class TaskView extends TaskStageView {
 
     /**
      * Creates a new TaskView element.
-     * @param {CMMNElementView} parent 
+     * @param {StageView} parent 
      * @param {PlanItem} definition
      * @param {TaskDefinition} planItemDefinition 
      * @param {ShapeDefinition} shape 
      */
     constructor(parent, definition, planItemDefinition, shape) {
-        super(parent, definition, planItemDefinition, shape);
+        super(parent.case, parent, definition, planItemDefinition, shape);
         this.planItemDefinition = planItemDefinition;
 
         //Define the mapping form to link task parameters with model parameters (case process humantask) 
@@ -233,5 +241,9 @@
             return true;
         }
         return super.referencesDefinitionElement(definitionId);
+    }
+
+    get isTask() {
+        return true;
     }
 }

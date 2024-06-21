@@ -1,4 +1,10 @@
-class TimerEventView extends EventListenerView {
+import PlanItem from "../../../../repository/definition/cmmn/caseplan/planitem";
+import TimerEventDefinition from "../../../../repository/definition/cmmn/caseplan/timereventdefinition";
+import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+import EventListenerView from "./eventlistenerview";
+import StageView from "./stageview";
+
+export default class TimerEventView extends EventListenerView {
     /**
      * 
      * @param {StageView} stage 
@@ -8,15 +14,12 @@ class TimerEventView extends EventListenerView {
     static create(stage, x, y) {
         const definition = stage.planItemDefinition.createPlanItem(TimerEventDefinition);
         const shape = stage.case.diagram.createShape(x, y, 32, 32, definition.id);
-        if (definition.definition instanceof TimerEventDefinition) {
-            return new TimerEventView(stage, definition, definition.definition, shape);
-        }
-        console.error('Not supposed to reach this code');
+        return new TimerEventView(stage, definition, definition.definition, shape);
     }
 
     /**
      * Creates a new TimerEventView element.
-     * @param {CMMNElementView} parent 
+     * @param {StageView} parent 
      * @param {PlanItem} definition
      * @param {TimerEventDefinition} planItemDefinition 
      * @param {ShapeDefinition} shape 
@@ -40,6 +43,9 @@ class TimerEventView extends EventListenerView {
             return true;
         }
         return super.referencesDefinitionElement(definitionId);
-    }    
+    }
+
+    get isTimerEvent() {
+        return true;
+    }
 }
-CMMNElementView.registerType(TimerEventView, 'Timer Event', 'images/svg/timerevent.svg');
