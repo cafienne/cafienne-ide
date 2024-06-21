@@ -1,4 +1,6 @@
-class EntryCriterionDefinition extends CriterionDefinition {
+import CriterionDefinition from "./criteriondefinition";
+
+export default class EntryCriterionDefinition extends CriterionDefinition {
     /**
      * @param {Element} parentNode 
      */

@@ -1,4 +1,10 @@
-class CriterionDefinition extends CMMNElementDefinition {
+import CMMNElementDefinition from "../../cmmnelementdefinition";
+import CaseFileItemOnPartDefinition from "./casefileitemonpartdefinition";
+import IfPartDefinition from "./ifpartdefinition";
+import PlanItemOnPartDefinition from "./planitemonpartdefinition";
+import SentryDefinition from "./sentrydefinition";
+
+export default class CriterionDefinition extends CMMNElementDefinition {
     constructor(importNode, caseDefinition, parent) {
         super(importNode, caseDefinition, parent);
         this.sentryRef = this.parseAttribute('sentryRef');

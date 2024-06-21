@@ -24,11 +24,21 @@ import CaseDefinition from '../repository/definition/cmmn/casedefinition';
 import CaseFileDefinition from '../repository/definition/cmmn/casefile/casefiledefinition';
 import CaseFileItemCollection from '../repository/definition/cmmn/casefile/casefileitemcollection';
 import CaseFileItemDef from '../repository/definition/cmmn/casefile/casefileitemdef';
+import ConstraintDefinition from '../repository/definition/cmmn/caseplan/constraintdefinition';
 import CaseRoleDefinition from '../repository/definition/cmmn/caseteam/caseroledefinition';
 import CaseRoleReference from '../repository/definition/cmmn/caseteam/caserolereference';
 import CaseTeamDefinition from '../repository/definition/cmmn/caseteam/caseteamdefinition';
 import ParameterDefinition from '../repository/definition/cmmn/contract/parameterdefinition';
 import ExpressionDefinition from '../repository/definition/cmmn/expression/expressiondefinition';
+import CaseFileItemOnPartDefinition from '../repository/definition/cmmn/sentry/casefileitemonpartdefinition';
+import CriterionDefinition from '../repository/definition/cmmn/sentry/criteriondefinition';
+import EntryCriterionDefinition from '../repository/definition/cmmn/sentry/entrycriteriondefinition';
+import ExitCriterionDefinition from '../repository/definition/cmmn/sentry/exitcriteriondefinition';
+import IfPartDefinition from '../repository/definition/cmmn/sentry/ifpartdefinition';
+import OnPartDefinition from '../repository/definition/cmmn/sentry/onpartdefinition';
+import PlanItemOnPartDefinition from '../repository/definition/cmmn/sentry/planitemonpartdefinition';
+import ReactivateCriterionDefinition from '../repository/definition/cmmn/sentry/reactivatecriteriondefinition';
+import SentryDefinition from '../repository/definition/cmmn/sentry/sentrydefinition';
 import CMMNDocumentationDefinition from '../repository/definition/cmmndocumentationdefinition';
 import CMMNElementDefinition from '../repository/definition/cmmnelementdefinition';
 import Dimensions from '../repository/definition/dimensions/dimensions';
@@ -102,9 +112,19 @@ const pointers = [
     CaseTeamDefinition,
     CaseRoleDefinition,
     CaseRoleReference,
-
     ExpressionDefinition,
     ParameterDefinition,
+    ConstraintDefinition,
+    SentryDefinition,
+    CriterionDefinition,
+    IfPartDefinition,
+    OnPartDefinition,
+    PlanItemOnPartDefinition,
+    CaseFileItemOnPartDefinition,
+    EntryCriterionDefinition,
+    ExitCriterionDefinition,
+    ReactivateCriterionDefinition,
+
 
     Dimensions,
     Edge,

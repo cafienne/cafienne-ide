@@ -1,4 +1,6 @@
-class ReactivateCriterionDefinition extends CriterionDefinition {
+import CriterionDefinition from "./criteriondefinition";
+
+export default class ReactivateCriterionDefinition extends CriterionDefinition {
     /**
      * @param {Element} parentNode 
      */

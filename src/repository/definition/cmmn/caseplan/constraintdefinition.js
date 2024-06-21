@@ -1,4 +1,6 @@
-class ConstraintDefinition extends UnnamedCMMNElementDefinition {
+import UnnamedCMMNElementDefinition from "../../unnamedcmmnelementdefinition";
+
+export default class ConstraintDefinition extends UnnamedCMMNElementDefinition {
     constructor(importNode, caseDefinition, parent) {
         super(importNode, caseDefinition, parent);
         this.expression = this.parseElement('condition', ExpressionDefinition);

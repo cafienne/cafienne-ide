@@ -1,4 +1,9 @@
-class OnPartDefinition extends UnnamedCMMNElementDefinition {
+import UnnamedCMMNElementDefinition from "../../unnamedcmmnelementdefinition";
+import CaseDefinition from "../casedefinition";
+import CaseFileItemDef from "../casefile/casefileitemdef";
+// import SentryDefinition from "./sentrydefinition"; 
+// BIG TODO HERE
+export default class OnPartDefinition extends UnnamedCMMNElementDefinition {
     /**
      * 
      * @param {Element} importNode 

@@ -1,4 +1,10 @@
-class SentryDefinition extends UnnamedCMMNElementDefinition {
+import UnnamedCMMNElementDefinition from "../../unnamedcmmnelementdefinition";
+import CaseDefinition from "../casedefinition";
+import CaseFileItemOnPartDefinition from "./casefileitemonpartdefinition";
+import IfPartDefinition from "./ifpartdefinition";
+import PlanItemOnPartDefinition from "./planitemonpartdefinition";
+
+export default class SentryDefinition extends UnnamedCMMNElementDefinition {
     /**
      * 
      * @param {Element} importNode 
