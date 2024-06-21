@@ -1,9 +1,12 @@
-﻿const MINTEXTWIDTHCPM = 200;
-const CPM_WIDTH = 800;
-const CPM_HEIGHT = 500;
+﻿import CasePlanDefinition from "../../../../repository/definition/cmmn/caseplan/caseplandefinition";
+import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+import CaseView from "./caseview";
+import { ExitCriterionView } from "./sentryview";
+import StageView from "./stageview";
+
 const CPM_TAB_HEIGHT = 22;
 
-class CasePlanView extends StageView {
+export default class CasePlanView extends StageView {
     /**
      * 
      * @param {CaseView} cs 
@@ -18,12 +21,12 @@ class CasePlanView extends StageView {
 
     /**
      * Creates a new CasePlan model
-     * @param {*} parent Must be the CaseView object itself.
+     * @param {CaseView} cs Must be the CaseView object itself.
      * @param {CasePlanDefinition} definition 
      * @param {ShapeDefinition} shape 
      */
-    constructor(parent, definition, shape) {
-        super(parent, definition, definition, shape);
+    constructor(cs, definition, shape) {
+        super(cs, undefined, definition, definition, shape);
         // A case plan is both a plan item and a planitem definition
         //  It is also a stage, and a stage has distinctive plan item and planitem definition.
         //  Inside stage, we set a pointer to this.definition and this.planItemDefinition, pointing to this.definition.definition
@@ -130,5 +133,8 @@ class CasePlanView extends StageView {
             return super.createCMMNChild(cmmnType, x, y);
         }
     }
+
+    get isCasePlan() {
+        return true;
+    }
 }
-CMMNElementView.registerType(CasePlanView, 'Case Plan', 'images/svg/caseplanmodel.svg');

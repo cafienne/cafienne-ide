@@ -1,4 +1,37 @@
-﻿class CaseView {
+﻿// import TextAnnotationDefinition from "../../../../repository/definition/artifact/textannotation";
+// import CaseDefinition from "../../../../repository/definition/cmmn/casedefinition";
+// import CaseFileItemDef from "../../../../repository/definition/cmmn/casefile/casefileitemdef";
+// import CMMNElementDefinition from "../../../../repository/definition/cmmnelementdefinition";
+// import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+// import ValidateForm from "../../../../validate/validateform";
+// import Validator from "../../../../validate/validator";
+// import Debugger from "../../../debugger/debugger";
+// import RightSplitter from "../../../splitter/rightsplitter";
+// import CaseModelEditor from "../casemodeleditor";
+// import CaseFileItemsEditor from "../editors/casefileitemseditor";
+// import CaseSourceEditor from "../editors/casesourceeditor";
+// import Deploy from "../editors/deploy";
+// import CaseParametersEditor from "../editors/parameters/caseparameterseditor";
+// import RolesEditor from "../editors/roleseditor";
+// import StartCaseEditor from "../editors/startcaseeditor";
+// import ShapeBox from "../shapebox";
+// import UndoRedoBox from "../undoredo/undoredobox";
+// import CaseFileItemView from "./casefileitemview";
+// import CasePlanView from "./caseplanview";
+// import CaseTaskView from "./casetaskview";
+// import CMMNElementView from "./cmmnelementview";
+// import Connector from "./connector";
+// import HumanTaskView from "./humantaskview";
+// import MilestoneView from "./milestoneview";
+// import PlanningTableView from "./planningtableview";
+// import ProcessTaskView from "./processtaskview";
+// import { EntryCriterionView, ExitCriterionView, ReactivateCriterionView } from "./sentryview";
+// import StageView from "./stageview";
+// import TextAnnotationView from "./textannotationview";
+// import TimerEventView from "./timereventview";
+// import UserEventView from "./usereventview";
+
+export default class CaseView {
     /**
      * Creates a new CaseView object based on the definition and dimensions
      * @param {CaseModelEditor} editor
@@ -51,10 +84,9 @@
         this.undoBox = new UndoRedoBox(this, this.divUndoRedo);
         this.shapeBox = new ShapeBox(this, this.divShapeBox);
         this.splitter = new RightSplitter(this.divCaseModel, '60%', 5);
-
-        /** @type {Array<CMMNElementView>} */
-        this.items = [];
-        this.connectors = [];
+        
+        this.items = /** @type {Array<CMMNElementView>} */ ([]);
+        this.connectors = /** @type {Array<Connector>} */ ([]);
 
         //add the drawing area for this case
         this.createJointStructure();
@@ -88,7 +120,7 @@
                 }
             }
             // Now render the "loose" shapes (textboxes and casefileitems) in the appropriate parent stage            
-            const stages = /** @type {Array<StageView>} */ (this.items.filter(element => element instanceof StageView));
+            const stages = /** @type {Array<StageView>} */ (this.items.filter(element => element.isStage));
             this.diagram.shapes.forEach(shape => {
                 const definitionElement = getDefinition(shape);
                 // Only take the textboxes and case file items, not the other elements, as they are rendered from caseplanmodel constructor.
@@ -97,7 +129,7 @@
                     if (definitionElement instanceof CaseFileItemDef) {
                         parent.__addCMMNChild(new CaseFileItemView(parent, definitionElement, shape));
                     } else if (definitionElement instanceof TextAnnotationDefinition) {
-                        parent.__addCMMNChild(new TextAnnotationView(parent, definitionElement, shape)); 
+                        parent.__addCMMNChild(new TextAnnotationView(parent, definitionElement, shape));
                     } else {
                         // Quite weird :)
                     }
@@ -256,7 +288,7 @@
     get markerContainer() {
         return this.html.find('.divMarker');
     }
-    
+
     repositionSplitter() {
         /*When dragging this repository browser splitter, the splitter between the canvas and cfiEditor is not automatically updated
         Here recalculate the position of the splitter and the width of the canvas.
@@ -383,7 +415,7 @@
             // Hide all halos (perhaps it is sufficient to just hide current one), and show the new one (if any)
             this.items.forEach(item => item.__renderBoundary(false));
             if (itemUnderMouse) itemUnderMouse.__renderBoundary(true);
-            else this.casePlanModel && this.casePlanModel.hideHalo();          
+            else this.casePlanModel && this.casePlanModel.hideHalo();
         }
     }
 
@@ -591,13 +623,30 @@
      * @param {String} caseFileItemID 
      */
     getCaseFileItemElement(caseFileItemID) {
-        return this.items.find(item => item instanceof CaseFileItemView && item.definition.id == caseFileItemID);
+        return this.items.find(item => item.isCaseFileItem && item.definition.id == caseFileItemID);
     }
 
     switchLabels() {
         this.diagram.connectorStyle.shiftRight();
         this.editor.ide.info(this.diagram.connectorStyle.infoMessage, 8000);
-        this.items.filter(item => item instanceof SentryView).forEach(sentry => sentry.updateConnectorLabels());
+        this.items.filter(item => item.isCriterion).forEach(sentry => sentry.updateConnectorLabels());
         this.editor.saveModel();
+    }
+
+    static registerViewElements() {
+        CMMNElementView.registerType(CaseFileItemView, 'Case File Item', 'images/svg/casefileitem.svg');
+        CMMNElementView.registerType(CasePlanView, 'Case Plan', 'images/svg/caseplanmodel.svg');
+        CMMNElementView.registerType(CaseTaskView, 'Case TaskView', 'images/svg/casetaskmenu.svg', 'images/casetaskmenu_32.png');
+        CMMNElementView.registerType(HumanTaskView, 'Human TaskView', 'images/svg/blockinghumantaskmenu.svg', 'images/humantaskmenu_32.png');
+        CMMNElementView.registerType(MilestoneView, 'MilestoneView', 'images/svg/milestone.svg');
+        CMMNElementView.registerType(PlanningTableView, 'Planning Table');
+        CMMNElementView.registerType(ProcessTaskView, 'Process TaskView', 'images/svg/processtaskmenu.svg', 'images/processtaskmenu_32.png');
+        CMMNElementView.registerType(EntryCriterionView, 'Entry Criterion', 'images/svg/entrycriterion.svg');
+        CMMNElementView.registerType(ReactivateCriterionView, 'Reactivate Criterion', 'images/svg/reactivatecriterion.svg');
+        CMMNElementView.registerType(ExitCriterionView, 'Exit Criterion', 'images/svg/exitcriterion.svg');
+        CMMNElementView.registerType(StageView, 'StageView', 'images/svg/collapsedstage.svg');
+        CMMNElementView.registerType(TextAnnotationView, 'Text Annotation', 'images/svg/textannotation.svg');
+        CMMNElementView.registerType(TimerEventView, 'Timer Event', 'images/svg/timerevent.svg');
+        CMMNElementView.registerType(UserEventView, 'User Event', 'images/svg/userevent.svg');
     }
 }

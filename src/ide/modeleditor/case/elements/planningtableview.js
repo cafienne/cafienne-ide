@@ -1,4 +1,10 @@
-﻿class PlanningTableView extends CMMNElementView {
+﻿import PlanningTableDefinition from "../../../../repository/definition/cmmn/caseplan/planningtabledefinition";
+import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+import CMMNElementView from "./cmmnelementview";
+import { EXPANDEDPLANNINGTABLE_IMG } from "./elements";
+import TaskStageView from "./taskstageview";
+
+export default class PlanningTableView extends CMMNElementView {
 
     /**
      * 
@@ -7,14 +13,14 @@
      * @param {ShapeDefinition} shape 
      */
     constructor(parent, definition, shape) {
-        super(parent, definition, shape);
+        super(parent.case, parent, definition, shape);
         // Setters enable better type introspection
         this.definition = definition;
         this.parent = parent;
         this.__resizable = false;
         parent.__addCMMNChild(this);
 
-        this.stage = this.parent instanceof StageView ? this.parent : this.parent.parent;
+        this.stage = this.parent.isStage ? this.parent : this.parent.parent;
         // Now also render the discretionary items from the definition in our parent
         this.definition.tableItems.forEach(item => this.parent.addDiscretionaryItem(item));
     }
@@ -73,16 +79,16 @@
             return;
         }
 
-        if (cmmnParentElement instanceof StageView) {
+        if (cmmnParentElement.isStage) {
             const stage = cmmnParentElement;
             if (stage.planningTableView.definition.tableItems.length == 0) {
-                if (!stage.__getConnectedElements().find(element => element instanceof PlanItemView && element.definition.isDiscretionary)) {
+                if (!stage.__getConnectedElements().find(element => element.isPlanItem && element.definition.isDiscretionary)) {
                     this.raiseValidationIssue(19, [stage.typeDescription, stage.name, this.case.name]);
                 }
             }
-        } else if (cmmnParentElement instanceof TaskView) {
+        } else if (cmmnParentElement.isTask) {
             const task = cmmnParentElement;
-            if (!task.__getConnectedElements().find(element => element instanceof PlanItemView && element.definition.isDiscretionary)) {
+            if (!task.__getConnectedElements().find(element => element.isPlanItem && element.definition.isDiscretionary)) {
                 this.raiseValidationIssue(19, [task.typeDescription, task.name, this.case.name]);
             }
         }
@@ -134,5 +140,8 @@
         }
         return super.referencesDefinitionElement(definitionId);
     }
+
+    get isPlanningTable() {
+        return true;
+    }
 }
-CMMNElementView.registerType(PlanningTableView, 'Planning Table');

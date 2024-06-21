@@ -17,6 +17,27 @@ import ColumnRenderer from '../ide/modeleditor/case/editors/tableeditor/columnre
 import RowRenderer from '../ide/modeleditor/case/editors/tableeditor/rowrenderer';
 import TableEditor, { RowEditor } from '../ide/modeleditor/case/editors/tableeditor/tableeditor';
 import TableRenderer from '../ide/modeleditor/case/editors/tableeditor/tablerenderer';
+import CanvasElement from '../ide/modeleditor/case/elements/canvaselement';
+import CaseFileItemView from '../ide/modeleditor/case/elements/casefileitemview';
+import CasePlanView from '../ide/modeleditor/case/elements/caseplanview';
+import CaseTaskView from '../ide/modeleditor/case/elements/casetaskview';
+import CaseView from '../ide/modeleditor/case/elements/caseview';
+import CMMNElementView from '../ide/modeleditor/case/elements/cmmnelementview';
+import Connector, { TemporaryConnector } from '../ide/modeleditor/case/elements/connector';
+import { AUTOCOMPLETE_IMG, DISCRETIONARYSTAGE_IMG, DISCRETIONARYTASK_IMG, EXPANDEDPLANNINGTABLE_IMG, ISBLOCKING_IMG, MANUALACTIVATION_IMG, MINUS_IMG, PLUS_IMG, REPETITION_IMG, REQUIRED_IMG } from '../ide/modeleditor/case/elements/elements';
+import EventListenerView from '../ide/modeleditor/case/elements/eventlistenerview';
+import HumanTaskView from '../ide/modeleditor/case/elements/humantaskview';
+import MilestoneView from '../ide/modeleditor/case/elements/milestoneview';
+import PlanItemView from '../ide/modeleditor/case/elements/planitemview';
+import PlanningTableView from '../ide/modeleditor/case/elements/planningtableview';
+import ProcessTaskView from '../ide/modeleditor/case/elements/processtaskview';
+import SentryView, { EntryCriterionView, ExitCriterionView, ReactivateCriterionView } from '../ide/modeleditor/case/elements/sentryview';
+import StageView from '../ide/modeleditor/case/elements/stageview';
+import TaskStageView from '../ide/modeleditor/case/elements/taskstageview';
+import TaskView from '../ide/modeleditor/case/elements/taskview';
+import TextAnnotationView from '../ide/modeleditor/case/elements/textannotationview';
+import TimerEventView from '../ide/modeleditor/case/elements/timereventview';
+import UserEventView from '../ide/modeleditor/case/elements/usereventview';
 import Grid from '../ide/modeleditor/case/grid';
 import Marker from '../ide/modeleditor/case/marker';
 import Resizer from '../ide/modeleditor/case/resizer';
@@ -252,6 +273,31 @@ const pointers = [
     RowEditor,
     StartCaseEditor,
 
+    CanvasElement,
+    Connector,
+    TemporaryConnector,
+    CaseView,
+    CaseFileItemView,
+    CasePlanView,
+    CaseTaskView,
+    CMMNElementView,
+    EventListenerView,
+    HumanTaskView,
+    MilestoneView,
+    PlanItemView,
+    PlanningTableView,
+    ProcessTaskView,
+    SentryView,
+    EntryCriterionView,
+    ReactivateCriterionView,
+    ExitCriterionView,
+    StageView,
+    TaskStageView,
+    TaskView,
+    TextAnnotationView,
+    TimerEventView,
+    UserEventView,
+
 
 
 ]
@@ -286,5 +332,16 @@ export default class Compatibility {
         window.CAFIENNE_NAMESPACE = CAFIENNE_NAMESPACE;
         window.CAFIENNE_PREFIX = CAFIENNE_PREFIX;
         window.IMPLEMENTATION_TAG = IMPLEMENTATION_TAG;
+
+        window.EXPANDEDPLANNINGTABLE_IMG = EXPANDEDPLANNINGTABLE_IMG;
+        window.REPETITION_IMG = REPETITION_IMG;
+        window.REQUIRED_IMG = REQUIRED_IMG;
+        window.AUTOCOMPLETE_IMG = AUTOCOMPLETE_IMG;
+        window.ISBLOCKING_IMG = ISBLOCKING_IMG;
+        window.MANUALACTIVATION_IMG = MANUALACTIVATION_IMG;
+        window.DISCRETIONARYTASK_IMG = DISCRETIONARYTASK_IMG;
+        window.DISCRETIONARYSTAGE_IMG = DISCRETIONARYSTAGE_IMG;
+        window.PLUS_IMG = PLUS_IMG;
+        window.MINUS_IMG = MINUS_IMG;
     }
 }

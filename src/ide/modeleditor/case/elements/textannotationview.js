@@ -1,4 +1,9 @@
-﻿class TextAnnotationView extends CMMNElementView {
+﻿import TextAnnotationDefinition from "../../../../repository/definition/artifact/textannotation";
+import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+import CMMNElementView from "./cmmnelementview";
+import StageView from "./stageview";
+
+export default class TextAnnotationView extends CMMNElementView {
     /**
      * 
      * @param {StageView} stage 
@@ -18,7 +23,7 @@
      * @param {ShapeDefinition} shape 
      */
     constructor(parent, definition, shape) {
-        super(parent, definition, shape);
+        super(parent.case, parent, definition, shape);
         this.definition = definition;
     }
 
@@ -52,5 +57,8 @@
             }
         };
     }
+
+    get isTextAnnotation() {
+        return true;
+    }
 }
-CMMNElementView.registerType(TextAnnotationView, 'Text Annotation', 'images/svg/textannotation.svg');

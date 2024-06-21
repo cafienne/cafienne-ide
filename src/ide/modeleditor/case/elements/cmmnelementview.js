@@ -1,32 +1,34 @@
-/**
- * This file contains basic functions that are available on every CMMNElementView in the graph.
- */
-class CMMNElementView extends CanvasElement {
+import CMMNDocumentationDefinition from "../../../../repository/definition/cmmndocumentationdefinition";
+import CMMNElementDefinition from "../../../../repository/definition/cmmnelementdefinition";
+import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+import Util from "../../../../util/util";
+import CanvasElement from "./canvaselement";
+import CaseView from "./caseview";
+import Connector from "./connector";
+
+export default class CMMNElementView extends CanvasElement {
     /**
      * Creates a new CMMNElementView within the case having the corresponding definition and x, y coordinates
+     * @param {CaseView} cs
      * @param {CMMNElementView} parent
      * @param {CMMNElementDefinition} definition
      * @param {ShapeDefinition} shape 
      */
-    constructor(parent, definition, shape) {
-        super(parent);
-        if (!parent || !definition) {
-            throw new Error(`Cannot create a ${this.constructor.name} without a parent and definition.`);
-        }
+    constructor(cs, parent, definition, shape) {
+        super(cs);
         if (! shape) {
             console.warn(`${this.constructor.name}[${definition.id}] does not have a shape`);
         }
 
-        this.parent = parent;
+        this.case = cs;
+        this.case.items.push(this);
+        this.parent = parent || cs; // For now let parent point either to actual cmmn element view or to case. Not so nice ...
         this.definition = definition;
         this.shape = shape;
-        /** @type{CaseView} */
-        this.case = parent instanceof CaseView ? parent : parent.case;
-        this.case.items.push(this);
         this.editor = this.case.editor;
-        /** @type{Array<Connector>} */
+        /** @type {Array<Connector>} */
         this.__connectors = []; // An array of the connectors this element has with other elements (both incoming and outgoing)
-        /** @type{Array<CMMNElementView>} */
+        /** @type {Array<CMMNElementView>} */
         this.__childElements = []; // Create an array to keep track of our children, such that we can render them later on. 
         if (this.parent.__childElements) { // Register with parent.
             this.parent.__childElements.push(this);
@@ -104,11 +106,7 @@ class CMMNElementView extends CanvasElement {
      * @returns {CMMNDocumentationDefinition}
      */
     get documentation() {
-        if (this.definition instanceof CMMNElementDefinition) {
-            return this.definition.documentation;
-        } else {
-            throw new Error('This method must be implemented in ' + this.constructor.name);
-        }
+        return this.definition.documentation;
     }
 
     /**
@@ -170,8 +168,8 @@ class CMMNElementView extends CanvasElement {
 
         // EventListenerView somehow have an unclear and weird positioning with jointjs. Hence we need to do some correction for that.
         //  Note that this is still not a flawless improvement :(
-        const left = this instanceof EventListenerView ? offset.left - 0.5 * distance : offset.left - distance;
-        const right = this instanceof EventListenerView ? offset.left + this.shape.width + 1.5 * distance : offset.left + this.shape.width + distance;
+        const left = this.isEventListener ? offset.left - 0.5 * distance : offset.left - distance;
+        const right = this.isEventListener ? offset.left + this.shape.width + 1.5 * distance : offset.left + this.shape.width + distance;
         const top = offset.top - distance;
         const bottom = offset.top + this.shape.height + distance;
         const x = e.clientX;
@@ -700,6 +698,82 @@ class CMMNElementView extends CanvasElement {
         cmmnElementType.typeDescription = typeDescription;
         cmmnElementType.smallImage = smallImageURL;
         cmmnElementType.menuImage = menuImageURL;
+    }
+
+    get isPlanItem() {
+        return false;
+    }
+
+    get isTask() {
+        return false;
+    }
+
+    get isTaskOrStage() {
+        return false;
+    }
+
+    get isMilestone() {
+        return false;
+    }
+
+    get isEventListener() {
+        return false;
+    }
+
+    get isUserEvent() {
+        return false;
+    }
+
+    get isTimerEvent() {
+        return false;
+    }
+
+    get isStage() {
+        return false;
+    }
+
+    get isCasePlan() {
+        return false;
+    }
+
+    get isCaseTask() {
+        return false;
+    }
+
+    get isProcessTask() {
+        return false;
+    }
+
+    get isHumanTask() {
+        return false;
+    }
+
+    get isCriterion() {
+        return false;
+    }
+
+    get isEntryCriterion() {
+        return false;
+    }
+
+    get isExitCriterion() {
+        return false;
+    }
+
+    get isReactivateCriterion() {
+        return false;
+    }
+
+    get isPlanningTable() {
+        return false;
+    }
+
+    get isCaseFileItem() {
+        return false;
+    }
+
+    get isTextAnnotation() {
+        return false;
     }
 }
 CMMNElementView.constructors = {};

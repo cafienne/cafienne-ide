@@ -1,4 +1,27 @@
-﻿class StageView extends TaskStageView {
+﻿import MilestoneDefinition from "../../../../repository/definition/cmmn/caseplan/milestonedefinition";
+import PlanItem from "../../../../repository/definition/cmmn/caseplan/planitem";
+import StageDefinition from "../../../../repository/definition/cmmn/caseplan/stagedefinition";
+import CaseTaskDefinition from "../../../../repository/definition/cmmn/caseplan/task/casetaskdefinition";
+import HumanTaskDefinition from "../../../../repository/definition/cmmn/caseplan/task/humantaskdefinition";
+import ProcessTaskDefinition from "../../../../repository/definition/cmmn/caseplan/task/processtaskdefinition";
+import TimerEventDefinition from "../../../../repository/definition/cmmn/caseplan/timereventdefinition";
+import UserEventDefinition from "../../../../repository/definition/cmmn/caseplan/usereventdefinition";
+import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+import DragData, { CaseFileItemDragData } from "../../../dragdata";
+import CaseFileItemView from "./casefileitemview";
+import CaseTaskView from "./casetaskview";
+import CMMNElementView from "./cmmnelementview";
+import HumanTaskView from "./humantaskview";
+import MilestoneView from "./milestoneview";
+import PlanItemView from "./planitemview";
+import ProcessTaskView from "./processtaskview";
+import TaskStageView from "./taskstageview";
+import TaskView from "./taskview";
+import TextAnnotationView from "./textannotationview";
+import TimerEventView from "./timereventview";
+import UserEventView from "./usereventview";
+
+export default class StageView extends TaskStageView {
     /**
      * 
      * @param {StageView} stage 
@@ -8,21 +31,19 @@
     static create(stage, x, y) {
         const definition = stage.planItemDefinition.createPlanItem(StageDefinition);
         const shape = stage.case.diagram.createShape(x, y, 420, 140, definition.id);
-        if (definition.definition instanceof StageDefinition) {
-            return new StageView(stage, definition, definition.definition, shape);
-        }
-        console.error('Not supposed to reach this code');
+        return new StageView(stage.case, stage, definition, definition.definition, shape);
     }
 
     /**
      * Creates a new StageView element.
+     * @param {CaseView} cs 
      * @param {CMMNElementView} parent 
      * @param {PlanItem} definition
      * @param {StageDefinition} planItemDefinition 
      * @param {ShapeDefinition} shape 
      */
-    constructor(parent, definition, planItemDefinition, shape) {
-        super(parent, definition, planItemDefinition, shape);
+    constructor(cs, parent, definition, planItemDefinition, shape) {
+        super(cs, parent, definition, planItemDefinition, shape);
         this.planItemDefinition = planItemDefinition;
         this.planItemDefinition.planItems.forEach(planItem => this.addPlanItem(planItem));
     }
@@ -68,7 +89,7 @@
     resetChildren() {
         const currentChildren = this.__childElements;
         // Only other plan items, case file items and textboxes can move in/out of us. Not planning tables or sentries.
-        const allCaseItems = this.case.items.filter(item => !(item instanceof PlanningTableView) && !(item instanceof SentryView));
+        const allCaseItems = this.case.items.filter(item => !item.isPlanningTable && !item.isCriterion);
         // Create a collection of items we surround visually, but only the "top-level", not their children.
         const visuallySurroundedItems = allCaseItems.filter(item => this.surrounds(item) && !this.surrounds(item.parent));
         // Former children: those that are currently a descendant, but that we no longer surround visually.
@@ -129,7 +150,7 @@
     createPlanItemView(definition) {
         const planItemDefinition = definition.definition;
         const shape = this.case.diagram.getShape(definition);
-        if (! shape) {
+        if (!shape) {
             console.warn(`Error: missing shape definition for ${definition.definition.constructor.name} named "${definition.name}" with id "${definition.id}"`)
             return;
         }
@@ -141,7 +162,7 @@
         } else if (planItemDefinition instanceof ProcessTaskDefinition) {
             return new ProcessTaskView(this, definition, planItemDefinition, shape);
         } else if (planItemDefinition instanceof StageDefinition) {
-            return new StageView(this, definition, planItemDefinition, shape);
+            return new StageView(this.case, this, definition, planItemDefinition, shape);
         } else if (planItemDefinition instanceof MilestoneDefinition) {
             return new MilestoneView(this, definition, planItemDefinition, shape);
         } else if (planItemDefinition instanceof UserEventDefinition) {
@@ -160,11 +181,11 @@
     adoptItem(childElement) {
         const previousParent = childElement.parent;
         super.adoptItem(childElement);
-        if (childElement instanceof PlanItemView) {
+        if (childElement.isPlanItem) {
             // then also move the definition
             childElement.definition.switchParent(this.planItemDefinition);
             // If the item is discretionary, we may also have to clean up the former planning table and refresh ours.
-            if (childElement.definition.isDiscretionary && previousParent && previousParent instanceof StageView) {
+            if (childElement.definition.isDiscretionary && previousParent && previousParent.isStage) {
                 previousParent.cleanupPlanningTableIfPossible();
                 this.showPlanningTable();
             }
@@ -321,5 +342,8 @@
         }
         return false;
     }
+
+    get isStage() {
+        return true;
+    }
 }
-CMMNElementView.registerType(StageView, 'StageView', 'images/svg/collapsedstage.svg');

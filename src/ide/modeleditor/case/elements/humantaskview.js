@@ -1,6 +1,13 @@
+import PlanItem from "../../../../repository/definition/cmmn/caseplan/planitem";
+import HumanTaskDefinition from "../../../../repository/definition/cmmn/caseplan/task/humantaskdefinition";
+import CMMNElementDefinition from "../../../../repository/definition/cmmnelementdefinition";
+import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+import StageView from "./stageview";
+import TaskView from "./taskview";
+
 const BLOCKINGHUMANTASK_IMG = 'images/svg/blockinghumantask.svg';
 const NONBLOCKINGHUMANTASK_IMG = 'images/svg/nonblockinghumantask.svg';
-class HumanTaskView extends TaskView {
+export default class HumanTaskView extends TaskView {
     /**
      * 
      * @param {StageView} stage 
@@ -10,15 +17,12 @@ class HumanTaskView extends TaskView {
     static create(stage, x, y) {
         const definition = stage.planItemDefinition.createPlanItem(HumanTaskDefinition);
         const shape = stage.case.diagram.createShape(x, y, 140, 80, definition.id);
-        if (definition.definition instanceof HumanTaskDefinition) {
-            return new HumanTaskView(stage, definition, definition.definition, shape);
-        }
-        console.error('Not supposed to reach this code');
+        return new HumanTaskView(stage, definition, definition.definition, shape);
     }
 
     /**
      * Creates a new HumanTaskView element.
-     * @param {CMMNElementView} parent 
+     * @param {StageView} parent 
      * @param {PlanItem} definition
      * @param {HumanTaskDefinition} planItemDefinition 
      * @param {ShapeDefinition} shape 
@@ -97,5 +101,8 @@ class HumanTaskView extends TaskView {
         }
         return super.referencesDefinitionElement(definitionId);
     }
+
+    get isHumanTask() {
+        return true;
+    }
 }
-CMMNElementView.registerType(HumanTaskView, 'Human TaskView', 'images/svg/blockinghumantaskmenu.svg', 'images/humantaskmenu_32.png');

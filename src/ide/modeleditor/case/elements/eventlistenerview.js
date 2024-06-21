@@ -1,12 +1,16 @@
-﻿class EventListenerView extends PlanItemView {
+﻿import PlanItem from "../../../../repository/definition/cmmn/caseplan/planitem";
+import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+import PlanItemView from "./planitemview";
+
+export default class EventListenerView extends PlanItemView {
     /**
      * Creates a new EventListenerView
-     * @param {CMMNElementView} parent 
+     * @param {StageView} parent 
      * @param {PlanItem} definition
      * @param {ShapeDefinition} shape 
      */
     constructor(parent, definition, shape) {
-        super(parent, definition, shape);
+        super(parent.case, parent, definition, shape);
         //define default color
         this.__resizable = false;
     }
@@ -21,5 +25,9 @@
      */
     get imageURL() {
         throw new Error('This method must be implemented in ' + this.constructor.name);
+    }
+
+    get isEventListener() {
+        return true;
     }
 }

@@ -1,4 +1,11 @@
-﻿class CaseFileItemView extends CMMNElementView {
+﻿import CaseDefinition from "../../../../repository/definition/cmmn/casedefinition";
+import CaseFileItemDef from "../../../../repository/definition/cmmn/casefile/casefileitemdef";
+import CMMNDocumentationDefinition from "../../../../repository/definition/cmmndocumentationdefinition";
+import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+import CMMNElementView from "./cmmnelementview";
+import StageView from "./stageview";
+
+export default class CaseFileItemView extends CMMNElementView {
     /**
      * 
      * @param {StageView} stage 
@@ -31,7 +38,7 @@
      * @param {ShapeDefinition} shape 
      */
     constructor(parent, definition, shape) {
-        super(parent, definition, shape);
+        super(parent.case, parent, definition, shape);
         this.definition = definition;
         if (definition.isEmpty) {
             // This means it is a temporary definition that will not be saved on the server.
@@ -108,5 +115,8 @@
     referencesDefinitionElement(definitionId) {
         return this.definition && this.definition.id === definitionId;
     }
+
+    get isCaseFileItem() {
+        return true;
+    }
 }
-CMMNElementView.registerType(CaseFileItemView, 'Case File Item', 'images/svg/casefileitem.svg');

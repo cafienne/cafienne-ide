@@ -1,4 +1,10 @@
-class ProcessTaskView extends TaskView {
+import PlanItem from "../../../../repository/definition/cmmn/caseplan/planitem";
+import ProcessTaskDefinition from "../../../../repository/definition/cmmn/caseplan/task/processtaskdefinition";
+import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+import StageView from "./stageview";
+import TaskView from "./taskview";
+
+export default class ProcessTaskView extends TaskView {
     /**
      * 
      * @param {StageView} stage 
@@ -8,15 +14,12 @@ class ProcessTaskView extends TaskView {
     static create(stage, x, y) {
         const definition = stage.planItemDefinition.createPlanItem(ProcessTaskDefinition);
         const shape = stage.case.diagram.createShape(x, y, 140, 80, definition.id);
-        if (definition.definition instanceof ProcessTaskDefinition) {
-            return new ProcessTaskView(stage, definition, definition.definition, shape);
-        }
-        console.error('Not supposed to reach this code');
+        return new ProcessTaskView(stage, definition, definition.definition, shape);
     }
 
     /**
      * Creates a new ProcessTaskView element.
-     * @param {CMMNElementView} parent 
+     * @param {StageView} parent 
      * @param {PlanItem} definition
      * @param {ProcessTaskDefinition} planItemDefinition 
      * @param {ShapeDefinition} shape 
@@ -40,5 +43,8 @@ class ProcessTaskView extends TaskView {
     get fileType() {
         return 'process';
     }
+
+    get isProcessTask() {
+        return true;
+    }
 }
-CMMNElementView.registerType(ProcessTaskView, 'Process TaskView', 'images/svg/processtaskmenu.svg', 'images/processtaskmenu_32.png');
