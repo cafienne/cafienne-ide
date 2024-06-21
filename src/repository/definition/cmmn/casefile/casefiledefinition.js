@@ -1,4 +1,7 @@
-class CaseFileDefinition extends CaseFileItemCollection {
+import CaseFileItemCollection from "./casefileitemcollection";
+import CaseFileItemDef from "./casefileitemdef";
+
+export default class CaseFileDefinition extends CaseFileItemCollection {
     constructor(importNode, caseDefinition, parent) {
         super(importNode, caseDefinition, parent);
         this.parseElements('caseFileItem', CaseFileItemDef, this.children);
