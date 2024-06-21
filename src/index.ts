@@ -6,8 +6,9 @@ import ProcessModelEditorMetadata from './ide/modeleditor/process/processtaskmod
 //Start initialization after the entire page is loaded
 window.addEventListener('load', e => {
     // For now create a global IDE pointer.
-    console.log("Creating IDE")
-        
+    console.log("Creating IDE");
+
+    IDE.registerEditorType(new CaseModelEditorMetadata());
     IDE.registerEditorType(new HumantaskModelEditorMetadata());
     IDE.registerEditorType(new ProcessModelEditorMetadata());
 

@@ -1,4 +1,4 @@
-﻿class Marker {
+﻿export default class Marker {
     /**
      * implements the marker object for the element
      * @param {CMMNElementView} element
