@@ -24,6 +24,9 @@ import CaseDefinition from '../repository/definition/cmmn/casedefinition';
 import CaseFileDefinition from '../repository/definition/cmmn/casefile/casefiledefinition';
 import CaseFileItemCollection from '../repository/definition/cmmn/casefile/casefileitemcollection';
 import CaseFileItemDef from '../repository/definition/cmmn/casefile/casefileitemdef';
+import CaseRoleDefinition from '../repository/definition/cmmn/caseteam/caseroledefinition';
+import CaseRoleReference from '../repository/definition/cmmn/caseteam/caserolereference';
+import CaseTeamDefinition from '../repository/definition/cmmn/caseteam/caseteamdefinition';
 import CMMNDocumentationDefinition from '../repository/definition/cmmndocumentationdefinition';
 import CMMNElementDefinition from '../repository/definition/cmmnelementdefinition';
 import Dimensions from '../repository/definition/dimensions/dimensions';
@@ -87,6 +90,9 @@ const pointers = [
     CaseFileItemCollection,
     CaseFileItemDef,
     CaseFileDefinition,
+    CaseTeamDefinition,
+    CaseRoleDefinition,
+    CaseRoleReference,
 
     Dimensions,
     Edge,
