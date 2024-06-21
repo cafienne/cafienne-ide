@@ -1,4 +1,7 @@
-class ItemControlDefinition extends UnnamedCMMNElementDefinition {
+import UnnamedCMMNElementDefinition from "../../unnamedcmmnelementdefinition";
+import ConstraintDefinition from "./constraintdefinition";
+
+export default class ItemControlDefinition extends UnnamedCMMNElementDefinition {
     constructor(importNode, caseDefinition, parent) {
         super(importNode, caseDefinition, parent);
         this.repetitionRule = this.parseElement('repetitionRule', ConstraintDefinition);

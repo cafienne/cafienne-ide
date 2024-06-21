@@ -1,4 +1,9 @@
-class StageDefinition extends TaskStageDefinition {
+import SentryDefinition from "../sentry/sentrydefinition";
+import PlanItem from "./planitem";
+import { TaskStageDefinition } from "./planitemdefinitiondefinition";
+import HumanTaskDefinition from "./task/humantaskdefinition";
+
+export default class StageDefinition extends TaskStageDefinition {
     constructor(importNode, caseDefinition, parent) {
         super(importNode, caseDefinition, parent);
         this.autoComplete = this.parseBooleanAttribute('autoComplete', true);

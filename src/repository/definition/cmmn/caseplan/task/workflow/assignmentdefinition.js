@@ -1,4 +1,7 @@
-class DueDateDefinition extends UnnamedCMMNElementDefinition {
+import UnnamedCMMNElementDefinition from "../../../../unnamedcmmnelementdefinition";
+import ExpressionDefinition from "../../../expression/expressiondefinition";
+
+export default class AssignmentDefinition extends UnnamedCMMNElementDefinition {
     constructor(importNode, caseDefinition, parent) {
         super(importNode, caseDefinition, parent);
         this.expression = this.parseElement('condition', ExpressionDefinition);
@@ -11,7 +14,7 @@ class DueDateDefinition extends UnnamedCMMNElementDefinition {
     }
 
     createExportNode(parentNode) {
-        super.createExportNode(parentNode, DueDateDefinition.TAG, 'contextRef');
+        super.createExportNode(parentNode, AssignmentDefinition.TAG, 'contextRef');
         if (this.expression) {
             // Hmmm... perhaps we should rename 'expression' to 'condition' ...
             this.expression.createExportNode(this.exportNode, 'condition');
@@ -46,4 +49,4 @@ class DueDateDefinition extends UnnamedCMMNElementDefinition {
         return this.expression ? this.expression.body : '';
     }
 }
-DueDateDefinition.TAG = 'duedate';
+AssignmentDefinition.TAG = 'assignment';

@@ -1,4 +1,7 @@
-class FourEyesDefinition extends TaskPairingDefinition {
+import PlanItem from "../../planitem";
+import TaskPairingDefinition from "./taskpairingdefinition";
+
+export default class FourEyesDefinition extends TaskPairingDefinition {
     /**
      * 
      * @param {*} importNode 

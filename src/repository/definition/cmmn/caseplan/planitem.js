@@ -1,4 +1,21 @@
-class PlanItem extends CMMNElementDefinition {
+import Util from "../../../../util/util";
+import CMMNElementDefinition from "../../cmmnelementdefinition";
+import CaseRoleDefinition from "../caseteam/caseroledefinition";
+import CaseRoleReference from "../caseteam/caserolereference";
+import CriterionDefinition from "../sentry/criteriondefinition";
+import EntryCriterionDefinition from "../sentry/entrycriteriondefinition";
+import ExitCriterionDefinition from "../sentry/exitcriteriondefinition";
+import ReactivateCriterionDefinition from "../sentry/reactivatecriteriondefinition";
+import ItemControlDefinition from "./itemcontroldefinition";
+import PlanItemDefinitionDefinition, { TaskStageDefinition } from "./planitemdefinitiondefinition";
+import PlanningTableDefinition, { ApplicabilityRuleDefinition } from "./planningtabledefinition";
+import FourEyesDefinition from "./task/workflow/foureyesdefinition";
+import RendezVousDefinition from "./task/workflow/rendezvousdefinition";
+// import StageDefinition from "./stagedefinition";
+// import TaskDefinition from "./task/taskdefinition";
+// BIG TODO HERE
+
+export default class PlanItem extends CMMNElementDefinition {
     constructor(importNode, caseDefinition, parent) {
         super(importNode, caseDefinition, parent);
         this.definitionRef = this.parseAttribute('definitionRef');
@@ -26,7 +43,7 @@ class PlanItem extends CMMNElementDefinition {
      * @returns {String}
      */
     get defaultTransition() {
-        return this.definition instanceof MilestoneEventListenerDefinition ? 'occur' : 'complete';
+        return this.definition.defaultTransition;
     }
 
     /**

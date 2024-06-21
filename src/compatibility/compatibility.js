@@ -24,7 +24,28 @@ import CaseDefinition from '../repository/definition/cmmn/casedefinition';
 import CaseFileDefinition from '../repository/definition/cmmn/casefile/casefiledefinition';
 import CaseFileItemCollection from '../repository/definition/cmmn/casefile/casefileitemcollection';
 import CaseFileItemDef from '../repository/definition/cmmn/casefile/casefileitemdef';
+import CasePlanDefinition from '../repository/definition/cmmn/caseplan/caseplandefinition';
 import ConstraintDefinition from '../repository/definition/cmmn/caseplan/constraintdefinition';
+import EventListenerDefinition from '../repository/definition/cmmn/caseplan/eventlistenerdefinition';
+import ItemControlDefinition from '../repository/definition/cmmn/caseplan/itemcontroldefinition';
+import MilestoneDefinition from '../repository/definition/cmmn/caseplan/milestonedefinition';
+import PlanItem from '../repository/definition/cmmn/caseplan/planitem';
+import PlanItemDefinitionDefinition from '../repository/definition/cmmn/caseplan/planitemdefinitiondefinition';
+import PlanningTableDefinition from '../repository/definition/cmmn/caseplan/planningtabledefinition';
+import StageDefinition from '../repository/definition/cmmn/caseplan/stagedefinition';
+import CaseTaskDefinition from '../repository/definition/cmmn/caseplan/task/casetaskdefinition';
+import HumanTaskDefinition from '../repository/definition/cmmn/caseplan/task/humantaskdefinition';
+import PlanItemReference from '../repository/definition/cmmn/caseplan/task/planitemreference';
+import ProcessTaskDefinition from '../repository/definition/cmmn/caseplan/task/processtaskdefinition';
+import TaskDefinition from '../repository/definition/cmmn/caseplan/task/taskdefinition';
+import AssignmentDefinition from '../repository/definition/cmmn/caseplan/task/workflow/assignmentdefinition';
+import CafienneWorkflowDefinition from '../repository/definition/cmmn/caseplan/task/workflow/cafienneworkflowdefinition';
+import DueDateDefinition from '../repository/definition/cmmn/caseplan/task/workflow/duedatedefinition';
+import FourEyesDefinition from '../repository/definition/cmmn/caseplan/task/workflow/foureyesdefinition';
+import RendezVousDefinition from '../repository/definition/cmmn/caseplan/task/workflow/rendezvousdefinition';
+import TaskPairingDefinition from '../repository/definition/cmmn/caseplan/task/workflow/taskpairingdefinition';
+import TimerEventDefinition from '../repository/definition/cmmn/caseplan/timereventdefinition';
+import UserEventDefinition from '../repository/definition/cmmn/caseplan/usereventdefinition';
 import CaseRoleDefinition from '../repository/definition/cmmn/caseteam/caseroledefinition';
 import CaseRoleReference from '../repository/definition/cmmn/caseteam/caserolereference';
 import CaseTeamDefinition from '../repository/definition/cmmn/caseteam/caseteamdefinition';
@@ -124,6 +145,28 @@ const pointers = [
     EntryCriterionDefinition,
     ExitCriterionDefinition,
     ReactivateCriterionDefinition,
+
+    AssignmentDefinition,
+    CafienneWorkflowDefinition,
+    DueDateDefinition,
+    FourEyesDefinition,
+    RendezVousDefinition,
+    TaskPairingDefinition,
+    CaseTaskDefinition,
+    HumanTaskDefinition,
+    PlanItemReference,
+    ProcessTaskDefinition,
+    TaskDefinition,
+    CasePlanDefinition,
+    EventListenerDefinition,
+    ItemControlDefinition,
+    MilestoneDefinition,
+    PlanItemDefinitionDefinition,
+    PlanningTableDefinition,
+    StageDefinition,
+    TimerEventDefinition,
+    UserEventDefinition,
+    PlanItem,
 
 
     Dimensions,

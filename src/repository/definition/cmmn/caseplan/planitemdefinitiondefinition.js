@@ -1,4 +1,7 @@
-class PlanItemDefinitionDefinition extends CMMNElementDefinition {
+import CMMNElementDefinition from "../../cmmnelementdefinition";
+import PlanningTableDefinition from "./planningtabledefinition";
+
+export default class PlanItemDefinitionDefinition extends CMMNElementDefinition {
     constructor(importNode, caseDefinition, parent) {
         super(importNode, caseDefinition, parent);
     }
@@ -23,7 +26,7 @@ class PlanItemDefinitionDefinition extends CMMNElementDefinition {
 /**
  * Simple helper class to re-use logic across stages and tasks
  */
-class TaskStageDefinition extends PlanItemDefinitionDefinition {
+export class TaskStageDefinition extends PlanItemDefinitionDefinition {
     constructor(importNode, caseDefinition, parent) {
         super(importNode, caseDefinition, parent);
         /** @type{PlanningTableDefinition} */
@@ -42,6 +45,10 @@ class TaskStageDefinition extends PlanItemDefinitionDefinition {
         return ['complete', 'create', 'disable', 'enable', 'exit', 'fault', 'manualStart', 'parentResume', 'parentSuspend', 'reactivate', 'reenable', 'resume', 'start', 'suspend', 'terminate'];
     }
 
+    get defaultTransition() {
+        return 'completes';
+    }
+
     get entryTransition() {
         return 'start';
     }
@@ -50,13 +57,17 @@ class TaskStageDefinition extends PlanItemDefinitionDefinition {
 /**
  * Simple helper class to re-use logic across milestones and event listeners
  */
-class MilestoneEventListenerDefinition extends PlanItemDefinitionDefinition {
+export class MilestoneEventListenerDefinition extends PlanItemDefinitionDefinition {
     constructor(importNode, caseDefinition, parent) {
         super(importNode, caseDefinition, parent);
     }
 
     get transitions() {
         return ['occur', 'create', 'reactivate', 'resume', 'suspend', 'terminate'];
+    }
+
+    get defaultTransition() {
+        return 'occur';
     }
 
     get entryTransition() {

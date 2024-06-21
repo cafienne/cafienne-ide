@@ -1,4 +1,7 @@
-class RendezVousDefinition extends TaskPairingDefinition {
+import PlanItem from "../../planitem";
+import TaskPairingDefinition from "./taskpairingdefinition";
+
+export default class RendezVousDefinition extends TaskPairingDefinition {
     /**
      * 
      * @param {*} importNode 
