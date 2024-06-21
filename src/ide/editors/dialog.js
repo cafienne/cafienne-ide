@@ -1,3 +1,5 @@
+import Util from "../../util/util";
+
 export default class Dialog {
     /**
      * @param {IDE} ide
@@ -57,7 +59,7 @@ export default class Dialog {
     /** @param {any} returnValue */
     closeModalDialog(returnValue) {
         if (this.callback) this.callback(returnValue);
-        Util.removeHTML(this.dialogHTML);
+        Utill.removeHTML(this.dialogHTML);
     }
 
     renderDialog() {

@@ -1,3 +1,4 @@
+import XML from "../../../../util/xml";
 import UnnamedCMMNElementDefinition from "../../unnamedcmmnelementdefinition";
 import CaseRoleDefinition from "./caseroledefinition";
 

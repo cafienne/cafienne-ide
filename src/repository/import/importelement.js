@@ -16,7 +16,7 @@ export default class ImportElement {
     }
 
     get content() {
-        return XML.prettyPrint(this.xmlElement);
+        return XMLDocumentL.prettyPrint(this.xmlElement);
     }
 
     save() {

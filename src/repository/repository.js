@@ -1,5 +1,7 @@
 import Followup from "../util/promise/followup";
 import FollowupList from "../util/promise/followuplist";
+import Util from "../util/util";
+import XML from "../util/xml";
 import Metadata from "./metadata";
 import ServerFile from "./serverfile";
 import CaseFile from "./serverfile/casefile";
