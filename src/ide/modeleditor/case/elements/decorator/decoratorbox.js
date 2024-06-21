@@ -1,4 +1,7 @@
-class DecoratorBox {
+import PlanItemView from "../planitemview";
+import Decorator, { DECORATORFROMBOTTOM, DECORATORSIZE } from "./decorator";
+
+export default class DecoratorBox {
     /**
      * 
      * @param {PlanItemView} view 
@@ -51,64 +54,5 @@ class DecoratorBox {
 
         //x position in middle
         decoratorBox.attr('transform', 'translate(' + this.decoratorsLeft + ')');
-    }
-}
-
-class StageDecoratorBox extends DecoratorBox {
-    /**
-     * @param {StageView} view 
-     */
-    constructor(view) {
-        super(view);
-        this.view = view;
-        this.decorators = [
-            new ManualActivationRuleDecorator(this, view),
-            new RequiredRuleDecorator(this, view),
-            new MinusDecorator(this, view),
-            new AutoCompleteDecorator(this, view),
-            new RepetitionRuleDecorator(this, view)
-        ];
-    }
-}
-
-class TaskDecoratorBox extends DecoratorBox {
-    /**
-     * @param {TaskView} view 
-     */
-    constructor(view) {
-        super(view);
-        this.view = view;
-        this.decorators = [
-            new ManualActivationRuleDecorator(this, view),
-            new RequiredRuleDecorator(this, view),
-            new RepetitionRuleDecorator(this, view)
-        ];
-    }
-}
-
-class MilestoneDecoratorBox extends DecoratorBox {
-    /**
-     * @param {MilestoneView} view 
-     */
-    constructor(view) {
-        super(view);
-        this.view = view;
-        this.decorators = [
-            new RequiredRuleDecorator(this, view),
-            new RepetitionRuleDecorator(this, view)
-        ];
-    }
-}
-
-class CasePlanDecoratorBox extends StageDecoratorBox {
-    /**
-     * @param {CasePlanView} view 
-     */
-    constructor(view) {
-        super(view);
-        this.view = view;
-        this.decorators = [
-            new AutoCompleteDecorator(this, view)
-        ];
     }
 }
