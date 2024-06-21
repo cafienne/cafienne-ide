@@ -1,6 +1,9 @@
-const STARTCASEMODEL_TAG = 'cafienne:start-case-model';
+import XML from "../../../util/xml";
+import Dimensions from "../dimensions/dimensions";
+import CMMNExtensionDefinition from "../extensions/cmmnextensiondefinition";
+import ModelDefinition from "../modeldefinition";
 
-class CaseDefinition extends ModelDefinition {
+export default class CaseDefinition extends ModelDefinition {
     /**
      * Imports an XML element and parses it into a in-memory definition structure.
      * @param {CaseFile} file
@@ -173,4 +176,4 @@ class StartCaseSchemaDefinition extends CMMNExtensionDefinition {
     }
 }
 
-StartCaseSchemaDefinition.TAG = STARTCASEMODEL_TAG;
+StartCaseSchemaDefinition.TAG = 'cafienne:start-case-model';

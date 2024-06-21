@@ -50,6 +50,7 @@ import ValidateForm from '../validate/validateform';
 import Validator from '../validate/validator';
 import ClassicScripts from './classicscripts';
 import TextAnnotationDefinition from '../repository/definition/artifact/textannotation';
+import CaseDefinition from '../repository/definition/cmmn/casedefinition';
 
 const pointers = [
     // Util
@@ -79,6 +80,8 @@ const pointers = [
     CafienneImplementationDefinition,
     TextAnnotationDefinition,
     
+    CaseDefinition,
+
     Dimensions,
     Edge,
     ShapeDefinition,
