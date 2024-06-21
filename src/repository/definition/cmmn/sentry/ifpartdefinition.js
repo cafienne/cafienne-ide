@@ -1,4 +1,6 @@
-class IfPartDefinition extends ConstraintDefinition {
+import ConstraintDefinition from "../caseplan/constraintdefinition";
+
+export default class IfPartDefinition extends ConstraintDefinition {
     constructor(importNode, caseDefinition, parent) {
         super(importNode, caseDefinition, parent);
     }
