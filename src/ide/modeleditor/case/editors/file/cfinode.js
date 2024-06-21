@@ -1,4 +1,8 @@
-class CFINode {
+import CaseFileItemCollection from "../../../../../repository/definition/cmmn/casefile/casefileitemcollection";
+import CaseFileItemDef from "../../../../../repository/definition/cmmn/casefile/casefileitemdef";
+import CaseFileItemsEditor, { NEWDEF } from "../casefileitemseditor";
+
+export default class CFINode {
     /**
      * 
      * @param {CaseFileItemsEditor} editor 

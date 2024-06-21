@@ -1,6 +1,8 @@
-﻿'use strict';
+﻿import CodeMirrorConfig from "../../../../util/codemirrorconfig";
+import StandardForm from "../../../editors/standardform";
+import CaseModelEditor from "../casemodeleditor";
 
-class StartCaseEditor extends StandardForm {
+export default class StartCaseEditor extends StandardForm {
     /**
      * Editor for the content of the extension element <start-case-schema>
      * @param {CaseModelEditor} editor 

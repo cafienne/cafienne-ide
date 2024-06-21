@@ -1,11 +1,13 @@
-﻿'use strict';
+﻿import CodeMirrorConfig from "../../../../util/codemirrorconfig";
+import StandardForm from "../../../editors/standardform";
+import CaseModelEditor from "../casemodeleditor";
 
-/**
- * This class implements the logic to call the repository REST service to deploy a CMMN model.
- *
- * @constructor
- */
-class Deploy extends StandardForm {
+export default class Deploy extends StandardForm {
+    /**
+     * 
+     * This class implements the logic to call the repository REST service to deploy a CMMN model.
+     * @param {CaseModelEditor} editor 
+     */
     constructor(editor) {
         super(editor, 'Deploy CMMN Model - ' + editor.case.name, 'deployform');
     }

@@ -1,4 +1,6 @@
-class ParameterDeleter {
+import { ParameterRow } from "./caseparameterseditor";
+
+export default class ParameterDeleter {
     static get label() {
         return '';
     }

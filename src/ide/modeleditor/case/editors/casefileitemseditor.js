@@ -1,6 +1,11 @@
-﻿const NEWDEF = '__new__';
+﻿import CaseFileItemDef from "../../../../repository/definition/cmmn/casefile/casefileitemdef";
+import Util from "../../../../util/util";
+import CFINode from "./file/cfinode";
+import CFISelector from "./file/cfiselector";
 
-class CaseFileItemsEditor {
+export const NEWDEF = '__new__';
+
+export default class CaseFileItemsEditor {
     /**
      * Renders the CaseFile definition through CFINode
      * @param {CaseView} cs 
