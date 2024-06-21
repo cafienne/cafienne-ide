@@ -2,6 +2,7 @@ import PlanItem from "../../../../repository/definition/cmmn/caseplan/planitem";
 import HumanTaskDefinition from "../../../../repository/definition/cmmn/caseplan/task/humantaskdefinition";
 import CMMNElementDefinition from "../../../../repository/definition/cmmnelementdefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+import PreviewTaskForm from "../editors/task/previewtaskform";
 import StageView from "./stageview";
 import TaskView from "./taskview";
 

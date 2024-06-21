@@ -1,4 +1,9 @@
-class PreviewTaskForm extends StandardForm {
+import Util from "../../../../../util/util";
+import StandardForm from "../../../../editors/standardform";
+import ModelEditor from "../../../modeleditor";
+import HumanTaskView from "../../elements/humantaskview";
+
+export default class PreviewTaskForm extends StandardForm {
     /**
      * Editor for the content of the extension element <start-case-schema>
      * @param {ModelEditor} editor

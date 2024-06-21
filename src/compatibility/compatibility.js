@@ -17,6 +17,7 @@ import ColumnRenderer from '../ide/modeleditor/case/editors/tableeditor/columnre
 import RowRenderer from '../ide/modeleditor/case/editors/tableeditor/rowrenderer';
 import TableEditor, { RowEditor } from '../ide/modeleditor/case/editors/tableeditor/tableeditor';
 import TableRenderer from '../ide/modeleditor/case/editors/tableeditor/tablerenderer';
+import BindingRefinementEditor from '../ide/modeleditor/case/editors/task/bindingrefinementeditor';
 import CanvasElement from '../ide/modeleditor/case/elements/canvaselement';
 import CaseFileItemView from '../ide/modeleditor/case/elements/casefileitemview';
 import CasePlanView from '../ide/modeleditor/case/elements/caseplanview';
@@ -210,7 +211,6 @@ const pointers = [
     UserEventDefinition,
     PlanItem,
 
-
     Dimensions,
     Edge,
     ShapeDefinition,
@@ -296,7 +296,7 @@ const pointers = [
     TextAnnotationView,
     TimerEventView,
     UserEventView,
-
+    BindingRefinementEditor,
 
 
 ]
