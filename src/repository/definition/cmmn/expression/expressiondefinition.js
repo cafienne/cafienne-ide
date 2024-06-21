@@ -1,5 +1,6 @@
+import UnnamedCMMNElementDefinition from "../../unnamedcmmnelementdefinition";
 
-class ExpressionDefinition extends UnnamedCMMNElementDefinition {
+export default class ExpressionDefinition extends UnnamedCMMNElementDefinition {
     constructor(importNode, caseDefinition, parent) {
         super(importNode, caseDefinition, parent);
         this.language = this.parseAttribute('language', '');

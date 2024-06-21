@@ -1,5 +1,8 @@
+import CMMNElementDefinition from "../../cmmnelementdefinition";
+import CaseFileItemDef from "../casefile/casefileitemdef";
+import ExpressionDefinition from "../expression/expressiondefinition";
 
-class ParameterDefinition extends CMMNElementDefinition {
+export default class ParameterDefinition extends CMMNElementDefinition {
     constructor(importNode, caseDefinition, parent) {
         super(importNode, caseDefinition, parent);
         this.bindingRef = this.parseAttribute('bindingRef');

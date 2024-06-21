@@ -1,3 +1,9 @@
+import ParameterMappingDefinition from "@repository/definition/cmmn/contract/parametermappingdefinition";
+import CafienneImplementationDefinition from "../../../../extensions/cafienneimplementationdefinition";
+import ModelDefinition from "../../../../modeldefinition";
+import HumanTaskDefinition from "../humantaskdefinition";
+import AssignmentDefinition from "./assignmentdefinition";
+import DueDateDefinition from "./duedatedefinition";
 
 class CafienneWorkflowDefinition extends CafienneImplementationDefinition {
     /**

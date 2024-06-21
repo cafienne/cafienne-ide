@@ -27,6 +27,8 @@ import CaseFileItemDef from '../repository/definition/cmmn/casefile/casefileitem
 import CaseRoleDefinition from '../repository/definition/cmmn/caseteam/caseroledefinition';
 import CaseRoleReference from '../repository/definition/cmmn/caseteam/caserolereference';
 import CaseTeamDefinition from '../repository/definition/cmmn/caseteam/caseteamdefinition';
+import ParameterDefinition from '../repository/definition/cmmn/contract/parameterdefinition';
+import ExpressionDefinition from '../repository/definition/cmmn/expression/expressiondefinition';
 import CMMNDocumentationDefinition from '../repository/definition/cmmndocumentationdefinition';
 import CMMNElementDefinition from '../repository/definition/cmmnelementdefinition';
 import Dimensions from '../repository/definition/dimensions/dimensions';
@@ -57,6 +59,9 @@ import XML from '../util/xml';
 import ValidateForm from '../validate/validateform';
 import Validator from '../validate/validator';
 import ClassicScripts from './classicscripts';
+import InputMappingDefinition from '@repository/definition/cmmn/contract/inputmappingdefinition';
+import OutputMappingDefinition from '@repository/definition/cmmn/contract/outputmappingdefinition';
+import ParameterMappingDefinition from '@repository/definition/cmmn/contract/parametermappingdefinition';
 
 const pointers = [
     // Util
@@ -85,6 +90,10 @@ const pointers = [
     CMMNExtensionDefinition,
     CafienneImplementationDefinition,
     TextAnnotationDefinition,
+
+    ParameterMappingDefinition,
+    InputMappingDefinition,
+    OutputMappingDefinition,
     
     CaseDefinition,
     CaseFileItemCollection,
@@ -93,6 +102,9 @@ const pointers = [
     CaseTeamDefinition,
     CaseRoleDefinition,
     CaseRoleReference,
+
+    ExpressionDefinition,
+    ParameterDefinition,
 
     Dimensions,
     Edge,

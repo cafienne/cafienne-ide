@@ -1,4 +1,10 @@
-class TaskDefinition extends TaskStageDefinition {
+import InputMappingDefinition from "../../contract/inputmappingdefinition";
+import OutputMappingDefinition from "../../contract/outputmappingdefinition";
+import ParameterDefinition from "../../contract/parameterdefinition";
+import ParameterMappingDefinition from "../../contract/parametermappingdefinition";
+import { TaskStageDefinition } from "../planitemdefinitiondefinition";
+
+export default class TaskDefinition extends TaskStageDefinition {
     constructor(importNode, caseDefinition, parent) {
         super(importNode, caseDefinition, parent);
         this.isBlocking = this.parseBooleanAttribute('isBlocking', true);
