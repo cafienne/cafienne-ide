@@ -17,14 +17,20 @@ import Splitter from '../ide/splitter/splitter';
 import SplitterSettings from '../ide/splitter/splittersettings';
 import TopSplitter from '../ide/splitter/topsplitter';
 import VerticalSplitter from '../ide/splitter/verticalsplitter';
+import TextAnnotationDefinition from '../repository/definition/artifact/textannotation';
 import CaseFileDefinitionDefinition, { UNKNOWN, UNKNOWN_URI, UNSPECIFIED, UNSPECIFIED_URI, XMLELEMENT, XMLELEMENT_URI } from '../repository/definition/cfid/casefileitemdefinitiondefinition';
 import PropertyDefinition from '../repository/definition/cfid/propertydefinition';
+import CaseDefinition from '../repository/definition/cmmn/casedefinition';
+import CaseFileDefinition from '../repository/definition/cmmn/casefile/casefiledefinition';
+import CaseFileItemCollection from '../repository/definition/cmmn/casefile/casefileitemcollection';
+import CaseFileItemDef from '../repository/definition/cmmn/casefile/casefileitemdef';
 import CMMNDocumentationDefinition from '../repository/definition/cmmndocumentationdefinition';
 import CMMNElementDefinition from '../repository/definition/cmmnelementdefinition';
 import Dimensions from '../repository/definition/dimensions/dimensions';
 import Edge from '../repository/definition/dimensions/edge';
 import ShapeDefinition from '../repository/definition/dimensions/shape';
 import Tags from '../repository/definition/dimensions/tags';
+import ElementDefinition from '../repository/definition/elementdefinition';
 import CafienneImplementationDefinition from '../repository/definition/extensions/cafienneimplementationdefinition';
 import CMMNExtensionDefinition from '../repository/definition/extensions/cmmnextensiondefinition';
 import HumanTaskModelDefinition from '../repository/definition/humantask/humantaskmodeldefinition';
@@ -34,7 +40,6 @@ import ReferableElementDefinition from '../repository/definition/referableelemen
 import TypeCounter from '../repository/definition/typecounter';
 import UnnamedCMMNElementDefinition from '../repository/definition/unnamedcmmnelementdefinition';
 import { CAFIENNE_NAMESPACE, CAFIENNE_PREFIX, EXTENSIONELEMENTS, IMPLEMENTATION_TAG } from '../repository/definition/xmlserializable';
-import ElementDefinition from '../repository/definition/elementdefinition';
 import CaseFile from '../repository/serverfile/casefile';
 import CFIDFile from '../repository/serverfile/cfidfile';
 import DimensionsFile from '../repository/serverfile/dimensionsfile';
@@ -49,8 +54,6 @@ import XML from '../util/xml';
 import ValidateForm from '../validate/validateform';
 import Validator from '../validate/validator';
 import ClassicScripts from './classicscripts';
-import TextAnnotationDefinition from '../repository/definition/artifact/textannotation';
-import CaseDefinition from '../repository/definition/cmmn/casedefinition';
 
 const pointers = [
     // Util
@@ -81,6 +84,9 @@ const pointers = [
     TextAnnotationDefinition,
     
     CaseDefinition,
+    CaseFileItemCollection,
+    CaseFileItemDef,
+    CaseFileDefinition,
 
     Dimensions,
     Edge,

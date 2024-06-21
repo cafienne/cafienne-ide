@@ -1,4 +1,7 @@
-class CaseFileItemDef extends CaseFileItemCollection {
+import CaseDefinition from "../casedefinition";
+import CaseFileItemCollection from "./casefileitemcollection";
+
+export default class CaseFileItemDef extends CaseFileItemCollection {
     /**
      * @returns {Array<String>} List of the possible events/transitions on a case file item
      */
@@ -12,11 +15,11 @@ class CaseFileItemDef extends CaseFileItemCollection {
 
     /**
      * 
-     * @param {CaseDefinition} parent 
+     * @param {CaseDefinition} caseDefinition 
      * @param {String} id
      */
-    static createEmptyDefinition(parent, id = undefined) {
-        const definition = parent.createDefinition(CaseFileItemDef, id, '');
+    static createEmptyDefinition(caseDefinition, id = undefined) {
+        const definition = caseDefinition.createDefinition(CaseFileItemDef, id, '');
         definition.isEmpty = true;        
         return definition;
     }
