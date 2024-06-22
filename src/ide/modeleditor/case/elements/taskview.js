@@ -4,6 +4,7 @@ import ShapeDefinition from "../../../../repository/definition/dimensions/shape"
 import ServerFile from "../../../../repository/serverfile";
 import DragData from "../../../dragdata";
 import { TaskDecoratorBox } from "./decorator/box/taskdecoratorbox";
+import TaskProperties from "./properties/taskproperties";
 import TaskStageView from "./taskstageview";
 
 export default class TaskView extends TaskStageView {

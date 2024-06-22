@@ -1,4 +1,8 @@
-class TaskProperties extends TaskStageProperties {
+import TaskStageProperties, { DISCRETIONARYTASK_IMG } from "./taskstageproperties";
+
+const ISBLOCKING_IMG = 'images/isblocking_32.png';
+
+export default class TaskProperties extends TaskStageProperties {
     /**
      * 
      * @param {TaskView} task 

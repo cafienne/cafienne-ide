@@ -3,6 +3,7 @@ import PlanItem from "../../../../repository/definition/cmmn/caseplan/planitem";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import MilestoneDecoratorBox from "./decorator/box/milestonedecoratorbox";
 import PlanItemView from "./planitemview";
+import MilestoneProperties from "./properties/milestoneproperties";
 import StageView from "./stageview";
 
 export default class MilestoneView extends PlanItemView {

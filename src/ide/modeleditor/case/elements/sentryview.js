@@ -5,6 +5,7 @@ import CaseFileItemView from "./casefileitemview";
 import CMMNElementView from "./cmmnelementview";
 import Connector from "./connector";
 import PlanItemView from "./planitemview";
+import SentryProperties from "./properties/sentryproperties";
 
 export default class SentryView extends CMMNElementView {
     /**

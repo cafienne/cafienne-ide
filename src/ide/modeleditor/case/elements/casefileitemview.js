@@ -3,6 +3,7 @@ import CaseFileItemDef from "../../../../repository/definition/cmmn/casefile/cas
 import CMMNDocumentationDefinition from "../../../../repository/definition/cmmndocumentationdefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import CMMNElementView from "./cmmnelementview";
+import CaseFileItemProperties from "./properties/casefileitemproperties";
 import StageView from "./stageview";
 
 export default class CaseFileItemView extends CMMNElementView {

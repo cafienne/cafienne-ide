@@ -1,4 +1,12 @@
-class PlanItemProperties extends Properties {
+import ConstraintDefinition from "../../../../../repository/definition/cmmn/caseplan/constraintdefinition";
+import CaseRoleReference from "../../../../../repository/definition/cmmn/caseteam/caserolereference";
+import { MANUALACTIVATION_IMG } from "../decorator/items/manualactivationrule";
+import { REPETITION_IMG } from "../decorator/items/repetitionrule";
+import { REQUIRED_IMG } from "../decorator/items/requiredrule";
+import PlanItemView from "../planitemview";
+import Properties from "./properties";
+
+export default class PlanItemProperties extends Properties {
     /**
      * 
      * @param {PlanItemView} planItem 

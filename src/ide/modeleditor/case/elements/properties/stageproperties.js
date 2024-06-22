@@ -1,4 +1,9 @@
-class StageProperties extends TaskStageProperties {
+import PlanItem from "../../../../../repository/definition/cmmn/caseplan/planitem";
+import { AUTOCOMPLETE_IMG } from "../decorator/items/autocomplete";
+import StageView from "../stageview";
+import TaskStageProperties, { DISCRETIONARYTASK_IMG } from "./taskstageproperties";
+
+export default class StageProperties extends TaskStageProperties {
     /**
      * @param {StageView} stage 
      */
@@ -17,7 +22,7 @@ class StageProperties extends TaskStageProperties {
         this.addManualActivationRuleBlock();
         this.addSeparator();
         this.addAutoComplete();
-        this.addDiscretionaryBlock(DISCRETIONARYTASK_IMG, 'Discretionary StageView');
+        this.addDiscretionaryBlock(DISCRETIONARYTASK_IMG, 'Discretionary Stage');
         this.addSeparator();
         this.addPlanningTableField();
         this.addSeparator();

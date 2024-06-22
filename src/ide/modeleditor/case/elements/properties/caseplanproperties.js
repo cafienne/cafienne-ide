@@ -1,10 +1,13 @@
-class CasePlanProperties extends StageProperties {
+import CasePlanView from "../caseplanview";
+import StageProperties from "./stageproperties";
+
+export default class CasePlanProperties extends StageProperties {
     /**
      * @param {CasePlanView} casePlan 
      */
     constructor(casePlan) {
         super(casePlan);
-        this.cmmnElement = casePlan;
+        this.cmmnElement = /** @type {CasePlanView} */ (casePlan);
     }
 
     renderData() {

@@ -2,7 +2,7 @@ import PlanItemView from "../../planitemview";
 import DecoratorBox from "../decoratorbox";
 import RuleDecorator from "./rule";
 
-const REQUIRED_IMG = 'images/requireddecorator_32.png';
+export const REQUIRED_IMG = 'images/requireddecorator_32.png';
 
 export default class RequiredRuleDecorator extends RuleDecorator {
     /**

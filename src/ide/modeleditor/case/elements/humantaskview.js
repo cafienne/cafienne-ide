@@ -3,6 +3,8 @@ import HumanTaskDefinition from "../../../../repository/definition/cmmn/caseplan
 import CMMNElementDefinition from "../../../../repository/definition/cmmnelementdefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import PreviewTaskForm from "../editors/task/previewtaskform";
+import HumanTaskProperties from "./properties/humantaskproperties";
+import WorkflowProperties from "./properties/workflowproperties";
 import StageView from "./stageview";
 import TaskView from "./taskview";
 

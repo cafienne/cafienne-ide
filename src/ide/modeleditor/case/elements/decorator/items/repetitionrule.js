@@ -2,7 +2,7 @@ import PlanItemView from "../../planitemview";
 import DecoratorBox from "../decoratorbox";
 import RuleDecorator from "./rule";
 
-const REPETITION_IMG = 'images/repetitiondecorator_32.png';
+export const REPETITION_IMG = 'images/repetitiondecorator_32.png';
 
 export default class RepetitionRuleDecorator extends RuleDecorator {
     /**

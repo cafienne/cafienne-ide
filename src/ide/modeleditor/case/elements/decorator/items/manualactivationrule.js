@@ -2,7 +2,7 @@ import PlanItemView from "../../planitemview";
 import DecoratorBox from "../decoratorbox";
 import RuleDecorator from "./rule";
 
-const MANUALACTIVATION_IMG = 'images/manualactivationdecorator_32.png';
+export const MANUALACTIVATION_IMG = 'images/manualactivationdecorator_32.png';
 
 export default class ManualActivationRuleDecorator extends RuleDecorator {
     /**

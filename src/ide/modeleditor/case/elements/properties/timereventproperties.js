@@ -1,4 +1,10 @@
-class TimerEventProperties extends PlanItemProperties {
+import CasePlanDefinition from "../../../../../repository/definition/cmmn/caseplan/caseplandefinition";
+import PlanItem from "../../../../../repository/definition/cmmn/caseplan/planitem";
+import { CaseFileItemStartTrigger, PlanItemStartTrigger } from "../../../../../repository/definition/cmmn/caseplan/timereventdefinition";
+import TimerEventView from "../timereventview";
+import PlanItemProperties from "./planitemproperties";
+
+export default class TimerEventProperties extends PlanItemProperties {
     /**
      * 
      * @param {TimerEventView} timerEvent 

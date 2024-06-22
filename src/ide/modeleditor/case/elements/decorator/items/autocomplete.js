@@ -2,7 +2,7 @@ import StageView from "../../stageview";
 import StageDecoratorBox from "../box/stagedecoratorbox";
 import Decorator from "../decorator";
 
-const AUTOCOMPLETE_IMG = 'images/autocompletedecorator_32.png';
+export const AUTOCOMPLETE_IMG = 'images/autocompletedecorator_32.png';
 
 export default class AutoCompleteDecorator extends Decorator {
     /**

@@ -1,4 +1,11 @@
-class TaskStageProperties extends PlanItemProperties {
+import Util from "../../../../../util/util";
+import { EXPANDEDPLANNINGTABLE_IMG } from "../planningtableview";
+import TaskStageView from "../taskstageview";
+import PlanItemProperties from "./planitemproperties";
+
+export const DISCRETIONARYTASK_IMG = 'images/discretionary_task_32.png';
+
+export default class TaskStageProperties extends PlanItemProperties {
     /**
      * @param {TaskStageView} taskStage 
      */

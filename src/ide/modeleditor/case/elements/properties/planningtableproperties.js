@@ -1,4 +1,8 @@
-class PlanningTableProperties extends Properties {
+import { ApplicabilityRuleDefinition } from "../../../../../repository/definition/cmmn/caseplan/planningtabledefinition";
+import PlanningTableView from "../planningtableview";
+import Properties from "./properties";
+
+export default class PlanningTableProperties extends Properties {
     /**
      * @param {PlanningTableView} planningTable 
      */

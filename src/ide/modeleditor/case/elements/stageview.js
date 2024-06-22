@@ -16,6 +16,7 @@ import HumanTaskView from "./humantaskview";
 import MilestoneView from "./milestoneview";
 import PlanItemView from "./planitemview";
 import ProcessTaskView from "./processtaskview";
+import StageProperties from "./properties/stageproperties";
 import TaskStageView from "./taskstageview";
 import TaskView from "./taskview";
 import TextAnnotationView from "./textannotationview";
