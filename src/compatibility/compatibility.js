@@ -136,6 +136,17 @@ import ClassicScripts from './classicscripts';
 import InputMappingDefinition from '@repository/definition/cmmn/contract/inputmappingdefinition';
 import OutputMappingDefinition from '@repository/definition/cmmn/contract/outputmappingdefinition';
 import ParameterMappingDefinition from '@repository/definition/cmmn/contract/parametermappingdefinition';
+import Halo from '@ide/modeleditor/case/elements/halo/halo';
+import HaloItem from '@ide/modeleditor/case/elements/halo/item/haloitem';
+import HaloBar from '@ide/modeleditor/case/elements/halo/halobar';
+import HaloClickItem, { DeleteHaloItem, InputParametersHaloItem, InvalidPreviewTaskFormHaloItem, NewTaskImplemenationHaloItem, OutputParametersHaloItem, PreviewTaskFormHaloItem, PropertiesHaloItem, WorkflowHaloItem, ZoomTaskImplementationHaloItem } from '@ide/modeleditor/case/elements/halo/item/haloclickitems';
+import HaloDragItem, { ConnectorHaloItem, EntryCriterionHaloItem, ExitCriterionHaloItem, ReactivateCriterionHaloItem, SentryHaloItem } from '@ide/modeleditor/case/elements/halo/item/halodragitems';
+import CaseFileItemHalo from '@ide/modeleditor/case/elements/halo/casefileitemhalo';
+import CasePlanHalo from '@ide/modeleditor/case/elements/halo/caseplanhalo';
+import PlanItemHalo from '@ide/modeleditor/case/elements/halo/planitemhalo';
+import PlanningTableHalo from '@ide/modeleditor/case/elements/halo/planningtablehalo';
+import { EntryCriterionHalo, ExitCriterionHalo, ReactivateCriterionHalo } from '@ide/modeleditor/case/elements/halo/sentryhalo';
+import TaskHalo, { HumanTaskHalo } from '@ide/modeleditor/case/elements/halo/taskhalo';
 
 const pointers = [
     // Util
@@ -298,6 +309,16 @@ const pointers = [
     UserEventView,
     BindingRefinementEditor,
 
+    Halo,
+    CaseFileItemHalo,
+    CasePlanHalo,
+    PlanItemHalo,
+    PlanningTableHalo,
+    EntryCriterionHalo,
+    ReactivateCriterionHalo,
+    ExitCriterionHalo,
+    TaskHalo,
+    HumanTaskHalo,
 
 ]
 

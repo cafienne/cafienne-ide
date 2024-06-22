@@ -1,4 +1,9 @@
-class Halo {
+import CMMNElementView from "../cmmnelementview";
+import HaloBar from "./halobar";
+import { DeleteHaloItem, PropertiesHaloItem } from "./item/haloclickitems";
+import { ConnectorHaloItem } from "./item/halodragitems";
+
+export default class Halo {
     /**
      * Creates a halo for the cmmn element.
      * The content of the halo need not be set it in the constructor, but rather

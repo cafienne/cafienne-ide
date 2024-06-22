@@ -1,4 +1,8 @@
-class PlanningTableHalo extends Halo {
+import PlanningTableView from "../planningtableview";
+import Halo from "./halo";
+import { DeleteHaloItem, PropertiesHaloItem } from "./item/haloclickitems";
+
+export default class PlanningTableHalo extends Halo {
     /**
      * Create the halo for the planning table.
      * @param {PlanningTableView} element 

@@ -1,12 +1,14 @@
+import Halo from "../halo";
+import HaloItem from "./haloitem";
 
-class HaloClickItem extends HaloItem {
+export default class HaloClickItem extends HaloItem {
     constructor(halo, imgURL, title, clickHandler, html) {
         super(halo, imgURL, title, html);
         this.html.on('click', e => clickHandler(e));
     }
 }
 
-class PropertiesHaloItem extends HaloClickItem {
+export class PropertiesHaloItem extends HaloClickItem {
     /**
      * Returns the default bar in which this item appears
      * @param {Halo} halo 
@@ -20,7 +22,7 @@ class PropertiesHaloItem extends HaloClickItem {
     }
 }
 
-class DeleteHaloItem extends HaloClickItem {
+export class DeleteHaloItem extends HaloClickItem {
     /**
      * Returns the default bar in which this item appears
      * @param {Halo} halo 
@@ -34,7 +36,7 @@ class DeleteHaloItem extends HaloClickItem {
     }
 }
 
-class InputParametersHaloItem extends HaloClickItem {
+export class InputParametersHaloItem extends HaloClickItem {
     /**
      * Returns the default bar in which this item appears
      * @param {Halo} halo 
@@ -48,7 +50,7 @@ class InputParametersHaloItem extends HaloClickItem {
     }
 }
 
-class OutputParametersHaloItem extends HaloClickItem {
+export class OutputParametersHaloItem extends HaloClickItem {
     /**
      * Returns the default bar in which this item appears
      * @param {Halo} halo 
@@ -62,7 +64,7 @@ class OutputParametersHaloItem extends HaloClickItem {
     }
 }
 
-class ZoomTaskImplementationHaloItem extends HaloClickItem {
+export class ZoomTaskImplementationHaloItem extends HaloClickItem {
     /**
      * Returns the default bar in which this item appears
      * @param {Halo} halo 
@@ -79,7 +81,7 @@ class ZoomTaskImplementationHaloItem extends HaloClickItem {
         super(halo, imgURL, title, e => window.location.hash = implementationRef, html);
     }
 }
-class PreviewTaskFormHaloItem extends HaloClickItem {
+export class PreviewTaskFormHaloItem extends HaloClickItem {
     /**
      * Returns the default bar in which this item appears
      * @param {Halo} halo 
@@ -92,7 +94,7 @@ class PreviewTaskFormHaloItem extends HaloClickItem {
         super(halo, 'images/preview_32.png', 'Preview Task Form', e => this.element.previewTaskForm());
     }
 }
-class InvalidPreviewTaskFormHaloItem extends HaloClickItem {
+export class InvalidPreviewTaskFormHaloItem extends HaloClickItem {
     /**
      * Returns the default bar in which this item appears
      * @param {Halo} halo 
@@ -108,7 +110,7 @@ class InvalidPreviewTaskFormHaloItem extends HaloClickItem {
     }
 }
 
-class NewTaskImplemenationHaloItem extends HaloClickItem {
+export class NewTaskImplemenationHaloItem extends HaloClickItem {
     /**
      * Returns the default bar in which this item appears
      * @param {Halo} halo 
@@ -123,7 +125,7 @@ class NewTaskImplemenationHaloItem extends HaloClickItem {
 }
 
 
-class WorkflowHaloItem extends HaloClickItem {
+export class WorkflowHaloItem extends HaloClickItem {
     /**
      * Returns the default bar in which this item appears
      * @param {Halo} halo 

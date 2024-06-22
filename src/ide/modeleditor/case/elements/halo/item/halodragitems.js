@@ -1,5 +1,11 @@
+import CasePlanView from "../../caseplanview";
+import { TemporaryConnector } from "../../connector";
+import EventListenerView from "../../eventlistenerview";
+import { EntryCriterionView, ExitCriterionView, ReactivateCriterionView } from "../../sentryview";
+import Halo from "../halo";
+import HaloItem from "./haloitem";
 
-class HaloDragItem extends HaloItem {
+export default class HaloDragItem extends HaloItem {
     /**
      * 
      * @param {Halo} halo 
@@ -83,7 +89,7 @@ class HaloDragItem extends HaloItem {
     }
 }
 
-class ConnectorHaloItem extends HaloDragItem {
+export class ConnectorHaloItem extends HaloDragItem {
     /**
      * Returns the default bar in which this item appears
      * @param {Halo} halo 
@@ -116,7 +122,7 @@ class ConnectorHaloItem extends HaloDragItem {
     }
 }
 
-class SentryHaloItem extends HaloDragItem {
+export class SentryHaloItem extends HaloDragItem {
     /**
      * Returns the default bar in which this item appears
      * @param {Halo} halo 
@@ -174,7 +180,7 @@ class SentryHaloItem extends HaloDragItem {
     }
 }
 
-class EntryCriterionHaloItem extends SentryHaloItem {
+export class EntryCriterionHaloItem extends SentryHaloItem {
     constructor(halo) {
         super(halo, EntryCriterionView.smallImage, EntryCriterionView.typeDescription);
     }
@@ -184,7 +190,7 @@ class EntryCriterionHaloItem extends SentryHaloItem {
     }
 }
 
-class ReactivateCriterionHaloItem extends SentryHaloItem {
+export class ReactivateCriterionHaloItem extends SentryHaloItem {
     constructor(halo) {
         super(halo, ReactivateCriterionView.smallImage, ReactivateCriterionView.typeDescription);
     }
@@ -194,7 +200,7 @@ class ReactivateCriterionHaloItem extends SentryHaloItem {
     }
 }
 
-class ExitCriterionHaloItem extends SentryHaloItem {
+export class ExitCriterionHaloItem extends SentryHaloItem {
     constructor(halo) {
         super(halo, ExitCriterionView.smallImage, ExitCriterionView.typeDescription);
     }

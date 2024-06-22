@@ -5,6 +5,8 @@ import CasePlanDecoratorBox from "./decorator/box/caseplandecoratorbox";
 import CasePlanProperties from "./properties/caseplanproperties";
 import { ExitCriterionView } from "./sentryview";
 import StageView from "./stageview";
+// import CasePlanHalo from "./halo/caseplanhalo";
+// BIG TODO HERE
 
 const CPM_TAB_HEIGHT = 22;
 

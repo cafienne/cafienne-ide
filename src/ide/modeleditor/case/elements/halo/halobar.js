@@ -1,5 +1,7 @@
+import Halo from "./halo";
+import HaloItem from "./item/haloitem";
 
-class HaloBar {
+export default class HaloBar {
     /**
      * @param {Halo} halo 
      * @param {JQuery<HTMLElement>} html 

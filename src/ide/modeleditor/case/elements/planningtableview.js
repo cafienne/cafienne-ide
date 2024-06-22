@@ -3,6 +3,8 @@ import ShapeDefinition from "../../../../repository/definition/dimensions/shape"
 import CMMNElementView from "./cmmnelementview";
 import PlanningTableProperties from "./properties/planningtableproperties";
 import TaskStageView from "./taskstageview";
+// import PlanningTableHalo from "./halo/planningtablehalo";
+// BIG TODO HERE
 
 export const EXPANDEDPLANNINGTABLE_IMG = 'images/expandedplanningtable_32.png';
 

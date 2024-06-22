@@ -6,6 +6,8 @@ import DragData from "../../../dragdata";
 import { TaskDecoratorBox } from "./decorator/box/taskdecoratorbox";
 import TaskProperties from "./properties/taskproperties";
 import TaskStageView from "./taskstageview";
+// import TaskHalo from "./halo/taskhalo";
+// BIG TODO HERE
 
 export default class TaskView extends TaskStageView {
 

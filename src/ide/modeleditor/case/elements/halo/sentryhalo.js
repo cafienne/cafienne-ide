@@ -1,4 +1,9 @@
-class EntryCriterionHalo extends Halo {
+import { EntryCriterionView, ExitCriterionView, ReactivateCriterionView } from "../sentryview";
+import Halo from "./halo";
+import { DeleteHaloItem, PropertiesHaloItem } from "./item/haloclickitems";
+import { ConnectorHaloItem, EntryCriterionHaloItem, ExitCriterionHaloItem } from "./item/halodragitems";
+
+export class EntryCriterionHalo extends Halo {
     /**
      * Create the halo for the entry criterion.
      * @param {EntryCriterionView} element 
@@ -16,10 +21,10 @@ class EntryCriterionHalo extends Halo {
     }
 }
 
-class ReactivateCriterionHalo extends Halo {
+export class ReactivateCriterionHalo extends Halo {
     /**
      * Create the halo for the entry criterion.
-     * @param {EntryCriterionView} element 
+     * @param {ReactivateCriterionView} element 
      */
     constructor(element) {
         super(element);
@@ -34,7 +39,7 @@ class ReactivateCriterionHalo extends Halo {
     }
 }
 
-class ExitCriterionHalo extends Halo {
+export class ExitCriterionHalo extends Halo {
     /**
      * Create the halo for the exit criterion.
      * @param {ExitCriterionView} element 
