@@ -30,6 +30,12 @@ module.exports = {
     },
     resolve: {
         extensions: ['.tsx', '.ts', '.js', '.html'],
+        alias: {
+            '@util': path.resolve(__dirname, 'src/util'),
+            '@repository': path.resolve(__dirname, 'src/repository'),
+            '@definition': path.resolve(__dirname, 'src/repository/definition'),
+            '@ide': path.resolve(__dirname, 'src/ide'),
+        },
     },
     devtool: 'source-map',
     mode: 'development',
