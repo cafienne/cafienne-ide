@@ -1,25 +1,25 @@
-﻿// import TextAnnotationDefinition from "../../../../repository/definition/artifact/textannotation";
-// import CaseDefinition from "../../../../repository/definition/cmmn/casedefinition";
-// import CaseFileItemDef from "../../../../repository/definition/cmmn/casefile/casefileitemdef";
-// import CMMNElementDefinition from "../../../../repository/definition/cmmnelementdefinition";
-// import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
-// import ValidateForm from "../../../../validate/validateform";
-// import Validator from "../../../../validate/validator";
-// import Debugger from "../../../debugger/debugger";
-// import RightSplitter from "../../../splitter/rightsplitter";
-// import CaseModelEditor from "../casemodeleditor";
-// import CaseFileItemsEditor from "../editors/casefileitemseditor";
-// import CaseSourceEditor from "../editors/casesourceeditor";
-// import Deploy from "../editors/deploy";
-// import CaseParametersEditor from "../editors/parameters/caseparameterseditor";
-// import RolesEditor from "../editors/roleseditor";
-// import StartCaseEditor from "../editors/startcaseeditor";
-// import ShapeBox from "../shapebox";
-// import UndoRedoBox from "../undoredo/undoredobox";
+﻿import TextAnnotationDefinition from "@definition/artifact/textannotation";
+import CaseDefinition from "@definition/cmmn/casedefinition";
+import CaseFileItemDef from "@definition/cmmn/casefile/casefileitemdef";
+import CMMNElementDefinition from "@definition/cmmnelementdefinition";
+import ShapeDefinition from "@definition/dimensions/shape";
+import ValidateForm from "../../../../validate/validateform";
+import Validator from "../../../../validate/validator";
+import Debugger from "../../../debugger/debugger";
+import RightSplitter from "../../../splitter/rightsplitter";
+import CaseModelEditor from "../casemodeleditor";
+import CaseFileItemsEditor from "../editors/casefileitemseditor";
+import CaseSourceEditor from "../editors/casesourceeditor";
+import Deploy from "../editors/deploy";
+import CaseParametersEditor from "../editors/parameters/caseparameterseditor";
+import RolesEditor from "../editors/roleseditor";
+import StartCaseEditor from "../editors/startcaseeditor";
+import ShapeBox from "../shapebox";
+import UndoRedoBox from "../undoredo/undoredobox";
 // import CaseFileItemView from "./casefileitemview";
 // import CasePlanView from "./caseplanview";
 // import CaseTaskView from "./casetaskview";
-// import CMMNElementView from "./cmmnelementview";
+import CMMNElementView from "./cmmnelementview";
 // import Connector from "./connector";
 // import HumanTaskView from "./humantaskview";
 // import MilestoneView from "./milestoneview";
@@ -30,6 +30,7 @@
 // import TextAnnotationView from "./textannotationview";
 // import TimerEventView from "./timereventview";
 // import UserEventView from "./usereventview";
+// BIG TODO HERE
 
 export default class CaseView {
     /**
@@ -51,7 +52,7 @@ export default class CaseView {
         this.htmlParent = htmlParent;
 
         this.html = $(
-`<div case="${this.id}">
+            `<div case="${this.id}">
     <div class="casemodeler">
         <div class="basicbox basicform undoredobox"></div>
         <div class="basicbox basicform shapebox"></div>
@@ -84,7 +85,7 @@ export default class CaseView {
         this.undoBox = new UndoRedoBox(this, this.divUndoRedo);
         this.shapeBox = new ShapeBox(this, this.divShapeBox);
         this.splitter = new RightSplitter(this.divCaseModel, '60%', 5);
-        
+
         this.items = /** @type {Array<CMMNElementView>} */ ([]);
         this.connectors = /** @type {Array<Connector>} */ ([]);
 
