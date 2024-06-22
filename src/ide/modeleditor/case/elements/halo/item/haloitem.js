@@ -1,4 +1,6 @@
-class HaloItem {
+import Halo from "../halo";
+
+export default class HaloItem {
     /**
      * 
      * @param {Halo} halo 

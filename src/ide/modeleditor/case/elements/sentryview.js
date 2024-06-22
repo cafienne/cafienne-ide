@@ -6,6 +6,8 @@ import CMMNElementView from "./cmmnelementview";
 import Connector from "./connector";
 import PlanItemView from "./planitemview";
 import SentryProperties from "./properties/sentryproperties";
+// import { EntryCriterionHalo, ExitCriterionHalo, ReactivateCriterionHalo } from "./halo/sentryhalo";
+// BIG TODO HERE
 
 export default class SentryView extends CMMNElementView {
     /**

@@ -5,6 +5,8 @@ import Util from "../../../../util/util";
 import CanvasElement from "./canvaselement";
 import CaseView from "./caseview";
 import Connector from "./connector";
+// import Halo from "./halo/halo";
+// BIG TODO HERE
 
 export default class CMMNElementView extends CanvasElement {
     /**

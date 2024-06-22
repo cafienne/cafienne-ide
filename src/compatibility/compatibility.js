@@ -133,6 +133,17 @@ import XML from '../util/xml';
 import ValidateForm from '../validate/validateform';
 import Validator from '../validate/validator';
 import ClassicScripts from './classicscripts';
+import Halo from '@ide/modeleditor/case/elements/halo/halo';
+import HaloItem from '@ide/modeleditor/case/elements/halo/item/haloitem';
+import HaloBar from '@ide/modeleditor/case/elements/halo/halobar';
+import HaloClickItem, { DeleteHaloItem, InputParametersHaloItem, InvalidPreviewTaskFormHaloItem, NewTaskImplemenationHaloItem, OutputParametersHaloItem, PreviewTaskFormHaloItem, PropertiesHaloItem, WorkflowHaloItem, ZoomTaskImplementationHaloItem } from '@ide/modeleditor/case/elements/halo/item/haloclickitems';
+import HaloDragItem, { ConnectorHaloItem, EntryCriterionHaloItem, ExitCriterionHaloItem, ReactivateCriterionHaloItem, SentryHaloItem } from '@ide/modeleditor/case/elements/halo/item/halodragitems';
+import CaseFileItemHalo from '@ide/modeleditor/case/elements/halo/casefileitemhalo';
+import CasePlanHalo from '@ide/modeleditor/case/elements/halo/caseplanhalo';
+import PlanItemHalo from '@ide/modeleditor/case/elements/halo/planitemhalo';
+import PlanningTableHalo from '@ide/modeleditor/case/elements/halo/planningtablehalo';
+import { EntryCriterionHalo, ExitCriterionHalo, ReactivateCriterionHalo } from '@ide/modeleditor/case/elements/halo/sentryhalo';
+import TaskHalo, { HumanTaskHalo } from '@ide/modeleditor/case/elements/halo/taskhalo';
 
 const pointers = [
     // Util
@@ -291,6 +302,16 @@ const pointers = [
     UserEventView,
     BindingRefinementEditor,
 
+    Halo,
+    CaseFileItemHalo,
+    CasePlanHalo,
+    PlanItemHalo,
+    PlanningTableHalo,
+    EntryCriterionHalo,
+    ReactivateCriterionHalo,
+    ExitCriterionHalo,
+    TaskHalo,
+    HumanTaskHalo,
 
 ]
 

@@ -6,6 +6,8 @@ import CMMNElementView from "./cmmnelementview";
 import DecoratorBox from "./decorator/decoratorbox";
 import PlanItemProperties from "./properties/planitemproperties";
 import { EntryCriterionView, ExitCriterionView, ReactivateCriterionView } from "./sentryview";
+// import PlanItemHalo from "./halo/planitemhalo";
+// BIG TODO HERE
 
 export default class PlanItemView extends CMMNElementView {
     /**

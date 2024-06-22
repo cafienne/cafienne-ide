@@ -1,4 +1,10 @@
-class TaskHalo extends PlanItemHalo {
+import HumanTaskView from "../humantaskview";
+import TaskView from "../taskview";
+import { DeleteHaloItem, InputParametersHaloItem, InvalidPreviewTaskFormHaloItem, NewTaskImplemenationHaloItem, OutputParametersHaloItem, PreviewTaskFormHaloItem, PropertiesHaloItem, WorkflowHaloItem, ZoomTaskImplementationHaloItem } from "./item/haloclickitems";
+import { ConnectorHaloItem, EntryCriterionHaloItem, ExitCriterionHaloItem, ReactivateCriterionHaloItem } from "./item/halodragitems";
+import PlanItemHalo from "./planitemhalo";
+
+export default class TaskHalo extends PlanItemHalo {
     /**
      * Create the halo for the task.
      * @param {TaskView} element 
@@ -18,7 +24,7 @@ class TaskHalo extends PlanItemHalo {
     }
 }
 
-class HumanTaskHalo extends TaskHalo {
+export class HumanTaskHalo extends TaskHalo {
     /**
      * Create the halo for the task.
      * @param {HumanTaskView} element 
@@ -38,7 +44,7 @@ class HumanTaskHalo extends TaskHalo {
             const model = task.planItemDefinition.implementationModel && task.planItemDefinition.implementationModel.taskModel;
             const taskModel = model && model.taskModel || '';
             try {
-                JSON.parse(taskModel)
+                JSON.parse(taskModel);
                 this.addItems(ZoomTaskImplementationHaloItem, InputParametersHaloItem, OutputParametersHaloItem, PreviewTaskFormHaloItem);                
             } catch (error) {
                 this.addItems(ZoomTaskImplementationHaloItem, InputParametersHaloItem, OutputParametersHaloItem, InvalidPreviewTaskFormHaloItem);

@@ -1,4 +1,8 @@
-class CasePlanHalo extends Halo {
+import Halo from "./halo";
+import HaloClickItem, { DeleteHaloItem, PropertiesHaloItem } from "./item/haloclickitems";
+import HaloItem from "./item/haloitem";
+
+export default class CasePlanHalo extends Halo {
     /**
      * Create the halo for the caseplan model. This halo is situated next to the top tab of the case plan model
      * @param {CasePlanView} element 

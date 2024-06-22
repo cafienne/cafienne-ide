@@ -7,6 +7,8 @@ import HumanTaskProperties from "./properties/humantaskproperties";
 import WorkflowProperties from "./properties/workflowproperties";
 import StageView from "./stageview";
 import TaskView from "./taskview";
+// import { HumanTaskHalo } from "./halo/taskhalo";
+// BIG TODO HERE
 
 const BLOCKINGHUMANTASK_IMG = 'images/svg/blockinghumantask.svg';
 const NONBLOCKINGHUMANTASK_IMG = 'images/svg/nonblockinghumantask.svg';
