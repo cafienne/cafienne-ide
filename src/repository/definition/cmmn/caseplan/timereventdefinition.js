@@ -51,13 +51,13 @@ export default class TimerEventDefinition extends EventListenerDefinition {
     }
 }
 
-class PlanItemStartTrigger extends OnPartDefinition {
+export class PlanItemStartTrigger extends OnPartDefinition {
     createExportNode(parentNode) {
         super.createExportNode(parentNode, 'planItemStartTrigger');
     }
 }
 
-class CaseFileItemStartTrigger extends OnPartDefinition {
+export class CaseFileItemStartTrigger extends OnPartDefinition {
     createExportNode(parentNode) {
         super.createExportNode(parentNode, 'caseFileItemStartTrigger');
     }

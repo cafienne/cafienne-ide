@@ -4,6 +4,7 @@ import PlanItemDefinitionDefinition from "../../../../repository/definition/cmmn
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import CMMNElementView from "./cmmnelementview";
 import DecoratorBox from "./decorator/decoratorbox";
+import PlanItemProperties from "./properties/planitemproperties";
 import { EntryCriterionView, ExitCriterionView, ReactivateCriterionView } from "./sentryview";
 
 export default class PlanItemView extends CMMNElementView {

@@ -1,4 +1,14 @@
-class SentryProperties extends Properties {
+import CaseFileItemDef from "@definition/cmmn/casefile/casefileitemdef";
+import CaseFileItemOnPartDefinition from "@definition/cmmn/sentry/casefileitemonpartdefinition";
+import OnPartDefinition from "@definition/cmmn/sentry/onpartdefinition";
+import PlanItemOnPartDefinition from "@definition/cmmn/sentry/planitemonpartdefinition";
+import PlanItem from "@repository/definition/cmmn/caseplan/planitem";
+import Util from "@util/util";
+import Connector from "../connector";
+import SentryView from "../sentryview";
+import Properties from "./properties";
+
+export default class SentryProperties extends Properties {
     /**
      * @param {SentryView} sentry 
      */

@@ -1,4 +1,8 @@
-class Properties extends MovableEditor {
+import Util from "../../../../../util/util";
+import MovableEditor from "../../../../editors/movableeditor";
+import CMMNElementView from "../cmmnelementview";
+
+export default class Properties extends MovableEditor {
     /**
      * Renderer for the properties of the element
      * @param {CMMNElementView} cmmnElement 

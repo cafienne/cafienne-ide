@@ -1,4 +1,9 @@
-class HumanTaskProperties extends TaskProperties {
+import HumanTaskDefinition from "../../../../../repository/definition/cmmn/caseplan/task/humantaskdefinition";
+import HumanTaskView from "../humantaskview";
+import TaskProperties from "./taskproperties";
+import { DISCRETIONARYTASK_IMG } from "./taskstageproperties";
+
+export default class HumanTaskProperties extends TaskProperties {
     /**
      * 
      * @param {HumanTaskView} task 

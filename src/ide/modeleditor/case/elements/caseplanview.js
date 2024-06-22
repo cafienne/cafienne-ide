@@ -2,6 +2,7 @@
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import CaseView from "./caseview";
 import CasePlanDecoratorBox from "./decorator/box/caseplandecoratorbox";
+import CasePlanProperties from "./properties/caseplanproperties";
 import { ExitCriterionView } from "./sentryview";
 import StageView from "./stageview";
 

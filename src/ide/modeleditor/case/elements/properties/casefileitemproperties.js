@@ -1,4 +1,8 @@
-class CaseFileItemProperties extends Properties {
+import CaseFileItemDef from "../../../../../repository/definition/cmmn/casefile/casefileitemdef";
+import CaseFileItemView from "../casefileitemview";
+import Properties from "./properties";
+
+export default class CaseFileItemProperties extends Properties {
     /**
      * 
      * @param {CaseFileItemView} caseFileItem 

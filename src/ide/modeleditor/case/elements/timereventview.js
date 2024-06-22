@@ -2,6 +2,7 @@ import PlanItem from "../../../../repository/definition/cmmn/caseplan/planitem";
 import TimerEventDefinition from "../../../../repository/definition/cmmn/caseplan/timereventdefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import EventListenerView from "./eventlistenerview";
+import TimerEventProperties from "./properties/timereventproperties";
 import StageView from "./stageview";
 
 export default class TimerEventView extends EventListenerView {

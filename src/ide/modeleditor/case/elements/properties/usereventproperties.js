@@ -1,4 +1,7 @@
-class UserEventProperties extends PlanItemProperties {
+import UserEventView from "../usereventview";
+import PlanItemProperties from "./planitemproperties";
+
+export default class UserEventProperties extends PlanItemProperties {
     /**
      * 
      * @param {UserEventView} userEvent 

@@ -1,4 +1,12 @@
-class WorkflowProperties extends TaskProperties {
+import PlanItem from "@repository/definition/cmmn/caseplan/planitem";
+import AssignmentDefinition from "@repository/definition/cmmn/caseplan/task/workflow/assignmentdefinition";
+import DueDateDefinition from "@repository/definition/cmmn/caseplan/task/workflow/duedatedefinition";
+import Util from "@util/util";
+import HumanTaskDefinition from "../../../../../repository/definition/cmmn/caseplan/task/humantaskdefinition";
+import HumanTaskView from "../humantaskview";
+import TaskProperties from "./taskproperties";
+
+export default class WorkflowProperties extends TaskProperties {
     /**
      * 
      * @param {HumanTaskView} task 

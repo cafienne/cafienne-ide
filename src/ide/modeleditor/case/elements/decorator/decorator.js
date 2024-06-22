@@ -50,9 +50,3 @@ export default class Decorator {
         </image>`;
     }
 }
-
-//decorator images that are not in use  (define as decorator + '_IMG')
-const ISBLOCKING_IMG = 'images/isblocking_32.png';
-const DISCRETIONARYTASK_IMG = 'images/discretionary_task_32.png';
-const DISCRETIONARYSTAGE_IMG = 'images/discretionary_stage_32.png';
-const PLUS_IMG = 'images/plus_32.png';
