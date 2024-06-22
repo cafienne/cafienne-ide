@@ -1,5 +1,5 @@
-﻿import CaseFileDefinitionDefinition from "../../../repository/definition/cfid/casefileitemdefinitiondefinition";
-import Util from "../../../util/util";
+﻿import CaseFileDefinitionDefinition from "@definition/cfid/casefileitemdefinitiondefinition";
+import Util from "@util/util";
 import CaseFileItemDefinitionEditor from "./casefileitemdefinitioneditor";
 
 export default class CFIDefinitionXMLElement {

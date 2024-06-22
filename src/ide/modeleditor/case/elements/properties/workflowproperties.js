@@ -1,8 +1,8 @@
+import HumanTaskDefinition from "@definition/cmmn/caseplan/task/humantaskdefinition";
 import PlanItem from "@repository/definition/cmmn/caseplan/planitem";
 import AssignmentDefinition from "@repository/definition/cmmn/caseplan/task/workflow/assignmentdefinition";
 import DueDateDefinition from "@repository/definition/cmmn/caseplan/task/workflow/duedatedefinition";
 import Util from "@util/util";
-import HumanTaskDefinition from "../../../../../repository/definition/cmmn/caseplan/task/humantaskdefinition";
 import HumanTaskView from "../humantaskview";
 import TaskProperties from "./taskproperties";
 

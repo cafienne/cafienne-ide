@@ -1,6 +1,6 @@
-import CasePlanDefinition from "../../../../../repository/definition/cmmn/caseplan/caseplandefinition";
-import PlanItem from "../../../../../repository/definition/cmmn/caseplan/planitem";
-import { CaseFileItemStartTrigger, PlanItemStartTrigger } from "../../../../../repository/definition/cmmn/caseplan/timereventdefinition";
+import CasePlanDefinition from "@definition/cmmn/caseplan/caseplandefinition";
+import PlanItem from "@definition/cmmn/caseplan/planitem";
+import { CaseFileItemStartTrigger, PlanItemStartTrigger } from "@definition/cmmn/caseplan/timereventdefinition";
 import TimerEventView from "../timereventview";
 import PlanItemProperties from "./planitemproperties";
 

@@ -1,4 +1,4 @@
-import CMMNElementDefinition from "../../../../../repository/definition/cmmnelementdefinition";
+import CMMNElementDefinition from "@definition/cmmnelementdefinition";
 import TableRenderer from "./tablerenderer";
 
 export default class RowRenderer {

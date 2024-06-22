@@ -1,5 +1,5 @@
-﻿import PlanningTableDefinition from "../../../../repository/definition/cmmn/caseplan/planningtabledefinition";
-import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+﻿import PlanningTableDefinition from "@definition/cmmn/caseplan/planningtabledefinition";
+import ShapeDefinition from "@definition/dimensions/shape";
 import CMMNElementView from "./cmmnelementview";
 import PlanningTableProperties from "./properties/planningtableproperties";
 import TaskStageView from "./taskstageview";

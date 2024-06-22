@@ -1,8 +1,8 @@
-﻿import PlanItem from "../../../../repository/definition/cmmn/caseplan/planitem";
-import TaskDefinition from "../../../../repository/definition/cmmn/caseplan/task/taskdefinition";
-import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
-import ServerFile from "../../../../repository/serverfile";
-import DragData from "../../../dragdata";
+﻿import PlanItem from "@definition/cmmn/caseplan/planitem";
+import TaskDefinition from "@definition/cmmn/caseplan/task/taskdefinition";
+import ShapeDefinition from "@definition/dimensions/shape";
+import ServerFile from "@repository/serverfile";
+import DragData from "@ide/dragdata";
 import { TaskDecoratorBox } from "./decorator/box/taskdecoratorbox";
 import TaskProperties from "./properties/taskproperties";
 import TaskStageView from "./taskstageview";

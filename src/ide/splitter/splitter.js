@@ -1,4 +1,4 @@
-import Util from "../../util/util";
+import Util from "@util/util";
 import SplitterSettings from "./splittersettings";
 
 export default class Splitter {

@@ -1,4 +1,4 @@
-import Util from "../../../util/util";
+import Util from "@util/util";
 import CMMNElementDefinition from "../cmmnelementdefinition";
 import ConnectorStyle from "./connectorstyle";
 import DiagramElement from "./diagramelement";

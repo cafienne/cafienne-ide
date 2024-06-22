@@ -1,4 +1,4 @@
-﻿import ServerFile from "../../repository/serverfile";
+﻿import ServerFile from "@repository/serverfile";
 import MovableEditor from "../editors/movableeditor";
 import IDE from "../ide";
 

@@ -1,4 +1,4 @@
-import XML from "../../../../util/xml";
+import XML from "@util/xml";
 import UnnamedCMMNElementDefinition from "../../unnamedcmmnelementdefinition";
 
 export default class ExpressionDefinition extends UnnamedCMMNElementDefinition {

@@ -1,4 +1,4 @@
-import ServerFile from "../../repository/serverfile";
+import ServerFile from "@repository/serverfile";
 import IDE from "../ide";
 import ModelEditor from "./modeleditor";
 

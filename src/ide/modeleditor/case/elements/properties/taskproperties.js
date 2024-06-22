@@ -1,3 +1,4 @@
+import TaskView from "../taskview";
 import TaskStageProperties, { DISCRETIONARYTASK_IMG } from "./taskstageproperties";
 
 const ISBLOCKING_IMG = 'images/isblocking_32.png';

@@ -1,5 +1,5 @@
-﻿import TextAnnotationDefinition from "../../../../repository/definition/artifact/textannotation";
-import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+﻿import TextAnnotationDefinition from "@definition/artifact/textannotation";
+import ShapeDefinition from "@definition/dimensions/shape";
 import CMMNElementView from "./cmmnelementview";
 import TextAnnotationProperties from "./properties/textannotationproperties";
 import StageView from "./stageview";

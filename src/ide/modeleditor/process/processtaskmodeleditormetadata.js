@@ -1,6 +1,6 @@
-import ServerFile from "../../../repository/serverfile";
-import ProcessFile from "../../../repository/serverfile/processfile";
-import IDE from "../../ide";
+import ServerFile from "@repository/serverfile";
+import ProcessFile from "@repository/serverfile/processfile";
+import IDE from "@ide/ide";
 import ModelEditorMetadata from "../modeleditormetadata";
 import ProcessModelEditor from "./processmodeleditor";
 

@@ -1,4 +1,4 @@
-import Util from "../../../../util/util";
+import Util from "@util/util";
 import CMMNElementDefinition from "../../cmmnelementdefinition";
 import CaseRoleDefinition from "../caseteam/caseroledefinition";
 import CaseRoleReference from "../caseteam/caserolereference";

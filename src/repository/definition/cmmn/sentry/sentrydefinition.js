@@ -1,4 +1,4 @@
-import Util from "../../../../util/util";
+import Util from "@util/util";
 import UnnamedCMMNElementDefinition from "../../unnamedcmmnelementdefinition";
 import CaseDefinition from "../casedefinition";
 import CaseFileItemOnPartDefinition from "./casefileitemonpartdefinition";

@@ -1,4 +1,4 @@
-import XML from "../../../util/xml";
+import XML from "@util/xml";
 import Dimensions from "../dimensions/dimensions";
 import ModelDefinition from "../modeldefinition";
 import StartCaseSchemaDefinition from "./startcaseschemadefinition";

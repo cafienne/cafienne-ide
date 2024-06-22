@@ -1,4 +1,4 @@
-import { ApplicabilityRuleDefinition } from "../../../../../repository/definition/cmmn/caseplan/planningtabledefinition";
+import { ApplicabilityRuleDefinition } from "@definition/cmmn/caseplan/planningtabledefinition";
 import PlanningTableView from "../planningtableview";
 import Properties from "./properties";
 

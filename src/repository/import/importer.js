@@ -1,4 +1,4 @@
-import XML from "../../util/xml";
+import XML from "@util/xml";
 import Tags from "../definition/dimensions/tags";
 import Repository from "../repository";
 import ImportElement, { CFIDImporter, CaseImporter, DimensionsImporter, HumanTaskImporter, ProcessImporter } from "./importelement";

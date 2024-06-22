@@ -1,4 +1,4 @@
-import Util from "../../../util/util";
+import Util from "@util/util";
 import Diagram from "./diagram";
 import DiagramElement from "./diagramelement";
 import Dimensions from "./dimensions";
