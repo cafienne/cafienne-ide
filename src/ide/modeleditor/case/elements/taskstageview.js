@@ -1,7 +1,7 @@
-import PlanItem from "../../../../repository/definition/cmmn/caseplan/planitem";
-import { TaskStageDefinition } from "../../../../repository/definition/cmmn/caseplan/planitemdefinitiondefinition";
-import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
-import Util from "../../../../util/util";
+import PlanItem from "@definition/cmmn/caseplan/planitem";
+import { TaskStageDefinition } from "@definition/cmmn/caseplan/planitemdefinitiondefinition";
+import ShapeDefinition from "@definition/dimensions/shape";
+import Util from "@util/util";
 import CMMNElementView from "./cmmnelementview";
 import Connector from "./connector";
 import PlanItemView from "./planitemview";

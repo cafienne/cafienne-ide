@@ -1,5 +1,5 @@
 ﻿﻿import StandardForm from "../ide/editors/standardform";
-import Util from "../util/util";
+import Util from "@util/util";
 import ProblemType from "./problemtype";
 import ValidationSettings from "./validationsettings";
 

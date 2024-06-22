@@ -1,7 +1,7 @@
-import CaseDefinition from "../../../repository/definition/cmmn/casedefinition";
-import CaseFile from "../../../repository/serverfile/casefile";
-import MovableEditor from "../../editors/movableeditor";
-import IDE from "../../ide";
+import CaseDefinition from "@definition/cmmn/casedefinition";
+import CaseFile from "@repository/serverfile/casefile";
+import MovableEditor from "@ide/editors/movableeditor";
+import IDE from "@ide/ide";
 import ModelEditor from "../modeleditor";
 import UndoManager from "./undoredo/undoredo";
 

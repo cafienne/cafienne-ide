@@ -1,4 +1,4 @@
-import Util from "../../../../../util/util";
+import Util from "@util/util";
 import { EXPANDEDPLANNINGTABLE_IMG } from "../planningtableview";
 import TaskStageView from "../taskstageview";
 import PlanItemProperties from "./planitemproperties";

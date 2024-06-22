@@ -1,4 +1,4 @@
-﻿import CaseFileDefinitionDefinition from "../../../repository/definition/cfid/casefileitemdefinitiondefinition";
+﻿import CaseFileDefinitionDefinition from "@definition/cfid/casefileitemdefinitiondefinition";
 import CaseFileItemDefinitionEditor from "./casefileitemdefinitioneditor";
 
 export default class CFIDefinitionUnknown{

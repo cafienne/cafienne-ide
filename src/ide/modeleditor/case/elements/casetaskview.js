@@ -1,6 +1,6 @@
-import PlanItem from "../../../../repository/definition/cmmn/caseplan/planitem";
-import CaseTaskDefinition from "../../../../repository/definition/cmmn/caseplan/task/casetaskdefinition";
-import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+import PlanItem from "@definition/cmmn/caseplan/planitem";
+import CaseTaskDefinition from "@definition/cmmn/caseplan/task/casetaskdefinition";
+import ShapeDefinition from "@definition/dimensions/shape";
 import StageView from "./stageview";
 import TaskView from "./taskview";
 

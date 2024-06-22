@@ -1,5 +1,5 @@
-import CMMNElementDefinition from "../../../../../repository/definition/cmmnelementdefinition";
-import MovableEditor from "../../../../editors/movableeditor";
+import CMMNElementDefinition from "@definition/cmmnelementdefinition";
+import MovableEditor from "@ide/editors/movableeditor";
 import CaseModelEditor from "../../casemodeleditor";
 
 export default class TableEditor extends MovableEditor {

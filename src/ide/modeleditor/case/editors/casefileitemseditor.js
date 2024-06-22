@@ -1,5 +1,5 @@
-﻿import CaseFileItemDef from "../../../../repository/definition/cmmn/casefile/casefileitemdef";
-import Util from "../../../../util/util";
+﻿import CaseFileItemDef from "@definition/cmmn/casefile/casefileitemdef";
+import Util from "@util/util";
 import CFINode from "./file/cfinode";
 import CFISelector from "./file/cfiselector";
 

@@ -1,7 +1,7 @@
-import { andThen } from "../../util/promise/followup";
-import SequentialFollowupList from "../../util/promise/sequentialfollowuplist";
-import Util from "../../util/util";
-import XML from "../../util/xml";
+import { andThen } from "@util/promise/followup";
+import SequentialFollowupList from "@util/promise/sequentialfollowuplist";
+import Util from "@util/util";
+import XML from "@util/xml";
 import ServerFile from "../serverfile";
 import CMMNDocumentationDefinition from "./cmmndocumentationdefinition";
 import TypeCounter from "./typecounter";

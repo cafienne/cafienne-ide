@@ -1,4 +1,4 @@
-import CaseDefinition from "../../../../repository/definition/cmmn/casedefinition";
+import CaseDefinition from "@definition/cmmn/casedefinition";
 import Action from "./action";
 
 export default class UndoManager {

@@ -1,5 +1,5 @@
-﻿import PlanItem from "../../../../repository/definition/cmmn/caseplan/planitem";
-import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+﻿import PlanItem from "@definition/cmmn/caseplan/planitem";
+import ShapeDefinition from "@definition/dimensions/shape";
 import PlanItemView from "./planitemview";
 
 export default class EventListenerView extends PlanItemView {

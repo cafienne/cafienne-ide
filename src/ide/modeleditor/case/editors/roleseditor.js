@@ -1,4 +1,4 @@
-﻿import CaseRoleDefinition from "../../../../repository/definition/cmmn/caseteam/caseroledefinition";
+﻿import CaseRoleDefinition from "@definition/cmmn/caseteam/caseroledefinition";
 import TableEditor, { RowEditor, TableEditorColumn } from "./tableeditor/tableeditor";
 
 export default class RolesEditor extends TableEditor {

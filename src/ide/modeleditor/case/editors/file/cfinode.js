@@ -1,5 +1,5 @@
-import CaseFileItemCollection from "../../../../../repository/definition/cmmn/casefile/casefileitemcollection";
-import CaseFileItemDef from "../../../../../repository/definition/cmmn/casefile/casefileitemdef";
+import CaseFileItemCollection from "@definition/cmmn/casefile/casefileitemcollection";
+import CaseFileItemDef from "@definition/cmmn/casefile/casefileitemdef";
 import CaseFileItemsEditor, { NEWDEF } from "../casefileitemseditor";
 
 export default class CFINode {

@@ -1,5 +1,5 @@
-import CMMNElementDefinition from "../../repository/definition/cmmnelementdefinition";
-import Util from "../../util/util";
+import CMMNElementDefinition from "@definition/cmmnelementdefinition";
+import Util from "@util/util";
 
 export default class MovableEditor {
     /**

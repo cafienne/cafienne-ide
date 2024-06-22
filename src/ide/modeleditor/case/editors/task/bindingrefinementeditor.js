@@ -1,7 +1,7 @@
 'use strict';
 
-import ParameterDefinition from "../../../../../repository/definition/cmmn/contract/parameterdefinition";
-import CMMNElementDefinition from "../../../../../repository/definition/cmmnelementdefinition";
+import ParameterDefinition from "@definition/cmmn/contract/parameterdefinition";
+import CMMNElementDefinition from "@definition/cmmnelementdefinition";
 import TableEditor, { RowEditor, TableEditorColumn } from "../tableeditor/tableeditor";
 
 export default class BindingRefinementEditor extends TableEditor {

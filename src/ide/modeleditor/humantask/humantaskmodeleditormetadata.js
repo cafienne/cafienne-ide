@@ -1,6 +1,6 @@
-import ServerFile from "../../../repository/serverfile";
-import HumanTaskFile from "../../../repository/serverfile/humantaskfile";
-import IDE from "../../ide";
+import ServerFile from "@repository/serverfile";
+import HumanTaskFile from "@repository/serverfile/humantaskfile";
+import IDE from "@ide/ide";
 import ModelEditorMetadata from "../modeleditormetadata";
 import HumantaskModelEditor from "./humantaskmodeleditor";
 

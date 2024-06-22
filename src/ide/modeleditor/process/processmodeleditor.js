@@ -1,9 +1,9 @@
 ﻿'use strict';
 
-import ElementDefinition from "../../../repository/definition/elementdefinition";
-import ProcessModelDefinition from "../../../repository/definition/process/processmodeldefinition";
-import CodeMirrorConfig from "../../../util/codemirrorconfig";
-import XML from "../../../util/xml";
+import ElementDefinition from "@definition/elementdefinition";
+import ProcessModelDefinition from "@definition/process/processmodeldefinition";
+import CodeMirrorConfig from "@util/codemirrorconfig";
+import XML from "@util/xml";
 import ModelEditor from "../modeleditor";
 import ModelParameters from "../xmleditor/modelparameters";
 import ModelSourceEditor from "../xmleditor/modelsourceeditor";

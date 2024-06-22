@@ -1,4 +1,4 @@
-import CaseFileItemDef from "../../../../../repository/definition/cmmn/casefile/casefileitemdef";
+import CaseFileItemDef from "@definition/cmmn/casefile/casefileitemdef";
 import CaseFileItemView from "../casefileitemview";
 import Properties from "./properties";
 

@@ -1,4 +1,4 @@
-import XML from "../util/xml";
+import XML from "@util/xml";
 import ServerFile from "./serverfile";
 
 export default class Content {
