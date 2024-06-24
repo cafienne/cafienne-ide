@@ -56,7 +56,6 @@ import ProcessModelDefinition from '@definition/process/processmodeldefinition';
 import ReferableElementDefinition from '@definition/referableelementdefinition';
 import TypeCounter from '@definition/typecounter';
 import UnnamedCMMNElementDefinition from '@definition/unnamedcmmnelementdefinition';
-import { CAFIENNE_NAMESPACE, CAFIENNE_PREFIX, EXTENSIONELEMENTS, IMPLEMENTATION_TAG } from '@definition/xmlserializable';
 import CaseFileItemHalo from '@ide/modeleditor/case/elements/halo/casefileitemhalo';
 import CasePlanHalo from '@ide/modeleditor/case/elements/halo/caseplanhalo';
 import Halo from '@ide/modeleditor/case/elements/halo/halo';
@@ -64,6 +63,9 @@ import PlanItemHalo from '@ide/modeleditor/case/elements/halo/planitemhalo';
 import PlanningTableHalo from '@ide/modeleditor/case/elements/halo/planningtablehalo';
 import { EntryCriterionHalo, ExitCriterionHalo, ReactivateCriterionHalo } from '@ide/modeleditor/case/elements/halo/sentryhalo';
 import TaskHalo, { HumanTaskHalo } from '@ide/modeleditor/case/elements/halo/taskhalo';
+import InputMappingDefinition from '@repository/definition/cmmn/contract/inputmappingdefinition';
+import { OutputMappingDefinition } from '@repository/definition/cmmn/contract/outputmappingdefinition';
+import ParameterMappingDefinition from '@repository/definition/cmmn/contract/parametermappingdefinition';
 import CaseFile from '@repository/serverfile/casefile';
 import CFIDFile from '@repository/serverfile/cfidfile';
 import DimensionsFile from '@repository/serverfile/dimensionsfile';
@@ -140,9 +142,6 @@ import VerticalSplitter from '../ide/splitter/verticalsplitter';
 import ValidateForm from '../validate/validateform';
 import Validator from '../validate/validator';
 import ClassicScripts from './classicscripts';
-import InputMappingDefinition from '@repository/definition/cmmn/contract/inputmappingdefinition';
-import OutputMappingDefinition from '@repository/definition/cmmn/contract/outputmappingdefinition';
-import ParameterMappingDefinition from '@repository/definition/cmmn/contract/parametermappingdefinition';
 
 const pointers = [
     // Util
@@ -344,9 +343,5 @@ export default class Compatibility {
     }
 
     static registerConstants() {
-        window.EXTENSIONELEMENTS = EXTENSIONELEMENTS;
-        window.CAFIENNE_NAMESPACE = CAFIENNE_NAMESPACE;
-        window.CAFIENNE_PREFIX = CAFIENNE_PREFIX;
-        window.IMPLEMENTATION_TAG = IMPLEMENTATION_TAG;
     }
 }
