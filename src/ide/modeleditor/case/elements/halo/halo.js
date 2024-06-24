@@ -1,3 +1,4 @@
+import Util from "@util/util";
 import CMMNElementView from "../cmmnelementview";
 import HaloBar from "./halobar";
 import { DeleteHaloItem, PropertiesHaloItem } from "./item/haloclickitems";

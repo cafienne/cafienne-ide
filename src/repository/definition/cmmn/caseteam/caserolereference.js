@@ -1,3 +1,4 @@
+import Util from "@util/util";
 import CaseDefinition from "../casedefinition";
 import CaseRoleDefinition from "./caseroledefinition";
 

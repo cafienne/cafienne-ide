@@ -5,6 +5,7 @@ import { REPETITION_IMG } from "../decorator/items/repetitionrule";
 import { REQUIRED_IMG } from "../decorator/items/requiredrule";
 import PlanItemView from "../planitemview";
 import Properties from "./properties";
+import Util from "@util/util";
 
 export default class PlanItemProperties extends Properties {
     /**

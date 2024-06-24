@@ -1,6 +1,7 @@
 import CMMNElementDefinition from "@definition/cmmnelementdefinition";
 import MovableEditor from "@ide/editors/movableeditor";
 import CaseModelEditor from "../../casemodeleditor";
+import Util from "@util/util";
 
 export default class TableEditor extends MovableEditor {
     /**

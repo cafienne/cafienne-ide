@@ -1,5 +1,4 @@
 import IDE from "@ide/ide";
-import Util from "@util/util";
 
 export default class Dialog {
     /**

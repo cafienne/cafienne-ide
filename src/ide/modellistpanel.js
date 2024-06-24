@@ -4,6 +4,7 @@ import ModelEditorMetadata from "./modeleditor/modeleditormetadata";
 import RepositoryBrowser from "./repositorybrowser";
 import ModelEditor from "./modeleditor/modeleditor";
 import CreateNewModelDialog from "./createnewmodeldialog";
+import { andThen } from "@util/promise/followup";
 
 export default class ModelListPanel {
     /**

@@ -1,4 +1,4 @@
-import Followup from "@util/promise/followup";
+import Followup, { andThen } from "@util/promise/followup";
 import FollowupList from "@util/promise/followuplist";
 import Util from "@util/util";
 import XML from "@util/xml";

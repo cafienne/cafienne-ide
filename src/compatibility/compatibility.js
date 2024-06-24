@@ -56,7 +56,6 @@ import ProcessModelDefinition from '@definition/process/processmodeldefinition';
 import ReferableElementDefinition from '@definition/referableelementdefinition';
 import TypeCounter from '@definition/typecounter';
 import UnnamedCMMNElementDefinition from '@definition/unnamedcmmnelementdefinition';
-import CaseFileItemHalo from '@ide/modeleditor/case/elements/halo/casefileitemhalo';
 import CasePlanHalo from '@ide/modeleditor/case/elements/halo/caseplanhalo';
 import Halo from '@ide/modeleditor/case/elements/halo/halo';
 import PlanItemHalo from '@ide/modeleditor/case/elements/halo/planitemhalo';
@@ -71,12 +70,9 @@ import CFIDFile from '@repository/serverfile/cfidfile';
 import DimensionsFile from '@repository/serverfile/dimensionsfile';
 import HumanTaskFile from '@repository/serverfile/humantaskfile';
 import ProcessFile from '@repository/serverfile/processfile';
-import CodeMirrorConfig from '@util/codemirrorconfig';
 import Followup, { andThen, onFail } from '@util/promise/followup';
 import FollowupList from '@util/promise/followuplist';
 import SequentialFollowupList from '@util/promise/sequentialfollowuplist';
-import Util from '@util/util';
-import XML from '@util/xml';
 import CaseModelEditor from '../ide/modeleditor/case/casemodeleditor';
 import CaseFileItemsEditor from '../ide/modeleditor/case/editors/casefileitemseditor';
 import BindingRefinementEditor from '../ide/modeleditor/case/editors/task/bindingrefinementeditor';
@@ -102,16 +98,6 @@ import ModelEditor from '../ide/modeleditor/modeleditor';
 import ClassicScripts from './classicscripts';
 
 const pointers = [
-    // Util
-    Util,
-    XML,
-    CodeMirrorConfig,
-    Followup,
-    FollowupList,
-    SequentialFollowupList,
-    andThen,
-    onFail,
-
     // Repository
     CaseFile,
     CFIDFile,
