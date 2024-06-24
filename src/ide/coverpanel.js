@@ -1,3 +1,5 @@
+import IDE from "./ide";
+
 /**
  * Showing/hiding status messages on top of the fixed editors.
  */

@@ -7,6 +7,7 @@ import XML from "@util/xml";
 import ModelEditor from "../modeleditor";
 import ModelParameters from "../xmleditor/modelparameters";
 import ModelSourceEditor from "../xmleditor/modelsourceeditor";
+import IDE from "@ide/ide";
 
 const HTTP_CALL_DEFINITION = 'HTTPCallDefinition';
 const HTTP_CALL_DEFINITION_IMPLEMENTATION_CLASS = 'org.cafienne.processtask.implementation.http.HTTPCallDefinition';

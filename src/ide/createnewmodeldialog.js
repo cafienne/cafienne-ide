@@ -1,4 +1,5 @@
 import Dialog from "./editors/dialog";
+import IDE from "./ide";
 
 export default class CreateNewModelDialog extends Dialog {
     /**

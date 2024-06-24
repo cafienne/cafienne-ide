@@ -1,5 +1,8 @@
 import CMMNElementDefinition from "@definition/cmmnelementdefinition";
+// import CaseModelEditor from "@ide/modeleditor/case/casemodeleditor";
+// import ModelEditor from "@ide/modeleditor/modeleditor";
 import Util from "@util/util";
+// BIG TODO HERE
 
 export default class MovableEditor {
     /**

@@ -6,6 +6,7 @@ import CMMNElementView from "./cmmnelementview";
 import DecoratorBox from "./decorator/decoratorbox";
 import PlanItemProperties from "./properties/planitemproperties";
 import { EntryCriterionView, ExitCriterionView, ReactivateCriterionView } from "./sentryview";
+import CaseView from "./caseview";
 // import PlanItemHalo from "./halo/planitemhalo";
 // BIG TODO HERE
 

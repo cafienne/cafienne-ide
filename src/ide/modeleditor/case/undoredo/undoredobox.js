@@ -1,3 +1,4 @@
+import CaseView from "../elements/caseview";
 
 export default class UndoRedoBox {
     /**

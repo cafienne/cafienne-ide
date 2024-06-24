@@ -1,3 +1,5 @@
+import Settings from "@ide/settings/settings";
+
 export default class SplitterSettings {
     constructor() {
         this.splitters = {};

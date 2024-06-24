@@ -4,6 +4,7 @@ import IDE from "@ide/ide";
 import ModelEditorMetadata from "../modeleditormetadata";
 import CaseModelEditor from "./casemodeleditor";
 import CaseTaskView from "./elements/casetaskview";
+import Grid from "./grid";
 
 export default class CaseModelEditorMetadata extends ModelEditorMetadata {
     /** @returns {Array<ServerFile>} */

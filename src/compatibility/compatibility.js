@@ -77,33 +77,14 @@ import FollowupList from '@util/promise/followuplist';
 import SequentialFollowupList from '@util/promise/sequentialfollowuplist';
 import Util from '@util/util';
 import XML from '@util/xml';
-import CreateNewModelDialog from '../ide/createnewmodeldialog';
-import Debugger from '../ide/debugger/debugger';
-import DragData, { CaseFileItemDragData } from '../ide/dragdata';
-import Dialog from '../ide/editors/dialog';
-import MovableEditor from '../ide/editors/movableeditor';
-import StandardForm from '../ide/editors/standardform';
-import IDE from '../ide/ide';
 import CaseModelEditor from '../ide/modeleditor/case/casemodeleditor';
-import CaseModelEditorMetadata from '../ide/modeleditor/case/casemodeleditormetadata';
 import CaseFileItemsEditor from '../ide/modeleditor/case/editors/casefileitemseditor';
-import CaseSourceEditor from '../ide/modeleditor/case/editors/casesourceeditor';
-import Deploy from '../ide/modeleditor/case/editors/deploy';
-import CaseParametersEditor from '../ide/modeleditor/case/editors/parameters/caseparameterseditor';
-import RolesEditor from '../ide/modeleditor/case/editors/roleseditor';
-import StartCaseEditor from '../ide/modeleditor/case/editors/startcaseeditor';
-import ColumnRenderer from '../ide/modeleditor/case/editors/tableeditor/columnrenderer';
-import RowRenderer from '../ide/modeleditor/case/editors/tableeditor/rowrenderer';
-import TableEditor, { RowEditor } from '../ide/modeleditor/case/editors/tableeditor/tableeditor';
-import TableRenderer from '../ide/modeleditor/case/editors/tableeditor/tablerenderer';
 import BindingRefinementEditor from '../ide/modeleditor/case/editors/task/bindingrefinementeditor';
-import CanvasElement from '../ide/modeleditor/case/elements/canvaselement';
 import CaseFileItemView from '../ide/modeleditor/case/elements/casefileitemview';
 import CasePlanView from '../ide/modeleditor/case/elements/caseplanview';
 import CaseTaskView from '../ide/modeleditor/case/elements/casetaskview';
-import CaseView from '../ide/modeleditor/case/elements/caseview';
 import CMMNElementView from '../ide/modeleditor/case/elements/cmmnelementview';
-import Connector, { TemporaryConnector } from '../ide/modeleditor/case/elements/connector';
+import Connector from '../ide/modeleditor/case/elements/connector';
 import EventListenerView from '../ide/modeleditor/case/elements/eventlistenerview';
 import HumanTaskView from '../ide/modeleditor/case/elements/humantaskview';
 import MilestoneView from '../ide/modeleditor/case/elements/milestoneview';
@@ -117,30 +98,7 @@ import TaskView from '../ide/modeleditor/case/elements/taskview';
 import TextAnnotationView from '../ide/modeleditor/case/elements/textannotationview';
 import TimerEventView from '../ide/modeleditor/case/elements/timereventview';
 import UserEventView from '../ide/modeleditor/case/elements/usereventview';
-import Grid from '../ide/modeleditor/case/grid';
-import Marker from '../ide/modeleditor/case/marker';
-import Resizer from '../ide/modeleditor/case/resizer';
-import ShapeBox from '../ide/modeleditor/case/shapebox';
-import Action from '../ide/modeleditor/case/undoredo/action';
-import UndoManager from '../ide/modeleditor/case/undoredo/undoredo';
-import UndoRedoBox from "../ide/modeleditor/case/undoredo/undoredobox";
-import CaseFileItemDefinitionEditor from '../ide/modeleditor/cfid/casefileitemdefinitioneditor';
 import ModelEditor from '../ide/modeleditor/modeleditor';
-import ModelEditorMetadata from '../ide/modeleditor/modeleditormetadata';
-import ModelListPanel from '../ide/modellistpanel';
-import RepositoryBrowser from '../ide/repositorybrowser';
-import Settings from '../ide/settings/settings';
-import SettingsStorage from '../ide/settings/settingsstorage';
-import BottomSplitter from '../ide/splitter/bottomsplitter';
-import HorizontalSplitter from '../ide/splitter/horizontalsplitter';
-import LeftSplitter from '../ide/splitter/leftsplitter';
-import RightSplitter from '../ide/splitter/rightsplitter';
-import Splitter from '../ide/splitter/splitter';
-import SplitterSettings from '../ide/splitter/splittersettings';
-import TopSplitter from '../ide/splitter/topsplitter';
-import VerticalSplitter from '../ide/splitter/verticalsplitter';
-import ValidateForm from '../validate/validateform';
-import Validator from '../validate/validator';
 import ClassicScripts from './classicscripts';
 
 const pointers = [
@@ -174,7 +132,7 @@ const pointers = [
     ParameterMappingDefinition,
     InputMappingDefinition,
     OutputMappingDefinition,
-    
+
     CaseDefinition,
     CaseFileItemCollection,
     CaseFileItemDef,
@@ -230,58 +188,14 @@ const pointers = [
     ProcessModelDefinition,
 
     // IDE
-    IDE,
-    MovableEditor,
-    StandardForm,
     ModelEditor,
-    ModelEditorMetadata,
-    CaseFileItemDefinitionEditor,
-    Dialog,
-    CreateNewModelDialog,
-    DragData,
-    CaseFileItemDragData,
-    Settings,
-    SettingsStorage,
-    ModelListPanel,
-    RepositoryBrowser,
-    SplitterSettings,
-    Splitter,
-    HorizontalSplitter,
-    LeftSplitter,
-    RightSplitter,
-    VerticalSplitter,
-    BottomSplitter,
-    TopSplitter,
-    Validator,
-    ValidateForm,
-    Debugger,
 
-    UndoManager,
-    UndoRedoBox,
-    Action,
     CaseModelEditor,
-    CaseModelEditorMetadata,
-    Grid,
-    Marker,
-    Resizer,
-    ShapeBox,
 
-    CaseParametersEditor,
-    TableRenderer,
-    TableEditor,
-    ColumnRenderer,
-    RowRenderer,
     CaseFileItemsEditor,
-    CaseSourceEditor,
-    Deploy,
-    RolesEditor,
-    RowEditor,
-    StartCaseEditor,
 
-    CanvasElement,
     Connector,
-    TemporaryConnector,
-    CaseView,
+
     CaseFileItemView,
     CasePlanView,
     CaseTaskView,
@@ -305,7 +219,6 @@ const pointers = [
     BindingRefinementEditor,
 
     Halo,
-    CaseFileItemHalo,
     CasePlanHalo,
     PlanItemHalo,
     PlanningTableHalo,
@@ -339,7 +252,7 @@ export default class Compatibility {
         s.src = src;
         s.type = "text/javascript";
         s.async = false;                                 // <-- this is important
-        document.getElementsByTagName('head')[0].appendChild(s);    
+        document.getElementsByTagName('head')[0].appendChild(s);
     }
 
     static registerConstants() {

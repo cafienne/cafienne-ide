@@ -10,6 +10,7 @@ import CFIZoom from "./cfizoom";
 import ExpressionChanger from "./expressionchanger";
 import NameChanger from "./namechanger";
 import ParameterDeleter from "./parameterdeleter";
+import BottomSplitter from "@ide/splitter/bottomsplitter";
 
 export default class CaseParametersEditor extends StandardForm {
     /**

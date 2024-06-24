@@ -1,3 +1,4 @@
+import IDE from "@ide/ide";
 import StandardForm from "../editors/standardform";
 import SettingsStorage from "./settingsstorage";
 

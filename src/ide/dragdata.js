@@ -1,3 +1,6 @@
+import IDE from "./ide";
+import CaseFileItemView from "./modeleditor/case/elements/casefileitemview";
+
 export default class DragData {
     /**
      * Simple helper class for dragging/dropping elements from either RepositoryBrowser or ShapeBox to the CaseModelEditor canvas.

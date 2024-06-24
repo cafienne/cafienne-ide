@@ -6,6 +6,8 @@ import CMMNElementView from "./cmmnelementview";
 import Connector from "./connector";
 import PlanItemView from "./planitemview";
 import PlanningTableView from "./planningtableview";
+import CaseView from "./caseview";
+import { EntryCriterionView, ExitCriterionView, ReactivateCriterionView } from "./sentryview";
 
 export default class TaskStageView extends PlanItemView {
     /**
