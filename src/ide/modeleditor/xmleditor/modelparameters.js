@@ -2,6 +2,7 @@
 
 import ParameterDefinition from "@definition/cmmn/contract/parameterdefinition";
 import ModelEditor from "../modeleditor";
+import Util from "@util/util";
 
 export default class ModelParameters {
     /**

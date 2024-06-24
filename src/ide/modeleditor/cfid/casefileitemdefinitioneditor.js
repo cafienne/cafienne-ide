@@ -1,8 +1,10 @@
 ﻿// import CaseFileItemsEditor from "../case/editors/casefileitemseditor";
 // BIG TODO HERE
+import XML from "@util/xml";
 import CFIDefinitionUnknown from "./cfidefinitionunknown";
 import CFIDefinitionUnspecified from "./cfidefinitionunspecified";
 import CFIDefinitionXMLElement from "./cfidefinitionxmlelement";
+import { andThen } from "@util/promise/followup";
 
 export const UNSPECIFIED = 'Unspecified';
 export const UNSPECIFIED_URI = 'http://www.omg.org/spec/CMMN/DefinitionType/Unspecified';

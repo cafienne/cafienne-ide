@@ -5,6 +5,8 @@ import ModelEditorMetadata from "../modeleditormetadata";
 import CaseModelEditor from "./casemodeleditor";
 import CaseTaskView from "./elements/casetaskview";
 import Grid from "./grid";
+import Util from "@util/util";
+import { andThen } from "@util/promise/followup";
 
 export default class CaseModelEditorMetadata extends ModelEditorMetadata {
     /** @returns {Array<ServerFile>} */

@@ -23,6 +23,7 @@ import TextAnnotationView from "./textannotationview";
 import TimerEventView from "./timereventview";
 import UserEventView from "./usereventview";
 import CaseView from "./caseview";
+import Util from "@util/util";
 
 export default class StageView extends TaskStageView {
     /**

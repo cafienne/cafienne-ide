@@ -1,4 +1,5 @@
-﻿import CMMNElementView from "./elements/cmmnelementview";
+﻿import Util from "@util/util";
+import CMMNElementView from "./elements/cmmnelementview";
 import Grid from "./grid";
 
 export default class Resizer {

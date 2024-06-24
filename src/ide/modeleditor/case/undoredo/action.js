@@ -1,5 +1,7 @@
 import CaseDefinition from "@definition/cmmn/casedefinition";
 import UndoManager from "./undoredo";
+import XML from "@util/xml";
+import { andThen } from "@util/promise/followup";
 
 export default class Action {
     /**

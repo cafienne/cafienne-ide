@@ -21,6 +21,7 @@ import UndoRedoBox from "../undoredo/undoredobox";
 // import CaseTaskView from "./casetaskview";
 import CMMNElementView from "./cmmnelementview";
 import Grid from "../grid";
+import Util from "@util/util";
 // import Connector from "./connector";
 // import HumanTaskView from "./humantaskview";
 // import MilestoneView from "./milestoneview";
