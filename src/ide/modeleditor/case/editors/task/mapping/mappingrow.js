@@ -1,4 +1,9 @@
-class MappingRow extends RowRenderer {
+import ParameterMappingDefinition from "@repository/definition/cmmn/contract/parametermappingdefinition";
+import RowRenderer from "../../tableeditor/rowrenderer";
+import MappingControl from "./mappingcontrol";
+import TaskDefinition from "@repository/definition/cmmn/caseplan/task/taskdefinition";
+
+export default class MappingRow extends RowRenderer {
     /**
      * @param {MappingControl} control 
      * @param {ParameterMappingDefinition} mapping 
@@ -89,22 +94,5 @@ class MappingRow extends RowRenderer {
     done() {
         this.case.editor.completeUserAction();
         this.control.refresh();
-    }
-}
-
-class InputMappingRow extends MappingRow {
-    /**
-     * @returns {InputMappingDefinition}
-     */
-    createElement() {
-        return this.taskDefinition.createMapping(InputMappingDefinition);
-    }
-}
-class OutputMappingRow extends MappingRow {
-    /**
-     * @returns {OutputMappingDefinition}
-     */
-    createElement() {
-        return this.taskDefinition.createMapping(OutputMappingDefinition);
     }
 }

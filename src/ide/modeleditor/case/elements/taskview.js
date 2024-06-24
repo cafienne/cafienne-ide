@@ -6,6 +6,7 @@ import DragData from "@ide/dragdata";
 import { TaskDecoratorBox } from "./decorator/box/taskdecoratorbox";
 import TaskProperties from "./properties/taskproperties";
 import TaskStageView from "./taskstageview";
+import TaskMappingsEditor from "../editors/task/taskmappingseditor";
 // import TaskHalo from "./halo/taskhalo";
 // BIG TODO HERE
 

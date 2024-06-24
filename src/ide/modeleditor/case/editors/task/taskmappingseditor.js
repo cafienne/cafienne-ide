@@ -1,4 +1,9 @@
-class TaskMappingsEditor extends StandardForm {
+import StandardForm from "@ide/editors/standardform";
+import TaskView from "../../elements/taskview";
+import InputMappingControl from "./mapping/input/inputmappingcontrol";
+import OutputMappingControl from "./mapping/output/outputmappingcontrol";
+
+export default class TaskMappingsEditor extends StandardForm {
     /**
      * @param {TaskView} task 
      */

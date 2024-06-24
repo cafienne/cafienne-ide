@@ -1,4 +1,6 @@
-class MappingOrderChanger {
+import MappingRow from "./mappingrow";
+
+export default class MappingOrderChanger {
     static get label() {
         return 'Order';
     }

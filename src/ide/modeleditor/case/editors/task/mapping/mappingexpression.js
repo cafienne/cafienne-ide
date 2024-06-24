@@ -1,4 +1,7 @@
-class MappingExpression {
+import Util from "@util/util";
+import MappingRow from "./mappingrow";
+
+export default class MappingExpression {
     static get label() {
         return 'Transformation';
     }
@@ -9,7 +12,7 @@ class MappingExpression {
 
     /**
      * 
-     * @param {MappingRow} row 
+     * @param {MappingRow row 
      * @param {JQuery<HTMLTableCellElement>} column 
      */
     constructor(row, column) {
@@ -62,23 +65,5 @@ class MappingExpression {
             row.case.editor.completeUserAction();
             row.editor.refresh();
         });
-    }
-}
-
-class InputMappingExpression extends MappingExpression {
-
-    static get tooltip() {
-        return `Expression executed when the task becomes active
-
-The (optional) case file item is passed as input to the epxression`;
-    }
-}
-
-class OutputMappingExpression extends MappingExpression {
-
-    static get tooltip() {
-        return `Expression executed when the task completes or fails
-
-Takes the value from the output parameter, transforms it and passes it to the operation`;
     }
 }
