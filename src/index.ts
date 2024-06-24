@@ -1,7 +1,7 @@
+import ElementRegistry from '@ide/modeleditor/case/elements/elementregistry';
 import Compatibility from './compatibility/compatibility';
 import IDE from './ide/ide';
 import CaseModelEditorMetadata from './ide/modeleditor/case/casemodeleditormetadata';
-import CaseView from './ide/modeleditor/case/elements/caseview';
 import HumantaskModelEditorMetadata from './ide/modeleditor/humantask/humantaskmodeleditormetadata';
 import ProcessModelEditorMetadata from './ide/modeleditor/process/processtaskmodeleditormetadata';
 
@@ -15,7 +15,7 @@ window.addEventListener('load', e => {
     IDE.registerEditorType(new ProcessModelEditorMetadata());
 
     console.log("Registering view elements");
-    CaseView.registerViewElements();
+    ElementRegistry.initialize();
 
     console.log("Creating IDE");
     const ide = new IDE();

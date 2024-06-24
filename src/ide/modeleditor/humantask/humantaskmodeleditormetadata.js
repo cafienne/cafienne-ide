@@ -5,6 +5,7 @@ import ModelEditorMetadata from "../modeleditormetadata";
 import HumantaskModelEditor from "./humantaskmodeleditor";
 import { CAFIENNE_NAMESPACE, CAFIENNE_PREFIX, IMPLEMENTATION_TAG } from "@repository/definition/xmlserializable";
 import { andThen } from "@util/promise/followup";
+import HumanTaskView from "../case/elements/humantaskview";
 
 export default class HumantaskModelEditorMetadata extends ModelEditorMetadata {
     /** @returns {Array<ServerFile>} */
