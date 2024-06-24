@@ -3,6 +3,7 @@ import Util from "@util/util";
 import XML from "@util/xml";
 import CaseModelEditor from "../casemodeleditor";
 import { andThen } from "@util/promise/followup";
+import Tags from "@repository/definition/dimensions/tags";
 
 export default class CaseSourceEditor {
     /**

@@ -1,6 +1,13 @@
+import CaseFile from "@repository/serverfile/casefile";
 import XML from "@util/xml";
+import TextAnnotationDefinition from "../artifact/textannotation";
+import CMMNElementDefinition from "../cmmnelementdefinition";
 import Dimensions from "../dimensions/dimensions";
 import ModelDefinition from "../modeldefinition";
+import CaseFileDefinition from "./casefile/casefiledefinition";
+import CasePlanDefinition from "./caseplan/caseplandefinition";
+import CaseTeamDefinition from "./caseteam/caseteamdefinition";
+import ParameterDefinition from "./contract/parameterdefinition";
 import StartCaseSchemaDefinition from "./startcaseschemadefinition";
 
 export default class CaseDefinition extends ModelDefinition {

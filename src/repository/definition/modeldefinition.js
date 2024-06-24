@@ -7,6 +7,8 @@ import CMMNDocumentationDefinition from "./cmmndocumentationdefinition";
 import TypeCounter from "./typecounter";
 import ElementDefinition from "./elementdefinition";
 import XMLSerializable from "./xmlserializable";
+// import ParameterDefinition from "./cmmn/contract/parameterdefinition";
+// BIG TODO HERE
 
 /**
  * A ModelDefinition is the base class of a model, such as CaseDefinition, ProcessDefinition, HumanTaskDefinition, CaseFileDefinitionDefinition 

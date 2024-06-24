@@ -1,3 +1,7 @@
+// import ExitCriterionDefinition from "../sentry/exitcriteriondefinition";
+// import EntryCriterionDefinition from "../sentry/entrycriteriondefinition";
+// import ReactivateCriterionDefinition from "../sentry/reactivatecriteriondefinition";
+// BIG TODO HERE
 import MilestoneDefinition from "./milestonedefinition";
 import PlanItemDefinitionDefinition from "./planitemdefinitiondefinition";
 import StageDefinition from "./stagedefinition";
@@ -11,11 +15,11 @@ export default class CasePlanDefinition extends StageDefinition {
     constructor(importNode, caseDefinition, parent) {
         super(importNode, caseDefinition, parent);
         this.definition = this; // Case plan is both plan item and plan item definition (yes, it is little weird)
-        /** @type{Array<EntryCriterionDefinition>} */
+        /** @type {Array<EntryCriterionDefinition>} */
         this.entryCriteria = []; // Caseplan cannot have entry criteria, but we still create the array, because caseplan extends stage
-        /** @type{Array<ReactivateCriterionDefinition>} */
+        /** @type {Array<ReactivateCriterionDefinition>} */
         this.reactivateCriteria = []; // Same goes for reactivation criteria.
-        /** @type{Array<ExitCriterionDefinition>} */
+        /** @type {Array<ExitCriterionDefinition>} */
         this.exitCriteria = this.parseElements('exitCriterion', ExitCriterionDefinition, []);
 
         /** @type{Array<PlanItemDefinitionDefinition>} */

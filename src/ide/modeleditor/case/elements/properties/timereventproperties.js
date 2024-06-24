@@ -1,6 +1,7 @@
 import CasePlanDefinition from "@definition/cmmn/caseplan/caseplandefinition";
 import PlanItem from "@definition/cmmn/caseplan/planitem";
 import { CaseFileItemStartTrigger, PlanItemStartTrigger } from "@definition/cmmn/caseplan/timereventdefinition";
+import CaseFileItemDef from "@repository/definition/cmmn/casefile/casefileitemdef";
 import TimerEventView from "../timereventview";
 import PlanItemProperties from "./planitemproperties";
 

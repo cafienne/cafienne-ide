@@ -5,6 +5,7 @@ import CFIDefinitionUnknown from "./cfidefinitionunknown";
 import CFIDefinitionUnspecified from "./cfidefinitionunspecified";
 import CFIDefinitionXMLElement from "./cfidefinitionxmlelement";
 import { andThen } from "@util/promise/followup";
+import CaseFileDefinitionDefinition from "@repository/definition/cfid/casefileitemdefinitiondefinition";
 
 export const UNSPECIFIED = 'Unspecified';
 export const UNSPECIFIED_URI = 'http://www.omg.org/spec/CMMN/DefinitionType/Unspecified';

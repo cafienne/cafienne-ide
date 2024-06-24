@@ -1,6 +1,7 @@
 import Util from "@util/util";
 import MovableEditor from "@ide/editors/movableeditor";
 import CMMNElementView from "../cmmnelementview";
+import CMMNElementDefinition from "@repository/definition/cmmnelementdefinition";
 
 export default class Properties extends MovableEditor {
     /**

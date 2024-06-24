@@ -1,3 +1,4 @@
+import CaseFileItemDef from "../casefile/casefileitemdef";
 import OnPartDefinition from "./onpartdefinition";
 
 export default class CaseFileItemOnPartDefinition extends OnPartDefinition {

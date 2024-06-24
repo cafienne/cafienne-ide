@@ -3,6 +3,7 @@ import CaseDefinition from "../casedefinition";
 import TaskDefinition from "../caseplan/task/taskdefinition";
 import ParameterDefinition from "./parameterdefinition";
 import CaseFileItemDef from "../casefile/casefileitemdef";
+import ExpressionDefinition from "../expression/expressiondefinition";
 
 export default class ParameterMappingDefinition extends UnnamedCMMNElementDefinition {
     /**

@@ -1,4 +1,5 @@
 import Util from "@util/util";
+import ModelDefinition from "./modeldefinition";
 
 /**
  * Helper class for creating new names and/or IDs within a given ModelDefinition.

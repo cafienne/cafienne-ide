@@ -1,3 +1,4 @@
+import ExpressionDefinition from "../expression/expressiondefinition";
 import OnPartDefinition from "../sentry/onpartdefinition";
 import EventListenerDefinition from "./eventlistenerdefinition";
 
