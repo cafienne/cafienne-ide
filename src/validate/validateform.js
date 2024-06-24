@@ -2,6 +2,7 @@
 import Util from "@util/util";
 import ProblemType from "./problemtype";
 import ValidationSettings from "./validationsettings";
+import Settings from "@ide/settings/settings";
 
 export default class ValidateForm extends StandardForm {
     /** @returns {ValidationSettings} */

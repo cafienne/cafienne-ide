@@ -1,5 +1,4 @@
 import CaseView from "./caseview";
-import CMMNElementView from "./cmmnelementview";
 
 export default class CanvasElement {
     /**

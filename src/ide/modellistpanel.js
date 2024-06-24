@@ -2,6 +2,8 @@ import ServerFile from "@repository/serverfile";
 import Util from "@util/util";
 import ModelEditorMetadata from "./modeleditor/modeleditormetadata";
 import RepositoryBrowser from "./repositorybrowser";
+import ModelEditor from "./modeleditor/modeleditor";
+import CreateNewModelDialog from "./createnewmodeldialog";
 
 export default class ModelListPanel {
     /**

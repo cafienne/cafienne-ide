@@ -1,3 +1,4 @@
+import CasePlanView from "../caseplanview";
 import Halo from "./halo";
 import HaloClickItem, { DeleteHaloItem, PropertiesHaloItem } from "./item/haloclickitems";
 import HaloItem from "./item/haloitem";

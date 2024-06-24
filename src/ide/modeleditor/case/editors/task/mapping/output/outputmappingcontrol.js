@@ -9,6 +9,7 @@ import RequiredChanger from "./requiredchanger";
 import MappingOrderChanger from "../mappingorderchanger";
 import ParameterMappingDefinition from "@repository/definition/cmmn/contract/parametermappingdefinition";
 import OutputMappingRow from "./outputmappingrow";
+import ColumnRenderer from "../../../tableeditor/columnrenderer";
 
 export default class OutputMappingControl extends MappingControl {
     constructor(editor, htmlParent) {

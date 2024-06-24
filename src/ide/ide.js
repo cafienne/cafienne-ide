@@ -8,6 +8,10 @@ import IDEHeader from "./ideheader";
 import IDEMain from "./idemain";
 import MessageBox from "./messagebox";
 import SettingsEditor from "./settings/settingseditor";
+import ModelEditorMetadata from "./modeleditor/modeleditormetadata";
+import RepositoryBrowser from "./repositorybrowser";
+import ModelEditor from "./modeleditor/modeleditor";
+import CaseModelEditor from "./modeleditor/case/casemodeleditor";
 
 export default class IDE {
     /** @type {Array<ModelEditorMetadata>} */

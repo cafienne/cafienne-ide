@@ -1,3 +1,6 @@
+import CaseView from "@ide/modeleditor/case/elements/caseview";
+import Settings from "@ide/settings/settings";
+
 export class CaseValidationSettings {
     constructor(hiddenProblemsList) {
         this.date = new Date();

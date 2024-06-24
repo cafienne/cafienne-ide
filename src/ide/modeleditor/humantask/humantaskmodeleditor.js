@@ -8,6 +8,7 @@ import IDE from "@ide/ide";
 import ModelEditor from "../modeleditor";
 import ModelParameters from "../xmleditor/modelparameters";
 import ModelSourceEditor from "../xmleditor/modelsourceeditor";
+import RightSplitter from "@ide/splitter/rightsplitter";
 
 export default class HumantaskModelEditor extends ModelEditor {
     /**

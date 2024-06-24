@@ -5,6 +5,9 @@ import Util from "@util/util";
 import CanvasElement from "./canvaselement";
 import CaseView from "./caseview";
 import Connector from "./connector";
+import Grid from "../grid";
+import Marker from "../marker";
+import Resizer from "../resizer";
 // import Halo from "./halo/halo";
 // BIG TODO HERE
 

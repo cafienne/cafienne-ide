@@ -5,8 +5,8 @@ import ShapeDefinition from "@definition/dimensions/shape";
 import CMMNElementView from "./cmmnelementview";
 import CaseFileItemProperties from "./properties/casefileitemproperties";
 import StageView from "./stageview";
-// import CaseFileItemHalo from "./halo/casefileitemhalo";
-// BIG TODO HERE
+import CaseFileItemHalo from "./halo/casefileitemhalo";
+
 export default class CaseFileItemView extends CMMNElementView {
     /**
      * 

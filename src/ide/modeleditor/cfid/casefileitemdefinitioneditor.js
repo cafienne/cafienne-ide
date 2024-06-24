@@ -1,4 +1,6 @@
-﻿import CFIDefinitionUnknown from "./cfidefinitionunknown";
+﻿// import CaseFileItemsEditor from "../case/editors/casefileitemseditor";
+// BIG TODO HERE
+import CFIDefinitionUnknown from "./cfidefinitionunknown";
 import CFIDefinitionUnspecified from "./cfidefinitionunspecified";
 import CFIDefinitionXMLElement from "./cfidefinitionxmlelement";
 

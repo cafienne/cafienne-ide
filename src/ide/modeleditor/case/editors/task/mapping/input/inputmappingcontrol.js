@@ -8,6 +8,7 @@ import InputParameterSelector from "./inputparameterselector";
 import MappingOrderChanger from "../mappingorderchanger";
 import InputMappingExpression from "./inputmappingexpression";
 import InputMappingRow from "./inputmappingrow";
+import ColumnRenderer from "../../../tableeditor/columnrenderer";
 
 export default class InputMappingControl extends MappingControl {
     constructor(editor, htmlParent) {

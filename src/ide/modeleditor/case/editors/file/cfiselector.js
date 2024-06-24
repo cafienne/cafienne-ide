@@ -1,5 +1,6 @@
 import CaseFileItemDef from "@definition/cmmn/casefile/casefileitemdef";
 import Dialog from "@ide/editors/dialog";
+import CaseView from "../../elements/caseview";
 
 export default class CFISelector extends Dialog {
     /**

@@ -4,6 +4,8 @@ import MovableEditor from "@ide/editors/movableeditor";
 import IDE from "@ide/ide";
 import ModelEditor from "../modeleditor";
 import UndoManager from "./undoredo/undoredo";
+import Grid from "./grid";
+import CaseView from "./elements/caseview";
 
 export default class CaseModelEditor extends ModelEditor {
     /**

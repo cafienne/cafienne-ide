@@ -20,6 +20,7 @@ import UndoRedoBox from "../undoredo/undoredobox";
 // import CasePlanView from "./caseplanview";
 // import CaseTaskView from "./casetaskview";
 import CMMNElementView from "./cmmnelementview";
+import Grid from "../grid";
 // import Connector from "./connector";
 // import HumanTaskView from "./humantaskview";
 // import MilestoneView from "./milestoneview";

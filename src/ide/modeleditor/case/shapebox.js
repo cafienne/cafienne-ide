@@ -1,3 +1,18 @@
+import DragData from "@ide/dragdata";
+import CaseView from "./elements/caseview";
+// import CaseFileItemView from "./elements/casefileitemview";
+// import TextAnnotationView from "./elements/textannotationview";
+// import CasePlanView from "./elements/caseplanview";
+// import { EntryCriterionView, ExitCriterionView, ReactivateCriterionView } from "./elements/sentryview";
+// import StageView from "./elements/stageview";
+// import UserEventView from "./elements/usereventview";
+// import TimerEventView from "./elements/timereventview";
+// import MilestoneView from "./elements/milestoneview";
+// import ProcessTaskView from "./elements/processtaskview";
+// import CaseTaskView from "./elements/casetaskview";
+// import HumanTaskView from "./elements/humantaskview";
+// BIG TODO HERE
+
 export default class ShapeBox {
     /**
      * 

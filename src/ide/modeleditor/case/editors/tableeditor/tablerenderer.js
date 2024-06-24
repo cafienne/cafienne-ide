@@ -1,6 +1,7 @@
 import CMMNElementDefinition from "@definition/cmmnelementdefinition";
 import ColumnRenderer from "./columnrenderer";
 import RowRenderer from "./rowrenderer";
+import CaseView from "../../elements/caseview";
 
 export default class TableRenderer {
     /**

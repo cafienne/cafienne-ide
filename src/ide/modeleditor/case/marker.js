@@ -1,4 +1,7 @@
-﻿export default class Marker {
+﻿import CaseFileItemDef from "@repository/definition/cmmn/casefile/casefileitemdef";
+import CMMNElementView from "./elements/cmmnelementview";
+
+export default class Marker {
     /**
      * implements the marker object for the element
      * @param {CMMNElementView} element

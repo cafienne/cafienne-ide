@@ -22,6 +22,7 @@ import TaskView from "./taskview";
 import TextAnnotationView from "./textannotationview";
 import TimerEventView from "./timereventview";
 import UserEventView from "./usereventview";
+import CaseView from "./caseview";
 
 export default class StageView extends TaskStageView {
     /**
@@ -145,8 +146,7 @@ export default class StageView extends TaskStageView {
     }
 
     /**
-     * Creates a new view (either HumanTaskView, CaseTaskView, ProcessTaskView, CasePlanView, MilestoneView, StageView, UserEventView, TimerEventView),
-     * based on the given plan item. It will look for the planItemDefinition inside the plan item and take it's type to determine the view.
+     * Creates a new view based on the PlanItemDefinitionDefinition of the plan item,
      * @param {PlanItem} definition 
      */
     createPlanItemView(definition) {

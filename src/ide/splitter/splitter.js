@@ -1,5 +1,6 @@
 import Util from "@util/util";
 import SplitterSettings from "./splittersettings";
+import Settings from "@ide/settings/settings";
 
 export default class Splitter {
     /** @returns {SplitterSettings} */

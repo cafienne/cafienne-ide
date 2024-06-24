@@ -1,3 +1,5 @@
+import IDE from "./ide";
+
 export default class IDEHeader {
     /**
      * Constructs the footer of the IDE element.
