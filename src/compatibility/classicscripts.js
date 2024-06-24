@@ -43,7 +43,7 @@ const scripts = [
     // "scripts/repository/definition/cmmn/definitions/casefile/casefiledefinition.js",
     // "scripts/repository/definition/cmmn/definitions/casefile/casefileitemdef.js",
     // "scripts/repository/definition/cmmn/definitions/contract/parameterdefinition.js",
-    "scripts/repository/definition/cmmn/definitions/contract/parametermappingdefinition.js",
+    // "scripts/repository/definition/cmmn/definitions/contract/parametermappingdefinition.js",
     // "scripts/repository/definition/cmmn/definitions/caseplan/planitem.js",
     // "scripts/repository/definition/cmmn/definitions/caseplan/constraintdefinition.js",
     // "scripts/repository/definition/cmmn/definitions/sentry/sentrydefinition.js",

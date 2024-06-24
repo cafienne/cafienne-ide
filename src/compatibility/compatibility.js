@@ -140,6 +140,9 @@ import VerticalSplitter from '../ide/splitter/verticalsplitter';
 import ValidateForm from '../validate/validateform';
 import Validator from '../validate/validator';
 import ClassicScripts from './classicscripts';
+import InputMappingDefinition from '@repository/definition/cmmn/contract/inputmappingdefinition';
+import { OutputMappingDefinition } from '@repository/definition/cmmn/contract/outputmappingdefinition';
+import ParameterMappingDefinition from '@repository/definition/cmmn/contract/parametermappingdefinition';
 
 const pointers = [
     // Util
@@ -168,6 +171,10 @@ const pointers = [
     CMMNExtensionDefinition,
     CafienneImplementationDefinition,
     TextAnnotationDefinition,
+
+    ParameterMappingDefinition,
+    InputMappingDefinition,
+    OutputMappingDefinition,
     
     CaseDefinition,
     CaseFileItemCollection,

@@ -1,4 +1,10 @@
-class ParameterMappingDefinition extends UnnamedCMMNElementDefinition {
+import UnnamedCMMNElementDefinition from "@repository/definition/unnamedcmmnelementdefinition";
+import CaseDefinition from "../casedefinition";
+import TaskDefinition from "../caseplan/task/taskdefinition";
+import ParameterDefinition from "./parameterdefinition";
+import CaseFileItemDef from "../casefile/casefileitemdef";
+
+export default class ParameterMappingDefinition extends UnnamedCMMNElementDefinition {
     /**
      * 
      * @param {Element} importNode 
@@ -260,25 +266,5 @@ class ParameterMappingDefinition extends UnnamedCMMNElementDefinition {
             return;
         }
         super.createExportNode(parentNode, 'parameterMapping', 'sourceRef', 'targetRef', 'transformation');
-    }
-}
-
-class InputMappingDefinition extends ParameterMappingDefinition {
-    get isInputMapping() {
-        return true;
-    }
-}
-
-class OutputMappingDefinition extends ParameterMappingDefinition {
-    get isInputMapping() {
-        return false;
-    }
-
-    createExportNode(parentNode) {
-        super.createExportNode(parentNode);
-        // It is allowed to have empty sourceRef attributes for output mappings; note that there must be an export node (i.e., tranformation is available)
-        if (this.exportNode !== undefined && !this.sourceRef) {
-            this.exportNode.setAttribute('sourceRef', '');
-        }
     }
 }
