@@ -1,3 +1,5 @@
+// import CaseDefinition from "./cmmn/casedefinition";
+// BIG TODO HERE
 import ReferableElementDefinition from "./referableelementdefinition";
 
 export default class CMMNElementDefinition extends ReferableElementDefinition {

@@ -2,6 +2,7 @@ import Util from "@util/util";
 import Content from "./content";
 import XML from "@util/xml";
 import Followup, { andThen } from "@util/promise/followup";
+import ModelDefinition from "./definition/modeldefinition";
 
 export default class ServerFile {
     /**

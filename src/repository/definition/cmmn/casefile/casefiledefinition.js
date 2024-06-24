@@ -1,5 +1,4 @@
-import CaseFileItemCollection from "./casefileitemcollection";
-import CaseFileItemDef from "./casefileitemdef";
+import CaseFileItemDef, { CaseFileItemCollection } from "./casefileitemdef";
 
 export default class CaseFileDefinition extends CaseFileItemCollection {
     constructor(importNode, caseDefinition, parent) {

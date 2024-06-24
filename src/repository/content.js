@@ -1,5 +1,6 @@
 import XML from "@util/xml";
 import ServerFile from "./serverfile";
+import ModelDefinition from "./definition/modeldefinition";
 
 export default class Content {
     /**

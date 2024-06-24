@@ -1,5 +1,7 @@
+import ProcessFile from "@repository/serverfile/processfile";
 import ModelDefinition from "../modeldefinition";
 import ProcessImplementationDefinition from "./processimplementationdefinition";
+import ParameterDefinition from "../cmmn/contract/parameterdefinition";
 
 export default class ProcessModelDefinition extends ModelDefinition {
     /**

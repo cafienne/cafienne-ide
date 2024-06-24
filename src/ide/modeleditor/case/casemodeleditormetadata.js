@@ -7,6 +7,7 @@ import CaseTaskView from "./elements/casetaskview";
 import Grid from "./grid";
 import Util from "@util/util";
 import { andThen } from "@util/promise/followup";
+import Tags from "@repository/definition/dimensions/tags";
 
 export default class CaseModelEditorMetadata extends ModelEditorMetadata {
     /** @returns {Array<ServerFile>} */

@@ -1,4 +1,5 @@
 import UnnamedCMMNElementDefinition from "../../unnamedcmmnelementdefinition";
+import ExpressionDefinition from "../expression/expressiondefinition";
 
 export default class ConstraintDefinition extends UnnamedCMMNElementDefinition {
     constructor(importNode, caseDefinition, parent) {

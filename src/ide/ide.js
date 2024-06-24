@@ -12,6 +12,7 @@ import ModelEditorMetadata from "./modeleditor/modeleditormetadata";
 import RepositoryBrowser from "./repositorybrowser";
 import ModelEditor from "./modeleditor/modeleditor";
 import CaseModelEditor from "./modeleditor/case/casemodeleditor";
+import ModelDefinition from "@repository/definition/modeldefinition";
 
 export default class IDE {
     /** @type {Array<ModelEditorMetadata>} */
