@@ -1,4 +1,8 @@
-class MappingControl extends TableRenderer {
+import ParameterMappingDefinition from "@repository/definition/cmmn/contract/parametermappingdefinition";
+import TableRenderer from "../../tableeditor/tablerenderer";
+import TaskMappingsEditor from "../taskmappingseditor";
+
+export default class MappingControl extends TableRenderer {
     /**
      * 
      * @param {TaskMappingsEditor} editor 

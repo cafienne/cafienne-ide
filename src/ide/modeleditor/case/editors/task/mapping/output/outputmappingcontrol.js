@@ -1,4 +1,16 @@
-class OutputMappingControl extends MappingControl {
+import ParameterDefinition from "@repository/definition/cmmn/contract/parameterdefinition";
+import MappingControl from "../mappingcontrol";
+import OutputMappingDeleter from "./outputmappingdeleter";
+import OutputParameterSelector from "./outputparameterselector";
+import OutputMappingExpression from "./outputmappingexpression";
+import OperationSelector from "./outputoperationselector";
+import MappingCFI from "../mappingcfi";
+import RequiredChanger from "./requiredchanger";
+import MappingOrderChanger from "../mappingorderchanger";
+import ParameterMappingDefinition from "@repository/definition/cmmn/contract/parametermappingdefinition";
+import OutputMappingRow from "./outputmappingrow";
+
+export default class OutputMappingControl extends MappingControl {
     constructor(editor, htmlParent) {
         super(editor, htmlParent);
     }

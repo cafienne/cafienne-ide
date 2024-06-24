@@ -1,4 +1,7 @@
-class MappingCFI {
+import CaseFileItemDef from "@repository/definition/cmmn/casefile/casefileitemdef";
+import MappingRow from "./mappingrow";
+
+export default class MappingCFI {
     static get label() {
         return 'Case File Item';
     }
