@@ -5,6 +5,7 @@ import ModelEditorMetadata from "../modeleditormetadata";
 import ProcessModelEditor from "./processmodeleditor";
 import { CAFIENNE_NAMESPACE, CAFIENNE_PREFIX, EXTENSIONELEMENTS, IMPLEMENTATION_TAG } from "@repository/definition/xmlserializable";
 import { andThen } from "@util/promise/followup";
+import ProcessTaskView from "../case/elements/processtaskview";
 
 export default class ProcessModelEditorMetadata extends ModelEditorMetadata {
     /** @returns {Array<ServerFile>} */

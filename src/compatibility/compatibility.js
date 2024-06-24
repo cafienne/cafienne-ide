@@ -13,7 +13,6 @@ import { EntryCriterionHalo, ExitCriterionHalo, ReactivateCriterionHalo } from '
 import TaskHalo, { HumanTaskHalo } from '@ide/modeleditor/case/elements/halo/taskhalo';
 import CaseModelEditor from '../ide/modeleditor/case/casemodeleditor';
 import CaseFileItemsEditor from '../ide/modeleditor/case/editors/casefileitemseditor';
-import BindingRefinementEditor from '../ide/modeleditor/case/editors/task/bindingrefinementeditor';
 import CaseFileItemView from '../ide/modeleditor/case/elements/casefileitemview';
 import CasePlanView from '../ide/modeleditor/case/elements/caseplanview';
 import CaseTaskView from '../ide/modeleditor/case/elements/casetaskview';
@@ -54,6 +53,7 @@ const pointers = [
 
     Connector,
 
+    // Needed in e.g. ShapeBox and CaseView
     CaseFileItemView,
     CasePlanView,
     CaseTaskView,
@@ -74,7 +74,6 @@ const pointers = [
     TextAnnotationView,
     TimerEventView,
     UserEventView,
-    BindingRefinementEditor,
 
     Halo,
     CasePlanHalo,
