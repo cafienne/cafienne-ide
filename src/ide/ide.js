@@ -1,5 +1,7 @@
 'use strict';
+import ModelEditorRegistry from "./modeleditor/modeleditorregistry";
 
+import ModelDefinition from "@repository/definition/modeldefinition";
 import Importer from "@repository/import/importer";
 import Repository from "@repository/repository";
 import CoverPanel from "./coverpanel";
@@ -7,18 +9,24 @@ import IDEFooter from "./idefooter";
 import IDEHeader from "./ideheader";
 import IDEMain from "./idemain";
 import MessageBox from "./messagebox";
-import SettingsEditor from "./settings/settingseditor";
+import ModelEditor from "./modeleditor/modeleditor";
 import ModelEditorMetadata from "./modeleditor/modeleditormetadata";
 import RepositoryBrowser from "./repositorybrowser";
-import ModelEditor from "./modeleditor/modeleditor";
-import CaseModelEditor from "./modeleditor/case/casemodeleditor";
-import ModelDefinition from "@repository/definition/modeldefinition";
+import SettingsEditor from "./settings/settingseditor";
 
 export default class IDE {
+    static createInstance() {
+        ModelEditorRegistry.initialize();
+
+        const ide = new IDE();
+        ide.init();
+    
+    }
+
     /** @type {Array<ModelEditorMetadata>} */
     static editorTypes = []
     constructor() {
-        this._editors = [];
+        this._editors = /** @type {Array<ModelEditor>} */ ([]);
     }
 
     back() {
@@ -89,13 +97,6 @@ export default class IDE {
      */
     register(editor) {
         this.editors.push(editor);
-    }
-
-    /**
-     * @returns {CaseModelEditor}
-     */
-    get caseModelEditor() {
-        return /** @type {CaseModelEditor} */ (this.editors.find(editor => editor instanceof CaseModelEditor));
     }
 
     /**

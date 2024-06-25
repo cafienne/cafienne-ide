@@ -32,7 +32,6 @@ import TextAnnotationView from '../ide/modeleditor/case/elements/textannotationv
 import TimerEventView from '../ide/modeleditor/case/elements/timereventview';
 import UserEventView from '../ide/modeleditor/case/elements/usereventview';
 import ModelEditor from '../ide/modeleditor/modeleditor';
-import ClassicScripts from './classicscripts';
 
 const pointers = [
     // Repository
@@ -95,10 +94,6 @@ export default class Compatibility {
             window[property.name] = property;
         });
         console.groupEnd();
-
-        this.registerConstants();
-
-        ClassicScripts.include();
     }
 
     static loadScriptSync(src) {
@@ -110,8 +105,5 @@ export default class Compatibility {
         s.type = "text/javascript";
         s.async = false;                                 // <-- this is important
         document.getElementsByTagName('head')[0].appendChild(s);
-    }
-
-    static registerConstants() {
     }
 }

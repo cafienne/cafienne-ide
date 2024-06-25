@@ -1,11 +1,11 @@
+import IDE from "@ide/ide";
+import { CAFIENNE_NAMESPACE, CAFIENNE_PREFIX, EXTENSIONELEMENTS, IMPLEMENTATION_TAG } from "@repository/definition/xmlserializable";
 import ServerFile from "@repository/serverfile";
 import ProcessFile from "@repository/serverfile/processfile";
-import IDE from "@ide/ide";
-import ModelEditorMetadata from "../modeleditormetadata";
-import ProcessModelEditor from "./processmodeleditor";
-import { CAFIENNE_NAMESPACE, CAFIENNE_PREFIX, EXTENSIONELEMENTS, IMPLEMENTATION_TAG } from "@repository/definition/xmlserializable";
 import { andThen } from "@util/promise/followup";
 import ProcessTaskView from "../case/elements/processtaskview";
+import ModelEditorMetadata from "../modeleditormetadata";
+import ProcessModelEditor from "./processmodeleditor";
 
 export default class ProcessModelEditorMetadata extends ModelEditorMetadata {
     /** @returns {Array<ServerFile>} */
