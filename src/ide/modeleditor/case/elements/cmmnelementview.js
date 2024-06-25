@@ -2,12 +2,13 @@ import CMMNDocumentationDefinition from "@definition/cmmndocumentationdefinition
 import CMMNElementDefinition from "@definition/cmmnelementdefinition";
 import ShapeDefinition from "@definition/dimensions/shape";
 import Util from "@util/util";
-import CanvasElement from "./canvaselement";
-import CaseView from "./caseview";
-import Connector from "./connector";
 import Grid from "../grid";
 import Marker from "../marker";
 import Resizer from "../resizer";
+import CanvasElement from "./canvaselement";
+import CaseView from "./caseview";
+import Connector from "./connector";
+import ElementRegistry from "./elementregistry";
 // import Halo from "./halo/halo";
 // BIG TODO HERE
 
@@ -212,7 +213,7 @@ export default class CMMNElementView extends CanvasElement {
      */
     addElementView(shapeType, e) {
         const coor = this.case.getCursorCoordinates(e);
-        const cmmnType = CMMNElementView.constructors[shapeType];
+        const cmmnType = ElementRegistry.getType(shapeType);
         const cmmnElement = this.createCMMNChild(cmmnType, Grid.snap(coor.x), Grid.snap(coor.y));
         // Now select the newly added element
         this.case.clearSelection();
@@ -691,20 +692,6 @@ export default class CMMNElementView extends CanvasElement {
      */
     __moveConstraint(x, y) { }
 
-    /**
-     * Registers a class that extends CMMNElementView by it's name.
-     * @param {Function} cmmnElementType 
-     * @param {String} typeDescription Friendly description of the type
-     * @param {String} smallImageURL url of small image (for drag/drop, shapebox, etc.)
-     * @param {String} menuImageURL optional url of image shown in repository browser
-     */
-    static registerType(cmmnElementType, typeDescription, smallImageURL = '', menuImageURL = smallImageURL) {
-        CMMNElementView.constructors[cmmnElementType.name] = cmmnElementType;
-        cmmnElementType.typeDescription = typeDescription;
-        cmmnElementType.smallImage = smallImageURL;
-        cmmnElementType.menuImage = menuImageURL;
-    }
-
     get isPlanItem() {
         return false;
     }
@@ -781,4 +768,3 @@ export default class CMMNElementView extends CanvasElement {
         return false;
     }
 }
-CMMNElementView.constructors = {};
