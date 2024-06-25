@@ -1,6 +1,8 @@
 import UnnamedCMMNElementDefinition from "../../unnamedcmmnelementdefinition";
 import ConstraintDefinition from "./constraintdefinition";
 import PlanItem from "./planitem";
+// import StageDefinition from "./stagedefinition";
+// BIG TODO HERE
 
 export default class PlanningTableDefinition extends UnnamedCMMNElementDefinition {
     constructor(importNode, caseDefinition, parent) {
