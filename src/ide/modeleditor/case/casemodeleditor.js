@@ -1,11 +1,11 @@
 import CaseDefinition from "@definition/cmmn/casedefinition";
-import CaseFile from "@repository/serverfile/casefile";
 import MovableEditor from "@ide/editors/movableeditor";
 import IDE from "@ide/ide";
+import CaseFile from "@repository/serverfile/casefile";
 import ModelEditor from "../modeleditor";
-import UndoManager from "./undoredo/undoredo";
-import Grid from "./grid";
 import CaseView from "./elements/caseview";
+import Grid from "./grid";
+import UndoManager from "./undoredo/undoredo";
 
 export default class CaseModelEditor extends ModelEditor {
     /**

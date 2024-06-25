@@ -1,13 +1,13 @@
+import IDE from "@ide/ide";
+import Tags from "@repository/definition/dimensions/tags";
 import ServerFile from "@repository/serverfile";
 import CaseFile from "@repository/serverfile/casefile";
-import IDE from "@ide/ide";
+import { andThen } from "@util/promise/followup";
+import Util from "@util/util";
 import ModelEditorMetadata from "../modeleditormetadata";
 import CaseModelEditor from "./casemodeleditor";
 import CaseTaskView from "./elements/casetaskview";
 import Grid from "./grid";
-import Util from "@util/util";
-import { andThen } from "@util/promise/followup";
-import Tags from "@repository/definition/dimensions/tags";
 
 export default class CaseModelEditorMetadata extends ModelEditorMetadata {
     /** @returns {Array<ServerFile>} */
