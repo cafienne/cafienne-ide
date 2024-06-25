@@ -1,17 +1,6 @@
 import DragData from "@ide/dragdata";
 import CaseView from "./elements/caseview";
-// import CaseFileItemView from "./elements/casefileitemview";
-// import TextAnnotationView from "./elements/textannotationview";
-// import CasePlanView from "./elements/caseplanview";
-// import { EntryCriterionView, ExitCriterionView, ReactivateCriterionView } from "./elements/sentryview";
-// import StageView from "./elements/stageview";
-// import UserEventView from "./elements/usereventview";
-// import TimerEventView from "./elements/timereventview";
-// import MilestoneView from "./elements/milestoneview";
-// import ProcessTaskView from "./elements/processtaskview";
-// import CaseTaskView from "./elements/casetaskview";
-// import HumanTaskView from "./elements/humantaskview";
-// BIG TODO HERE
+import ElementRegistry from "./elements/elementregistry";
 
 export default class ShapeBox {
     /**
@@ -40,23 +29,8 @@ export default class ShapeBox {
         //stop ghost image dragging, stop text and html-element selection
         html.on('pointerdown', e => e.preventDefault());
         this.htmlContainer = html.find('ul');
-        // add following shapes
-        const shapeTypes = [
-            HumanTaskView,
-            CaseTaskView,
-            ProcessTaskView,
-            MilestoneView,
-            TimerEventView,
-            UserEventView,
-            StageView,
-            EntryCriterionView,
-            ReactivateCriterionView,
-            ExitCriterionView,
-            CasePlanView,
-            CaseFileItemView,
-            TextAnnotationView
-        ];
-        shapeTypes.forEach(shapeType => {
+        // add shapes from element registry that have an image.
+        ElementRegistry.viewMetadata.filter(shapeType => shapeType.hasImage).forEach(shapeType => {
             const description = shapeType.typeDescription;
             const imgURL = shapeType.smallImage;
             const html = $(`<li class="list-group-item" title="${description}">
@@ -64,7 +38,7 @@ export default class ShapeBox {
                             </li>`);
             html.on('pointerdown', e => this.handleMouseDown(e, shapeType.name, description, imgURL));
             this.htmlContainer.append(html);
-        })
+        });
     }
 
     /**
