@@ -20,6 +20,7 @@ import CMMNElementView from "./cmmnelementview";
 import Grid from "../grid";
 import Util from "@util/util";
 import CaseFileItemView from "./casefileitemview";
+import { dia } from "jointjs";
 // import CasePlanView from "./caseplanview";
 // import Connector from "./connector";
 // import StageView from "./stageview";
@@ -192,10 +193,10 @@ export default class CaseView {
     }
 
     createJointStructure() {
-        this.graph = new joint.dia.Graph();
+        this.graph = new dia.Graph();
 
         //create drawing area (SVG), all elements will be drawn in here
-        this.paper = new joint.dia.Paper({
+        this.paper = new dia.Paper({
             el: this.paperContainer,
             width: '6000px',
             height: '6000px',

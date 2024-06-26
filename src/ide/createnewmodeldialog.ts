@@ -1,23 +1,20 @@
 import Dialog from "./editors/dialog";
-import IDE from "./ide";
+import IDE from "@ide/ide";
+import $ from "jquery";
 
 export default class CreateNewModelDialog extends Dialog {
-    /**
-     * @param {IDE} ide
-     * @param {string} label
-     * @param {string} defaultName
-     */
-    constructor(ide, label, defaultName = '') {
+    defaultName: string;
+    constructor(ide: IDE, label: string, defaultName: string = '') {
         super(ide, label);
         this.defaultName = defaultName;
     }
 
     get name() {
-        return this.dialogHTML.find('.inputName').val();
+        return this.dialogHTML?.find('.inputName').val();
     }
 
     get description() {
-        return this.dialogHTML.find('.inputDescription').val();
+        return this.dialogHTML?.find('.inputDescription').val();
     }
 
     renderDialog() {
@@ -32,9 +29,9 @@ export default class CreateNewModelDialog extends Dialog {
                 <button class='buttonCancel'>Cancel</button>
             </form>
         `);
-        this.dialogHTML.append(htmlDialog);
-        this.dialogHTML.find('input').on('focus', e => e.target.select());
-        this.dialogHTML.find('.buttonOk').on('click', e => this.closeModalDialog({ name: this.name, description: this.description }));
-        this.dialogHTML.find('.buttonCancel').on('click', e => this.closeModalDialog(false));
+        this.dialogHTML?.append(htmlDialog);
+        this.dialogHTML?.find('input').on('focus', e => e.target.select());
+        this.dialogHTML?.find('.buttonOk').on('click', e => this.closeModalDialog({ name: this.name, description: this.description }));
+        this.dialogHTML?.find('.buttonCancel').on('click', e => this.closeModalDialog(false));
     }
 }
