@@ -1,5 +1,7 @@
 // FOR SOME WEIRD REASON THE UNUSED CasePlanDefinition IMPORT MUST BE PUT HERE. VERY WEIRD, giving errors in TaskDefinition if it is removed...
-import CasePlanDefinition from '@definition/cmmn/caseplan/caseplandefinition';
+// In the compatibilityhelper we do an import CasePlanDefinition from '@definition/cmmn/caseplan/caseplandefinition';
+import echo from './compatibilityhelper';
+
 import TaskDefinition from '@definition/cmmn/caseplan/task/taskdefinition';
 import ParameterDefinition from '@definition/cmmn/contract/parameterdefinition';
 import EntryCriterionDefinition from '@definition/cmmn/sentry/entrycriteriondefinition';
@@ -62,19 +64,9 @@ export default class Compatibility {
         console.groupCollapsed("Registering " + pointers.length + " exports");
         pointers.forEach(property => {
             console.log("Registering window." + property.name);
-            window[property.name] = property;
+            (<any>window)[property.name] = property;
         });
+        echo();  // TODO BIG .... Shouldn't be necessary
         console.groupEnd();
-    }
-
-    static loadScriptSync(src) {
-        // if (pointers.find(pointer => pointer.name && src.endsWith(pointer.name.toLowerCase() + '.js'))) {
-        //     console.log("Skipping script " + src)
-        // }
-        var s = document.createElement('script');
-        s.src = src;
-        s.type = "text/javascript";
-        s.async = false;                                 // <-- this is important
-        document.getElementsByTagName('head')[0].appendChild(s);
     }
 }
