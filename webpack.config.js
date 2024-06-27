@@ -42,6 +42,8 @@ module.exports = {
             '@repository': path.resolve(__dirname, 'src/repository'),
             '@definition': path.resolve(__dirname, 'src/repository/definition'),
             '@ide': path.resolve(__dirname, 'src/ide'),
+            'jquery': path.resolve(__dirname, 'node_modules/jquery/dist/jquery'),
+            'jquery-ui': path.resolve(__dirname, 'node_modules/jquery-ui/dist/jquery-ui'),
         },
     },
     devtool: 'source-map',
