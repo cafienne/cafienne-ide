@@ -7,6 +7,7 @@
 
 import Settings from "@ide/settings/settings";
 import CaseView from "./elements/caseview";
+import { dia } from "jointjs";
 
 /**
  * @type {Array<Grid>}
@@ -111,7 +112,7 @@ export default class Grid {
     /**
      * Helper class that adds grid structure to the jointjs paper element.
      * We can set the .size and the .visible property.
-     * @param {*} paper effectively joint.dia.Paper
+     * @param {dia.Paper} paper effectively joint.dia.Paper
      * @param {CaseView} cs effectively joint.dia.Paper
      */
     constructor(paper, cs) {

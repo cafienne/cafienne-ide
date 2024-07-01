@@ -6,6 +6,7 @@ import CMMNElementView from "./cmmnelementview";
 import Connector from "./connector";
 import PlanItemView from "./planitemview";
 import SentryProperties from "./properties/sentryproperties";
+import { g } from "jointjs";
 // import { EntryCriterionHalo, ExitCriterionHalo, ReactivateCriterionHalo } from "./halo/sentryhalo";
 // BIG TODO HERE
 
@@ -271,11 +272,6 @@ export default class SentryView extends CMMNElementView {
      * @param {*} y the coordinates of the event (cursor/mouse pointer location)
      */
     __moveConstraint(x, y) {
-        // const point = g.point(x, y);
-
-        // //get the coordinates of the boundrypoint of the parent that is nearest to the cursor
-        // const boundryPoint = this.parent.xyz_joint.getBBox().pointNearestToPoint(point);
-
         const parentElement = this.case.graph.getCell(this.parent.xyz_joint.id);
         if (!parentElement) return; // Parent element probably has not yet been added to the case
 

@@ -9,6 +9,7 @@ import CanvasElement from "./canvaselement";
 import CaseView from "./caseview";
 import Connector from "./connector";
 import ElementRegistry from "./elementregistry";
+import { shapes, util } from "jointjs";
 // import Halo from "./halo/halo";
 // BIG TODO HERE
 
@@ -148,7 +149,7 @@ export default class CMMNElementView extends CanvasElement {
             // Attrs can contain additional relative styling for the text label inside the element
             attrs: this.textAttributes
         };
-        this.xyz_joint = new joint.shapes.basic.Generic(jointSVGSetup);
+        this.xyz_joint = new shapes.basic.Generic(jointSVGSetup);
         // Directly embed into parent
         if (this.parent && this.parent.xyz_joint) {
             this.parent.xyz_joint.embed(this.xyz_joint);
@@ -253,7 +254,7 @@ export default class CMMNElementView extends CanvasElement {
      */
     refreshText() {
         const rawText = this.text;
-        const formattedText = this.wrapText ? joint.util.breakText(rawText, { width: this.shape.width, height: this.shape.height }) : rawText;
+        const formattedText = this.wrapText ? util.breakText(rawText, { width: this.shape.width, height: this.shape.height }) : rawText;
         this.xyz_joint.attr('text/text', formattedText);
     }
 

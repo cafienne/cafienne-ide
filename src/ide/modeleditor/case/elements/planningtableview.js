@@ -3,6 +3,7 @@ import ShapeDefinition from "@definition/dimensions/shape";
 import CMMNElementView from "./cmmnelementview";
 import PlanningTableProperties from "./properties/planningtableproperties";
 import TaskStageView from "./taskstageview";
+import { g } from "jointjs";
 // import PlanningTableHalo from "./halo/planningtablehalo";
 // BIG TODO HERE
 

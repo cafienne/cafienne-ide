@@ -2,6 +2,7 @@
 import CanvasElement from "./canvaselement";
 import CaseView from "./caseview";
 import CMMNElementView from "./cmmnelementview";
+import { dia } from "jointjs";
 
 export default class Connector extends CanvasElement {
     /**
@@ -56,7 +57,7 @@ export default class Connector extends CanvasElement {
 
         const arrowStyle = this.sentry ? '8 3 3 3 3 3' : '5 5'
 
-        this.link = this.xyz_joint = new joint.dia.Link({
+        this.link = this.xyz_joint = new dia.Link({
             source: { id: this.source.xyz_joint.id },
             target: { id: this.target.xyz_joint.id },
             attrs: {
@@ -159,7 +160,7 @@ export class TemporaryConnector extends CanvasElement {
     constructor(source, coordinates) {
         super(source.case);
         this.source = source;
-        this.link = this.xyz_joint = new joint.dia.Link({
+        this.link = this.xyz_joint = new dia.Link({
             source: { id: source.xyz_joint.id },
             target: coordinates,
             attrs: {
