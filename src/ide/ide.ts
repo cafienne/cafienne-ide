@@ -13,33 +13,31 @@ import ModelEditor from "./modeleditor/modeleditor";
 import ModelEditorMetadata from "./modeleditor/modeleditormetadata";
 import RepositoryBrowser from "./repositorybrowser";
 import SettingsEditor from "./settings/settingseditor";
+import $ from "jquery";
 
 export default class IDE {
+    private _editors: Array<ModelEditor> = [];
+    repository: Repository;
+    html: JQuery<HTMLElement>;
+    header: IDEHeader;
+    main: IDEMain;
+    footer: IDEFooter;
+    messageBox: MessageBox;
+    coverPanel: CoverPanel;
+    settingsEditor: SettingsEditor;
+    private _dragging: any;
+
     static createInstance() {
         ModelEditorRegistry.initialize();
 
         const ide = new IDE();
-        ide.init();
-    
     }
 
-    /** @type {Array<ModelEditorMetadata>} */
-    static editorTypes = []
+    static editorTypes: Array<ModelEditorMetadata> = []
+
     constructor() {
-        this._editors = /** @type {Array<ModelEditor>} */ ([]);
-    }
-
-    back() {
-        // Simplistic. Buggy. But nice and simple for now. Better would be to hash all locations we've been and go back properly
-        history.back();
-    }
-
-    init() {
-        // Repository object handles the interaction with the server
         this.repository = new Repository();
-
         this.html = $('body');
-
         this.header = new IDEHeader(this);
         this.main = new IDEMain(this);
         this.footer = new IDEFooter(this);
@@ -47,8 +45,9 @@ export default class IDE {
         this.coverPanel = new CoverPanel(this); // Helper to show/hide status messages while loading models from the repository
         this.settingsEditor = new SettingsEditor(this);
 
+        // Repository object handles the interaction with the server
         this.html.on('keydown', e => {
-            if (e.keyCode == 83 && e.altKey) {
+            if (e.which == 83 && e.altKey) { // ALT S
                 this.settingsEditor.show();
             }
         });
@@ -59,12 +58,13 @@ export default class IDE {
         IDE.editorTypes.forEach(type => type.init(this));
     }
 
-    /**
-     * 
-     * @param {JQuery.TriggeredEvent} e 
-     */
-    handlePasteText(e) {
-        const pastedText = e.originalEvent.clipboardData.getData('text/plain');
+    back() {
+        // Simplistic. Buggy. But nice and simple for now. Better would be to hash all locations we've been and go back properly
+        history.back();
+    }
+
+    handlePasteText(e: JQuery.TriggeredEvent) {
+        const pastedText = (<any>e).originalEvent.clipboardData.getData('text/plain');
         const importer = new Importer(this.repository, pastedText);
         console.log("Found " + importer.files.length + " files to import")
         if (importer.files.length > 0) {
@@ -75,10 +75,7 @@ export default class IDE {
         }
     }
 
-    /**
-     * @returns {RepositoryBrowser}
-     */
-    get repositoryBrowser() {
+    get repositoryBrowser(): RepositoryBrowser {
         return this.main.repositoryBrowser;
     }
 
@@ -92,17 +89,14 @@ export default class IDE {
         return this._editors;
     }
 
-    /**
-     * @param {ModelEditor} editor 
-     */
-    register(editor) {
+    register(editor: ModelEditor) {
         this.editors.push(editor);
     }
 
     /**
-     * @returns {Boolean} Determines if someone is drag/dropping an item across the IDE.
+     * @returns Determines if someone is drag/dropping an item across the IDE.
      */
-    get dragging() {
+    get dragging(): boolean {
         return this._dragging;
     }
 
@@ -112,13 +106,9 @@ export default class IDE {
 
     /**
      * 
-     * @param {String} modelType 
-     * @param {String} newModelName 
-     * @param {String} newModelDescription 
-     * @param {Function} callback 
-     * @returns {String} fileName of the new model
+     * @returns fileName of the new model
      */
-    createNewModel(modelType, newModelName, newModelDescription, callback) {
+    createNewModel(modelType: string, newModelName: string, newModelDescription: string, callback: Function): string | undefined {
         const editorMetadata = IDE.editorTypes.find(type => type.modelType == modelType);
         if (!editorMetadata) {
             const msg = 'Cannot create new models of type ' + modelType;
@@ -129,19 +119,14 @@ export default class IDE {
         return editorMetadata.createNewModel(this, newModelName, newModelDescription, callback);
     }
 
-    /**
-     * 
-     * @param {ModelDefinition} model 
-     */
-    openModel(model) {
+    openModel(model: ModelDefinition) {
         console.log("Opened model " + model.name)
     }
 
     /**
      * Determines the type of the file name and opens the corresponding editor.
-     * @param {String} fileName 
      */
-    open(fileName) {
+    open(fileName: string) {
         if (!fileName) {
             // Simply no model to load; but hide all existing editors.
             this.editors.forEach(editor => editor.visible = false);
@@ -201,47 +186,44 @@ export default class IDE {
 
     /**
      * Shows a green success message.
-     * @param {String} message     : text to be displayed
-     * @param {Number} delay       : message is automatically remove after this number of microsec  
+     * @param message text to be displayed
+     * @param delay message is automatically remove after this number of microsec  
      */
-    success(message, delay = 0) {
+    success(message: string, delay = 0) {
         this.messageBox.createMessage(message, 'success', delay);
     }
 
     /** 
      * Shows a blue info message.
-     * @param {String} message     : text to be displayed
-     * @param {Number} delay       : message is automatically remove after this number of microsec  
+     * @param message text to be displayed
+     * @param delay message is automatically remove after this number of microsec  
      */
-    info(message, delay = 0) {
+    info(message: string, delay = 0) {
         this.messageBox.createMessage(message, 'info', delay);
     }
 
     /** 
      * Shows a yellow warning message.
-     * @param {String} message     : text to be displayed
-     * @param {Number} delay       : message is automatically remove after this number of microsec  
+     * @param message text to be displayed
+     * @param delay message is automatically remove after this number of microsec  
      */
-    warning(message, delay = 0) {
+    warning(message: string, delay = 0) {
         this.messageBox.createMessage(message, 'warning', delay);
     }
 
     /** 
      * Shows a red danger message.
-     * @param {String} message     : text to be displayed
-     * @param {Number} delay       : message is automatically remove after this number of microsec  
+     * @param message text to be displayed
+     * @param delay message is automatically remove after this number of microsec  
      */
-    danger(message, delay = 0) {
+    danger(message: string, delay = 0) {
         this.messageBox.createMessage(message, 'danger', delay);
     }
 
     /**
      * Registers a type of editor, e.g. HumanTaskEditor, CaseModelEditor, ProcessModelEditor
-     * @param {ModelEditorMetadata} editorMetadata 
      */
-    static registerEditorType(editorMetadata) {
+    static registerEditorType(editorMetadata: ModelEditorMetadata) {
         IDE.editorTypes.push(editorMetadata);
     }
 }
-
-window.IDE = IDE;
