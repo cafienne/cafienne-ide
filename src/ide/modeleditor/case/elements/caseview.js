@@ -21,11 +21,10 @@ import Grid from "../grid";
 import Util from "@util/util";
 import CaseFileItemView from "./casefileitemview";
 import { dia } from "jointjs";
-// import CasePlanView from "./caseplanview";
-// import Connector from "./connector";
-// import StageView from "./stageview";
-// import TextAnnotationView from "./textannotationview";
-// BIG TODO HERE
+import CasePlanView from "./caseplanview";
+import Connector from "./connector";
+import StageView from "./stageview";
+import TextAnnotationView from "./textannotationview";
 
 export default class CaseView {
     /**
@@ -74,7 +73,7 @@ export default class CaseView {
         this.canvas = this.divCaseModel.find('.divCaseCanvas');
         this.paperContainer = this.html.find('.paper-container');
 
-        this.deployForm = new Deploy(editor);
+        this.deployForm = new Deploy(this);
         this.sourceEditor = new CaseSourceEditor(editor, this.html);
         this.cfiEditor = new CaseFileItemsEditor(this, this.divCFIEditor);
         this.undoBox = new UndoRedoBox(this, this.divUndoRedo);
@@ -88,10 +87,10 @@ export default class CaseView {
         this.createJointStructure();
 
         //create the editor forms for roles, case file items, and case input and output parameters
-        this.rolesEditor = new RolesEditor(editor);
-        this.caseParametersEditor = new CaseParametersEditor(editor);
-        this.startCaseEditor = new StartCaseEditor(editor);
-        this.debugEditor = new Debugger(editor);
+        this.rolesEditor = new RolesEditor(this);
+        this.caseParametersEditor = new CaseParametersEditor(this);
+        this.startCaseEditor = new StartCaseEditor(this);
+        this.debugEditor = new Debugger(this);
 
         const casePlanDefinition = this.caseDefinition.casePlan;
         if (casePlanDefinition) {
@@ -153,7 +152,7 @@ export default class CaseView {
         }
         // create object for validation of CMMN schema
         this.validator = new Validator(this);
-        this.validateForm = new ValidateForm(editor);
+        this.validateForm = new ValidateForm(this);
         this.validator.addListener(validator => {
             // Shows the number of errors and warnings in the case footer
             const iErrors = validator.errors.length;

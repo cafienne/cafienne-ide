@@ -1,5 +1,6 @@
 import CaseDefinition from "@definition/cmmn/casedefinition";
 import Action from "./action";
+import CaseModelEditor from "../casemodeleditor";
 
 export default class UndoManager {
     /**

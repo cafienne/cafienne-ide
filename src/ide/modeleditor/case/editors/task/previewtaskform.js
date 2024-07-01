@@ -1,6 +1,6 @@
-import Util from "@util/util";
 import StandardForm from "@ide/editors/standardform";
 import ModelEditor from "@ide/modeleditor/modeleditor";
+import Util from "@util/util";
 import HumanTaskView from "../../elements/humantaskview";
 
 export default class PreviewTaskForm extends StandardForm {
@@ -9,8 +9,8 @@ export default class PreviewTaskForm extends StandardForm {
      * @param {ModelEditor} editor
      * @param {HumanTaskView} task
      */
-    constructor(editor, task, dataGetter = undefined) {
-        super(editor, 'Task Preview', 'task-preview');
+    constructor(task) {
+        super(task.case, 'Task Preview', 'task-preview');
         this.task = task;
     }
     

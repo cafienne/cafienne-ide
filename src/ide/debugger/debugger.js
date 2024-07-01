@@ -1,10 +1,10 @@
 'use strict';
 
+import CaseView from "@ide/modeleditor/case/elements/caseview";
 import CodeMirrorConfig from "@util/codemirrorconfig";
 import Util from "@util/util";
 import StandardForm from "../editors/standardform";
 import RightSplitter from "../splitter/rightsplitter";
-import CaseModelEditor from "@ide/modeleditor/case/casemodeleditor";
 
 /**
  * This class implements the logic to call the repository REST service to debug a case instance.
@@ -14,10 +14,10 @@ import CaseModelEditor from "@ide/modeleditor/case/casemodeleditor";
 export default class Debugger extends StandardForm {
     /**
      * 
-     * @param {CaseModelEditor} editor 
+     * @param {CaseView} cs 
      */
-    constructor(editor) {
-        super(editor, 'Debugger', 'debug-form');
+    constructor(cs) {
+        super(cs, 'Debugger', 'debug-form');
         this.eventTypeFilter = '';
         this.eventNameFilter = '';
     }

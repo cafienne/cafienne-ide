@@ -10,7 +10,7 @@ export default class BindingRefinementEditor extends TableEditor {
      * @param {MappingRow} mappingRow 
      */
     constructor(mappingRow) {
-        super(mappingRow.case.editor);
+        super(mappingRow.case);
         this.mappingRow = mappingRow;
         this.task = mappingRow.control.task;
         this.taskParameter = this.mappingRow.mapping.taskParameter;

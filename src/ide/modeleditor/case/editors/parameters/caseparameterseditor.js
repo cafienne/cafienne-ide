@@ -2,7 +2,7 @@ import CaseFileItemDef from "@definition/cmmn/casefile/casefileitemdef";
 import ParameterDefinition from "@definition/cmmn/contract/parameterdefinition";
 import CMMNElementDefinition from "@definition/cmmnelementdefinition";
 import StandardForm from "@ide/editors/standardform";
-import CaseModelEditor from "../../casemodeleditor";
+import BottomSplitter from "@ide/splitter/bottomsplitter";
 import ColumnRenderer from "../tableeditor/columnrenderer";
 import RowRenderer from "../tableeditor/rowrenderer";
 import TableRenderer from "../tableeditor/tablerenderer";
@@ -10,15 +10,14 @@ import CFIZoom from "./cfizoom";
 import ExpressionChanger from "./expressionchanger";
 import NameChanger from "./namechanger";
 import ParameterDeleter from "./parameterdeleter";
-import BottomSplitter from "@ide/splitter/bottomsplitter";
 
 export default class CaseParametersEditor extends StandardForm {
     /**
      * 
-     * @param {CaseModelEditor} editor 
+     * @param {CaseView} cs 
      */
-    constructor(editor) {
-        super(editor, 'Edit case parameters', 'caseparameters');
+    constructor(cs) {
+        super(cs, 'Edit case parameters', 'caseparameters');
     }
 
     renderHead() {

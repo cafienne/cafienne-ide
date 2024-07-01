@@ -1,8 +1,9 @@
-﻿﻿import StandardForm from "../ide/editors/standardform";
+﻿﻿import CaseView from "@ide/modeleditor/case/elements/caseview";
+import Settings from "@ide/settings/settings";
 import Util from "@util/util";
+import StandardForm from "../ide/editors/standardform";
 import ProblemType from "./problemtype";
 import ValidationSettings from "./validationsettings";
-import Settings from "@ide/settings/settings";
 
 export default class ValidateForm extends StandardForm {
     /** @returns {ValidationSettings} */
@@ -16,11 +17,11 @@ export default class ValidateForm extends StandardForm {
     /**
      * This object handles the validation of the CMMN schema drawn by the user;
      * If holds track of the problems found in the CMMN schema of the case; these problems have a @type {ProblemType}
-     * @param {CaseModelEditor} editor
+     * @param {CaseView} cs
      */
-    constructor(editor) {
-        super(editor, '');
-        this.validator = editor.case.validator;
+    constructor(cs) {
+        super(cs, '');
+        this.validator = cs.case.validator;
         this.validator.addListener(validator => this.renderData());
         if (ValidateForm.Settings.visible) {
             this.show();

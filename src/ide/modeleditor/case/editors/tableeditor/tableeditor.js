@@ -1,16 +1,16 @@
 import CMMNElementDefinition from "@definition/cmmnelementdefinition";
 import MovableEditor from "@ide/editors/movableeditor";
-import CaseModelEditor from "../../casemodeleditor";
 import Util from "@util/util";
+import CaseView from "../../elements/caseview";
 
 export default class TableEditor extends MovableEditor {
     /**
      * Defines a generic editor for collections of CMMNElementDefinition, to select and edit data in a table
      * Defines a generic TableEditor, to select and edit data in a table
-     * @param {CaseModelEditor} modelEditor 
+     * @param {CaseView} cs 
      */
-    constructor(modelEditor) {
-        super(modelEditor);
+    constructor(cs) {
+        super(cs);
         // this.id = this.case.id + '_' + this.constructor.name;
         /** @type {Array<RowEditor>} */
         this.rows = []; // Reset array of row renderers
