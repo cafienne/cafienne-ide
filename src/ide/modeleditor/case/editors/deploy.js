@@ -1,15 +1,15 @@
-﻿import CodeMirrorConfig from "@util/codemirrorconfig";
-import StandardForm from "@ide/editors/standardform";
-import CaseModelEditor from "../casemodeleditor";
+﻿import StandardForm from "@ide/editors/standardform";
+import CodeMirrorConfig from "@util/codemirrorconfig";
+import CaseView from "../elements/caseview";
 
 export default class Deploy extends StandardForm {
     /**
      * 
      * This class implements the logic to call the repository REST service to deploy a CMMN model.
-     * @param {CaseModelEditor} editor 
+     * @param {CaseView} cs 
      */
-    constructor(editor) {
-        super(editor, 'Deploy CMMN Model - ' + editor.case.name, 'deployform');
+    constructor(cs) {
+        super(cs, 'Deploy CMMN Model - ' + cs.case.name, 'deployform');
     }
 
     renderData() {

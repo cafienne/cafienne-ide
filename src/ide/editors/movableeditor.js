@@ -1,24 +1,19 @@
 import CMMNElementDefinition from "@definition/cmmnelementdefinition";
-// import CaseModelEditor from "@ide/modeleditor/case/casemodeleditor";
-// import ModelEditor from "@ide/modeleditor/modeleditor";
+import CaseView from "@ide/modeleditor/case/elements/caseview";
 import Util from "@util/util";
-// BIG TODO HERE
 
 export default class MovableEditor {
     /**
      * A movable editor resides typically within the context of a case.
      * Usually it is something that pops up upon button click (e.g., Properties of an element, Roles Editor, Parameters Editor, etc)
      * It can be moved around and resized.
-     * @param {ModelEditor} modelEditor 
+     * @param {CaseView} cs 
      */
-    constructor(modelEditor) {
-        this.modelEditor = modelEditor;
+    constructor(cs) {
+        this.case = cs;
+        this.modelEditor = cs.editor;
         this.htmlParent = this.modelEditor.divMovableEditors;
         this.modelEditor.registerMovableEditor(this);
-    }
-
-    get case() {
-        return this.modelEditor instanceof CaseModelEditor ? this.modelEditor.case : undefined;
     }
 
     get html() {

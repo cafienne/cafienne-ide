@@ -1,14 +1,14 @@
-﻿import CodeMirrorConfig from "@util/codemirrorconfig";
-import StandardForm from "@ide/editors/standardform";
-import CaseModelEditor from "../casemodeleditor";
+﻿import StandardForm from "@ide/editors/standardform";
+import CodeMirrorConfig from "@util/codemirrorconfig";
+import CaseView from "../elements/caseview";
 
 export default class StartCaseEditor extends StandardForm {
     /**
      * Editor for the content of the extension element <start-case-schema>
-     * @param {CaseModelEditor} editor 
+     * @param {CaseView} cs 
      */
-    constructor(editor) {
-        super(editor, 'Start Case Schema Editor', 'jsoneditor');
+    constructor(cs) {
+        super(cs, 'Start Case Schema Editor', 'jsoneditor');
     }
 
     renderData() {

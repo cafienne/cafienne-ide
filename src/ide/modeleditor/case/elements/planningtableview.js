@@ -4,8 +4,7 @@ import CMMNElementView from "./cmmnelementview";
 import PlanningTableProperties from "./properties/planningtableproperties";
 import TaskStageView from "./taskstageview";
 import { g } from "jointjs";
-// import PlanningTableHalo from "./halo/planningtablehalo";
-// BIG TODO HERE
+import PlanningTableHalo from "./halo/planningtablehalo";
 
 export const EXPANDEDPLANNINGTABLE_IMG = 'images/expandedplanningtable_32.png';
 

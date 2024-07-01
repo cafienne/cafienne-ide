@@ -1,15 +1,15 @@
 import StandardForm from "@ide/editors/standardform";
+import BottomSplitter from "@ide/splitter/bottomsplitter";
 import TaskView from "../../elements/taskview";
 import InputMappingControl from "./mapping/input/inputmappingcontrol";
 import OutputMappingControl from "./mapping/output/outputmappingcontrol";
-import BottomSplitter from "@ide/splitter/bottomsplitter";
 
 export default class TaskMappingsEditor extends StandardForm {
     /**
      * @param {TaskView} task 
      */
     constructor(task) {
-        super(task.editor, 'Edit mappings of task ' + task.definition.name, 'tableeditorform', 'mappingform');
+        super(task.case, 'Edit mappings of task ' + task.definition.name, 'tableeditorform', 'mappingform');
         this.task = task;
     }
 

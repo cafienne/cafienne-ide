@@ -7,8 +7,7 @@ import HumanTaskProperties from "./properties/humantaskproperties";
 import WorkflowProperties from "./properties/workflowproperties";
 import StageView from "./stageview";
 import TaskView from "./taskview";
-// import { HumanTaskHalo } from "./halo/taskhalo";
-// BIG TODO HERE
+import { HumanTaskHalo } from "./halo/taskhalo";
 
 const BLOCKINGHUMANTASK_IMG = 'images/svg/blockinghumantask.svg';
 const NONBLOCKINGHUMANTASK_IMG = 'images/svg/nonblockinghumantask.svg';
@@ -36,7 +35,7 @@ export default class HumanTaskView extends TaskView {
         super(parent, definition, planItemDefinition, shape);
         this.planItemDefinition = planItemDefinition;
         this.workflowProperties = new WorkflowProperties(this);
-        this.previewForm = new PreviewTaskForm(this.editor, this);
+        this.previewForm = new PreviewTaskForm(this);
     }
 
     getImplementationList() {

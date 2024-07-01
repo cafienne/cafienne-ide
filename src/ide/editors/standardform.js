@@ -2,18 +2,17 @@
 
 import Util from "@util/util";
 import MovableEditor from "./movableeditor";
-// import ModelEditor from "@ide/modeleditor/modeleditor";
-// BIG TODO HERE
+import CaseView from "@ide/modeleditor/case/elements/caseview";
 
 export default class StandardForm extends MovableEditor {
 
     /**
-     * @param {ModelEditor} modelEditor 
+     * @param {CaseView} cs 
      * @param {String} label 
      * @param {Array<String>} classNames      * 
      */
-    constructor(modelEditor, label, ...classNames) {
-        super(modelEditor);
+    constructor(cs, label, ...classNames) {
+        super(cs);
         this._label = label;
         this.classNames = classNames;
     }

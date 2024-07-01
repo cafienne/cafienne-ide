@@ -10,7 +10,7 @@ export default class Properties extends MovableEditor {
      */
     constructor(cmmnElement) {
         // console.log("Creating properties for " + cmmnElement)
-        super(cmmnElement.editor);
+        super(cmmnElement.case);
         this.cmmnElement = cmmnElement;
 
         //set the properties to get the html elements from index.html
