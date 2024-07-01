@@ -1,5 +1,6 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const devMode = process.env.DEV_MODE ? process.env.DEV_MODE.trim().toLowerCase() === 'true' : false;
 
 module.exports = {
     entry: './src/index.ts',
@@ -46,4 +47,5 @@ module.exports = {
         static: './dist',
         port: 7281,
     },
+    watch: devMode,
 };
