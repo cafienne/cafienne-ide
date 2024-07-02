@@ -1,3 +1,4 @@
+import Util from "@util/util";
 import ReferableElementDefinition from "../referableelementdefinition";
 import SchemaDefinition from "./schemadefinition";
 import TypeDefinition from "./typedefinition";
