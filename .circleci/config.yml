@@ -128,6 +128,7 @@ workflows:
               ignore:
                 - main
                 - remove-bower-and-gulp
+                - type-modeleditor-on-webpack
       - webpack-build-to-dev:
           context: automation-context
           filters:
