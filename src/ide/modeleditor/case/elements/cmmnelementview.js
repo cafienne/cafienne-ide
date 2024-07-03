@@ -373,11 +373,13 @@ export default class CMMNElementView extends CanvasElement {
     __select(selected) {
         if (selected) {
             //do not select element twice
-            this.html.find('.cmmn-shape').addClass('cmmn-selected-element');
+            Util.addClassOverride(this.html.find('.cmmn-shape'),'cmmn-selected-element');
+            // this.html.find('.cmmn-shape').addClass('cmmn-selected-element');
             this.__renderBoundary(true);
         } else {
             // Give ourselves default color again.
-            this.html.find('.cmmn-shape').removeClass('cmmn-selected-element');
+            Util.removeClassOverride(this.html.find('.cmmn-shape'),'cmmn-selected-element');
+            // this.html.find('.cmmn-shape').removeClass('cmmn-selected-element');
             this.propertiesView.hide();
             this.__renderBoundary(false);
         }
