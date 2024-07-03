@@ -2,6 +2,7 @@ import CaseFileItemCollection from "@definition/cmmn/casefile/casefileitemdef";
 import CaseFileItemDef from "@definition/cmmn/casefile/casefileitemdef";
 import CaseFileItemsEditor, { NEWDEF } from "../casefileitemseditor";
 import Util from "@util/util";
+import $ from "jquery";
 
 export default class CFINode {
     /**

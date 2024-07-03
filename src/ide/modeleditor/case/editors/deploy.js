@@ -1,6 +1,7 @@
 ﻿import StandardForm from "@ide/editors/standardform";
 import CodeMirrorConfig from "@util/codemirrorconfig";
 import CaseView from "../elements/caseview";
+import $ from "jquery";
 
 export default class Deploy extends StandardForm {
     /**

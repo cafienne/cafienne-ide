@@ -14,6 +14,7 @@ export const XMLELEMENT_URI = 'http://www.omg.org/spec/CMMN/DefinitionType/XSDEl
 
 export const UNKNOWN = 'Unknown';
 export const UNKNOWN_URI = 'http://www.omg.org/spec/CMMN/DefinitionType/Unknown';
+import $ from "jquery";
 
 export default class CaseFileItemDefinitionEditor {
     /** 

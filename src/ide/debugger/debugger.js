@@ -5,6 +5,7 @@ import CodeMirrorConfig from "@util/codemirrorconfig";
 import Util from "@util/util";
 import StandardForm from "../editors/standardform";
 import RightSplitter from "../splitter/rightsplitter";
+import $ from "jquery";
 
 /**
  * This class implements the logic to call the repository REST service to debug a case instance.

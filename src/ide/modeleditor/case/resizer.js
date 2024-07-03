@@ -1,6 +1,7 @@
 ﻿import Util from "@util/util";
 import CMMNElementView from "./elements/cmmnelementview";
 import Grid from "./grid";
+import $ from "jquery";
 
 export default class Resizer {
     /**

@@ -1,4 +1,5 @@
 import IDE from "./ide";
+import $ from "jquery";
 
 export default class IDEHeader {
     /**

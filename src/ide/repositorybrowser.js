@@ -3,6 +3,8 @@ import DragData from "./dragdata";
 import IDE from "./ide";
 import ModelEditorMetadata from "./modeleditor/modeleditormetadata";
 import ModelListPanel from "./modellistpanel";
+import $ from "jquery";
+import "jquery-ui"
 
 export default class RepositoryBrowser {
     /**

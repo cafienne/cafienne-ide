@@ -3,6 +3,7 @@ import MovableEditor from "../editors/movableeditor";
 import IDE from "../ide";
 import Util from "@util/util";
 import { andThen } from "@util/promise/followup";
+import $ from "jquery";
 
 export default class ModelEditor {
     /**

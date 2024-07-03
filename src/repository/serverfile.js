@@ -3,6 +3,7 @@ import Content from "./content";
 import XML from "@util/xml";
 import Followup, { andThen } from "@util/promise/followup";
 import ModelDefinition from "./definition/modeldefinition";
+import $ from "jquery";
 
 export default class ServerFile {
     /**

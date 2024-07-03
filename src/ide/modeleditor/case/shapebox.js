@@ -1,6 +1,7 @@
 import DragData from "@ide/dragdata";
 import CaseView from "./elements/caseview";
 import ElementRegistry from "./elements/elementregistry";
+import $ from "jquery";
 
 export default class ShapeBox {
     /**

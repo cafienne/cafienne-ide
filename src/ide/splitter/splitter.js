@@ -1,6 +1,7 @@
 import Util from "@util/util";
 import SplitterSettings from "./splittersettings";
 import Settings from "@ide/settings/settings";
+import $ from "jquery";
 
 export default class Splitter {
     /** @returns {SplitterSettings} */

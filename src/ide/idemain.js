@@ -1,6 +1,7 @@
 import IDE from "./ide";
 import RepositoryBrowser from "./repositorybrowser";
 import LeftSplitter from "./splitter/leftsplitter";
+import $ from "jquery";
 
 export default class IDEMain {
     /**

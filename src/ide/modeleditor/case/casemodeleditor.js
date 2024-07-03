@@ -6,6 +6,7 @@ import ModelEditor from "../modeleditor";
 import CaseView from "./elements/caseview";
 import Grid from "./grid";
 import UndoManager from "./undoredo/undoredo";
+import $ from "jquery";
 
 export default class CaseModelEditor extends ModelEditor {
     /**

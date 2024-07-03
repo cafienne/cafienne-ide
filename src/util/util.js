@@ -1,4 +1,5 @@
-﻿export default class Util {
+﻿import $ from "jquery"
+export default class Util {
     /**
      * Copies the text to clipboard
      * @param {string} text 

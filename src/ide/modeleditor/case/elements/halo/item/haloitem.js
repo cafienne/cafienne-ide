@@ -1,4 +1,5 @@
 import Halo from "../halo";
+import $ from "jquery";
 
 export default class HaloItem {
     /**

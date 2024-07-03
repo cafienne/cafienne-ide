@@ -4,6 +4,7 @@ import EventListenerView from "../../eventlistenerview";
 import { EntryCriterionView, ExitCriterionView, ReactivateCriterionView } from "../../sentryview";
 import Halo from "../halo";
 import HaloItem from "./haloitem";
+import $ from "jquery";
 
 export default class HaloDragItem extends HaloItem {
     /**

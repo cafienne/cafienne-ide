@@ -2,6 +2,7 @@ import CMMNElementDefinition from "@definition/cmmnelementdefinition";
 import MovableEditor from "@ide/editors/movableeditor";
 import Util from "@util/util";
 import CaseView from "../../elements/caseview";
+import $ from "jquery";
 
 export default class TableEditor extends MovableEditor {
     /**

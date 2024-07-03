@@ -4,6 +4,7 @@ import Util from "@util/util";
 import StandardForm from "../ide/editors/standardform";
 import ProblemType from "./problemtype";
 import ValidationSettings from "./validationsettings";
+import $ from "jquery";
 
 export default class ValidateForm extends StandardForm {
     /** @returns {ValidationSettings} */

@@ -4,6 +4,7 @@ import { CaseFileItemStartTrigger, PlanItemStartTrigger } from "@definition/cmmn
 import CaseFileItemDef from "@repository/definition/cmmn/casefile/casefileitemdef";
 import TimerEventView from "../timereventview";
 import PlanItemProperties from "./planitemproperties";
+import $ from "jquery";
 
 export default class TimerEventProperties extends PlanItemProperties {
     /**

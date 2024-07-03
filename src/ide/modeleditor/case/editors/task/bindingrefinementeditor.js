@@ -3,6 +3,7 @@
 import ParameterDefinition from "@definition/cmmn/contract/parameterdefinition";
 import CMMNElementDefinition from "@definition/cmmnelementdefinition";
 import TableEditor, { RowEditor, TableEditorColumn } from "../tableeditor/tableeditor";
+import $ from "jquery";
 
 export default class BindingRefinementEditor extends TableEditor {
     /**

@@ -1,5 +1,6 @@
 import IDE from "./ide";
 import CaseFileItemView from "./modeleditor/case/elements/casefileitemview";
+import $ from "jquery";
 
 export default class DragData {
     /**

@@ -1,5 +1,7 @@
 ﻿import Util from "@util/util";
 import IDE from "./ide";
+import $ from "jquery";
+import "jquery-ui";
 
 export default class MessageBox {
     /**

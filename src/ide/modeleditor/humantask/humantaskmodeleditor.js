@@ -9,6 +9,11 @@ import ModelEditor from "../modeleditor";
 import ModelParameters from "../xmleditor/modelparameters";
 import ModelSourceEditor from "../xmleditor/modelsourceeditor";
 import RightSplitter from "@ide/splitter/rightsplitter";
+import $ from "jquery";
+
+// BIG TODO HERE Alpaca doesn't work with jQuery import .  Some undefined jQuery
+// import "handlebars"
+// import "alpaca/dist/alpaca/bootstrap/alpaca"
 
 export default class HumantaskModelEditor extends ModelEditor {
     /**

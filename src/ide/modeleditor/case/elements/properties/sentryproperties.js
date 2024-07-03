@@ -7,6 +7,7 @@ import Util from "@util/util";
 import Connector from "../connector";
 import SentryView from "../sentryview";
 import Properties from "./properties";
+import $ from "jquery";
 
 export default class SentryProperties extends Properties {
     /**
