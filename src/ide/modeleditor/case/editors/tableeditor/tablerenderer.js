@@ -3,6 +3,7 @@ import ColumnRenderer from "./columnrenderer";
 import RowRenderer from "./rowrenderer";
 import CaseView from "../../elements/caseview";
 import Util from "@util/util";
+import $ from "jquery";
 
 export default class TableRenderer {
     /**

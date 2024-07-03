@@ -1,5 +1,6 @@
 ﻿import CaseFileDefinitionDefinition from "@definition/cfid/casefileitemdefinitiondefinition";
 import CaseFileItemDefinitionEditor from "./casefileitemdefinitioneditor";
+import $ from "jquery";
 
 export default class CFIDefinitionUnknown{
     /**

@@ -9,6 +9,7 @@ import CFIDFile from "./serverfile/cfidfile";
 import DimensionsFile from "./serverfile/dimensionsfile";
 import HumanTaskFile from "./serverfile/humantaskfile";
 import ProcessFile from "./serverfile/processfile";
+import $ from "jquery";
 
 export default class Repository {
     /**

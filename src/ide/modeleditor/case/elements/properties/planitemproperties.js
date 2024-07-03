@@ -6,6 +6,7 @@ import { REQUIRED_IMG } from "../decorator/items/requiredrule";
 import PlanItemView from "../planitemview";
 import Properties from "./properties";
 import Util from "@util/util";
+import $ from "jquery";
 
 export default class PlanItemProperties extends Properties {
     /**

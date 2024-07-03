@@ -3,6 +3,7 @@ import CMMNElementView from "../cmmnelementview";
 import HaloBar from "./halobar";
 import { DeleteHaloItem, PropertiesHaloItem } from "./item/haloclickitems";
 import { ConnectorHaloItem } from "./item/halodragitems";
+import $ from "jquery";
 
 export default class Halo {
     /**

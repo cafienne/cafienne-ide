@@ -6,6 +6,7 @@ import CaseFileItemDefinitionEditor from "@ide/modeleditor/cfid/casefileitemdefi
 import { CaseFileItemDragData } from "@ide/dragdata";
 import BottomSplitter from "@ide/splitter/bottomsplitter";
 import CaseView from "../elements/caseview";
+import $ from "jquery";
 
 export const NEWDEF = '__new__';
 

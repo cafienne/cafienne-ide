@@ -1,6 +1,7 @@
 import CMMNElementDefinition from "@definition/cmmnelementdefinition";
 import CaseView from "@ide/modeleditor/case/elements/caseview";
 import Util from "@util/util";
+import $ from "jquery";
 
 export default class MovableEditor {
     /**

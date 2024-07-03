@@ -25,6 +25,7 @@ import CasePlanView from "./caseplanview";
 import Connector from "./connector";
 import StageView from "./stageview";
 import TextAnnotationView from "./textannotationview";
+import $ from "jquery";
 
 export default class CaseView {
     /**

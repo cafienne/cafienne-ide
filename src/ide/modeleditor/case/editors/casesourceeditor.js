@@ -4,6 +4,7 @@ import XML from "@util/xml";
 import CaseModelEditor from "../casemodeleditor";
 import { andThen } from "@util/promise/followup";
 import Tags from "@repository/definition/dimensions/tags";
+import $ from "jquery";
 
 export default class CaseSourceEditor {
     /**

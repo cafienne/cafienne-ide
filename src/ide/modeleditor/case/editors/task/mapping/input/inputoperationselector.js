@@ -1,4 +1,5 @@
 import MappingRow from "../mappingrow";
+import $ from "jquery";
 
 export default class InputOperationSelector {
     static get label() {

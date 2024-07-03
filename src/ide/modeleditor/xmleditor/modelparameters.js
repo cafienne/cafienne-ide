@@ -3,6 +3,7 @@
 import ParameterDefinition from "@definition/cmmn/contract/parameterdefinition";
 import ModelEditor from "../modeleditor";
 import Util from "@util/util";
+import $ from "jquery";
 
 export default class ModelParameters {
     /**

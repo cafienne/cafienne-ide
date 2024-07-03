@@ -1,6 +1,7 @@
 import { ApplicabilityRuleDefinition } from "@definition/cmmn/caseplan/planningtabledefinition";
 import PlanningTableView from "../planningtableview";
 import Properties from "./properties";
+import $ from "jquery";
 
 export default class PlanningTableProperties extends Properties {
     /**

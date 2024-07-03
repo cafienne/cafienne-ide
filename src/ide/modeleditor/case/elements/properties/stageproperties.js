@@ -2,6 +2,7 @@ import PlanItem from "@definition/cmmn/caseplan/planitem";
 import { AUTOCOMPLETE_IMG } from "../decorator/items/autocomplete";
 import StageView from "../stageview";
 import TaskStageProperties, { DISCRETIONARYTASK_IMG } from "./taskstageproperties";
+import $ from "jquery";
 
 export default class StageProperties extends TaskStageProperties {
     /**

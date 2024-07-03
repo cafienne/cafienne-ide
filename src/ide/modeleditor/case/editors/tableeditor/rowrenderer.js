@@ -1,6 +1,7 @@
 import CMMNElementDefinition from "@definition/cmmnelementdefinition";
 import TableRenderer from "./tablerenderer";
 import Util from "@util/util";
+import $ from "jquery";
 
 export default class RowRenderer {
     /**

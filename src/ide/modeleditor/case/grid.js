@@ -8,6 +8,7 @@
 import Settings from "@ide/settings/settings";
 import CaseView from "./elements/caseview";
 import { dia } from "jointjs";
+import $ from "jquery";
 
 /**
  * @type {Array<Grid>}

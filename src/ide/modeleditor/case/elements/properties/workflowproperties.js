@@ -5,6 +5,7 @@ import DueDateDefinition from "@repository/definition/cmmn/caseplan/task/workflo
 import Util from "@util/util";
 import HumanTaskView from "../humantaskview";
 import TaskProperties from "./taskproperties";
+import $ from "jquery";
 
 export default class WorkflowProperties extends TaskProperties {
     /**

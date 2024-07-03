@@ -3,6 +3,7 @@
 import Util from "@util/util";
 import MovableEditor from "./movableeditor";
 import CaseView from "@ide/modeleditor/case/elements/caseview";
+import $ from "jquery";
 
 export default class StandardForm extends MovableEditor {
 

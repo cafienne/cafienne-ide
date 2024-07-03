@@ -2,6 +2,7 @@ import Util from "@util/util";
 import { EXPANDEDPLANNINGTABLE_IMG } from "../planningtableview";
 import TaskStageView from "../taskstageview";
 import PlanItemProperties from "./planitemproperties";
+import $ from "jquery";
 
 export const DISCRETIONARYTASK_IMG = 'images/discretionary_task_32.png';
 

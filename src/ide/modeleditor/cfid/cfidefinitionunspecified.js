@@ -2,6 +2,7 @@
 import PropertyDefinition from "@definition/cfid/propertydefinition";
 import Util from "@util/util";
 import CaseFileItemDefinitionEditor from "./casefileitemdefinitioneditor";
+import $ from "jquery";
 
 export default class CFIDefinitionUnspecified {
     /**

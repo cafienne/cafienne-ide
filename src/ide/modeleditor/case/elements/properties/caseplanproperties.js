@@ -1,5 +1,6 @@
 import CasePlanView from "../caseplanview";
 import StageProperties from "./stageproperties";
+import $ from "jquery";
 
 export default class CasePlanProperties extends StageProperties {
     /**

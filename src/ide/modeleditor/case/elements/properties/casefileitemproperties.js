@@ -1,6 +1,7 @@
 import CaseFileItemDef from "@definition/cmmn/casefile/casefileitemdef";
 import CaseFileItemView from "../casefileitemview";
 import Properties from "./properties";
+import $ from "jquery";
 
 export default class CaseFileItemProperties extends Properties {
     /**

@@ -5,6 +5,8 @@ import RepositoryBrowser from "./repositorybrowser";
 import ModelEditor from "./modeleditor/modeleditor";
 import CreateNewModelDialog from "./createnewmodeldialog";
 import { andThen } from "@util/promise/followup";
+import $ from "jquery";
+import "jquery-ui";
 
 export default class ModelListPanel {
     /**

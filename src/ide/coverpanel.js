@@ -1,4 +1,5 @@
 import IDE from "./ide";
+import $ from "jquery";
 
 /**
  * Showing/hiding status messages on top of the fixed editors.
