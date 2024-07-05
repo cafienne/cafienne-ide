@@ -70,7 +70,7 @@
     height:20px;
     width:20px;
     margin-left:2px;
-    background-image: url(/images/delete_32.png);
+    background-image: url(_images_/delete_32.png);
     background-position: center;
     background-size: 90%;
     background-repeat: no-repeat;
@@ -80,7 +80,7 @@
 .removeReferenceButton {
     right: 2px;
     top: -1px;
-    background-image: url(/images/close_black_32.png);
+    background-image: url(_images_/close_black_32.png);
     background-position: center;
     background-size: 70%;
     background-repeat: no-repeat;
@@ -90,7 +90,7 @@
 .zoombt {
     right: 22px; /* most zoombuttons have an extra button to their right. So we take that into account by default */
     top: -1px;
-    background-image: url(/images/zoomin_32.png);
+    background-image: url(_images_/zoomin_32.png);
     background-position: center;
     background-size: 70%;
     background-repeat: no-repeat;
@@ -100,7 +100,7 @@
 .openBindingReferenceButton {
     right: 22px;
     top: -1px;
-    background-image: url(/images/cfinotused_24.png);
+    background-image: url(_images_/cfinotused_24.png);
     background-position: center;
     background-size: 70%;
     background-repeat: no-repeat;

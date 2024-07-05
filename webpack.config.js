@@ -33,6 +33,10 @@ module.exports = {
                     /[/\\]src[/\\]/
                 ],
             },
+            {
+                test: /\.css$/i,
+                use: ["style-loader", "css-loader"],
+            },
         ],
     },
     resolve: {
@@ -42,6 +46,8 @@ module.exports = {
             '@repository': path.resolve(__dirname, 'src/repository'),
             '@definition': path.resolve(__dirname, 'src/repository/definition'),
             '@ide': path.resolve(__dirname, 'src/ide'),
+            '@styles': path.resolve(__dirname, 'app/styles'),
+            '_images_': path.resolve(__dirname, 'app/images'),
             'jquery': path.resolve(__dirname, 'node_modules/jquery/dist/jquery'),
             'jquery-ui': path.resolve(__dirname, 'node_modules/jquery-ui/dist/jquery-ui'),
         },

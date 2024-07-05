@@ -46,6 +46,8 @@
       "@repository/*": ["src/repository/*"],
       "@definition/*": ["src/repository/definition/*"],
       "@ide/*": ["src/ide/*"],
+      "@styles/*": ["app/styles/*"],
+      "_images_/*": ["app/images/*"],
       "jquery": ["node_modules/@types/jquery/index"],
       "jquery-ui": ["node_modules/@types/jqueryui/index"],
     },                           /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */

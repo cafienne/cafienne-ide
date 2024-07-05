@@ -64,7 +64,7 @@
 .modelparametertable tbody button {
     height: 14px;
     width: 14px;
-    background-image: url(/images/close_black_32.png);
+    background-image: url(_images_/close_black_32.png);
     background-position: 2px 2px;
     background-repeat: no-repeat;
     background-size: 8px 8px;
