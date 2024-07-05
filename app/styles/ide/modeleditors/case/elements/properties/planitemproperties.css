@@ -35,11 +35,11 @@
 }
 
 .properties-container .role-selector .removeRoleButton {
-    background-image: url(/images/close_black_32.png);
+    background-image: url(_images_/close_black_32.png);
 }
 
 .properties-container .role-selector .deleteRoleButton {
-    background-image: url(/images/delete_32.png);
+    background-image: url(_images_/delete_32.png);
 }
 
 .properties-container .performer-field {
