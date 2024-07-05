@@ -156,10 +156,6 @@ export default class PlanItem extends CMMNElementDefinition {
             this.parent = newParent;
             newParent.planItems.push(this);
             newParent.childDefinitions.push(this);
-            
-            // Finally make sure that the sentries of our entry and exit criteria also move to the new parent
-            this.entryCriteria.forEach(c => c.switchParent(newParent));
-            this.exitCriteria.forEach(c => c.switchParent(newParent));
         }
     }
 
@@ -200,7 +196,7 @@ export default class PlanItem extends CMMNElementDefinition {
 
         const entryCriteriaRefs = this.parseAttribute('entryCriteriaRefs');
         if (entryCriteriaRefs) {
-            const sentries = this.caseDefinition.findElements(entryCriteriaRefs, [], SentryDefinition);
+            const sentries = this.caseDefinition.findElements(entryCriteriaRefs, []);
             sentries.forEach(sentry => {
                 const ec = super.createDefinition(EntryCriterionDefinition);
                 ec.sentryRef = sentry.id;
@@ -210,7 +206,7 @@ export default class PlanItem extends CMMNElementDefinition {
         }
         const exitCriteriaRefs = this.parseAttribute('exitCriteriaRefs');
         if (exitCriteriaRefs) {
-            const sentries = this.caseDefinition.findElements(exitCriteriaRefs, [], SentryDefinition);
+            const sentries = this.caseDefinition.findElements(exitCriteriaRefs, []);
             sentries.forEach(sentry => {
                 const ec = super.createDefinition(ExitCriterionDefinition);
                 ec.sentryRef = sentry.id;

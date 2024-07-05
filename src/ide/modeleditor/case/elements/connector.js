@@ -53,9 +53,9 @@ export default class Connector extends CanvasElement {
         this.source = source;
         this.target = target;
         this.edge = edge;
-        this.sentry = source.isCriterion ? source : target.isCriterion ? target : undefined;
+        this.criterion = source.isCriterion ? source : target.isCriterion ? target : undefined;
 
-        const arrowStyle = this.sentry ? '8 3 3 3 3 3' : '5 5'
+        const arrowStyle = this.criterion ? '8 3 3 3 3 3' : '5 5'
 
         this.link = this.xyz_joint = new dia.Link({
             source: { id: this.source.xyz_joint.id },
@@ -124,8 +124,8 @@ export default class Connector extends CanvasElement {
         // On mouse enter of a 'sentry' linked connector, we will show the standard event if it is not yet visible.
         //  It is hidden again on mouseout
         this.formerLabel = this.label;
-        if (this.label || ! this.sentry) return;
-        const onPart = this.sentry.__getOnPart(this);
+        if (this.label || ! this.criterion) return;
+        const onPart = this.criterion.__getOnPart(this);
         if (onPart) this.__setJointLabel(onPart.standardEvent);
     }
 

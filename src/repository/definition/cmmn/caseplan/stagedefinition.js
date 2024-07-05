@@ -1,4 +1,3 @@
-import SentryDefinition from "../sentry/sentrydefinition";
 import PlanItem from "./planitem";
 import { TaskStageDefinition } from "./planitemdefinitiondefinition";
 import HumanTaskDefinition from "./task/humantaskdefinition";
@@ -53,15 +52,6 @@ export default class StageDefinition extends TaskStageDefinition {
         });
 
         return items;
-    }
-
-    /**
-     * @returns {SentryDefinition}
-     */
-    createSentry() {
-        const sentry = super.createDefinition(SentryDefinition);
-        this.sentries.push(sentry);
-        return sentry;
     }
 
     createExportNode(parentNode, tagName = 'stage', ...propertyNames) {
