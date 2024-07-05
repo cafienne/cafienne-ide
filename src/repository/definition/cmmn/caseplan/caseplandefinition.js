@@ -53,24 +53,11 @@ export default class CasePlanDefinition extends StageDefinition {
         return planItemDefinition;
     }
 
-    /**
-     * Creates an exit criterion for the case plan
-     * @param {Number} x
-     * @param {Number} y
-     */
-    createExitCriterion(x, y) {
-        const sentry = this.createSentry();
-        const criterion = super.createDefinition(ExitCriterionDefinition);
-        criterion.sentryRef = sentry.id;
-        this.exitCriteria.push(criterion);
-        return criterion;
-    }
-
     resolveReferences() {
         super.resolveReferences();
         const exitCriteriaRefs = this.parseAttribute('exitCriteriaRefs');
         if (exitCriteriaRefs) {
-            const sentries = this.caseDefinition.findElements(exitCriteriaRefs, [], SentryDefinition);
+            const sentries = this.caseDefinition.findElements(exitCriteriaRefs, []);
             sentries.forEach(sentry => {
                 this.caseDefinition.migrated('Converting sentry into an ExitCriterion in case plan');
                 const ec = super.createDefinition(ExitCriterionDefinition);
