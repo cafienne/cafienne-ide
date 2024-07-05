@@ -48,7 +48,7 @@ export default class TimerEventProperties extends PlanItemProperties {
             return '<option></option><option>first select a plan item</option>';
         } else {
             const isTransitionSelected = transition => transition == trigger.standardEvent ? 'selected="true"' : '';
-            return trigger.source.definition.transitions.map(t => `<option value="${t}" ${isTransitionSelected(t)}>${t}</option>`).join('');
+            return trigger.source.transitions.map(t => `<option value="${t}" ${isTransitionSelected(t)}>${t}</option>`).join('');
         }
     }
 
@@ -65,8 +65,8 @@ export default class TimerEventProperties extends PlanItemProperties {
     }
 
     addRadioBlock() {
-        const piTrigger = this.cmmnElement.planItemDefinition.planItemStartTrigger;
-        const cfiTrigger = this.cmmnElement.planItemDefinition.caseFileItemStartTrigger;
+        const piTrigger = this.cmmnElement.definition.planItemStartTrigger;
+        const cfiTrigger = this.cmmnElement.definition.caseFileItemStartTrigger;
         const piTriggerSelected = piTrigger ? true : false;
         const planItemSelection = this.getPlanItemsSelect(piTrigger);
         const planItemTransitions = this.getPlanItemStandardEvents(piTrigger);
@@ -108,20 +108,20 @@ export default class TimerEventProperties extends PlanItemProperties {
                         </div>`);
         html.find('#cfiRadio').on('change', e => {
             if (e.currentTarget.checked) {
-                this.cmmnElement.planItemDefinition.getCaseFileItemStartTrigger(); // Deletes pi trigger
+                this.cmmnElement.definition.getCaseFileItemStartTrigger(); // Deletes pi trigger
                 this.done();
                 this.show();
             }
         });
         html.find('#piRadio').on('change', e => {
             if (e.currentTarget.checked) {
-                this.cmmnElement.planItemDefinition.getPlanItemStartTrigger(); // Deletes cfi trigger
+                this.cmmnElement.definition.getPlanItemStartTrigger(); // Deletes cfi trigger
                 this.done();
                 this.show();
             }
         });
         html.find('#selectPlanItem').on('change', e => {
-            const trigger = this.cmmnElement.planItemDefinition.getPlanItemStartTrigger();
+            const trigger = this.cmmnElement.definition.getPlanItemStartTrigger();
             const selectedOption = e.currentTarget.selectedOptions[0];
             const planItemID = selectedOption.value;
             trigger.sourceRef = planItemID;
@@ -133,7 +133,7 @@ export default class TimerEventProperties extends PlanItemProperties {
             this.show();
         });
         html.find('#selectPlanItemTransition').on('change', e => {
-            const trigger = this.cmmnElement.planItemDefinition.getPlanItemStartTrigger();
+            const trigger = this.cmmnElement.definition.getPlanItemStartTrigger();
             const selectedOption = e.currentTarget.selectedOptions[0];
             const transition = selectedOption.value;
             this.change(trigger, 'standardEvent', transition);
@@ -141,26 +141,26 @@ export default class TimerEventProperties extends PlanItemProperties {
         });
         html.find('.zoombt').on('click', e => {
             this.cmmnElement.case.cfiEditor.open(cfi => {
-                const trigger = this.cmmnElement.planItemDefinition.getCaseFileItemStartTrigger();
+                const trigger = this.cmmnElement.definition.getCaseFileItemStartTrigger();
                 this.change(trigger, 'sourceRef', cfi.id);
                 this.show();
             });
         });
         html.find('.removeReferenceButton').on('click', e => {
-            const trigger = this.cmmnElement.planItemDefinition.getCaseFileItemStartTrigger();
+            const trigger = this.cmmnElement.definition.getCaseFileItemStartTrigger();
             this.change(trigger, 'sourceRef', undefined);
             this.show();
         });
         html.find('.zoomRow').on('pointerover', e => {
             e.stopPropagation();
             this.cmmnElement.case.cfiEditor.setDropHandler(dragData => {
-                const trigger = this.cmmnElement.planItemDefinition.getCaseFileItemStartTrigger();
+                const trigger = this.cmmnElement.definition.getCaseFileItemStartTrigger();
                 this.change(trigger, 'sourceRef', dragData.item.id);
                 this.show();
             });
         });
         html.find('#selectCaseFileItemTransition').on('change', e => {
-            const trigger = this.cmmnElement.planItemDefinition.getCaseFileItemStartTrigger();
+            const trigger = this.cmmnElement.definition.getCaseFileItemStartTrigger();
             const selectedOption = e.currentTarget.selectedOptions[0];
             const transition = selectedOption.value;
             this.change(trigger, 'standardEvent', transition);
@@ -173,13 +173,13 @@ export default class TimerEventProperties extends PlanItemProperties {
     }
 
     addTimerExpression() {
-        const ruleBody = this.cmmnElement.planItemDefinition.timerExpression ? this.cmmnElement.planItemDefinition.timerExpression.body : '';
+        const ruleBody = this.cmmnElement.definition.timerExpression ? this.cmmnElement.definition.timerExpression.body : '';
         const html = $(`<div class="propertyBlock" title="Provide an expression that returns a duration.\nThis can be an expression returning a string that can be parsed to XSD duration format.\nIt can also be a reference to a property in the Case File that holds the duration">
                             <label>Timer Expression</label>
                             <textarea class="multi">${ruleBody}</textarea>
                         </div>`);
         html.find('textarea').on('change', e => {
-            this.change(this.cmmnElement.planItemDefinition.getTimerExpression(), 'body', e.currentTarget.value);
+            this.change(this.cmmnElement.definition.getTimerExpression(), 'body', e.currentTarget.value);
         })
         this.htmlContainer.append(html);
     }

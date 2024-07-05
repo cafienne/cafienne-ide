@@ -30,7 +30,7 @@ export default class PlanItem extends CMMNElementDefinition {
     constructor(importNode, caseDefinition, parent) {
         super(importNode, caseDefinition, parent);
         // this.definitionRef = this.parseAttribute('definitionRef');
-        this.definition = this;
+        // this.definition = this;
         /** @type{ItemControlDefinition} */
         this.planItemControl = this.parseElement('itemControl', ItemControlDefinition);
         /** @type{Array<EntryCriterionDefinition>} */

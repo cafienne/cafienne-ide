@@ -33,23 +33,22 @@ export default class StageView extends TaskStageView {
      * @param {*} y 
      */
     static create(stage, x, y) {
-        const definition = stage.planItemDefinition.createPlanItem(StageDefinition);
+        const definition = stage.definition.createPlanItem(StageDefinition);
         const shape = stage.case.diagram.createShape(x, y, 420, 140, definition.id);
-        return new StageView(stage.case, stage, definition, definition.definition, shape);
+        return new StageView(stage.case, stage, definition, shape);
     }
 
     /**
      * Creates a new StageView element.
      * @param {CaseView} cs 
      * @param {CMMNElementView} parent 
-     * @param {PlanItem} definition
-     * @param {StageDefinition} planItemDefinition 
+     * @param {StageDefinition} definition 
      * @param {ShapeDefinition} shape 
      */
-    constructor(cs, parent, definition, planItemDefinition, shape) {
-        super(cs, parent, definition, planItemDefinition, shape);
-        this.planItemDefinition = planItemDefinition;
-        this.planItemDefinition.planItems.forEach(planItem => this.addPlanItem(planItem));
+    constructor(cs, parent, definition, shape) {
+        super(cs, parent, definition, shape);
+        this.definition = definition;
+        this.definition.planItems.forEach(planItem => this.addPlanItem(planItem));
     }
 
     setDropHandlers() {
@@ -135,7 +134,7 @@ export default class StageView extends TaskStageView {
      * @param {PlanItem} definition 
      */
     addPlanItem(definition) {
-        if (!definition.definition) {
+        if (!definition) {
             // there is no planitemdefinition for the planitem...
             console.warn('Plan item has NO definition and will be skipped', definition);
             return;
@@ -151,27 +150,26 @@ export default class StageView extends TaskStageView {
      * @param {PlanItem} definition 
      */
     createPlanItemView(definition) {
-        const planItemDefinition = definition.definition;
         const shape = this.case.diagram.getShape(definition);
         if (!shape) {
-            console.warn(`Error: missing shape definition for ${definition.definition.constructor.name} named "${definition.name}" with id "${definition.id}"`)
+            console.warn(`Error: missing shape definition for ${definition.constructor.name} named "${definition.name}" with id "${definition.id}"`)
             return;
         }
 
-        if (planItemDefinition instanceof HumanTaskDefinition) {
-            return new HumanTaskView(this, definition, planItemDefinition, shape);
-        } else if (planItemDefinition instanceof CaseTaskDefinition) {
-            return new CaseTaskView(this, definition, planItemDefinition, shape);
-        } else if (planItemDefinition instanceof ProcessTaskDefinition) {
-            return new ProcessTaskView(this, definition, planItemDefinition, shape);
-        } else if (planItemDefinition instanceof StageDefinition) {
-            return new StageView(this.case, this, definition, planItemDefinition, shape);
-        } else if (planItemDefinition instanceof MilestoneDefinition) {
-            return new MilestoneView(this, definition, planItemDefinition, shape);
-        } else if (planItemDefinition instanceof UserEventDefinition) {
-            return new UserEventView(this, definition, planItemDefinition, shape);
-        } else if (planItemDefinition instanceof TimerEventDefinition) {
-            return new TimerEventView(this, definition, planItemDefinition, shape);
+        if (definition instanceof HumanTaskDefinition) {
+            return new HumanTaskView(this, definition, shape);
+        } else if (definition instanceof CaseTaskDefinition) {
+            return new CaseTaskView(this, definition, shape);
+        } else if (definition instanceof ProcessTaskDefinition) {
+            return new ProcessTaskView(this, definition, shape);
+        } else if (definition instanceof StageDefinition) {
+            return new StageView(this.case, this, definition, shape);
+        } else if (definition instanceof MilestoneDefinition) {
+            return new MilestoneView(this, definition, shape);
+        } else if (definition instanceof UserEventDefinition) {
+            return new UserEventView(this, definition, shape);
+        } else if (definition instanceof TimerEventDefinition) {
+            return new TimerEventView(this, definition, shape);
         } else {
             throw new Error('This type of plan item cannot be instantiated into a view ' + definition.name);
         }
@@ -186,7 +184,7 @@ export default class StageView extends TaskStageView {
         super.adoptItem(childElement);
         if (childElement.isPlanItem) {
             // then also move the definition
-            childElement.definition.switchParent(this.planItemDefinition);
+            childElement.definition.switchParent(this.definition);
             // If the item is discretionary, we may also have to clean up the former planning table and refresh ours.
             if (childElement.definition.isDiscretionary && previousParent && previousParent.isStage) {
                 previousParent.cleanupPlanningTableIfPossible();
@@ -258,8 +256,8 @@ export default class StageView extends TaskStageView {
      * A stage should have more than one child
      */
     oneOrLessChildren() {
-        const numPlanItems = this.planItemDefinition.planItems.length;
-        const planningTable = this.planItemDefinition.planningTable;
+        const numPlanItems = this.definition.planItems.length;
+        const planningTable = this.definition.planningTable;
         const numDiscretionaryItems = planningTable ? planningTable.tableItems.length : 0;
         if (numPlanItems + numDiscretionaryItems <= 1) {
             //stage has one or less children
@@ -271,8 +269,8 @@ export default class StageView extends TaskStageView {
      * A stage with autocomplete=false should have discretionary items (and a planning table)
      */
     autoCompleteDiscretionary() {
-        if (this.planItemDefinition.autoComplete == false) {
-            const planningTable = this.planItemDefinition.planningTable;
+        if (this.definition.autoComplete == false) {
+            const planningTable = this.definition.planningTable;
             if (!planningTable || planningTable.tableItems.length == 0) {
                 //no discretionary children found
                 this.raiseValidationIssue(12);
@@ -284,7 +282,7 @@ export default class StageView extends TaskStageView {
      * checks whether element refers for its' plan item definition to an ancestor or descendant
      */
     validatePlanItemDefinitionNesting() {
-        const pidID = this.planItemDefinition.id;
+        const pidID = this.definition.id;
         if (pidID) {
             // search parents/ancestors
             let parent = this.parent;

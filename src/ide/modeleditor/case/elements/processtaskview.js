@@ -12,21 +12,20 @@ export default class ProcessTaskView extends TaskView {
      * @param {*} y 
      */
     static create(stage, x, y) {
-        const definition = stage.planItemDefinition.createPlanItem(ProcessTaskDefinition);
+        const definition = stage.definition.createPlanItem(ProcessTaskDefinition);
         const shape = stage.case.diagram.createShape(x, y, 140, 80, definition.id);
-        return new ProcessTaskView(stage, definition, definition.definition, shape);
+        return new ProcessTaskView(stage, definition, shape);
     }
 
     /**
      * Creates a new ProcessTaskView element.
      * @param {StageView} parent 
-     * @param {PlanItem} definition
-     * @param {ProcessTaskDefinition} planItemDefinition 
+     * @param {ProcessTaskDefinition} definition 
      * @param {ShapeDefinition} shape 
      */
-    constructor(parent, definition, planItemDefinition, shape) {
-        super(parent, definition, planItemDefinition, shape);
-        this.planItemDefinition = planItemDefinition;
+    constructor(parent, definition, shape) {
+        super(parent, definition, shape);
+        this.definition = definition;
     }
 
     getImplementationList() {

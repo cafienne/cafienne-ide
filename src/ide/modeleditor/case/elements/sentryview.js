@@ -431,7 +431,7 @@ export class EntryCriterionView extends SentryView {
 
     get purpose() {
         const hasRepetition = this.planItem.definition.planItemControl.repetitionRule != undefined;
-        const transition = this.planItem.definition.definition.entryTransition;
+        const transition = this.planItem.definition.entryTransition;
         return `This condition causes ${hasRepetition ? 'the next ' : ''}'${this.planItem.name}' to ${transition}`;
     }
 

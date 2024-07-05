@@ -75,7 +75,7 @@ export class ZoomTaskImplementationHaloItem extends HaloClickItem {
     }
 
     constructor(halo) {
-        const implementationRef = halo.element.planItemDefinition.implementationRef;
+        const implementationRef = halo.element.definition.implementationRef;
         const imgURL = 'images/zoomin_64.png';
         const title = 'Open task implementation - ' + implementationRef + '\nRight-click to open in new tab';
         const html = $(`<a href="./#${implementationRef}" title="${title}" ><img src="${imgURL}" /></a>`);

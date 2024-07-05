@@ -36,15 +36,6 @@ export default class PlanItemView extends CMMNElementView {
         this.__addCMMNChild(view);
     }
 
-    set planItemDefinition(definition) {
-        this.definition = definition;
-    }
-
-    /** @returns {PlanItem} */
-    get planItemDefinition() {
-        return this.definition;
-    }
-
     createProperties() {
         return new PlanItemProperties(this);
     }

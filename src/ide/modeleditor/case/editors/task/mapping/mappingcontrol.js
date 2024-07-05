@@ -12,7 +12,7 @@ export default class MappingControl extends TableRenderer {
         super(editor.task.case, htmlParent);
         this.editor = editor;
         this.task = editor.task;
-        this.taskDefinition = this.task.planItemDefinition;
+        this.taskDefinition = this.task.definition;
     }
 
     /**

@@ -19,7 +19,7 @@ export default class TaskProperties extends TaskStageProperties {
      */
     addModelImplementation() {
         const repositoryBrowser = this.cmmnElement.case.editor.ide.repositoryBrowser;
-        const taskDefinition = this.task.planItemDefinition;
+        const taskDefinition = this.task.definition;
         const implementation = taskDefinition.implementationRef ? taskDefinition.implementationRef : '';
 
         const options = this.task.getImplementationList().map(model => `<option value="${model.fileName}" ${model.fileName == implementation?" selected":""}>${model.name}</option>`).join('');
@@ -59,7 +59,7 @@ export default class TaskProperties extends TaskStageProperties {
     }
 
     addValidatorField() {
-        const taskDefinition = this.task.planItemDefinition;
+        const taskDefinition = this.task.definition;
         const implementation = taskDefinition.validatorRef ? taskDefinition.validatorRef : '';
 
         const options = this.case.editor.ide.repository.getProcesses().map(model => `<option value="${model.fileName}" ${model.fileName == implementation?" selected":""}>${model.name}</option>`).join('');
@@ -104,7 +104,7 @@ export default class TaskProperties extends TaskStageProperties {
     }
 
     addIsBlocking() {
-        this.addCheckField('Is Blocking', 'If the task is non-blocking, the case will continue without awaiting the task to complete', ISBLOCKING_IMG, 'isBlocking', this.task.planItemDefinition);
+        this.addCheckField('Is Blocking', 'If the task is non-blocking, the case will continue without awaiting the task to complete', ISBLOCKING_IMG, 'isBlocking', this.task.definition);
     }
 
     renderData() {

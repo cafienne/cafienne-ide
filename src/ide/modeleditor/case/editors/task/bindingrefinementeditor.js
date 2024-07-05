@@ -22,7 +22,7 @@ export default class BindingRefinementEditor extends TableEditor {
     }
 
     get label() {
-        return `Edit the binding refinement of task parameter ${this.taskParameter.name} in task ${this.task.planItemDefinition.name}`;
+        return `Edit the binding refinement of task parameter ${this.taskParameter.name} in task ${this.task.definition.name}`;
     }
 
     get columns() {

@@ -1,12 +1,12 @@
-﻿import PlanItem from "@definition/cmmn/caseplan/planitem";
-import ShapeDefinition from "@definition/dimensions/shape";
+﻿import ShapeDefinition from "@definition/dimensions/shape";
 import PlanItemView from "./planitemview";
+import EventListenerDefinition from "@repository/definition/cmmn/caseplan/eventlistenerdefinition";
 
 export default class EventListenerView extends PlanItemView {
     /**
      * Creates a new EventListenerView
      * @param {StageView} parent 
-     * @param {PlanItem} definition
+     * @param {EventListenerDefinition} definition
      * @param {ShapeDefinition} shape 
      */
     constructor(parent, definition, shape) {

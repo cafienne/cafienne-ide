@@ -32,7 +32,7 @@ export default class StageProperties extends TaskStageProperties {
     }
 
     addAutoComplete() {
-        this.addCheckField('Auto Complete', 'Determines whether the stage should auto complete or not.', AUTOCOMPLETE_IMG, 'autoComplete', this.cmmnElement.planItemDefinition);
+        this.addCheckField('Auto Complete', 'Determines whether the stage should auto complete or not.', AUTOCOMPLETE_IMG, 'autoComplete', this.cmmnElement.definition);
     }
 
     addPlanItemTable() {
@@ -51,14 +51,14 @@ export default class StageProperties extends TaskStageProperties {
             html.find('.togglePlanItemsButton').html(visible ? '&nbsp;&nbsp;+' : '');
         });
         
-        this.cmmnElement.planItemDefinition.planItems.forEach(item => {
+        this.cmmnElement.definition.planItems.forEach(item => {
             const itemHTML = $(`<div>
                                     <span title="Move plan item up (affects instantiation order)" class="upButton"><img src="images/doubleup_32.png" /></span>
                                     <span title="Move plan item down (affects instantiation order)" class="downButton"><img src="images/doubledown_32.png" /></span> ${item.name}
                                     <span class="separator" />
                                 </div>`);
-            itemHTML.find('.upButton').on('click', e => this.up(e, itemHTML, item, this.cmmnElement.planItemDefinition.planItems));
-            itemHTML.find('.downButton').on('click', e => this.down(e, itemHTML, item, this.cmmnElement.planItemDefinition.planItems));
+            itemHTML.find('.upButton').on('click', e => this.up(e, itemHTML, item, this.cmmnElement.definition.planItems));
+            itemHTML.find('.downButton').on('click', e => this.down(e, itemHTML, item, this.cmmnElement.definition.planItems));
             this.htmlContainer.find('.planitems-table').append(itemHTML);
         });
     }

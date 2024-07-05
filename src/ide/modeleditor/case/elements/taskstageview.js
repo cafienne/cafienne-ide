@@ -13,13 +13,12 @@ export default class TaskStageView extends PlanItemView {
      * Simple class to share some logic from TaskView and StageView.
      * @param {CaseView} cs 
      * @param {CMMNElementView} parent 
-     * @param {PlanItem} definition 
-     * @param {TaskStageDefinition} planItemDefinition 
+     * @param {TaskStageDefinition} definition 
      * @param {ShapeDefinition} shape 
      */
-    constructor(cs, parent, definition, planItemDefinition, shape) {
+    constructor(cs, parent, definition, shape) {
         super(cs, parent, definition, shape);
-        this.planItemDefinition = planItemDefinition;
+        this.definition = definition;
         this.showPlanningTable();
     }
 
@@ -67,13 +66,13 @@ export default class TaskStageView extends PlanItemView {
      * Creates a planning table if it does not yet exist, and shows it.
      */
     showPlanningTable() {
-        const ptDefinition = this.planItemDefinition.planningTable;
+        const ptDefinition = this.definition.planningTable;
         if (ptDefinition) {
             // If there is a definition, and we do not yet have a child to render it, then add such a child.
             if (!this.planningTableView) {
                 const position = this.__planningTablePosition;
                 const shape = this.case.diagram.getShape(ptDefinition) || this.case.diagram.createShape(position.x, position.y, 24, 16, ptDefinition.id);
-                new PlanningTableView(this, this.planItemDefinition.planningTable, shape);
+                new PlanningTableView(this, this.definition.planningTable, shape);
             }
         }
     }

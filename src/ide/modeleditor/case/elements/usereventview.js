@@ -13,21 +13,20 @@ export default class UserEventView extends EventListenerView {
      * @param {*} y 
      */
     static create(stage, x, y) {
-        const definition = stage.planItemDefinition.createPlanItem(UserEventDefinition);
+        const definition = stage.definition.createPlanItem(UserEventDefinition);
         const shape = stage.case.diagram.createShape(x, y, 32, 32, definition.id);
-        return new UserEventView(stage, definition, definition.definition, shape);
+        return new UserEventView(stage, definition, shape);
     }
 
     /**
      * Creates a new UserEventView element.
      * @param {StageView} parent 
-     * @param {PlanItem} definition
-     * @param {UserEventDefinition} planItemDefinition 
+     * @param {UserEventDefinition} definition 
      * @param {ShapeDefinition} shape 
      */
-    constructor(parent, definition, planItemDefinition, shape) {
+    constructor(parent, definition, shape) {
         super(parent, definition, shape);
-        this.planItemDefinition = planItemDefinition;
+        this.definition = definition;
     }
 
     createProperties() {
@@ -45,11 +44,11 @@ export default class UserEventView extends EventListenerView {
         super.__validate();
 
         // Authorized roles must be filled with an ID attribute.
-        this.planItemDefinition.authorizedRoles.filter(r => !r.id).forEach(r => this.raiseValidationIssue(40));
+        this.definition.authorizedRoles.filter(r => !r.id).forEach(r => this.raiseValidationIssue(40));
     }
 
     referencesDefinitionElement(definitionId) {
-        if (this.planItemDefinition.authorizedRoles.find(role => role.id == definitionId)) {
+        if (this.definition.authorizedRoles.find(role => role.id == definitionId)) {
             return true;
         }
         return super.referencesDefinitionElement(definitionId);

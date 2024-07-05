@@ -24,8 +24,8 @@ export default class PlanningTableDefinition extends UnnamedCMMNElementDefinitio
     getAllPlanItems() {
         const items = new Array(...this.tableItems); // First copy all table entries
         this.tableItems.forEach(item => { // And for those that are of type stage, get the content as well.
-            if (item.definition.isStage) {
-                items.push(...item.definition.getAllPlanItems());
+            if (item.isStage) {
+                items.push(...item.getAllPlanItems());
             }
         });
 
