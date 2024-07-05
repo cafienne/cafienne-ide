@@ -9,7 +9,6 @@ export default class StageDefinition extends TaskStageDefinition {
         this.autoComplete = this.parseBooleanAttribute('autoComplete', true);
         /** @type {Array<PlanItem>} */
         this.planItems = this.parseElements('planItem', PlanItem);
-        this.sentries = this.parseElements('sentry', SentryDefinition);
     }
 
     get isStage() {

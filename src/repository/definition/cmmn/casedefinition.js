@@ -21,6 +21,7 @@ export default class CaseDefinition extends ModelDefinition {
     }
 
     parseDocument() {
+        this.migrateXML();
         super.parseDocument();
         /** @type {CaseFileDefinition} */
         this.caseFile = this.parseElement('caseFileModel', CaseFileDefinition);
@@ -148,5 +149,25 @@ export default class CaseDefinition extends ModelDefinition {
         // Also export the guid that is used to generate new elements in the case. This must be removed upon deployment.
         this.exportNode.setAttribute('guid', this.typeCounters.guid);
         return xmlDocument;
+    }
+
+    migrateXML() {
+        const sentries = XML.getElementsByTagName(this.importNode, 'sentry');
+        if (sentries.length > 0) {
+            console.groupCollapsed("Converting " + sentries.length +" sentries in case plan of " + this.file.fileName);
+            const allElements = XML.allElements(this.importNode);
+            sentries.forEach(sentry => {
+                const id = sentry.getAttribute('id');
+                const criterion = allElements.find(element => !element.getAttribute('sourceRef') && element.getAttribute('sentryRef') === id);
+                if (criterion) {
+                    sentry.childNodes.forEach(node => criterion.appendChild(node.cloneNode(true)));
+                    sentry.parentElement.removeChild(sentry);
+                } else {
+                    throw new Error('Cannot find criterion for sentry ' + id);
+                }
+            });
+            this.migrated(`Merged <sentry> elements with their corresponding definitions, so now we have only <entryCriterion>, <exitCriterion> and <reactivateCriterion>`);
+            console.groupEnd();
+        }
     }
 }

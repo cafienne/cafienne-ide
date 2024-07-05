@@ -69,7 +69,7 @@ export default class SentryDefinition extends UnnamedCMMNElementDefinition {
         return onPart;
     }
 
-    createExportNode(parentNode) {
-        super.createExportNode(parentNode, 'sentry', 'ifPart', 'caseFileItemOnParts', 'planItemOnParts');
+    createExportNode(parentNode, tagName) {
+        super.createExportNode(parentNode, tagName, 'ifPart', 'caseFileItemOnParts', 'planItemOnParts');
     }
 }

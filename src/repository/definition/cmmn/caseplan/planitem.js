@@ -108,9 +108,7 @@ export default class PlanItem extends CMMNElementDefinition {
      * @returns {CriterionDefinition}
      */
     createSentry(criterionConstructor, criterionCollection) {
-        const sentry = this.getStage().createSentry();
         const criterion = super.createDefinition(criterionConstructor);
-        criterion.sentryRef = sentry.id;
         criterionCollection.push(criterion);
         return criterion;
     }
@@ -160,8 +158,8 @@ export default class PlanItem extends CMMNElementDefinition {
             newParent.childDefinitions.push(this);
             
             // Finally make sure that the sentries of our entry and exit criteria also move to the new parent
-            this.entryCriteria.forEach(c => c.sentry.switchParent(newParent));
-            this.exitCriteria.forEach(c => c.sentry.switchParent(newParent));
+            this.entryCriteria.forEach(c => c.switchParent(newParent));
+            this.exitCriteria.forEach(c => c.switchParent(newParent));
         }
     }
 

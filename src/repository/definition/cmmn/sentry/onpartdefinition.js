@@ -3,19 +3,18 @@ import UnnamedCMMNElementDefinition from "../../unnamedcmmnelementdefinition";
 import CaseDefinition from "../casedefinition";
 import CaseFileItemDef from "../casefile/casefileitemdef";
 import PlanItem from "../caseplan/planitem";
-// import SentryDefinition from "./sentrydefinition"; 
-// BIG TODO HERE
+import CriterionDefinition from "./criteriondefinition";
+
 export default class OnPartDefinition extends UnnamedCMMNElementDefinition {
     /**
      * 
      * @param {Element} importNode 
-     * @param {SentryDefinition} parent 
+     * @param {CriterionDefinition} parent 
      * @param {CaseDefinition} caseDefinition 
      * @param {Function} sourceConstructor 
      */
     constructor(importNode, caseDefinition, parent, sourceConstructor) {
         super(importNode, caseDefinition, parent);
-        this.sentry = parent;
         this.sourceConstructor = sourceConstructor;
         this.standardEvent = this.parseElementText('standardEvent', '');
         this.sourceRef = this.parseAttribute('sourceRef', '');
