@@ -7,15 +7,20 @@ import EntryCriterionDefinition from "../sentry/entrycriteriondefinition";
 import ExitCriterionDefinition from "../sentry/exitcriteriondefinition";
 import ReactivateCriterionDefinition from "../sentry/reactivatecriteriondefinition";
 import ItemControlDefinition from "./itemcontroldefinition";
-import PlanItemDefinitionDefinition, { TaskStageDefinition } from "./planitemdefinitiondefinition";
 import PlanningTableDefinition, { ApplicabilityRuleDefinition } from "./planningtabledefinition";
 import FourEyesDefinition from "./task/workflow/foureyesdefinition";
 import RendezVousDefinition from "./task/workflow/rendezvousdefinition";
 import CaseDefinition from "../casedefinition";
-// import StageDefinition from "./stagedefinition";
-// BIG TODO HERE
 
 export default class PlanItem extends CMMNElementDefinition {
+    static get infix() {
+        throw new Error('This method must be implemented in ' + this.name);
+    }
+
+    static get prefix() {
+        return 'pi_' + this.infix;
+    }
+
     /**
      * 
      * @param {Element} importNode 
@@ -24,7 +29,8 @@ export default class PlanItem extends CMMNElementDefinition {
      */
     constructor(importNode, caseDefinition, parent) {
         super(importNode, caseDefinition, parent);
-        this.definitionRef = this.parseAttribute('definitionRef');
+        // this.definitionRef = this.parseAttribute('definitionRef');
+        this.definition = this;
         /** @type{ItemControlDefinition} */
         this.planItemControl = this.parseElement('itemControl', ItemControlDefinition);
         /** @type{Array<EntryCriterionDefinition>} */
@@ -36,7 +42,6 @@ export default class PlanItem extends CMMNElementDefinition {
         // Properties below are special for discretionary items
         this.applicabilityRuleRefs = this.parseAttribute('applicabilityRuleRefs');
         this.authorizedRoleRefs = this.parseAttribute('authorizedRoleRefs');
-        this.isDiscretionary = parent instanceof PlanningTableDefinition;
         /** @type{Array<ApplicabilityRuleDefinition>} */
         this.applicabilityRules = [];
         /** @type{Array<CaseRoleReference>} */
@@ -45,11 +50,15 @@ export default class PlanItem extends CMMNElementDefinition {
         this.rendezVous = this.parseExtension(RendezVousDefinition);
     }
 
+    get isDiscretionary() {
+        return this.parent instanceof PlanningTableDefinition;
+    }
+
     /**
      * @returns {String}
      */
     get defaultTransition() {
-        return this.definition.defaultTransition;
+        throw new Error('This method must be implemented in ' + this.constructor.name);
     }
 
     /**
@@ -60,23 +69,6 @@ export default class PlanItem extends CMMNElementDefinition {
             this.planItemControl = super.createDefinition(ItemControlDefinition);
         }
         return this.planItemControl;
-    }
-
-    /**
-     * Returns the stage to which this plan item belongs (this.parent is not the stage for discretionary items)
-     * @returns {StageDefinition}
-     */
-    getStage() {
-        if (this.isDiscretionary) {
-            const planningTable = this.parent;
-            if (planningTable.parent.isTask) {
-                return planningTable.parent.parent;
-            } else {
-                return planningTable.parent;
-            }
-        } else {
-            return this.parent;
-        }
     }
 
     /**
@@ -167,7 +159,6 @@ export default class PlanItem extends CMMNElementDefinition {
     switchType() {
         if (this.isDiscretionary) {
             // Make it a regular plan item, and give it a new parent
-            this.isDiscretionary = false;
             // Remove ourselves from the planning table.
             const planningTableDefinition = this.parent;
             Util.removeFromArray(planningTableDefinition.tableItems, this);
@@ -180,7 +171,6 @@ export default class PlanItem extends CMMNElementDefinition {
             stageDefinition.childDefinitions.push(this);
         } else {
             // Make it a discretionary item, and give it a new parent
-            this.isDiscretionary = true;
             // Remove ourselves from our stage
             const stageDefinition = this.parent;
             Util.removeFromArray(stageDefinition.planItems, this);
@@ -215,8 +205,6 @@ export default class PlanItem extends CMMNElementDefinition {
             });
         }
 
-        /** @type {PlanItemDefinitionDefinition} */
-        this.definition = this.caseDefinition.getElement(this.definitionRef);
         // Resolve discretionary properties        
         /** @type {Array<CaseRoleReference>} */
         this.authorizedRoles = this.caseDefinition.findElements(this.authorizedRoleRefs, [], CaseRoleDefinition).map(role => new CaseRoleReference(role, this));
@@ -224,27 +212,11 @@ export default class PlanItem extends CMMNElementDefinition {
         this.applicabilityRules = this.caseDefinition.findElements(this.applicabilityRuleRefs, [], ApplicabilityRuleDefinition);
     }
 
-    createExportNode(parentNode) {
-        // Update some properties before exporting them
-        if (this.definition) {
-            this.definitionRef = this.definition.id;
-            this.definition.name = this.name;
-            if (this.definition.documentation.text === this.documentation.text) {
-                this.definition.documentation.text = '';
-            }    
-        }
+    createExportNode(parentNode, tagName, ...propertyNames) {
         // Flatten discretionary properties; this ensures that if a element has switched from discretionary to planitem, it will NOT accidentally keep the role and rule refs.
         this.authorizedRoleRefs = super.flattenListToString(this.isDiscretionary ? this.authorizedRoles : []);
         this.applicabilityRuleRefs = super.flattenListToString(this.isDiscretionary ? this.filterExistingRules() : []);
-
-        const tagName = this.isDiscretionary ? 'discretionaryItem' : 'planItem';
-        super.createExportNode(parentNode, tagName, 'definitionRef', 'entryCriteria', 'reactivateCriteria', 'exitCriteria', 'planItemControl', 'applicabilityRuleRefs', 'authorizedRoleRefs', 'fourEyes', 'rendezVous');
-    }
-
-    removeDefinition() {
-        // first, remove our planitemdefinitiondefinition
-        this.definition && this.definition.removeDefinition();
-        super.removeDefinition();
+        super.createExportNode(parentNode, tagName, 'entryCriteria', 'reactivateCriteria', 'exitCriteria', 'planItemControl', 'applicabilityRuleRefs', 'authorizedRoleRefs', 'fourEyes', 'rendezVous', propertyNames);
     }
 
     /**
@@ -253,5 +225,81 @@ export default class PlanItem extends CMMNElementDefinition {
      */
     filterExistingRules() {
         return this.applicabilityRules.filter(rule => this.caseDefinition.getElement(rule.id));
+    }
+
+    /**
+     * Returns a list of transitions valid for this type of plan item definition.
+     * @returns {Array<String>}
+     */
+    get transitions() {
+        throw new Error('This method must be implemented in ' + this.constructor.name);
+    }
+
+    /**
+     * Returns the entry transition for this type of plan item definition (Task/Stage => Start, Event/Milestone => Occur)
+     * @returns {String}
+     */
+    get entryTransition() {
+        throw new Error('This method must be implemented in ' + this.constructor.name);
+    }
+}
+
+/**
+ * Simple helper class to re-use logic across stages and tasks
+ */
+export class TaskStageDefinition extends PlanItem {
+    constructor(importNode, caseDefinition, parent) {
+        super(importNode, caseDefinition, parent);
+        /** @type{PlanningTableDefinition} */
+        this.planningTable = this.parseElement('planningTable', PlanningTableDefinition);
+    }
+
+    getPlanningTable() {
+        if (!this.planningTable) {
+            /** @type{PlanningTableDefinition} */
+            this.planningTable = super.createDefinition(PlanningTableDefinition); 
+        }
+        return this.planningTable;
+    }
+
+    get isTask() {
+        return false;
+    }
+
+    get isStage() {
+        return false;
+    }
+
+    get transitions() {
+        return ['complete', 'create', 'disable', 'enable', 'exit', 'fault', 'manualStart', 'parentResume', 'parentSuspend', 'reactivate', 'reenable', 'resume', 'start', 'suspend', 'terminate'];
+    }
+
+    get defaultTransition() {
+        return 'completes';
+    }
+
+    get entryTransition() {
+        return 'start';
+    }
+}
+
+/**
+ * Simple helper class to re-use logic across milestones and event listeners
+ */
+export class MilestoneEventListenerDefinition extends PlanItem {
+    constructor(importNode, caseDefinition, parent) {
+        super(importNode, caseDefinition, parent);
+    }
+
+    get transitions() {
+        return ['occur', 'create', 'reactivate', 'resume', 'suspend', 'terminate'];
+    }
+
+    get defaultTransition() {
+        return 'occur';
+    }
+
+    get entryTransition() {
+        return 'occur';
     }
 }

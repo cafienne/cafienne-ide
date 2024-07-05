@@ -5,7 +5,7 @@ import CafienneWorkflowDefinition from "./workflow/cafienneworkflowdefinition";
 import DueDateDefinition from "./workflow/duedatedefinition";
 
 export default class HumanTaskDefinition extends TaskDefinition {
-    static get prefix() {
+    static get infix() {
         return 'ht';
     }
 

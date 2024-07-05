@@ -3,6 +3,10 @@ import OnPartDefinition from "../sentry/onpartdefinition";
 import EventListenerDefinition from "./eventlistenerdefinition";
 
 export default class TimerEventDefinition extends EventListenerDefinition {
+    static get infix() {
+        return 'tmr';
+    }
+
     constructor(importNode, caseDefinition, parent) {
         super(importNode, caseDefinition, parent);
         this.timerExpression = this.parseElement('timerExpression', ExpressionDefinition);
@@ -41,10 +45,6 @@ export default class TimerEventDefinition extends EventListenerDefinition {
             }
         }
         return this.planItemStartTrigger;
-    }
-
-    static get prefix() {
-        return 'tmr';
     }
 
     createExportNode(parentNode) {

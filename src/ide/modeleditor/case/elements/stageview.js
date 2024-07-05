@@ -147,7 +147,7 @@ export default class StageView extends TaskStageView {
     }
 
     /**
-     * Creates a new view based on the PlanItemDefinitionDefinition of the plan item,
+     * Creates a new view based on the plan item,
      * @param {PlanItem} definition 
      */
     createPlanItemView(definition) {
@@ -173,7 +173,7 @@ export default class StageView extends TaskStageView {
         } else if (planItemDefinition instanceof TimerEventDefinition) {
             return new TimerEventView(this, definition, planItemDefinition, shape);
         } else {
-            throw new Error('This type of plan item cannot be instantiated into a view' + definition.name);
+            throw new Error('This type of plan item cannot be instantiated into a view ' + definition.name);
         }
     }
 

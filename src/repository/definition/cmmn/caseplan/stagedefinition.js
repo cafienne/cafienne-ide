@@ -1,13 +1,48 @@
+import XML from "@util/xml";
+import MilestoneDefinition from "./milestonedefinition";
 import PlanItem from "./planitem";
-import { TaskStageDefinition } from "./planitemdefinitiondefinition";
+import { TaskStageDefinition } from "./planitem";
+import CaseTaskDefinition from "./task/casetaskdefinition";
 import HumanTaskDefinition from "./task/humantaskdefinition";
+import ProcessTaskDefinition from "./task/processtaskdefinition";
+import TimerEventDefinition from "./timereventdefinition";
+import UserEventDefinition from "./usereventdefinition";
+import CMMNElementDefinition from "@repository/definition/cmmnelementdefinition";
 
 export default class StageDefinition extends TaskStageDefinition {
+    static get infix() {
+        return 'st';
+    }
+
     constructor(importNode, caseDefinition, parent) {
         super(importNode, caseDefinition, parent);
         this.autoComplete = this.parseBooleanAttribute('autoComplete', true);
-        /** @type {Array<PlanItem>} */
-        this.planItems = this.parseElements('planItem', PlanItem);
+        this.planItems = this.parseChildren(this);
+    }
+
+    /**
+     * This method is used by both a PlanningTableDefinition and a StageDefinition (and also then the CasePlanDefinition)
+     * It parses the children of the element and instantiates them to plan items.
+     * Note: this method keeps the order of the XML in place in the list of items being returned.
+     * @param {CMMNElementDefinition} parent 
+     * @returns {Array<PlanItem>}
+     */
+    parseChildren(parent) {
+        const items = [];
+        const itemCreator = (element, constructor) => parent.instantiateChild(element, constructor, items);
+        const childParser = (element) => {
+            switch (element.tagName) {
+                case 'humanTask': return itemCreator(element, HumanTaskDefinition);
+                case 'caseTask': return itemCreator(element, CaseTaskDefinition);
+                case 'processTask': return itemCreator(element, ProcessTaskDefinition);
+                case 'milestone': return itemCreator(element, MilestoneDefinition);
+                case 'userEvent': return itemCreator(element, UserEventDefinition);
+                case 'timerEvent': return itemCreator(element, TimerEventDefinition);
+                case 'stage': return itemCreator(element, StageDefinition);
+            }
+        }
+        XML.getChildrenByTagName(parent.importNode, '*').forEach(childParser);
+        return items;
     }
 
     get isStage() {
@@ -20,10 +55,7 @@ export default class StageDefinition extends TaskStageDefinition {
      * @returns {PlanItem}
      */
     createPlanItem(type) {
-        // For now, plan item definitions are always kept inside the case plan 
-        const planItemDefinition = this.caseDefinition.getCasePlan().createPlanItemDefinition(type);
-        const planItem = super.createDefinition(PlanItem, 'pi_' + planItemDefinition.id, planItemDefinition.name);
-        planItem.definition = planItemDefinition;
+        const planItem = super.createDefinition(type);
         this.planItems.push(planItem);
         return planItem;
     }
@@ -55,7 +87,7 @@ export default class StageDefinition extends TaskStageDefinition {
     }
 
     createExportNode(parentNode, tagName = 'stage', ...propertyNames) {
-        tagName = tagName == 'planItemDefinitions' ? 'stage' : tagName; // Override tagName for casePlan, but not for planItemDefinitions elements.
-        super.createExportNode(parentNode, tagName, 'autoComplete', 'planItems', 'sentries', 'planningTable', propertyNames);
+        tagName = tagName === 'planItems' || tagName === 'tableItems' ? 'stage' : tagName; // Override tagName, as it comes from exporting collection property with name 'planItems' from a Stage or 'tableItems' from a PlanningTable.
+        super.createExportNode(parentNode, tagName, 'autoComplete', 'planItems', 'planningTable', propertyNames);
     }
 }

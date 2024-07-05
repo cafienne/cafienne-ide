@@ -1,7 +1,7 @@
 import TaskDefinition from "./taskdefinition";
 
 export default class ProcessTaskDefinition extends TaskDefinition {
-    static get prefix() {
+    static get infix() {
         return 'pt';
     }
 

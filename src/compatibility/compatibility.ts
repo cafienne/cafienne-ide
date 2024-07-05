@@ -3,24 +3,14 @@
 import echo from './compatibilityhelper';
 
 import ParameterDefinition from '@definition/cmmn/contract/parameterdefinition';
-import EntryCriterionDefinition from '@definition/cmmn/sentry/entrycriteriondefinition';
-import ExitCriterionDefinition from '@definition/cmmn/sentry/exitcriteriondefinition';
-import ReactivateCriterionDefinition from '@definition/cmmn/sentry/reactivatecriteriondefinition';
 import Halo from '@ide/modeleditor/case/elements/halo/halo';
 import PlanItemHalo from '@ide/modeleditor/case/elements/halo/planitemhalo';
 import { EntryCriterionHalo, ExitCriterionHalo, ReactivateCriterionHalo } from '@ide/modeleditor/case/elements/halo/sentryhalo';
 import TaskHalo from '@ide/modeleditor/case/elements/halo/taskhalo';
-import StageDefinition from '@repository/definition/cmmn/caseplan/stagedefinition';
 
 const pointers = [
     // Repository
     ParameterDefinition,
-
-    EntryCriterionDefinition,
-    ExitCriterionDefinition,
-    ReactivateCriterionDefinition,
-
-    StageDefinition,
 
     // IDE
     Halo,
