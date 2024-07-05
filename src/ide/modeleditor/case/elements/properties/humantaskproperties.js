@@ -12,7 +12,7 @@ export default class HumanTaskProperties extends TaskProperties {
         super(task);
         this.cmmnElement = task;
         /** @type {HumanTaskDefinition} */
-        this.humanTaskDefinition = this.cmmnElement.definition.definition;
+        this.humanTaskDefinition = this.cmmnElement.definition;
     }
 
     renderData() {

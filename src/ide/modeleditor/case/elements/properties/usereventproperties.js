@@ -26,7 +26,7 @@ export default class UserEventProperties extends PlanItemProperties {
                             <label>Authorized Roles</label>
                         </div>`);
         // Add a row for each role, and also an empty ro(w)le at the end
-        const authorizedRoles = this.cmmnElement.planItemDefinition.authorizedRoles;
+        const authorizedRoles = this.cmmnElement.definition.authorizedRoles;
         authorizedRoles.forEach(role => this.addAuthorizedRoleField(authorizedRoles, html, role));
         this.addAuthorizedRoleField(authorizedRoles, html);
 

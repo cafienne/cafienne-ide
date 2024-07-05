@@ -15,11 +15,11 @@ export default class AutoCompleteDecorator extends Decorator {
     }
     
     get tooltip() {
-        const type = this.view.planItemDefinition.toString().replace('Definition', '');
+        const type = this.view.definition.toString().replace('Definition', '');
         return `${type} will complete when all active items have been completed and no required items are pending`
     }
 
     get visibility() {
-        return this.view.planItemDefinition.autoComplete;
+        return this.view.definition.autoComplete;
     }
 }

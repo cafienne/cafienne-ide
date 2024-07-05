@@ -12,21 +12,21 @@ export default class CaseTaskView extends TaskView {
      * @param {*} y 
      */
     static create(stage, x, y) {
-        const definition = stage.planItemDefinition.createPlanItem(CaseTaskDefinition);
+        const definition = stage.definition.createPlanItem(CaseTaskDefinition);
         const shape = stage.case.diagram.createShape(x, y, 140, 80, definition.id);
-        return new CaseTaskView(stage, definition, definition.definition, shape);
+        return new CaseTaskView(stage, definition, shape);
     }
 
     /**
      * Creates a new CaseTaskView element.
      * @param {StageView} parent 
      * @param {PlanItem} definition
-     * @param {CaseTaskDefinition} planItemDefinition 
+     * @param {CaseTaskDefinition} definition 
      * @param {ShapeDefinition} shape 
      */
-    constructor(parent, definition, planItemDefinition, shape) {
-        super(parent, definition, planItemDefinition, shape);
-        this.planItemDefinition = planItemDefinition;
+    constructor(parent, definition, shape) {
+        super(parent, definition, shape);
+        this.definition = definition;
     }
 
     getImplementationList() {

@@ -180,7 +180,7 @@ class ItemMigrator {
                 if (this.definitionNode.tagName === 'stage') {
                     this.stageMigrator = new StageMigrator(this.migrator.caseDefinition, this.definitionNode, this.migrator.casePlan, this.migrator.definitionNodes);
                 } else { // In a HumanTask we can also have a planning table, and then we have to migrate that one as well
-                    const planningTable = XML.getChildByTagName(this.item, 'planningTable');
+                    const planningTable = XML.getChildByTagName(this.definitionNode, 'planningTable');
                     if (planningTable) {
                         this.planningTableMigrator = new PlanningTableMigrator(this, planningTable);
                     }

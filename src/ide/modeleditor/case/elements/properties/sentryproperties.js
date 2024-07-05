@@ -223,7 +223,7 @@ export default class SentryProperties extends Properties {
             return '<option></option><option>first select a plan item</option>';
         } else {
             const isTransitionSelected = transition => transition == onPart.standardEvent ? 'selected="true"' : '';
-            return onPart.source.definition.transitions.map(t => `<option value="${t}" ${isTransitionSelected(t)}>${t}</option>`).join('');
+            return onPart.source.transitions.map(t => `<option value="${t}" ${isTransitionSelected(t)}>${t}</option>`).join('');
         }
     }
 

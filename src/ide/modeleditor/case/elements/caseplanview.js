@@ -29,13 +29,8 @@ export default class CasePlanView extends StageView {
      * @param {ShapeDefinition} shape 
      */
     constructor(cs, definition, shape) {
-        super(cs, undefined, definition, definition, shape);
-        // A case plan is both a plan item and a planitem definition
-        //  It is also a stage, and a stage has distinctive plan item and planitem definition.
-        //  Inside stage, we set a pointer to this.definition and this.planItemDefinition, pointing to this.definition.definition
-        //  However, for case plan, there is no definition.definition, rather the case plan is the definition.definition itself.
-        //  But stage is not aware of that, and relies on a planItemDefinition being present; hence we overwrite the property here.
-        this.planItemDefinition = definition;
+        super(cs, undefined, definition, shape);
+        this.definition = definition;
     }
 
     referencesDefinitionElement(definitionId) {

@@ -24,7 +24,7 @@ export default class PreviewTaskForm extends StandardForm {
         this.htmlContainer.html('<div class="taskpreview"></div>');
         
         const divPreview = this.htmlContainer.find('.taskpreview');
-        const form = this.task.planItemDefinition.implementationModel && this.task.planItemDefinition.implementationModel.taskModel;
+        const form = this.task.definition.implementationModel && this.task.definition.implementationModel.taskModel;
         const taskModel = form.taskModel || '';
 
         const parseResult = Util.parseJSON(taskModel);

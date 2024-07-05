@@ -100,7 +100,7 @@ export default class TaskStageProperties extends PlanItemProperties {
      * Adds a checkbox whether or not this element has a planning table.
      */
     addPlanningTableField() {
-        const checked = this.cmmnElement.planItemDefinition.planningTable ? ' checked' : '';
+        const checked = this.cmmnElement.definition.planningTable ? ' checked' : '';
         const checkId = Util.createID();
         const html = $(`<div class="propertyRule">
                             <div class="propertyRow">
@@ -112,7 +112,7 @@ export default class TaskStageProperties extends PlanItemProperties {
         html.on('change', e => {
             if (e.target.checked == true) {
                 // Create a new planning table on the definition by invoking the getter, and show it.
-                this.cmmnElement.planItemDefinition.getPlanningTable();
+                this.cmmnElement.definition.getPlanningTable();
                 this.cmmnElement.showPlanningTable();
             } else {
                 // Invoking delete on our planning table will also remove the definition and render this element again (and thus hide the pt image)

@@ -30,7 +30,7 @@ export default class CasePlanHalo extends Halo {
         const casePaper = this.element.case.paperContainer;
 
         // We need to make the halo a bit lower and on the right hand side of the top tab or the planning table.
-        const leftCorrection = this.element.planItemDefinition.planningTable ? 310 : 260;
+        const leftCorrection = this.element.definition.planningTable ? 310 : 260;
         const haloLeft = this.element.shape.x - casePaper.scrollLeft() + leftCorrection;
         const haloTop = this.element.shape.y - casePaper.scrollTop() + 24;
 

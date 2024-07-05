@@ -27,8 +27,8 @@ export default class TaskMappingsEditor extends StandardForm {
     </div>
 </div>`);
         const inputMappingsContainer = this.htmlContainer.find('.input-mappings .containerbox');
-        const numInputMappings = this.task.planItemDefinition.inputMappings.length;
-        const numOutputMappings = this.task.planItemDefinition.outputMappings.length;
+        const numInputMappings = this.task.definition.inputMappings.length;
+        const numOutputMappings = this.task.definition.outputMappings.length;
         const rowHeight = 32;
         const h4height = 42;
         const headerHeight = 25;

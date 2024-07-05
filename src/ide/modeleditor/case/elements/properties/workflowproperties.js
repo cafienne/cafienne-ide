@@ -16,7 +16,7 @@ export default class WorkflowProperties extends TaskProperties {
         super(task);
         this.cmmnElement = task;
         /** @type {HumanTaskDefinition} */
-        this.humanTaskDefinition = this.cmmnElement.definition.definition;
+        this.humanTaskDefinition = this.cmmnElement.definition;
     }
 
     get label() {
@@ -30,13 +30,13 @@ export default class WorkflowProperties extends TaskProperties {
     addPerformerField() {
         const html = $(`<div class="szoomDoubleRow performer-field" title="Select a Case Role that is required to perform the task.\nWhen empty all case team members can perform the task.">
                             <label class="zoomlabel">Performer (role needed to do task)</label>
-                            ${this.getRolesAsHTMLSelect(this.cmmnElement.planItemDefinition.performerRef, 'removeRoleButton')}
+                            ${this.getRolesAsHTMLSelect(this.cmmnElement.definition.performerRef, 'removeRoleButton')}
                         </div>`);
         html.find('select').on('change', e => {
-            this.change(this.cmmnElement.planItemDefinition, 'performerRef', e.target.value);
+            this.change(this.cmmnElement.definition, 'performerRef', e.target.value);
         });
         html.find('.removeRoleButton').on('click', e => {
-            this.change(this.cmmnElement.planItemDefinition, 'performerRef', undefined);
+            this.change(this.cmmnElement.definition, 'performerRef', undefined);
             html.find('select').val(undefined);
         });
         this.htmlContainer.append(html);

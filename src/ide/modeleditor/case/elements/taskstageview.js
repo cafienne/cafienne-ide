@@ -13,13 +13,12 @@ export default class TaskStageView extends PlanItemView {
      * Simple class to share some logic from TaskView and StageView.
      * @param {CaseView} cs 
      * @param {CMMNElementView} parent 
-     * @param {PlanItem} definition 
-     * @param {TaskStageDefinition} planItemDefinition 
+     * @param {TaskStageDefinition} definition 
      * @param {ShapeDefinition} shape 
      */
-    constructor(cs, parent, definition, planItemDefinition, shape) {
+    constructor(cs, parent, definition, shape) {
         super(cs, parent, definition, shape);
-        this.planItemDefinition = planItemDefinition;
+        this.definition = definition;
         this.showPlanningTable();
     }
 
@@ -67,13 +66,13 @@ export default class TaskStageView extends PlanItemView {
      * Creates a planning table if it does not yet exist, and shows it.
      */
     showPlanningTable() {
-        const ptDefinition = this.planItemDefinition.planningTable;
+        const ptDefinition = this.definition.planningTable;
         if (ptDefinition) {
             // If there is a definition, and we do not yet have a child to render it, then add such a child.
             if (!this.planningTableView) {
                 const position = this.__planningTablePosition;
                 const shape = this.case.diagram.getShape(ptDefinition) || this.case.diagram.createShape(position.x, position.y, 24, 16, ptDefinition.id);
-                new PlanningTableView(this, this.planItemDefinition.planningTable, shape);
+                new PlanningTableView(this, this.definition.planningTable, shape);
             }
         }
     }
@@ -96,7 +95,7 @@ export default class TaskStageView extends PlanItemView {
             const target = connector.source == this ? connector.target : connector.source;
             if (target.isHumanTask) {
                 // We are discretionary, and need to be added to the discretionary items in the planning table of the HumanTaskView
-                this.definition.switchParent(target.planItemDefinition);
+                this.definition.switchParent(target.definition);
             }
             this.parent.refreshView();
         }
@@ -111,7 +110,7 @@ export default class TaskStageView extends PlanItemView {
         if (this.definition.isDiscretionary) {
             const target = connector.source == this ? connector.target : connector.source;
             if (target.isHumanTask) { // If target is HumanTaskView, then we are the StageView containing that task.
-                this.definition.switchParent(target.parent.planItemDefinition);
+                this.definition.switchParent(target.parent.definition);
                 this.parent.refreshView();
             }
         }
@@ -131,14 +130,14 @@ export default class TaskStageView extends PlanItemView {
         // Check discretionary
         if (this.definition.isDiscretionary) {
             // ------- check if connected to a stage or task with a planning table first check connected to element with planningTable
-            const numberOfConnectionsToPlanningTable = this.__getConnectedElements().filter(item => item.isTaskOrStage && item.planItemDefinition.planningTable).length;
+            const numberOfConnectionsToPlanningTable = this.__getConnectedElements().filter(item => item.isTaskOrStage && item.definition.planningTable).length;
             //not connected check if inside stage/case plan model with plannnigTable
             if (numberOfConnectionsToPlanningTable == 0) {
                 // not connected to task with planningTable check if parent is stage or case plan
                 // model with planningTable
                 const cmmnParent = this.parent;
                 if (cmmnParent && cmmnParent.isTaskOrStage) {
-                    if (!cmmnParent.planItemDefinition.planningTable) {
+                    if (!cmmnParent.definition.planningTable) {
                         this.raiseValidationIssue(20);
                     }
                 } else {

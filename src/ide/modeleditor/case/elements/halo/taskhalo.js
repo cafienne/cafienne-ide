@@ -16,7 +16,7 @@ export default class TaskHalo extends PlanItemHalo {
 
     createItems() {
         super.createItems();
-        if (this.element.planItemDefinition.implementationRef) {
+        if (this.element.definition.implementationRef) {
             this.addItems(ZoomTaskImplementationHaloItem, InputParametersHaloItem, OutputParametersHaloItem);
         } else {
             this.addItems(NewTaskImplemenationHaloItem);
@@ -40,8 +40,8 @@ export class HumanTaskHalo extends TaskHalo {
         if (!this.element.definition.isDiscretionary) {
             this.addItems(EntryCriterionHaloItem, ReactivateCriterionHaloItem, ExitCriterionHaloItem);
         }
-        if (this.element.planItemDefinition.implementationRef) {
-            const model = task.planItemDefinition.implementationModel && task.planItemDefinition.implementationModel.taskModel;
+        if (this.element.definition.implementationRef) {
+            const model = task.definition.implementationModel && task.definition.implementationModel.taskModel;
             const taskModel = model && model.taskModel || '';
             try {
                 JSON.parse(taskModel);

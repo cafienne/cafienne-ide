@@ -14,21 +14,20 @@ export default class MilestoneView extends PlanItemView {
      * @param {*} y 
      */
     static create(stage, x, y) {
-        const definition = stage.planItemDefinition.createPlanItem(MilestoneDefinition);
+        const definition = stage.definition.createPlanItem(MilestoneDefinition);
         const shape = stage.case.diagram.createShape(x, y, 100, 40, definition.id);
-        return new MilestoneView(stage, definition, definition.definition, shape);
+        return new MilestoneView(stage, definition, shape);
     }
 
     /**
      * Creates a new MilestoneView element.
      * @param {StageView} parent 
-     * @param {PlanItem} definition
-     * @param {MilestoneDefinition} planItemDefinition 
+     * @param {MilestoneDefinition} definition
      * @param {ShapeDefinition} shape 
      */
-    constructor(parent, definition, planItemDefinition, shape) {
+    constructor(parent, definition, shape) {
         super(parent.case, parent, definition, shape);
-        this.planItemDefinition = planItemDefinition;
+        this.definition = definition;
     }
 
     get wrapText() {

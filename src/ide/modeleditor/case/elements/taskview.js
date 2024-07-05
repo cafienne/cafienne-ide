@@ -16,19 +16,18 @@ export default class TaskView extends TaskStageView {
     /**
      * Creates a new TaskView element.
      * @param {StageView} parent 
-     * @param {PlanItem} definition
-     * @param {TaskDefinition} planItemDefinition 
+     * @param {TaskDefinition} definition 
      * @param {ShapeDefinition} shape 
      */
-    constructor(parent, definition, planItemDefinition, shape) {
-        super(parent.case, parent, definition, planItemDefinition, shape);
-        this.planItemDefinition = planItemDefinition;
+    constructor(parent, definition, shape) {
+        super(parent.case, parent, definition, shape);
+        this.definition = definition;
 
         //Define the mapping form to link task parameters with model parameters (case process humantask) 
         this.mappingsEditor = new TaskMappingsEditor(this);
 
-        if (planItemDefinition.implementationRef && !planItemDefinition.implementationModel) {
-            this.editor.ide.warning(`Task ${this.definition.name} refers to '${planItemDefinition.implementationRef}', but that file does not exist`, 20000);
+        if (definition.implementationRef && !definition.implementationModel) {
+            this.editor.ide.warning(`Task ${this.definition.name} refers to '${definition.implementationRef}', but that file does not exist`, 20000);
         }
     }
 
@@ -83,12 +82,12 @@ export default class TaskView extends TaskStageView {
         const potentialImplementationName = this.definition.name.split(' ').join('');
         const existingModel = this.getImplementationList().find(serverFile => serverFile.name === potentialImplementationName);
         if (existingModel) {
-            this.planItemDefinition.implementationRef = existingModel.fileName;
+            this.definition.implementationRef = existingModel.fileName;
         } else {
             const fileName = this.case.editor.ide.createNewModel(this.fileType, potentialImplementationName, this.definition.documentation.text, fileName => {
                 window.location.hash = fileName;
             });
-            this.planItemDefinition.implementationRef = fileName;
+            this.definition.implementationRef = fileName;
         }
         this.case.editor.completeUserAction();
         this.refreshView();
@@ -103,7 +102,7 @@ export default class TaskView extends TaskStageView {
      */
     changeTaskImplementation(model, updateTaskName = false) {
         const fileName = model.fileName;
-        if (this.planItemDefinition.implementationRef == fileName) {
+        if (this.definition.implementationRef == fileName) {
             // no need to change. Perhaps re-generate parameters??? Better give a separate button for that ...
             return;
         }
@@ -127,7 +126,7 @@ export default class TaskView extends TaskStageView {
             }
 
             // Set the implementation.
-            this.planItemDefinition.setImplementation(fileName, model);
+            this.definition.setImplementation(fileName, model);
 
             // Make sure to save changes if any.
             this.case.editor.completeUserAction();
@@ -187,29 +186,29 @@ export default class TaskView extends TaskStageView {
     __validate() {
         super.__validate();
 
-        if (!this.planItemDefinition.implementationRef) {
+        if (!this.definition.implementationRef) {
             this.raiseValidationIssue(3);
         }
 
-        if (this.planItemDefinition.isBlocking == false) {
+        if (this.definition.isBlocking == false) {
             //non blocking task cannot have exit sentries
             if (this.definition.exitCriteria.length > 0) {
                 this.raiseValidationIssue(5);
             }
 
             //non blocking task cannot have output parameters
-            if (this.planItemDefinition.outputs.length > 0) {
+            if (this.definition.outputs.length > 0) {
                 this.raiseValidationIssue(6);
             }
 
             //non blocking human task cannot have a planningtable
-            if (this.planItemDefinition.planningTable) {
+            if (this.definition.planningTable) {
                 this.raiseValidationIssue(8);
             }
         }
 
-        this.validateParameterMappings(this.planItemDefinition.inputMappings, 'sourceRef', 'input');
-        this.validateParameterMappings(this.planItemDefinition.inputMappings, 'targetRef', 'input');
+        this.validateParameterMappings(this.definition.inputMappings, 'sourceRef', 'input');
+        this.validateParameterMappings(this.definition.inputMappings, 'targetRef', 'input');
     }
 
     validateParameterMappings(mappings, referenceProperty, mappingType) {
@@ -239,10 +238,10 @@ export default class TaskView extends TaskStageView {
     }
 
     referencesDefinitionElement(definitionId) {
-        if (this.planItemDefinition.inputs.find(parameter => parameter.bindingRef == definitionId)) {
+        if (this.definition.inputs.find(parameter => parameter.bindingRef == definitionId)) {
             return true;
         }
-        if (this.planItemDefinition.outputs.find(parameter => parameter.bindingRef == definitionId)) {
+        if (this.definition.outputs.find(parameter => parameter.bindingRef == definitionId)) {
             return true;
         }
         return super.referencesDefinitionElement(definitionId);

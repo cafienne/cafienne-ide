@@ -19,21 +19,21 @@ export default class HumanTaskView extends TaskView {
      * @param {*} y 
      */
     static create(stage, x, y) {
-        const definition = stage.planItemDefinition.createPlanItem(HumanTaskDefinition);
+        const definition = stage.definition.createPlanItem(HumanTaskDefinition);
         const shape = stage.case.diagram.createShape(x, y, 140, 80, definition.id);
-        return new HumanTaskView(stage, definition, definition.definition, shape);
+        return new HumanTaskView(stage, definition, shape);
     }
 
     /**
      * Creates a new HumanTaskView element.
      * @param {StageView} parent 
      * @param {PlanItem} definition
-     * @param {HumanTaskDefinition} planItemDefinition 
+     * @param {HumanTaskDefinition} definition 
      * @param {ShapeDefinition} shape 
      */
-    constructor(parent, definition, planItemDefinition, shape) {
-        super(parent, definition, planItemDefinition, shape);
-        this.planItemDefinition = planItemDefinition;
+    constructor(parent, definition, shape) {
+        super(parent, definition, shape);
+        this.definition = definition;
         this.workflowProperties = new WorkflowProperties(this);
         this.previewForm = new PreviewTaskForm(this);
     }
@@ -92,7 +92,7 @@ export default class HumanTaskView extends TaskView {
      * Returns the element type image for this task
      */
     get imageURL() {
-        return this.planItemDefinition.isBlocking ? BLOCKINGHUMANTASK_IMG : NONBLOCKINGHUMANTASK_IMG;
+        return this.definition.isBlocking ? BLOCKINGHUMANTASK_IMG : NONBLOCKINGHUMANTASK_IMG;
     }
 
     get fileType() {
@@ -100,7 +100,7 @@ export default class HumanTaskView extends TaskView {
     }
 
     referencesDefinitionElement(definitionId) {
-        if (definitionId == this.planItemDefinition.performerRef) {
+        if (definitionId == this.definition.performerRef) {
             return true;
         }
         return super.referencesDefinitionElement(definitionId);
