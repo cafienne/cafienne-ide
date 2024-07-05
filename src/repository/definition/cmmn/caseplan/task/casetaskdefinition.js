@@ -1,7 +1,7 @@
 import TaskDefinition from "./taskdefinition";
 
 export default class CaseTaskDefinition extends TaskDefinition {
-    static get prefix() {
+    static get infix() {
         return 'ct';
     }
 

@@ -3,14 +3,14 @@ import CaseRoleReference from "../caseteam/caserolereference";
 import EventListenerDefinition from "./eventlistenerdefinition";
 
 export default class UserEventDefinition extends EventListenerDefinition {
+    static get infix() {
+        return 'ue';
+    }
+
     constructor(importNode, caseDefinition, parent) {
         super(importNode, caseDefinition, parent);
         this.authorizedRoles = [];
         this.authorizedRoleRefs = this.parseAttribute('authorizedRoleRefs');
-    }
-
-    static get prefix() {
-        return 'ue';
     }
 
     resolveReferences() {

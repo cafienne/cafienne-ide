@@ -45,7 +45,7 @@ export default class ModelDefinition extends XMLSerializable {
         // Now check whether or not to convert the deprecated 'description' attribute
         const description = this.parseAttribute('description');
         if (description && !this.documentation.text) {
-            this.modelDefinition.migrated(`Migrating CMMN1.0 description attribute to <cmmn:documentation> element in ${this.constructor.name} '${this.name}'`);
+            this.migrated(`Migrating CMMN1.0 description attribute to <cmmn:documentation> element in ${this.constructor.name} '${this.name}'`);
             this.documentation.text = description;
         }
     }

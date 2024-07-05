@@ -176,16 +176,22 @@ export default class ServerFile {
         definition.parseDocument();
         definition.validateDocument();
         if (file.definition.hasMigrated()) {
-            console.log(`Definition of ${file.definition.constructor.name} '${file.fileName}' has migrated; uploading result`);
+            console.log(`${file.definition.constructor.name} of '${file.fileName}' has migrated; uploading result`);
             file.source = file.definition.toXML();
-            file.save();
+            file.save(andThen(() => {
+                definition.loadDependencies(() => {
+                    // console.log("File["+file.fileName+"].definition: " + file.definition);
+                    this.validateDefinition();
+                    then.run(file);
+                });        
+            }));
+        } else {
+            definition.loadDependencies(() => {
+                // console.log("File["+file.fileName+"].definition: " + file.definition);
+                this.validateDefinition();
+                then.run(file);
+            });    
         }
-
-        definition.loadDependencies(() => {
-            // console.log("File["+file.fileName+"].definition: " + file.definition);
-            this.validateDefinition();
-            then.run(file);
-        });
     }
 
     /**

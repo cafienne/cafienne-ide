@@ -1,5 +1,4 @@
 import CaseFile from "@repository/serverfile/casefile";
-import XML from "@util/xml";
 import TextAnnotationDefinition from "../artifact/textannotation";
 import CMMNElementDefinition from "../cmmnelementdefinition";
 import Dimensions from "../dimensions/dimensions";
@@ -8,6 +7,7 @@ import CaseFileDefinition from "./casefile/casefiledefinition";
 import CasePlanDefinition from "./caseplan/caseplandefinition";
 import CaseTeamDefinition from "./caseteam/caseteamdefinition";
 import ParameterDefinition from "./contract/parameterdefinition";
+import Migrator from "./migrator";
 import StartCaseSchemaDefinition from "./startcaseschemadefinition";
 
 export default class CaseDefinition extends ModelDefinition {
@@ -21,14 +21,15 @@ export default class CaseDefinition extends ModelDefinition {
     }
 
     parseDocument() {
-        this.migrateXML();
+        // First run migrations if necessary.
+        Migrator.updateXMLElement(this);
         super.parseDocument();
         /** @type {CaseFileDefinition} */
         this.caseFile = this.parseElement('caseFileModel', CaseFileDefinition);
         /** @type {CasePlanDefinition} */
-        this.casePlan = this.parseElement('casePlanModel', CasePlanDefinition);
+        this.casePlan = this.parseElement('casePlanModel', CasePlanDefinition)
         /** @type {CaseTeamDefinition} */
-        this.caseTeam = this.parseCaseTeam();
+        this.caseTeam = this.parseElement('caseRoles', CaseTeamDefinition);
         /** @type {Array<ParameterDefinition>} */
         this.input = this.parseElements('input', ParameterDefinition);
         /** @type {Array<ParameterDefinition>} */
@@ -43,7 +44,7 @@ export default class CaseDefinition extends ModelDefinition {
     }
 
     loadExternalReferences(callback) {
-        this.resolveExternalDefinition(this.file.name + ".dimensions", definition => {            
+        this.resolveExternalDefinition(this.file.name + ".dimensions", definition => {
             this.dimensions = /** @type {Dimensions} */ (definition);
             callback();
         });
@@ -51,26 +52,6 @@ export default class CaseDefinition extends ModelDefinition {
 
     validateDocument() {
         this.elements.forEach(element => element.resolveReferences());
-    }
-
-    parseCaseTeam() {
-        const rolesElements = XML.getChildrenByTagName(this.importNode, 'caseRoles');
-        if (rolesElements.length == 0 || rolesElements.length > 1) { 
-            // CMMN 1.0 format, we must migrate. Also, if roles.length == 0, then we should create an element to avoid nullpointers.
-            //  Note: if there is only 1 caseRoles tag it can be both CMMN1.0 or CMMN1.1;
-            //  CaseTeamDefinition class will do the check if additional migration is required.
-            if (rolesElements.length) {
-                this.migrated(`Converting ${rolesElements.length} CMMN1.0 roles`);
-            }
-            // Create a new element
-            const caseTeamElement = XML.loadXMLString('<caseRoles />').documentElement;
-            rolesElements.forEach(role => {
-                role.parentElement.removeChild(role);
-                caseTeamElement.appendChild(CaseTeamDefinition.convertRoleDefinition(role))
-            });
-            this.importNode.appendChild(caseTeamElement);
-        }
-        return this.parseElement('caseRoles', CaseTeamDefinition);
     }
 
     /**
@@ -149,25 +130,5 @@ export default class CaseDefinition extends ModelDefinition {
         // Also export the guid that is used to generate new elements in the case. This must be removed upon deployment.
         this.exportNode.setAttribute('guid', this.typeCounters.guid);
         return xmlDocument;
-    }
-
-    migrateXML() {
-        const sentries = XML.getElementsByTagName(this.importNode, 'sentry');
-        if (sentries.length > 0) {
-            console.groupCollapsed("Converting " + sentries.length +" sentries in case plan of " + this.file.fileName);
-            const allElements = XML.allElements(this.importNode);
-            sentries.forEach(sentry => {
-                const id = sentry.getAttribute('id');
-                const criterion = allElements.find(element => !element.getAttribute('sourceRef') && element.getAttribute('sentryRef') === id);
-                if (criterion) {
-                    sentry.childNodes.forEach(node => criterion.appendChild(node.cloneNode(true)));
-                    sentry.parentElement.removeChild(sentry);
-                } else {
-                    throw new Error('Cannot find criterion for sentry ' + id);
-                }
-            });
-            this.migrated(`Merged <sentry> elements with their corresponding definitions, so now we have only <entryCriterion>, <exitCriterion> and <reactivateCriterion>`);
-            console.groupEnd();
-        }
     }
 }

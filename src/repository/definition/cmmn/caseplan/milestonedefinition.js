@@ -1,12 +1,12 @@
-import { MilestoneEventListenerDefinition } from "./planitemdefinitiondefinition";
+import { MilestoneEventListenerDefinition } from "./planitem";
 
 export default class MilestoneDefinition extends MilestoneEventListenerDefinition {
-    constructor(importNode, caseDefinition, parent) {
-        super(importNode, caseDefinition, parent);
+    static get infix() {
+        return 'ms';
     }
 
-    static get prefix() {
-        return 'ms';
+    constructor(importNode, caseDefinition, parent) {
+        super(importNode, caseDefinition, parent);
     }
 
     createExportNode(parentNode) {

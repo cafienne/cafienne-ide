@@ -1,6 +1,5 @@
 import ConstraintDefinition from "@definition/cmmn/caseplan/constraintdefinition";
 import PlanItem from "@definition/cmmn/caseplan/planitem";
-import PlanItemDefinitionDefinition from "@definition/cmmn/caseplan/planitemdefinitiondefinition";
 import ShapeDefinition from "@definition/dimensions/shape";
 import CMMNElementView from "./cmmnelementview";
 import DecoratorBox from "./decorator/decoratorbox";
@@ -38,15 +37,12 @@ export default class PlanItemView extends CMMNElementView {
     }
 
     set planItemDefinition(definition) {
-        this.__pid = definition;
+        this.definition = definition;
     }
 
-    /** @returns {PlanItemDefinitionDefinition} */
+    /** @returns {PlanItem} */
     get planItemDefinition() {
-        if (!this.__pid) {
-            this.__pid = this.definition.definition;
-        }
-        return this.__pid;
+        return this.definition;
     }
 
     createProperties() {
