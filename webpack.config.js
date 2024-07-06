@@ -1,6 +1,7 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const devMode = process.env.DEV_MODE ? process.env.DEV_MODE.trim().toLowerCase() === 'true' : false;
+var buildNumber = 1;
 
 module.exports = {
     entry: './src/index.ts',
@@ -9,6 +10,11 @@ module.exports = {
         path: path.resolve(__dirname, 'dist/app'),
     },
     plugins: [
+        new function () {
+            this.apply = (compiler) => {
+                compiler.hooks.done.tap("PRINT TIME AFTER BUILD", () => setTimeout(() => console.log(`=== ${new Date().toTimeString().split(' ')[0]} completed build ${buildNumber++} ===\n`), 0));
+            };
+        },
         new CopyWebpackPlugin({
             patterns: [
                 { from: 'config', to: '../config' },
