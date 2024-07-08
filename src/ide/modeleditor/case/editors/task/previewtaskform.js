@@ -1,5 +1,6 @@
 import StandardForm from "@ide/editors/standardform";
 import ModelEditor from "@ide/modeleditor/modeleditor";
+import AlpacaPreview from "@util/alpacapreview";
 import Util from "@util/util";
 import HumanTaskView from "../../elements/humantaskview";
 
@@ -35,7 +36,7 @@ export default class PreviewTaskForm extends StandardForm {
                 const msg = `The task definition has an error: ${e.message}`;
                 divPreview.attr('title', msg);
             } // Ignore any errors.
-            this.htmlContainer.find('.taskpreview').alpaca(validJSON);
+            new AlpacaPreview(this.htmlContainer.find('.taskpreview')).render(validJSON);
         } else {
             divPreview.html(`<h3 style="color:red;font-weight: bold;">${parseResult.description}</h3>`);
         }

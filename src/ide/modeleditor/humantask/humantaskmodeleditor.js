@@ -2,6 +2,7 @@
 import HumanTaskModelDefinition from "@definition/humantask/humantaskmodeldefinition";
 import HumanTaskFile from "@repository/serverfile/humantaskfile";
 import CodeMirrorConfig from "@util/codemirrorconfig";
+import AlpacaPreview from "@util/alpacapreview";
 import Util from "@util/util";
 import XML from "@util/xml";
 import IDE from "@ide/ide";
@@ -10,10 +11,6 @@ import ModelParameters from "../xmleditor/modelparameters";
 import ModelSourceEditor from "../xmleditor/modelsourceeditor";
 import RightSplitter from "@ide/splitter/rightsplitter";
 import $ from "jquery";
-
-// BIG TODO HERE Alpaca doesn't work with jQuery import .  Some undefined jQuery
-// import "handlebars"
-// import "alpaca/dist/alpaca/bootstrap/alpaca"
 
 export default class HumantaskModelEditor extends ModelEditor {
     /**
@@ -174,7 +171,7 @@ export default class HumantaskModelEditor extends ModelEditor {
             }
             jsonForm.error = errorHandler;
             // Render the task view
-            this.taskPreview.alpaca(jsonForm);
+            new AlpacaPreview(this.taskPreview).render(jsonForm);
         } else {
             this.jsonErrorDiv.html(parseResult.description);
         }
