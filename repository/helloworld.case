@@ -18,13 +18,12 @@ and Send response]]>
             </documentation>
         </planItem>
         <planItem id="cm_cs3hg_196" name="Read response" definitionRef="pid_cm_cs3hg_196">
-            <entryCriterion id="_nTPPc_0" name="EntryCriterion_0" sentryRef="cm_cs3hg_198"/>
+            <entryCriterion id="_nTPPc_0" name="EntryCriterion_0">
+                <planItemOnPart id="ref_id_cm_csVQy_167" sourceRef="cm_csVQy_167">
+                    <standardEvent>complete</standardEvent>
+                </planItemOnPart>
+            </entryCriterion>
         </planItem>
-        <sentry id="cm_cs3hg_198">
-            <planItemOnPart id="ref_id_cm_csVQy_167" sourceRef="cm_csVQy_167">
-                <standardEvent>complete</standardEvent>
-            </planItemOnPart>
-        </sentry>
         <humanTask id="pid_cm_csVQy_167" name="Receive Greeting and Send response" isBlocking="true">
             <inputs id="inTP_cm_cs2F1_174_1" name="Greeting" bindingRef="cfi_csVQy_0"/>
             <outputs id="outTP_cm_cs2F1_174_1" name="Response" bindingRef="cfi_csVQy_1"/>

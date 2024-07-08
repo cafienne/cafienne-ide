@@ -28,28 +28,26 @@
             </itemControl>
         </planItem>
         <planItem id="pi__Z6eH1_0" name="Stage_1" definitionRef="_Z6eH1_0">
-            <entryCriterion id="_Z6eH1_23" name="EntryCriterion_0" sentryRef="crit__Z6eH1_0"/>
-            <exitCriterion id="_Z6eH1_24" name="ExitCriterion_0" sentryRef="crit__Z6eH1_1"/>
+            <entryCriterion id="_Z6eH1_23" name="EntryCriterion_0">
+                <caseFileItemOnPart id="_Z6eH1_25" name="CaseFileItemOnPart_1" sourceRef="_Z6eH1_20">
+                    <standardEvent>create</standardEvent>
+                </caseFileItemOnPart>
+                <caseFileItemOnPart id="_Z6eH1_39" name="CaseFileItemOnPart_0" sourceRef="_Z6eH1_4">
+                    <standardEvent>create</standardEvent>
+                </caseFileItemOnPart>
+                <planItemOnPart id="_Z6eH1_2" name="PlanItemOnPart_1" sourceRef="pi_pt__Z6eH1_0">
+                    <standardEvent>complete</standardEvent>
+                </planItemOnPart>
+            </entryCriterion>
+            <exitCriterion id="_Z6eH1_24" name="ExitCriterion_0">
+                <planItemOnPart id="_Z6eH1_3" name="PlanItemOnPart_2" sourceRef="pi_ct__Z6eH1_0">
+                    <standardEvent>complete</standardEvent>
+                </planItemOnPart>
+            </exitCriterion>
         </planItem>
         <planItem id="pi_ht__Z6eH1_2" name="HumanTask_3" definitionRef="ht__Z6eH1_2"/>
         <planItem id="pi_ct__Z6eH1_0" name="CaseTask_1" definitionRef="ct__Z6eH1_0"/>
         <planItem id="pi__Z6eH1_5" name="Stage_2" definitionRef="_Z6eH1_5"/>
-        <sentry id="crit__Z6eH1_0" name="Sentry_1">
-            <caseFileItemOnPart id="_Z6eH1_25" name="CaseFileItemOnPart_1" sourceRef="_Z6eH1_20">
-                <standardEvent>create</standardEvent>
-            </caseFileItemOnPart>
-            <caseFileItemOnPart id="_Z6eH1_39" name="CaseFileItemOnPart_0" sourceRef="_Z6eH1_4">
-                <standardEvent>create</standardEvent>
-            </caseFileItemOnPart>
-            <planItemOnPart id="_Z6eH1_2" name="PlanItemOnPart_1" sourceRef="pi_pt__Z6eH1_0">
-                <standardEvent>complete</standardEvent>
-            </planItemOnPart>
-        </sentry>
-        <sentry id="crit__Z6eH1_1" name="Sentry_2">
-            <planItemOnPart id="_Z6eH1_3" name="PlanItemOnPart_2" sourceRef="pi_ct__Z6eH1_0">
-                <standardEvent>complete</standardEvent>
-            </planItemOnPart>
-        </sentry>
         <planningTable id="_Z6eH1_6" name="PlanningTable_1">
             <discretionaryItem id="pi_ht__Z6eH1_0" name="HumanTask_1" definitionRef="ht__Z6eH1_0" authorizedRoleRefs="_Z6eH1_16"/>
             <discretionaryItem id="pi_ht__Z6eH1_3" name="HumanTask_4" definitionRef="ht__Z6eH1_3"/>

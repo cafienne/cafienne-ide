@@ -9,14 +9,13 @@
             </text>
         </documentation>
         <planItem id="cm_testPlanningTable.case_2" name="Task_1" definitionRef="pid_cm_testPlanningTable.case_2"/>
-        <sentry id="crit__0LiAz_0">
-            <planItemOnPart id="_0LiAz_7" sourceRef="cm_testPlanningTable.case_2">
-                <standardEvent>complete</standardEvent>
-            </planItemOnPart>
-        </sentry>
         <planningTable id="pt_cm_testPlanningTable.case_1">
             <discretionaryItem id="cm_testPlanningTable.case_4" name="Task_2" definitionRef="pid_cm_testPlanningTable.case_4">
-                <entryCriterion id="_0LiAz_6" name="EntryCriterion_0" sentryRef="crit__0LiAz_0"/>
+                <entryCriterion id="_0LiAz_6" name="EntryCriterion_0">
+                    <planItemOnPart id="_0LiAz_7" sourceRef="cm_testPlanningTable.case_2">
+                        <standardEvent>complete</standardEvent>
+                    </planItemOnPart>
+                </entryCriterion>
             </discretionaryItem>
             <discretionaryItem id="cm_testPlanningTable.case_8" name="Stage_1" definitionRef="pid_cm_testPlanningTable.case_8" applicabilityRuleRefs="rule_testPlanningTable.case_1"/>
             <applicabilityRule id="rule_testPlanningTable.case_0" name="rule1">
