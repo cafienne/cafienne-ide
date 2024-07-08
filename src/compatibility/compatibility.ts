@@ -2,7 +2,6 @@
 // In the compatibilityhelper we do an import CasePlanDefinition from '@definition/cmmn/caseplan/caseplandefinition';
 import echo from './compatibilityhelper';
 
-import TaskDefinition from '@definition/cmmn/caseplan/task/taskdefinition';
 import ParameterDefinition from '@definition/cmmn/contract/parameterdefinition';
 import EntryCriterionDefinition from '@definition/cmmn/sentry/entrycriteriondefinition';
 import ExitCriterionDefinition from '@definition/cmmn/sentry/exitcriteriondefinition';
@@ -21,7 +20,6 @@ const pointers = [
     ExitCriterionDefinition,
     ReactivateCriterionDefinition,
 
-    TaskDefinition,
     StageDefinition,
 
     // IDE
