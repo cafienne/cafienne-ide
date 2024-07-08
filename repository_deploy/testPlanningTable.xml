@@ -1,0 +1,158 @@
+<definitions xmlns="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:cafienne="org.cafienne">
+    <caseFileItemDefinition name="Greeting" definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified" id="greeting.cfid">
+        <property name="Message" type="http://www.omg.org/spec/CMMN/PropertyType/string"/>
+        <property name="To" type="http://www.omg.org/spec/CMMN/PropertyType/string"/>
+        <property name="From" type="http://www.omg.org/spec/CMMN/PropertyType/string"/>
+    </caseFileItemDefinition>
+    <case id="testPlanningTable.case" name="testPlanningTable" expressionLanguage="spel">
+        <caseFileModel>
+            <caseFileItem id="cfi_testPlanningTable.case_0" name="test" multiplicity="ExactlyOne" definitionRef="greeting.cfid"/>
+        </caseFileModel>
+        <casePlanModel id="cm_testPlanningTable.case_0" name="testPlanningTable" autoComplete="true">
+            <documentation textFormat="text/plain">
+                <text>
+                    <![CDATA[testPlanningTable]]>
+                </text>
+            </documentation>
+            <planItem id="cm_testPlanningTable.case_2" name="Task_1" definitionRef="pid_cm_testPlanningTable.case_2"/>
+            <sentry id="crit__0LiAz_0">
+                <planItemOnPart id="_0LiAz_7" sourceRef="cm_testPlanningTable.case_2">
+                    <standardEvent>complete</standardEvent>
+                </planItemOnPart>
+            </sentry>
+            <planningTable id="pt_cm_testPlanningTable.case_1">
+                <discretionaryItem id="cm_testPlanningTable.case_4" name="Task_2" definitionRef="pid_cm_testPlanningTable.case_4">
+                    <entryCriterion id="_0LiAz_6" name="EntryCriterion_0" sentryRef="crit__0LiAz_0"/>
+                </discretionaryItem>
+                <discretionaryItem id="cm_testPlanningTable.case_8" name="Stage_1" definitionRef="pid_cm_testPlanningTable.case_8" applicabilityRuleRefs="rule_testPlanningTable.case_1"/>
+                <applicabilityRule id="rule_testPlanningTable.case_0" name="rule1">
+                    <condition>
+                        <body>
+                            <![CDATA[r1==true]]>
+                        </body>
+                    </condition>
+                </applicabilityRule>
+                <applicabilityRule id="rule_testPlanningTable.case_1" name="rule2">
+                    <condition>
+                        <body>
+                            <![CDATA[r2]]>
+                        </body>
+                    </condition>
+                </applicabilityRule>
+            </planningTable>
+            <humanTask id="pid_cm_testPlanningTable.case_2" name="Task_1" isBlocking="true">
+                <planningTable id="pt_cm_testPlanningTable.case_3">
+                    <discretionaryItem id="cm_testPlanningTable.case_12" name="Task_4" definitionRef="pid_cm_testPlanningTable.case_12" applicabilityRuleRefs="rule_testPlanningTable.case_3 rule_testPlanningTable.case_4"/>
+                    <discretionaryItem id="cm_testPlanningTable.case_14" name="Task_5" definitionRef="pid_cm_testPlanningTable.case_14"/>
+                    <applicabilityRule id="rule_testPlanningTable.case_2" name="r4">
+                        <condition>
+                            <body>
+                                <![CDATA[true]]>
+                            </body>
+                        </condition>
+                    </applicabilityRule>
+                    <applicabilityRule id="rule_testPlanningTable.case_3" name="r5">
+                        <condition>
+                            <body>
+                                <![CDATA[true]]>
+                            </body>
+                        </condition>
+                    </applicabilityRule>
+                    <applicabilityRule id="rule_testPlanningTable.case_4" name="r6">
+                        <condition>
+                            <body>
+                                <![CDATA[true]]>
+                            </body>
+                        </condition>
+                    </applicabilityRule>
+                    <applicabilityRule id="rule_testPlanningTable.case_5" name="r7">
+                        <condition>
+                            <body>
+                                <![CDATA[true]]>
+                            </body>
+                        </condition>
+                    </applicabilityRule>
+                </planningTable>
+            </humanTask>
+            <humanTask id="pid_cm_testPlanningTable.case_4" name="Task_2" isBlocking="true"/>
+            <humanTask id="pid_cm_testPlanningTable.case_10" name="Task_3" isBlocking="true"/>
+            <humanTask id="pid_cm_testPlanningTable.case_14" name="Task_5" isBlocking="true"/>
+            <humanTask id="pid_cm_testPlanningTable.case_12" name="Task_4" isBlocking="true"/>
+            <stage id="pid_cm_testPlanningTable.case_8" name="Stage_1" autoComplete="true">
+                <planItem id="cm_testPlanningTable.case_10" name="Task_3" definitionRef="pid_cm_testPlanningTable.case_10"/>
+            </stage>
+        </casePlanModel>
+        <caseRoles>
+            <role id="_j75iY_31" name="CaseRole_1">
+                <documentation textFormat="text/plain">
+                    <text>
+                        <![CDATA[r1]]>
+                    </text>
+                </documentation>
+            </role>
+            <role id="_j75iY_45" name="CaseRole_2">
+                <documentation textFormat="text/plain">
+                    <text>
+                        <![CDATA[null]]>
+                    </text>
+                </documentation>
+            </role>
+            <role id="_j75iY_50" name="CaseRole_3">
+                <documentation textFormat="text/plain">
+                    <text>
+                        <![CDATA[null]]>
+                    </text>
+                </documentation>
+            </role>
+        </caseRoles>
+        <extensionElements mustUnderstand="false">
+            <cafienne:start-case-model xmlns:cafienne="org.cafienne">{
+  "schema":{
+    "title": "",
+    "type": "object",
+    "properties":{
+    }
+  }
+}</cafienne:start-case-model>
+        </extensionElements>
+    </case>
+    <CMMNDI>
+        <CMMNDiagram>
+            <CMMNShape cmmnElementRef="cm_testPlanningTable.case_0">
+                <Bounds x="10" y="10" width="734" height="742"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="cm_testPlanningTable.case_4">
+                <Bounds x="290" y="120" width="100" height="60"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="cm_testPlanningTable.case_8">
+                <Bounds x="250" y="220" width="420" height="140"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="cm_testPlanningTable.case_10">
+                <Bounds x="307" y="253" width="100" height="60"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="cm_testPlanningTable.case_2">
+                <Bounds x="85" y="89" width="100" height="60"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="cm_testPlanningTable.case_12">
+                <Bounds x="54" y="228" width="100" height="60"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="cm_testPlanningTable.case_14">
+                <Bounds x="132" y="391" width="100" height="60"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="pt_cm_testPlanningTable.case_1">
+                <Bounds x="290" y="23" width="24" height="16"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="pt_cm_testPlanningTable.case_3">
+                <Bounds x="107" y="80" width="24" height="16"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="_0LiAz_6">
+                <Bounds x="284" y="140" width="12" height="20"/>
+            </CMMNShape>
+            <CMMNEdge sourceCMMNElementRef="cm_testPlanningTable.case_12" targetCMMNElementRef="cm_testPlanningTable.case_2"/>
+            <CMMNEdge sourceCMMNElementRef="cm_testPlanningTable.case_14" targetCMMNElementRef="cm_testPlanningTable.case_2"/>
+            <CMMNEdge sourceCMMNElementRef="cm_testPlanningTable.case_12" targetCMMNElementRef="cm_testPlanningTable.case_2"/>
+            <CMMNEdge sourceCMMNElementRef="cm_testPlanningTable.case_14" targetCMMNElementRef="cm_testPlanningTable.case_2"/>
+            <CMMNEdge label="complete" sourceCMMNElementRef="cm_testPlanningTable.case_2" targetCMMNElementRef="_0LiAz_6"/>
+        </CMMNDiagram>
+    </CMMNDI>
+</definitions>
