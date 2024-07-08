@@ -2,8 +2,7 @@ import CafienneImplementationDefinition from "@repository/definition/extensions/
 import CMMNElementDefinition from "../../cmmnelementdefinition";
 import CaseFileItemDef from "../casefile/casefileitemdef";
 import ExpressionDefinition from "../expression/expressiondefinition";
-// import TaskDefinition from "../caseplan/task/taskdefinition";
-// BIG TODO HERE
+
 export default class ParameterDefinition extends CMMNElementDefinition {
     constructor(importNode, caseDefinition, parent) {
         super(importNode, caseDefinition, parent);
@@ -59,7 +58,7 @@ export default class ParameterDefinition extends CMMNElementDefinition {
 
     createExportNode(parentNode, tagName) {
         // Task parameters will not be saved, unless they are used in a non-empty mapping
-        if (this.parent instanceof TaskDefinition) {
+        if (this.parent && this.parent.isTask) {
             const nonEmptyMappings = this.parent.mappings.filter(mapping => (mapping.sourceRef == this.id || mapping.targetRef == this.id) && !mapping.isEmpty());
             if (nonEmptyMappings.length == 0) {
                 // console.log("Parameter "+this.name+" in "+this.parent.name+" is not used in any mapping");

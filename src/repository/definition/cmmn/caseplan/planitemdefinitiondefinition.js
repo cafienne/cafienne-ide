@@ -52,6 +52,14 @@ export class TaskStageDefinition extends PlanItemDefinitionDefinition {
     get entryTransition() {
         return 'start';
     }
+
+    get isTask() {
+        return false;
+    }
+
+    get isStage() {
+        return false;
+    }
 }
 
 /**

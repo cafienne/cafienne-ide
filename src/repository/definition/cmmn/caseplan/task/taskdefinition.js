@@ -15,6 +15,10 @@ export default class TaskDefinition extends TaskStageDefinition {
         this.parseElements('parameterMapping', ParameterMappingDefinition, this.mappings);
     }
 
+    get isTask() {
+        return true;
+    }
+
     /**
      * @returns {String}
      */

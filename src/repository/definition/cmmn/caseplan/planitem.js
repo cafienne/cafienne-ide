@@ -11,11 +11,17 @@ import PlanItemDefinitionDefinition, { TaskStageDefinition } from "./planitemdef
 import PlanningTableDefinition, { ApplicabilityRuleDefinition } from "./planningtabledefinition";
 import FourEyesDefinition from "./task/workflow/foureyesdefinition";
 import RendezVousDefinition from "./task/workflow/rendezvousdefinition";
+import CaseDefinition from "../casedefinition";
 // import StageDefinition from "./stagedefinition";
-// import TaskDefinition from "./task/taskdefinition";
 // BIG TODO HERE
 
 export default class PlanItem extends CMMNElementDefinition {
+    /**
+     * 
+     * @param {Element} importNode 
+     * @param {CaseDefinition} caseDefinition 
+     * @param {TaskStageDefinition} parent 
+     */
     constructor(importNode, caseDefinition, parent) {
         super(importNode, caseDefinition, parent);
         this.definitionRef = this.parseAttribute('definitionRef');
@@ -63,7 +69,7 @@ export default class PlanItem extends CMMNElementDefinition {
     getStage() {
         if (this.isDiscretionary) {
             const planningTable = this.parent;
-            if (planningTable.parent instanceof TaskDefinition) {
+            if (planningTable.parent.isTask) {
                 return planningTable.parent.parent;
             } else {
                 return planningTable.parent;
@@ -133,7 +139,7 @@ export default class PlanItem extends CMMNElementDefinition {
             const formerPlanningTable = currentParent;
             Util.removeFromArray(currentParent.tableItems, this);
             Util.removeFromArray(currentParent.childDefinitions, this);
-            const currentParentStage = currentParent.parent instanceof TaskDefinition ? currentParent.parent.parent : currentParent.parent;
+            const currentParentStage = currentParent.parent.isTask ? currentParent.parent.parent : currentParent.parent;
             // Add our selves to the new parent's planning table
             const newPlanningTable = newParent.getPlanningTable();
             newPlanningTable.childDefinitions.push(this);
@@ -143,8 +149,8 @@ export default class PlanItem extends CMMNElementDefinition {
             //  NOTE: this logic is shifted to the View side of the house... would be better if we can trigger that from here.
             // formerPlanningTable.cleanupIfPossible();
         } else {
-            if (! (newParent instanceof StageDefinition)) {
-                throw new Error('Cannot change the parent of '+this+', since the new parent is not of type stage definition; instead it is '+newParent);
+            if (!(newParent.isStage)) {
+                throw new Error('Cannot change the parent of ' + this + ', since the new parent is not of type stage definition; instead it is ' + newParent);
             }
             const currentParentStage = this.parent;
             Util.removeFromArray(currentParentStage.planItems, this);
@@ -173,7 +179,7 @@ export default class PlanItem extends CMMNElementDefinition {
             Util.removeFromArray(planningTableDefinition.tableItems, this);
             Util.removeFromArray(planningTableDefinition.childDefinitions, this);
             // Check whether the new parent is a task or a stage. If this item was discretionary to a task, then we need to add the new plan item to the stage that task belongs to
-            const stageDefinition = planningTableDefinition.parent instanceof TaskDefinition ? planningTableDefinition.parent.parent : planningTableDefinition.parent;
+            const stageDefinition = planningTableDefinition.parent.isTask ? planningTableDefinition.parent.parent : planningTableDefinition.parent;
             this.parent = stageDefinition;
             // And make ourselves known to the stage definition
             stageDefinition.planItems.push(this);
@@ -190,7 +196,7 @@ export default class PlanItem extends CMMNElementDefinition {
         }
         return this;
     }
-    
+
     resolveReferences() {
         super.resolveReferences();
 

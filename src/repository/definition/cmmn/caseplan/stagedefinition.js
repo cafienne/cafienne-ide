@@ -12,6 +12,10 @@ export default class StageDefinition extends TaskStageDefinition {
         this.sentries = this.parseElements('sentry', SentryDefinition);
     }
 
+    get isStage() {
+        return true;
+    }
+
     /**
      * Creates a new plan item, along with a plan item definition of the specified type
      * @param {Function} type
