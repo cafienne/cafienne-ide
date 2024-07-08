@@ -30,88 +30,80 @@
         <planItem id="cm_cs9Q0_205" name="View Travel request" definitionRef="pid_cm_cs9Q0_205"/>
         <planItem id="cm_cs9Q0_207" name="Approve and Generate Travel Order" definitionRef="pid_cm_cs9Q0_207"/>
         <planItem id="cm_csgxw_213" name="Request Submitted" definitionRef="pid_cm_csgxw_213">
-            <entryCriterion id="_4wCNa_0" name="EntryCriterion_0" sentryRef="cm_csGrn_388"/>
+            <entryCriterion id="_4wCNa_0" name="EntryCriterion_0">
+                <planItemOnPart id="ref_id_cm_cs9Q0_205" sourceRef="cm_cs9Q0_205">
+                    <standardEvent>start</standardEvent>
+                </planItemOnPart>
+            </entryCriterion>
         </planItem>
         <planItem id="cm_csgxw_219" name="Approved" definitionRef="pid_cm_csgxw_219">
-            <entryCriterion id="_4wCNa_1" name="EntryCriterion_1" sentryRef="cm_csgxw_222"/>
+            <entryCriterion id="_4wCNa_1" name="EntryCriterion_1">
+                <ifPart contextRef="cfi_csgxw_6">
+                    <condition>
+                        <body>
+                            <![CDATA[Approval.Status == "approved"]]>
+                        </body>
+                    </condition>
+                </ifPart>
+                <planItemOnPart id="ref_id_cm_cs9Q0_207" sourceRef="cm_cs9Q0_207">
+                    <standardEvent>complete</standardEvent>
+                </planItemOnPart>
+                <planItemOnPart id="ref_id_cm_csSAF_389" sourceRef="cm_csSAF_389">
+                    <standardEvent>complete</standardEvent>
+                </planItemOnPart>
+            </entryCriterion>
         </planItem>
         <planItem id="cm_csgxw_220" name="Disapproved" definitionRef="pid_cm_csgxw_220">
-            <entryCriterion id="_4wCNa_2" name="EntryCriterion_2" sentryRef="cm_csgxw_221"/>
+            <entryCriterion id="_4wCNa_2" name="EntryCriterion_2">
+                <ifPart contextRef="cfi_csgxw_6">
+                    <condition>
+                        <body>
+                            <![CDATA[Approval.Status == "disapproved"]]>
+                        </body>
+                    </condition>
+                </ifPart>
+                <planItemOnPart id="ref_id_cm_cs9Q0_207" sourceRef="cm_cs9Q0_207">
+                    <standardEvent>complete</standardEvent>
+                </planItemOnPart>
+            </entryCriterion>
         </planItem>
         <planItem id="cm_csgxw_223" name="Travel Arrangements" definitionRef="pid_cm_csgxw_223">
-            <entryCriterion id="_4wCNa_3" name="EntryCriterion_3" sentryRef="cm_csgxw_225"/>
-            <exitCriterion id="_4wCNa_4" name="ExitCriterion_0" sentryRef="cm_cskek_645"/>
+            <entryCriterion id="_4wCNa_3" name="EntryCriterion_3">
+                <planItemOnPart id="ref_id_cm_csgxw_219" sourceRef="cm_csgxw_219">
+                    <standardEvent>occur</standardEvent>
+                </planItemOnPart>
+            </entryCriterion>
+            <exitCriterion id="_4wCNa_4" name="ExitCriterion_0">
+                <planItemOnPart id="ref_id_cm_csjTZ_642" sourceRef="cm_csjTZ_642">
+                    <standardEvent>complete</standardEvent>
+                </planItemOnPart>
+                <planItemOnPart id="ref_id_cm_csgxw_226" sourceRef="cm_csgxw_226">
+                    <standardEvent>complete</standardEvent>
+                </planItemOnPart>
+            </exitCriterion>
         </planItem>
         <planItem id="cm_csgxw_228" name="Send approval to requestor" definitionRef="pid_cm_csgxw_228">
-            <entryCriterion id="_4wCNa_5" name="EntryCriterion_4" sentryRef="cm_css9P_478"/>
-            <entryCriterion id="_4wCNa_6" name="EntryCriterion_5" sentryRef="cm_csgxw_230"/>
+            <entryCriterion id="_4wCNa_5" name="EntryCriterion_4">
+                <planItemOnPart id="ref_id_cm_csgxw_219" sourceRef="cm_csgxw_219">
+                    <standardEvent>occur</standardEvent>
+                </planItemOnPart>
+            </entryCriterion>
+            <entryCriterion id="_4wCNa_6" name="EntryCriterion_5">
+                <planItemOnPart id="ref_id_cm_csgxw_220" sourceRef="cm_csgxw_220">
+                    <standardEvent>occur</standardEvent>
+                </planItemOnPart>
+            </entryCriterion>
         </planItem>
         <planItem id="cm_csEae_323" name="Cancel Travel request" definitionRef="pid_cm_csEae_323"/>
         <planItem id="cm_csSAF_389" name="Check prerequisites" definitionRef="pid_cm_csSAF_389"/>
-        <sentry id="cm_csGrn_388">
-            <planItemOnPart id="ref_id_cm_cs9Q0_205" sourceRef="cm_cs9Q0_205">
-                <standardEvent>start</standardEvent>
-            </planItemOnPart>
-        </sentry>
-        <sentry id="cm_csgxw_222">
-            <ifPart contextRef="cfi_csgxw_6">
-                <condition>
-                    <body>
-                        <![CDATA[Approval.Status == "approved"]]>
-                    </body>
-                </condition>
-            </ifPart>
-            <planItemOnPart id="ref_id_cm_cs9Q0_207" sourceRef="cm_cs9Q0_207">
-                <standardEvent>complete</standardEvent>
-            </planItemOnPart>
-            <planItemOnPart id="ref_id_cm_csSAF_389" sourceRef="cm_csSAF_389">
-                <standardEvent>complete</standardEvent>
-            </planItemOnPart>
-        </sentry>
-        <sentry id="cm_csgxw_221">
-            <ifPart contextRef="cfi_csgxw_6">
-                <condition>
-                    <body>
-                        <![CDATA[Approval.Status == "disapproved"]]>
-                    </body>
-                </condition>
-            </ifPart>
-            <planItemOnPart id="ref_id_cm_cs9Q0_207" sourceRef="cm_cs9Q0_207">
-                <standardEvent>complete</standardEvent>
-            </planItemOnPart>
-        </sentry>
-        <sentry id="cm_csgxw_225">
-            <planItemOnPart id="ref_id_cm_csgxw_219" sourceRef="cm_csgxw_219">
-                <standardEvent>occur</standardEvent>
-            </planItemOnPart>
-        </sentry>
-        <sentry id="cm_cskek_645">
-            <planItemOnPart id="ref_id_cm_csjTZ_642" sourceRef="cm_csjTZ_642">
-                <standardEvent>complete</standardEvent>
-            </planItemOnPart>
-            <planItemOnPart id="ref_id_cm_csgxw_226" sourceRef="cm_csgxw_226">
-                <standardEvent>complete</standardEvent>
-            </planItemOnPart>
-        </sentry>
-        <sentry id="cm_css9P_478">
-            <planItemOnPart id="ref_id_cm_csgxw_219" sourceRef="cm_csgxw_219">
-                <standardEvent>occur</standardEvent>
-            </planItemOnPart>
-        </sentry>
-        <sentry id="cm_csgxw_230">
-            <planItemOnPart id="ref_id_cm_csgxw_220" sourceRef="cm_csgxw_220">
-                <standardEvent>occur</standardEvent>
-            </planItemOnPart>
-        </sentry>
-        <sentry id="cm_csEae_324">
-            <planItemOnPart id="ref_id_cm_csEae_323" sourceRef="cm_csEae_323">
-                <standardEvent>occur</standardEvent>
-            </planItemOnPart>
-        </sentry>
         <planningTable id="pt_cm_undefined_3">
             <discretionaryItem id="cm_csgxw_215" name="Select approver manually" definitionRef="pid_cm_csgxw_215" authorizedRoleRefs="role_csKsD_1"/>
         </planningTable>
-        <exitCriterion id="_4wCNa_13" name="ExitCriterion_1" sentryRef="cm_csEae_324"/>
+        <exitCriterion id="_4wCNa_13" name="ExitCriterion_1">
+            <planItemOnPart id="ref_id_cm_csEae_323" sourceRef="cm_csEae_323">
+                <standardEvent>occur</standardEvent>
+            </planItemOnPart>
+        </exitCriterion>
         <humanTask id="pid_cm_cs9Q0_205" name="View Travel request" isBlocking="true" performerRef="role_csKsD_1">
             <inputs id="inTP_cm_cs9Q0_205_0" name="TravelRequest" bindingRef="cfi_csKsD_0"/>
             <extensionElements mustUnderstand="false">
@@ -503,84 +495,78 @@
         <stage id="pid_cm_cs9Q0_207" name="Approve and Generate Travel Order" autoComplete="true">
             <planItem id="cm_csgxw_208" name="Approve Travel request" definitionRef="pid_cm_csgxw_208"/>
             <planItem id="cm_csgxw_210" name="Create Travel Order" definitionRef="pid_cm_csgxw_210">
-                <entryCriterion id="_4wCNa_7" name="EntryCriterion_6" sentryRef="cm_csgxw_212"/>
+                <entryCriterion id="_4wCNa_7" name="EntryCriterion_6">
+                    <ifPart contextRef="cfi_csgxw_6">
+                        <condition>
+                            <body>
+                                <![CDATA[Approval.Status == "approved"]]>
+                            </body>
+                        </condition>
+                    </ifPart>
+                    <planItemOnPart id="ref_id_cm_csgxw_208" sourceRef="cm_csgxw_208">
+                        <standardEvent>complete</standardEvent>
+                    </planItemOnPart>
+                </entryCriterion>
             </planItem>
             <planItem id="cm_cs3yg_479" name="Budget allocation" definitionRef="pid_cm_cs3yg_479">
-                <entryCriterion id="_4wCNa_8" name="EntryCriterion_7" sentryRef="cm_cs3yg_481"/>
+                <entryCriterion id="_4wCNa_8" name="EntryCriterion_7">
+                    <ifPart contextRef="cfi_csKsD_0">
+                        <condition>
+                            <body>
+                                <![CDATA[1 == 0]]>
+                            </body>
+                        </condition>
+                    </ifPart>
+                    <planItemOnPart id="ref_id_cm_csgxw_210" sourceRef="cm_csgxw_210">
+                        <standardEvent>complete</standardEvent>
+                    </planItemOnPart>
+                </entryCriterion>
             </planItem>
             <planItem id="cm_cs3yg_487" name="Send Notification to Approver" definitionRef="pid_cm_cs3yg_487">
-                <entryCriterion id="_4wCNa_9" name="EntryCriterion_8" sentryRef="cm_cs3yg_489"/>
+                <entryCriterion id="_4wCNa_9" name="EntryCriterion_8">
+                    <planItemOnPart id="ref_id_cm_csgxw_208" sourceRef="cm_csgxw_208">
+                        <standardEvent>start</standardEvent>
+                    </planItemOnPart>
+                </entryCriterion>
             </planItem>
-            <sentry id="cm_csgxw_212">
-                <ifPart contextRef="cfi_csgxw_6">
-                    <condition>
-                        <body>
-                            <![CDATA[Approval.Status == "approved"]]>
-                        </body>
-                    </condition>
-                </ifPart>
-                <planItemOnPart id="ref_id_cm_csgxw_208" sourceRef="cm_csgxw_208">
-                    <standardEvent>complete</standardEvent>
-                </planItemOnPart>
-            </sentry>
-            <sentry id="cm_cs3yg_481">
-                <ifPart contextRef="cfi_csKsD_0">
-                    <condition>
-                        <body>
-                            <![CDATA[1 == 0]]>
-                        </body>
-                    </condition>
-                </ifPart>
-                <planItemOnPart id="ref_id_cm_csgxw_210" sourceRef="cm_csgxw_210">
-                    <standardEvent>complete</standardEvent>
-                </planItemOnPart>
-            </sentry>
-            <sentry id="cm_cs3yg_489">
-                <planItemOnPart id="ref_id_cm_csgxw_208" sourceRef="cm_csgxw_208">
-                    <standardEvent>start</standardEvent>
-                </planItemOnPart>
-            </sentry>
         </stage>
         <stage id="pid_cm_csgxw_223" name="Travel Arrangements" autoComplete="false">
             <planItem id="cm_csgxw_226" name="Email travel office" definitionRef="pid_cm_csgxw_226"/>
             <planItem id="cm_csjTZ_640" name="Generate Travel Order" definitionRef="pid_cm_csjTZ_640"/>
             <planItem id="cm_csjTZ_642" name="Email Travel Order" definitionRef="pid_cm_csjTZ_642">
-                <entryCriterion id="_4wCNa_10" name="EntryCriterion_9" sentryRef="cm_csjTZ_644"/>
+                <entryCriterion id="_4wCNa_10" name="EntryCriterion_9">
+                    <planItemOnPart id="ref_id_cm_csjTZ_640" sourceRef="cm_csjTZ_640">
+                        <standardEvent>complete</standardEvent>
+                    </planItemOnPart>
+                </entryCriterion>
             </planItem>
-            <sentry id="cm_csjTZ_644">
-                <planItemOnPart id="ref_id_cm_csjTZ_640" sourceRef="cm_csjTZ_640">
-                    <standardEvent>complete</standardEvent>
-                </planItemOnPart>
-            </sentry>
         </stage>
         <stage id="pid_cm_csSAF_389" name="Check prerequisites" autoComplete="true">
             <planItem id="cm_csSAF_392" name="Check travel requirements" definitionRef="pid_cm_csSAF_392">
-                <entryCriterion id="_4wCNa_11" name="EntryCriterion_10" sentryRef="cm_cs3yg_483"/>
-            </planItem>
-            <planItem id="cm_cs3yg_484" name="Arrange Visa and ESTA" definitionRef="pid_cm_cs3yg_484">
-                <entryCriterion id="_4wCNa_12" name="EntryCriterion_11" sentryRef="cm_cs3yg_486"/>
-            </planItem>
-            <sentry id="cm_cs3yg_483">
-                <ifPart contextRef="cfi_csKsD_0">
-                    <condition>
-                        <body>
-                            <![CDATA[
+                <entryCriterion id="_4wCNa_11" name="EntryCriterion_10">
+                    <ifPart contextRef="cfi_csKsD_0">
+                        <condition>
+                            <body>
+                                <![CDATA[
                                 TravelRequest.TravelDetails.Destination[0].Country != "US" or TravelRequest.TravellerDetails.Traveller[0].Nationality == "US"
                             ]]>
-                        </body>
-                    </condition>
-                </ifPart>
-            </sentry>
-            <sentry id="cm_cs3yg_486">
-                <ifPart contextRef="cfi_csKsD_0">
-                    <condition>
-                        <body>
-                            <![CDATA[TravelRequest.TravellerDetails.Traveller[0].Nationality != "US" and
+                            </body>
+                        </condition>
+                    </ifPart>
+                </entryCriterion>
+            </planItem>
+            <planItem id="cm_cs3yg_484" name="Arrange Visa and ESTA" definitionRef="pid_cm_cs3yg_484">
+                <entryCriterion id="_4wCNa_12" name="EntryCriterion_11">
+                    <ifPart contextRef="cfi_csKsD_0">
+                        <condition>
+                            <body>
+                                <![CDATA[TravelRequest.TravellerDetails.Traveller[0].Nationality != "US" and
 TravelRequest.TravelDetails.Destination[0].Country == "US"]]>
-                        </body>
-                    </condition>
-                </ifPart>
-            </sentry>
+                            </body>
+                        </condition>
+                    </ifPart>
+                </entryCriterion>
+            </planItem>
         </stage>
     </casePlanModel>
     <caseRoles>
