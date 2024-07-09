@@ -1,5 +1,4 @@
-import CaseFileItemCollection from "@definition/cmmn/casefile/casefileitemdef";
-import CaseFileItemDef from "@definition/cmmn/casefile/casefileitemdef";
+import CaseFileItemDef, { CaseFileItemCollection } from "@repository/definition/cmmn/casefile/casefileitemdef";
 import $ from "jquery";
 import CaseFileItemsEditor, { NEWDEF } from "./casefileitemseditor";
 import Util from "@util/util";
