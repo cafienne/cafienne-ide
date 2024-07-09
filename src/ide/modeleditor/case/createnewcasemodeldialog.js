@@ -1,5 +1,6 @@
 import Dialog from "@ide/editors/dialog";
 import IDE from "@ide/ide";
+import $ from "jquery";
 import TypeSelector from "../type/editor/typeselector";
 
 export default class CreateNewCaseModelDialog extends Dialog {

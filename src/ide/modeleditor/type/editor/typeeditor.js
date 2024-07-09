@@ -3,6 +3,7 @@ import ModelSourceEditor from "@ide/modeleditor/xmleditor/modelsourceeditor";
 import TypeFile from "@repository/serverfile/typefile";
 import CodeMirrorConfig from "@util/codemirrorconfig";
 import XML from "@util/xml";
+import $ from "jquery";
 import TypeModelEditor from "../typemodeleditor";
 import SchemaRenderer from "./schemarenderer";
 

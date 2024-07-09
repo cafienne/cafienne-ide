@@ -1,8 +1,9 @@
-﻿import TypeFile from "@repository/serverfile/typefile";
-import CaseFileEditor from "./casefileeditor";
-import TypeEditor from "@ide/modeleditor/type/editor/typeeditor";
-import Util from "@util/util";
+﻿import TypeEditor from "@ide/modeleditor/type/editor/typeeditor";
 import TypeSelector from "@ide/modeleditor/type/editor/typeselector";
+import TypeFile from "@repository/serverfile/typefile";
+import Util from "@util/util";
+import $ from "jquery";
+import CaseFileEditor from "./casefileeditor";
 
 export default class CaseTypeEditor {
     /**

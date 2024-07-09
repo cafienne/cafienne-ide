@@ -1,11 +1,12 @@
+import { CaseFileItemDragData } from "@ide/dragdata";
+import SchemaDefinition from "@repository/definition/type/schemadefinition";
 import SchemaPropertyDefinition from "@repository/definition/type/schemapropertydefinition";
+import TypeFile from "@repository/serverfile/typefile";
+import Util from "@util/util";
+import $ from "jquery";
 import LocalTypeDefinition from "./localtypedefinition";
 import SchemaRenderer from "./schemarenderer";
 import TypeRenderer from "./typerenderer";
-import Util from "@util/util";
-import { CaseFileItemDragData } from "@ide/dragdata";
-import TypeFile from "@repository/serverfile/typefile";
-import SchemaDefinition from "@repository/definition/type/schemadefinition";
 import TypeSelector from "./typeselector";
 
 export default class PropertyRenderer extends TypeRenderer {

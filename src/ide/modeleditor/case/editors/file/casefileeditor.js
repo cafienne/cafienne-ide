@@ -1,5 +1,6 @@
 import CaseTypeEditor from "./casetypeeditor";
 import CaseFileItemsEditor from "./classic/casefileitemseditor";
+import $ from "jquery";
 
 export default class CaseFileEditor {
     /**
