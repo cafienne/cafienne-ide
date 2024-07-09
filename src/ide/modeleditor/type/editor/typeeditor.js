@@ -6,6 +6,7 @@ import XML from "@util/xml";
 import $ from "jquery";
 import TypeModelEditor from "../typemodeleditor";
 import SchemaRenderer from "./schemarenderer";
+import { MainTypeDefinition } from "./localtypedefinition";
 
 export default class TypeEditor {
     /**
