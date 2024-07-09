@@ -1,7 +1,7 @@
 <case id="testRoles.case" name="testRoles" expressionLanguage="spel" guid="_3GznZ">
     <caseFileModel/>
     <casePlanModel id="cm__3GznZ_0" name="testRoles" autoComplete="true">
-        <planItem id="pi_ht__3GznZ_0" name="HumanTask_0" definitionRef="ht__3GznZ_0">
+        <humanTask id="pi_ht__3GznZ_0" name="HumanTask_0" isBlocking="true" performerRef="_3GznZ_4">
             <itemControl id="_3GznZ_1">
                 <repetitionRule id="_3GznZ_12">
                     <condition id="_3GznZ_13">
@@ -11,8 +11,14 @@
                     </condition>
                 </repetitionRule>
             </itemControl>
-        </planItem>
-        <planItem id="pi_ht__3GznZ_1" name="HumanTask_1" definitionRef="ht__3GznZ_1">
+            <outputs id="_3GznZ_20" name="Response"/>
+            <extensionElements mustUnderstand="false">
+                <cafienne:implementation xmlns:cafienne="org.cafienne" humanTaskRef="sendresponse.humantask">
+                    <parameterMapping id="_3GznZ_21" sourceRef="Response" targetRef="_3GznZ_20"/>
+                </cafienne:implementation>
+            </extensionElements>
+        </humanTask>
+        <humanTask id="pi_ht__3GznZ_1" name="HumanTask_1" isBlocking="true">
             <itemControl id="_3GznZ_2">
                 <repetitionRule id="_3GznZ_10">
                     <condition id="_3GznZ_11">
@@ -22,17 +28,17 @@
                     </condition>
                 </repetitionRule>
             </itemControl>
-        </planItem>
-        <planItem id="pi_ue__3GznZ_0" name="UserEvent_0 " definitionRef="ue__3GznZ_0">
+        </humanTask>
+        <userEvent id="pi_ue__3GznZ_0" name="UserEvent_0 ">
             <documentation textFormat="text/plain">
                 <text>
                     <![CDATA[UserEvent_0
 ]]>
                 </text>
             </documentation>
-        </planItem>
+        </userEvent>
         <planningTable id="_3GznZ_3">
-            <discretionaryItem id="pi_ht__3GznZ_2" name="HumanTask_2" definitionRef="ht__3GznZ_2" authorizedRoleRefs="_3GznZ_6 _3GznZ_7">
+            <humanTask id="pi_ht__3GznZ_2" name="HumanTask_2" authorizedRoleRefs="_3GznZ_6 _3GznZ_7" isBlocking="true">
                 <itemControl id="_3GznZ_0">
                     <repetitionRule id="_3GznZ_8">
                         <condition id="_3GznZ_9">
@@ -42,19 +48,8 @@
                         </condition>
                     </repetitionRule>
                 </itemControl>
-            </discretionaryItem>
+            </humanTask>
         </planningTable>
-        <humanTask id="ht__3GznZ_0" name="HumanTask_0" isBlocking="true" performerRef="_3GznZ_4">
-            <outputs id="_3GznZ_20" name="Response"/>
-            <extensionElements mustUnderstand="false">
-                <cafienne:implementation xmlns:cafienne="org.cafienne" humanTaskRef="sendresponse.humantask">
-                    <parameterMapping id="_3GznZ_21" sourceRef="Response" targetRef="_3GznZ_20"/>
-                </cafienne:implementation>
-            </extensionElements>
-        </humanTask>
-        <humanTask id="ht__3GznZ_1" name="HumanTask_1" isBlocking="true"/>
-        <humanTask id="ht__3GznZ_2" name="HumanTask_2" isBlocking="true"/>
-        <userEvent id="ue__3GznZ_0" name="UserEvent_0 " authorizedRoleRefs="_3GznZ_6 _3GznZ_4 _3GznZ_4 _3GznZ_4 _3GznZ_7"/>
     </casePlanModel>
     <caseRoles>
         <role id="_3GznZ_4" name="Role1">

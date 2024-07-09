@@ -8,35 +8,10 @@
                 <![CDATA[testPlanningTable]]>
             </text>
         </documentation>
-        <planItem id="cm_testPlanningTable.case_2" name="Task_1" definitionRef="pid_cm_testPlanningTable.case_2"/>
-        <planningTable id="pt_cm_testPlanningTable.case_1">
-            <discretionaryItem id="cm_testPlanningTable.case_4" name="Task_2" definitionRef="pid_cm_testPlanningTable.case_4">
-                <entryCriterion id="_0LiAz_6" name="EntryCriterion_0">
-                    <planItemOnPart id="_0LiAz_7" sourceRef="cm_testPlanningTable.case_2">
-                        <standardEvent>complete</standardEvent>
-                    </planItemOnPart>
-                </entryCriterion>
-            </discretionaryItem>
-            <discretionaryItem id="cm_testPlanningTable.case_8" name="Stage_1" definitionRef="pid_cm_testPlanningTable.case_8" applicabilityRuleRefs="rule_testPlanningTable.case_1"/>
-            <applicabilityRule id="rule_testPlanningTable.case_0" name="rule1">
-                <condition>
-                    <body>
-                        <![CDATA[r1==true]]>
-                    </body>
-                </condition>
-            </applicabilityRule>
-            <applicabilityRule id="rule_testPlanningTable.case_1" name="rule2">
-                <condition>
-                    <body>
-                        <![CDATA[r2]]>
-                    </body>
-                </condition>
-            </applicabilityRule>
-        </planningTable>
-        <humanTask id="pid_cm_testPlanningTable.case_2" name="Task_1" isBlocking="true">
+        <humanTask id="cm_testPlanningTable.case_2" name="Task_1" isBlocking="true">
             <planningTable id="pt_cm_testPlanningTable.case_3">
-                <discretionaryItem id="cm_testPlanningTable.case_12" name="Task_4" definitionRef="pid_cm_testPlanningTable.case_12" applicabilityRuleRefs="rule_testPlanningTable.case_3 rule_testPlanningTable.case_4"/>
-                <discretionaryItem id="cm_testPlanningTable.case_14" name="Task_5" definitionRef="pid_cm_testPlanningTable.case_14"/>
+                <humanTask id="cm_testPlanningTable.case_12" name="Task_4" isBlocking="true"/>
+                <humanTask id="cm_testPlanningTable.case_14" name="Task_5" isBlocking="true"/>
                 <applicabilityRule id="rule_testPlanningTable.case_2" name="r4">
                     <condition>
                         <body>
@@ -67,13 +42,32 @@
                 </applicabilityRule>
             </planningTable>
         </humanTask>
-        <humanTask id="pid_cm_testPlanningTable.case_4" name="Task_2" isBlocking="true"/>
-        <humanTask id="pid_cm_testPlanningTable.case_10" name="Task_3" isBlocking="true"/>
-        <humanTask id="pid_cm_testPlanningTable.case_14" name="Task_5" isBlocking="true"/>
-        <humanTask id="pid_cm_testPlanningTable.case_12" name="Task_4" isBlocking="true"/>
-        <stage id="pid_cm_testPlanningTable.case_8" name="Stage_1" autoComplete="true">
-            <planItem id="cm_testPlanningTable.case_10" name="Task_3" definitionRef="pid_cm_testPlanningTable.case_10"/>
-        </stage>
+        <planningTable id="pt_cm_testPlanningTable.case_1">
+            <humanTask id="cm_testPlanningTable.case_4" name="Task_2" isBlocking="true">
+                <entryCriterion id="_0LiAz_6" name="EntryCriterion_0">
+                    <planItemOnPart id="_0LiAz_7" sourceRef="cm_testPlanningTable.case_2">
+                        <standardEvent>complete</standardEvent>
+                    </planItemOnPart>
+                </entryCriterion>
+            </humanTask>
+            <stage id="cm_testPlanningTable.case_8" name="Stage_1" autoComplete="true">
+                <humanTask id="cm_testPlanningTable.case_10" name="Task_3" isBlocking="true"/>
+            </stage>
+            <applicabilityRule id="rule_testPlanningTable.case_0" name="rule1">
+                <condition>
+                    <body>
+                        <![CDATA[r1==true]]>
+                    </body>
+                </condition>
+            </applicabilityRule>
+            <applicabilityRule id="rule_testPlanningTable.case_1" name="rule2">
+                <condition>
+                    <body>
+                        <![CDATA[r2]]>
+                    </body>
+                </condition>
+            </applicabilityRule>
+        </planningTable>
     </casePlanModel>
     <caseRoles>
         <role id="_j75iY_31" name="CaseRole_1">
