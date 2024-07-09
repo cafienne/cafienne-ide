@@ -1,12 +1,11 @@
 import ServerFile from "@repository/serverfile";
-import Util from "@util/util";
-import ModelEditorMetadata from "./modeleditor/modeleditormetadata";
-import RepositoryBrowser from "./repositorybrowser";
-import ModelEditor from "./modeleditor/modeleditor";
-import CreateNewModelDialog from "./createnewmodeldialog";
 import { andThen } from "@util/promise/followup";
+import Util from "@util/util";
 import $ from "jquery";
 import "jquery-ui";
+import ModelEditor from "./modeleditor/modeleditor";
+import ModelEditorMetadata from "./modeleditor/modeleditormetadata";
+import RepositoryBrowser from "./repositorybrowser";
 
 export default class ModelListPanel {
     /**
