@@ -2,10 +2,11 @@
 import { CaseFileItemDragData } from "@ide/dragdata";
 import CaseFileItemDefinitionEditor from "@ide/modeleditor/cfid/casefileitemdefinitioneditor";
 import BottomSplitter from "@ide/splitter/bottomsplitter";
-import $ from "jquery";
+import { andThen } from "@util/promise/followup";
 import Util from "@util/util";
-import CFINode from "./cfinode";
+import $ from "jquery";
 import CFIDConverter from "./cfidconverter";
+import CFINode from "./cfinode";
 
 export const NEWDEF = '__new__';
 

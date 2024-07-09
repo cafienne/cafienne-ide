@@ -1,4 +1,5 @@
 import TypeFile from "@repository/serverfile/typefile";
+import { andThen } from "@util/promise/followup";
 import TypeEditor from "./typeeditor";
 import TypeRenderer from "./typerenderer";
 

@@ -1,6 +1,7 @@
 import CaseFileDefinitionDefinition from "@repository/definition/cfid/casefileitemdefinitiondefinition";
-import CFIDConverter from "./cfidconverter";
 import CFIDFile from "@repository/serverfile/cfidfile";
+import { andThen } from "@util/promise/followup";
+import CFIDConverter from "./cfidconverter";
 
 export default class TypeWrapper {
     /**

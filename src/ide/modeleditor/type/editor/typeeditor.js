@@ -1,8 +1,10 @@
 ﻿import CaseTypeEditor from "@ide/modeleditor/case/editors/file/casetypeeditor";
 import ModelSourceEditor from "@ide/modeleditor/xmleditor/modelsourceeditor";
+import CaseFileItemTypeDefinition from "@repository/definition/cmmn/casefile/casefileitemtypedefinition";
 import TypeFile from "@repository/serverfile/typefile";
 import CodeMirrorConfig from "@util/codemirrorconfig";
 import { andThen } from "@util/promise/followup";
+import Util from "@util/util";
 import XML from "@util/xml";
 import $ from "jquery";
 import TypeModelEditor from "../typemodeleditor";

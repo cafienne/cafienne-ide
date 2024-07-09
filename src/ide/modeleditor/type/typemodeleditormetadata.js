@@ -1,10 +1,11 @@
 import IDE from "@ide/ide";
-import ModelEditorMetadata from "../modeleditormetadata";
+import TypeDefinition from "@repository/definition/type/typedefinition";
 import ServerFile from "@repository/serverfile";
-import TypeModelEditor from "./typemodeleditor";
-import CaseFileItemView from "../case/elements/casefileitemview";
-import { andThen } from "@util/promise/followup";
 import TypeFile from "@repository/serverfile/typefile";
+import { andThen } from "@util/promise/followup";
+import CaseFileItemView from "../case/elements/casefileitemview";
+import ModelEditorMetadata from "../modeleditormetadata";
+import TypeModelEditor from "./typemodeleditor";
 
 export default class TypeModelEditorMetadata extends ModelEditorMetadata {
     /** @returns {Array<ServerFile>} */

@@ -1,7 +1,9 @@
 import CaseView from "@ide/modeleditor/case/elements/caseview";
+import TypeDefinition from "@repository/definition/type/typedefinition";
+import { andThen } from "@util/promise/followup";
+import Util from "@util/util";
 import CFIWrapper from "./cfiwrapper";
 import TypeWrapper from "./typewrapper";
-import TypeDefinition from "@repository/definition/type/typedefinition";
 
 export default class CFIDConverter {
     /**

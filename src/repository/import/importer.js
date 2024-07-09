@@ -1,8 +1,9 @@
+import TypeDefinition from "@repository/definition/type/typedefinition";
+import { andThen } from "@util/promise/followup";
 import XML from "@util/xml";
 import Tags from "../definition/dimensions/tags";
 import Repository from "../repository";
 import ImportElement, { CFIDImporter, CaseImporter, DimensionsImporter, HumanTaskImporter, ProcessImporter } from "./importelement";
-import TypeDefinition from "@repository/definition/type/typedefinition";
 
 export default class Importer {
     /**

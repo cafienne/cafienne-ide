@@ -1,7 +1,8 @@
 import IDE from "@ide/ide";
 import CodeMirrorConfig from "@util/codemirrorconfig";
-import SettingsStorage from "./settingsstorage";
+import Util from "@util/util";
 import $ from "jquery";
+import SettingsStorage from "./settingsstorage";
 
 export default class SettingsEditor {
     /**

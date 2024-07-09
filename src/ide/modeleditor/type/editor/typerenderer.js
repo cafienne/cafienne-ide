@@ -1,8 +1,10 @@
 import { CaseFileItemDragData } from "@ide/dragdata";
+import IDE from "@ide/ide";
 import SchemaDefinition from "@repository/definition/type/schemadefinition";
 import SchemaPropertyDefinition from "@repository/definition/type/schemapropertydefinition";
 import TypeFile from "@repository/serverfile/typefile";
 import { andThen } from "@util/promise/followup";
+import SequentialFollowupList from "@util/promise/sequentialfollowuplist";
 import Util from "@util/util";
 import $ from "jquery";
 import LocalTypeDefinition from "./localtypedefinition";

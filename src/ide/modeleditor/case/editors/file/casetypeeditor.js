@@ -1,6 +1,7 @@
 ﻿import TypeEditor from "@ide/modeleditor/type/editor/typeeditor";
 import TypeSelector from "@ide/modeleditor/type/editor/typeselector";
 import TypeFile from "@repository/serverfile/typefile";
+import { andThen } from "@util/promise/followup";
 import Util from "@util/util";
 import $ from "jquery";
 import CaseFileEditor from "./casefileeditor";
