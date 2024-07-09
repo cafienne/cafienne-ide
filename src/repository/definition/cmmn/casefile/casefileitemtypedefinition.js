@@ -112,14 +112,6 @@ x        updateDiagramReferences('CMMNShape', 'cmmnElementRef');
     }
 
     /**
-    * Returns the default transition for this type of plan item.
-    * @returns {String}
-    */
-    get defaultTransition() {
-        return 'create';
-    }
-
-    /**
      * Returns all descending case file items including this one, recursively.
      */
     getDescendants() {
