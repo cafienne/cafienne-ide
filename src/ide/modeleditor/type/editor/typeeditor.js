@@ -5,8 +5,8 @@ import CodeMirrorConfig from "@util/codemirrorconfig";
 import XML from "@util/xml";
 import $ from "jquery";
 import TypeModelEditor from "../typemodeleditor";
-import SchemaRenderer from "./schemarenderer";
 import { MainTypeDefinition } from "./localtypedefinition";
+import { SchemaRenderer, PropertyRenderer } from "./typerenderer";
 
 export default class TypeEditor {
     /**
