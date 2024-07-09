@@ -384,11 +384,3 @@ export default class PropertyRenderer extends TypeRenderer {
         }
     }
 }
-
-class PropertyDragData extends DragData {
-    constructor(editor, property, path) {
-        super(editor.ide, editor, property.name, SchemaPropertyDefinition.name, '/images/svg/casefileitem.svg', property.id);
-        this.item = property;
-        this.path = path;
-    }
-}
