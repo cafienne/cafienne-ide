@@ -1,5 +1,6 @@
 import { CaseFileItemDragData } from "@ide/dragdata";
 import IDE from "@ide/ide";
+import CaseFileItemDef from "@repository/definition/cmmn/casefile/casefileitemdef";
 import SchemaDefinition from "@repository/definition/type/schemadefinition";
 import SchemaPropertyDefinition from "@repository/definition/type/schemapropertydefinition";
 import TypeFile from "@repository/serverfile/typefile";
@@ -362,6 +363,7 @@ export class PropertyRenderer extends TypeRenderer {
                 // Only support drag/drop for complex type
                 e.preventDefault();
                 e.stopPropagation();
+                // TODO HERE:  cfi wrapper object 3rd parameter should not be the name but a 'parent'
                 const cfi = this.editor.case.caseDefinition.createDefinition(CaseFileItemDef, this.path, this.name);
                 this.editor.case.cfiEditor.dragData = new CaseFileItemDragData(this.editor, cfi);
             } else {
