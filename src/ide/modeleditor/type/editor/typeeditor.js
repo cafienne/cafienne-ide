@@ -2,11 +2,12 @@
 import ModelSourceEditor from "@ide/modeleditor/xmleditor/modelsourceeditor";
 import TypeFile from "@repository/serverfile/typefile";
 import CodeMirrorConfig from "@util/codemirrorconfig";
+import { andThen } from "@util/promise/followup";
 import XML from "@util/xml";
 import $ from "jquery";
 import TypeModelEditor from "../typemodeleditor";
 import { MainTypeDefinition } from "./localtypedefinition";
-import { SchemaRenderer, PropertyRenderer } from "./typerenderer";
+import { PropertyRenderer, SchemaRenderer } from "./typerenderer";
 
 export default class TypeEditor {
     /**
