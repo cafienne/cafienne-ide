@@ -10,6 +10,7 @@ import $ from "jquery";
 import TypeModelEditor from "../typemodeleditor";
 import { MainTypeDefinition } from "./localtypedefinition";
 import { PropertyRenderer, SchemaRenderer } from "./typerenderer";
+import CaseView from "@ide/modeleditor/case/elements/caseview";
 
 export default class TypeEditor {
     /**
