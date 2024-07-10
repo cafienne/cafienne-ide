@@ -363,8 +363,7 @@ export class PropertyRenderer extends TypeRenderer {
                 // Only support drag/drop for complex type
                 e.preventDefault();
                 e.stopPropagation();
-                // TODO HERE:  cfi wrapper object 3rd parameter should not be the name but a 'parent'
-                const cfi = this.editor.case.caseDefinition.createDefinition(CaseFileItemDef, this.path, this.name);
+                const cfi = this.editor.case.caseDefinition.createDefinition(CaseFileItemDef, undefined, this.path, this.name);
                 this.editor.case.cfiEditor.dragData = new CaseFileItemDragData(this.editor, cfi);
             } else {
                 this.ide.warning('Cannot drag items here', 1000)
