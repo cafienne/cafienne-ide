@@ -36,7 +36,7 @@ export default class PlanItem extends CMMNElementDefinition {
         /** @type{Array<EntryCriterionDefinition>} */
         this.entryCriteria = this.parseElements('entryCriterion', EntryCriterionDefinition, []);
         /** @type{Array<ReactivateCriterionDefinition>} */
-        this.reactivateCriteria = this.parseExtensions(ReactivateCriterionDefinition, []);
+        this.reactivateCriteria = this.parseExtensions(ReactivateCriterionDefinition, [], ReactivateCriterionDefinition.TAG);
         /** @type{Array<ExitCriterionDefinition>} */
         this.exitCriteria = this.parseElements('exitCriterion', ExitCriterionDefinition, []);
         // Properties below are special for discretionary items
@@ -46,8 +46,8 @@ export default class PlanItem extends CMMNElementDefinition {
         this.applicabilityRules = [];
         /** @type{Array<CaseRoleReference>} */
         this.authorizedRoles = [];
-        this.fourEyes = this.parseExtension(FourEyesDefinition);
-        this.rendezVous = this.parseExtension(RendezVousDefinition);
+        this.fourEyes = this.parseExtension(FourEyesDefinition, FourEyesDefinition.TAG);
+        this.rendezVous = this.parseExtension(RendezVousDefinition, RendezVousDefinition.TAG);
     }
 
     get isDiscretionary() {

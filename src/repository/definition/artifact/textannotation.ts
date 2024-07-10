@@ -18,9 +18,7 @@ export default class TextAnnotationDefinition extends ArtifactDefinition {
         super.createExportNode(parentNode, 'textAnnotation', 'textFormat');
 
         const textElement = XML.createChildElement(this.exportNode, 'text');
-        const textCDataNode = this.exportNode.ownerDocument?.createCDATASection(this.text);
-        if (textCDataNode) {
-            textElement.appendChild(textCDataNode);
-        }
+        const textCDataNode = this.exportNode.ownerDocument.createCDATASection(this.text);
+        textElement.appendChild(textCDataNode);
     }
 }

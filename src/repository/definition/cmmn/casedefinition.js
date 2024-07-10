@@ -35,7 +35,7 @@ export default class CaseDefinition extends ModelDefinition {
         /** @type {Array<ParameterDefinition>} */
         this.output = this.parseElements('output', ParameterDefinition);
         this.annotations = this.parseElements('textAnnotation', TextAnnotationDefinition);
-        this.startCaseSchema = this.parseExtension(StartCaseSchemaDefinition);
+        this.startCaseSchema = this.parseExtension(StartCaseSchemaDefinition, StartCaseSchemaDefinition.TAG);
         this.defaultExpressionLanguage = this.parseAttribute('expressionLanguage', 'spel');
     }
 
@@ -100,7 +100,7 @@ export default class CaseDefinition extends ModelDefinition {
     }
 
     parseStartCaseSchema() {
-        const startCaseNode = this.parseExtension(StartCaseSchemaDefinition);
+        const startCaseNode = this.parseExtension(StartCaseSchemaDefinition, StartCaseSchemaDefinition.TAG);
         return startCaseNode ? startCaseNode.value : '';
     }
 
