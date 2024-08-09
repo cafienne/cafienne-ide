@@ -5,13 +5,14 @@ import ParameterDefinition from "../../contract/parameterdefinition";
 import ParameterMappingDefinition from "../../contract/parametermappingdefinition";
 import { TaskStageDefinition } from "../planitem";
 import ModelDefinition from "@repository/definition/modeldefinition";
+import TaskParameterDefinition from "./taskparameterdefinition";
 
 export default class TaskDefinition extends TaskStageDefinition {
     constructor(importNode, caseDefinition, parent) {
         super(importNode, caseDefinition, parent);
         this.isBlocking = this.parseBooleanAttribute('isBlocking', true);
-        this.inputs = this.parseElements('inputs', ParameterDefinition);
-        this.outputs = this.parseElements('outputs', ParameterDefinition);
+        this.inputs = this.parseElements('inputs', TaskParameterDefinition);
+        this.outputs = this.parseElements('outputs', TaskParameterDefinition);
         this.parseElements('parameterMapping', ParameterMappingDefinition, this.mappings);
     }
 
@@ -113,7 +114,7 @@ export default class TaskDefinition extends TaskStageDefinition {
      * @param {String} name 
      */
     createInputParameterWithName(name) {
-        const newParameter = this.createDefinition(ParameterDefinition, undefined, this.generateUniqueParameterName(name, this.inputs));
+        const newParameter = this.createDefinition(TaskParameterDefinition, undefined, this.generateUniqueParameterName(name, this.inputs));
         this.inputs.push(newParameter);
         return newParameter;
     }
@@ -124,7 +125,7 @@ export default class TaskDefinition extends TaskStageDefinition {
      * @param {String} name 
      */
     createOutputParameterWithName(name) {
-        const newParameter = this.createDefinition(ParameterDefinition, undefined, this.generateUniqueOutputParameterName(name));
+        const newParameter = this.createDefinition(TaskParameterDefinition, undefined, this.generateUniqueOutputParameterName(name));
         this.outputs.push(newParameter);
         return newParameter;
     }
@@ -149,7 +150,7 @@ export default class TaskDefinition extends TaskStageDefinition {
      * - 'Response.2' ---> the third one
      * If in the meantime 'Response.1' is deleted or has a new name, then the fourth one will get that "free spot"
      * @param {string} name 
-     * @param {Array<ParameterDefinition>} siblings 
+     * @param {Array<TaskParameterDefinition>} siblings 
      * @returns {string}
      */
     generateUniqueParameterName(name, siblings) {
@@ -163,13 +164,13 @@ export default class TaskDefinition extends TaskStageDefinition {
     /**
      * 
      * @param {String} name 
-     * @param {Array<ParameterDefinition>} collection 
-     * @returns {ParameterDefinition}
+     * @param {Array<TaskParameterDefinition>} collection 
+     * @returns {TaskParameterDefinition}
      */
     getParameterWithName(name, collection) {
         const existingParameter = collection.find(p => p.name == name);
         if (!existingParameter) {
-            const newParameter = this.createDefinition(ParameterDefinition, undefined, name);
+            const newParameter = this.createDefinition(TaskParameterDefinition, undefined, name);
             collection.push(newParameter);
             return newParameter;
         } else {
@@ -183,7 +184,7 @@ export default class TaskDefinition extends TaskStageDefinition {
      * @param {Function} creator 
      * @param {String} sourceRef 
      * @param {String} targetRef 
-     * @param {ParameterDefinition} taskParameter 
+     * @param {TaskParameterDefinition} taskParameter 
      * @param {ParameterDefinition} implementationParameter 
      * @returns {ParameterMappingDefinition}
      */

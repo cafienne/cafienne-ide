@@ -1,8 +1,8 @@
 import CaseFileItemDef from "@definition/cmmn/casefile/casefileitemdef";
-import ParameterDefinition from "@definition/cmmn/contract/parameterdefinition";
 import CMMNElementDefinition from "@definition/cmmnelementdefinition";
 import StandardForm from "@ide/editors/standardform";
 import BottomSplitter from "@ide/splitter/bottomsplitter";
+import CaseParameterDefinition from "@repository/definition/cmmn/contract/caseparameterdefinition";
 import ColumnRenderer from "../tableeditor/columnrenderer";
 import RowRenderer from "../tableeditor/rowrenderer";
 import TableRenderer from "../tableeditor/tablerenderer";
@@ -84,7 +84,7 @@ class ParametersControl extends TableRenderer {
     }
 
     /**
-     * @returns {Array<ParameterDefinition>} The task input parameters (for usage in the parameters editor)
+     * @returns {Array<CaseParameterDefinition>} The task input parameters (for usage in the parameters editor)
      */
     get parameters() {
         return this.data;
@@ -96,7 +96,7 @@ class ParametersControl extends TableRenderer {
 
     /**
      * 
-     * @param {ParameterDefinition} parameter 
+     * @param {CaseParameterDefinition} parameter 
      */
     addRenderer(parameter = undefined) {
         return new ParameterRow(this, parameter);
@@ -144,7 +144,7 @@ class OutputParametersControl extends ParametersControl {
 export class ParameterRow extends RowRenderer {
     /**
      * @param {ParametersControl} control
-     * @param {ParameterDefinition} parameter
+     * @param {CaseParameterDefinition} parameter
      */
     constructor(control, parameter = undefined) {
         super(control, parameter);
@@ -157,7 +157,7 @@ export class ParameterRow extends RowRenderer {
     
     get parameter() {
         // Just to have some typesafe reference
-        return /** @type {ParameterDefinition} */ (this.element);
+        return /** @type {CaseParameterDefinition} */ (this.element);
     }
 
     /**
@@ -202,9 +202,9 @@ export class ParameterRow extends RowRenderer {
     }
 
     /**
-     * @returns {ParameterDefinition}
+     * @returns {CaseParameterDefinition}
      */
     createElement() {
-        return this.control.editor.case.caseDefinition.createDefinition(ParameterDefinition);
+        return this.control.editor.case.caseDefinition.createDefinition(CaseParameterDefinition);
     }
 }

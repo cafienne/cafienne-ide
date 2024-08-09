@@ -6,7 +6,7 @@ import ModelDefinition from "../modeldefinition";
 import CaseFileDefinition from "./casefile/casefiledefinition";
 import CasePlanDefinition from "./caseplan/caseplandefinition";
 import CaseTeamDefinition from "./caseteam/caseteamdefinition";
-import ParameterDefinition from "./contract/parameterdefinition";
+import CaseParameterDefinition from "./contract/caseparameterdefinition";
 import Migrator from "./migrator";
 import StartCaseSchemaDefinition from "./startcaseschemadefinition";
 
@@ -30,10 +30,10 @@ export default class CaseDefinition extends ModelDefinition {
         this.casePlan = this.parseElement('casePlanModel', CasePlanDefinition)
         /** @type {CaseTeamDefinition} */
         this.caseTeam = this.parseElement('caseRoles', CaseTeamDefinition);
-        /** @type {Array<ParameterDefinition>} */
-        this.input = this.parseElements('input', ParameterDefinition);
-        /** @type {Array<ParameterDefinition>} */
-        this.output = this.parseElements('output', ParameterDefinition);
+        /** @type {Array<CaseParameterDefinition>} */
+        this.input = this.parseElements('input', CaseParameterDefinition);
+        /** @type {Array<CaseParameterDefinition>} */
+        this.output = this.parseElements('output', CaseParameterDefinition);
         this.annotations = this.parseElements('textAnnotation', TextAnnotationDefinition);
         this.startCaseSchema = this.parseExtension(StartCaseSchemaDefinition);
         this.defaultExpressionLanguage = this.parseAttribute('expressionLanguage', 'spel');

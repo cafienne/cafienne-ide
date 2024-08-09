@@ -1,8 +1,8 @@
 // import CaseDefinition from "./cmmn/casedefinition";
 // BIG TODO HERE
-import ReferableElementDefinition from "./referableelementdefinition";
+import DocumentableElementDefinition from "./documentableelementdefinition";
 
-export default class CMMNElementDefinition extends ReferableElementDefinition {
+export default class CMMNElementDefinition extends DocumentableElementDefinition {
     /**
      * Creates a new, abstract CMMNElementDefinition object based on the given XML element 'importNode'.
      * Also parses 'id', 'name' and 'documentation' attributes, and adds the element to the case definition.

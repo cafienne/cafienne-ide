@@ -10,10 +10,25 @@ export default class ElementDefinition extends XMLSerializable {
      */
     constructor(importNode, modelDefinition, parent = undefined) {
         super(importNode, parent);
+        this.id = this.parseAttribute('id');
+        this.name = this.parseAttribute('name');
         this.modelDefinition = modelDefinition;
         if (modelDefinition) {
             this.modelDefinition.elements.push(this);
         }
+    }
+
+    /**
+     * Returns true if name or id property equals the identifier
+     * @param {String} identifier 
+     * @returns {Boolean}
+     */
+    hasIdentifier(identifier) {
+        return this.id === identifier || this.name === identifier;
+    }
+
+    getIdentifier() {
+        return this.id ? this.id : this.name ? this.name : '';
     }
 
     /**

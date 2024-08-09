@@ -1,7 +1,8 @@
-import CMMNDocumentationDefinition from "@definition/cmmndocumentationdefinition";
 import CMMNElementDefinition from "@definition/cmmnelementdefinition";
 import ShapeDefinition from "@definition/dimensions/shape";
+import { CMMNDocumentationDefinition } from "@repository/definition/elementdefinition";
 import Util from "@util/util";
+import { shapes, util } from "jointjs";
 import Grid from "../grid";
 import Marker from "../marker";
 import Resizer from "../resizer";
@@ -9,7 +10,6 @@ import CanvasElement from "./canvaselement";
 import CaseView from "./caseview";
 import Connector from "./connector";
 import ElementRegistry from "./elementregistry";
-import { shapes, util } from "jointjs";
 // import Halo from "./halo/halo";
 // BIG TODO HERE
 

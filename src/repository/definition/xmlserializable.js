@@ -296,7 +296,7 @@ export default class XMLSerializable {
      */
     createExportNode(parentNode, tagName, ...propertyNames) {
         this.exportNode = XML.createChildElement(parentNode, tagName);
-        this.exportProperties(propertyNames);
+        this.exportProperties('id', 'name', propertyNames);
     }
 
     /**

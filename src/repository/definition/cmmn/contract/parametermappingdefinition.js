@@ -4,6 +4,7 @@ import TaskDefinition from "../caseplan/task/taskdefinition";
 import ParameterDefinition from "./parameterdefinition";
 import CaseFileItemDef from "../casefile/casefileitemdef";
 import ExpressionDefinition from "../expression/expressiondefinition";
+import TaskParameterDefinition from "../caseplan/task/taskparameterdefinition";
 
 export default class ParameterMappingDefinition extends UnnamedCMMNElementDefinition {
     /**
@@ -84,7 +85,7 @@ export default class ParameterMappingDefinition extends UnnamedCMMNElementDefini
     }
 
     /**
-     * @returns {ParameterDefinition}
+     * @returns {TaskParameterDefinition}
      */
     get taskParameter() {
         if (this.isInputMapping) {
@@ -95,7 +96,7 @@ export default class ParameterMappingDefinition extends UnnamedCMMNElementDefini
     }
 
     /**
-     * @param {ParameterDefinition} parameter
+     * @param {TaskParameterDefinition} parameter
      */
     set taskParameter(parameter) {
         if (this.isInputMapping) {

@@ -1,9 +1,9 @@
 'use strict';
 
-import ParameterDefinition from "@definition/cmmn/contract/parameterdefinition";
 import CMMNElementDefinition from "@definition/cmmnelementdefinition";
-import TableEditor, { RowEditor, TableEditorColumn } from "../tableeditor/tableeditor";
+import CaseParameterDefinition from "@repository/definition/cmmn/contract/caseparameterdefinition";
 import $ from "jquery";
+import TableEditor, { RowEditor, TableEditorColumn } from "../tableeditor/tableeditor";
 
 export default class BindingRefinementEditor extends TableEditor {
     /**
@@ -42,7 +42,7 @@ export default class BindingRefinementEditor extends TableEditor {
     }
 
     /**
-     * @returns {Array<ParameterDefinition>}
+     * @returns {Array<CaseParameterDefinition>}
      */
     get data() {
         // Mapping editor knows whether we need to have the input or output parameters
@@ -51,7 +51,7 @@ export default class BindingRefinementEditor extends TableEditor {
 
     /**
      * 
-     * @param {ParameterDefinition} parameter 
+     * @param {CaseParameterDefinition} parameter 
      */
     addRenderer(parameter = undefined) {
         if (parameter != undefined) {
@@ -69,7 +69,7 @@ export default class BindingRefinementEditor extends TableEditor {
 class BindingRefinementRenderer extends RowEditor {
     /**
      * @param {BindingRefinementEditor} editor 
-     * @param {ParameterDefinition} parameter 
+     * @param {CaseParameterDefinition} parameter 
      */
     constructor(editor, parameter) {
         super(editor, parameter);
@@ -89,7 +89,7 @@ class BindingRefinementRenderer extends RowEditor {
         })
     }
 
-    /** @returns {ParameterDefinition} */
+    /** @returns {CaseParameterDefinition} */
     get parameter() {
         // Just to have some typesafe reference
         return this.element;
@@ -106,9 +106,9 @@ class BindingRefinementRenderer extends RowEditor {
     }
 
     /**
-     * @returns {ParameterDefinition}
+     * @returns {CaseParameterDefinition}
      */
     createElement() {
-        return this.editor.case.caseDefinition.createDefinition(ParameterDefinition);
+        return this.editor.case.caseDefinition.createDefinition(CaseParameterDefinition);
     }
 }

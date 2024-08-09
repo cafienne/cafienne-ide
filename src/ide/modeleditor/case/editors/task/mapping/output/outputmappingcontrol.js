@@ -1,15 +1,14 @@
-import ParameterDefinition from "@repository/definition/cmmn/contract/parameterdefinition";
-import MappingControl from "../mappingcontrol";
-import OutputMappingDeleter from "./outputmappingdeleter";
-import OutputParameterSelector from "./outputparameterselector";
-import OutputMappingExpression from "./outputmappingexpression";
-import OperationSelector from "./outputoperationselector";
-import MappingCFI from "../mappingcfi";
-import RequiredChanger from "./requiredchanger";
-import MappingOrderChanger from "../mappingorderchanger";
 import ParameterMappingDefinition from "@repository/definition/cmmn/contract/parametermappingdefinition";
-import OutputMappingRow from "./outputmappingrow";
 import ColumnRenderer from "../../../tableeditor/columnrenderer";
+import MappingCFI from "../mappingcfi";
+import MappingControl from "../mappingcontrol";
+import MappingOrderChanger from "../mappingorderchanger";
+import OutputMappingDeleter from "./outputmappingdeleter";
+import OutputMappingExpression from "./outputmappingexpression";
+import OutputMappingRow from "./outputmappingrow";
+import OperationSelector from "./outputoperationselector";
+import OutputParameterSelector from "./outputparameterselector";
+import RequiredChanger from "./requiredchanger";
 
 export default class OutputMappingControl extends MappingControl {
     constructor(editor, htmlParent) {
@@ -17,7 +16,7 @@ export default class OutputMappingControl extends MappingControl {
     }
 
     /**
-     * @returns {Array<ParameterDefinition>} The task input parameters (for usage in the parameters editor)
+     * @returns {Array<CaseParameterDefinition>} The task input parameters (for usage in the parameters editor)
      */
     get parameters() {
         return this.taskDefinition.outputs;

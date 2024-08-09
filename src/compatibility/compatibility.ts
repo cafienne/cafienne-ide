@@ -2,16 +2,12 @@
 // In the compatibilityhelper we do an import CasePlanDefinition from '@definition/cmmn/caseplan/caseplandefinition';
 import echo from './compatibilityhelper';
 
-import ParameterDefinition from '@definition/cmmn/contract/parameterdefinition';
 import Halo from '@ide/modeleditor/case/elements/halo/halo';
 import PlanItemHalo from '@ide/modeleditor/case/elements/halo/planitemhalo';
 import { EntryCriterionHalo, ExitCriterionHalo, ReactivateCriterionHalo } from '@ide/modeleditor/case/elements/halo/sentryhalo';
 import TaskHalo from '@ide/modeleditor/case/elements/halo/taskhalo';
 
 const pointers = [
-    // Repository
-    ParameterDefinition,
-
     // IDE
     Halo,
     PlanItemHalo,
