@@ -43,12 +43,12 @@ export default class SchemaDefinition extends ElementDefinition<TypeDefinition> 
         Util.insertInArray(this.properties, child, after);
     }
 
-    toJSONSchema(parent: any): Object {
+    toJSONSchema(parent: any, root: any): Object {
         const jsonSchema = {};
         parent['properties'] = jsonSchema;
         const required: [] = [];
         this.properties.forEach(property => {
-            property.toJSONSchema(jsonSchema, required);
+            property.toJSONSchema(jsonSchema, required, root);
             if (required.length) {
                 parent['required'] = required;
             }

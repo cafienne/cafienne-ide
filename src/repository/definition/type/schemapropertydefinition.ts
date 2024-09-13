@@ -85,7 +85,7 @@ export default class SchemaPropertyDefinition extends ReferableElementDefinition
         }
     }
 
-    toJSONSchema(properties: any, required: any) {
+    toJSONSchema(properties: any, required: any, root: any) {
         const jsonProperty: any = {};
         properties[this.name] = jsonProperty;
         jsonProperty.$id = this.id;
@@ -93,9 +93,25 @@ export default class SchemaPropertyDefinition extends ReferableElementDefinition
         const property: any = jsonProperty;
         if (this.type === 'object') {
             property.type = 'object';
-            this.schema?.toJSONSchema(property)
-        } else if (this.typeRef) {
-            property.$ref = this.typeRef;
+            this.schema?.toJSONSchema(property, root);
+        } else if (this.typeRef && this.subType) {
+            const $id = this.subType.id.slice(0, this.subType.id.length - 5); // Strip ".type" from id
+            const $ref = '#/definitions/' + $id;
+            property.$ref = $ref;
+            if (!root.definitions) {
+                // Create the definitions in the root schema upon first typeRef
+                // All (nested) external definitions will be bundled inline in definitions of the JSON schema of the root type
+                root.definitions = {};
+            }
+            if (!root.definitions[$id]) {
+                // Generate JSCHEMA for a definition once as it can have multiple references
+                const definitionJSONSchema = {
+                    $id: $id,
+                    type: 'object'
+                }
+                root.definitions[$id] = definitionJSONSchema;
+                this.subType?.schema?.toJSONSchema(definitionJSONSchema, root);
+            }
         } else {
             property.type = this.type;
             if (this.format) {

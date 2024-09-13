@@ -27,12 +27,12 @@ export default class TypeDefinition extends ModelDefinition {
         // Example JSON
         const jsonSchema = {
             schema: {
-                $id: this.id,
+                $id: this.id.slice(0, this.id.length - 5), // Strip ".type" from id
                 title: this.name,
                 type: 'object'
             }
         }
-        this.schema?.toJSONSchema(jsonSchema.schema)
+        this.schema?.toJSONSchema(jsonSchema.schema, jsonSchema.schema)
         return jsonSchema;
     }
 }
