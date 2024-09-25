@@ -162,7 +162,7 @@ export default class TypeEditor {
         this.selectedPropertyRenderer = propertyRenderer;
         if (propertyRenderer) {
             propertyRenderer.select();
-            if (this.case) {
+            if (this.case && propertyRenderer.property.isComplexType) {
                 const references = /** @type {Array<CaseFileItemTypeDefinition> } */ (propertyRenderer.property.searchInboundReferences().filter(element => element instanceof CaseFileItemTypeDefinition));
                 const selectedProperty = references.find(cfi => cfi.caseDefinition === this.case.caseDefinition);
                 this.case.updateSelectedCaseFileItemDefinition(selectedProperty);
