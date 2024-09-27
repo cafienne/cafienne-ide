@@ -440,8 +440,22 @@ export class PropertyRenderer extends TypeRenderer {
      * But first check if the property is still in use. If so, then it cannot be removed.
      */
     removeProperty() {
+        // Recusrsive lookup for all parent TypesFile's using the TypeFile of this property to be removed 
+        const getParentTypes = (typeFile, results = []) => {
+            results.push(typeFile);
+            typeFile.usageFiles.filter(modelUsingMyType => modelUsingMyType.fileName.endsWith('.type')).forEach(file => getParentTypes(file, results));
+            return results;
+        }
+        const referringTypeFiles = getParentTypes(this.property.modelDefinition.file);
+
+        // Lookup all referring .case fileNames (including corresponding .dimensions)
+        const referringCaseFileNames = referringTypeFiles.map(type => type.usageFiles.filter(modelUsingType => modelUsingType.fileName.endsWith('.case'))).flat().map(f => f.fileName);
+        const dims = referringCaseFileNames.map(f => f.replace('.case', '.dimensions'));
+        referringCaseFileNames.push(...dims);
+        
         // First check direct references, as that gives a different error message than child properties.
-        const references = this.property.getCaseReferences();
+        const caseFilter = (ref) => referringCaseFileNames.indexOf(ref.modelDefinition.file.fileName) >= 0;
+        const references = this.property.getCaseReferences().filter(caseFilter);
         if (references.length > 0) {
             const definitionsUsing = Util.removeDuplicates(references.map(ref => ref.modelDefinition.file.fileName));
             this.editor.ide.warning('Cannot remove property, as it is in use in ' + references.length + ' places across the files ' + definitionsUsing.map(fileName => `<br />- ${fileName}`).join(''));
@@ -450,9 +464,13 @@ export class PropertyRenderer extends TypeRenderer {
 
         // Now check references to one of our descendents. Also they are not allowed.
         const childRenderers = this.getDescendents().filter(child => child instanceof PropertyRenderer).map((/** @type {PropertyRenderer} */child) => child.property);
-        const childCaseReferences = Util.removeDuplicates(childRenderers.filter(p => p !== this.property && p.getCaseReferences().length > 0));
+        const allChildCaseReferences = childRenderers.filter(p => p !== this.property && p.getCaseReferences().filter(caseFilter).length > 0);
+        const childCaseReferences = Util.removeDuplicates(allChildCaseReferences);
         if (childCaseReferences.length > 0) {
-            this.editor.ide.warning('Cannot remove property, as it has child properties that are in use' + childCaseReferences.map(property => `<br />- ${property.name}`).join(''));
+            let usedInWarning = [];
+            childRenderers.filter(p => p !== this.property && p.getCaseReferences().filter(caseFilter).forEach(p => usedInWarning.push(`<br />- ${p.modelDefinition.file.fileName}`)));
+            Util.removeDuplicates(usedInWarning);
+            this.editor.ide.warning('Cannot remove property, as it has child properties that are in use' + childCaseReferences.map(property => `<br />- ${property.name}`).join('')  + '<br /> used in' + usedInWarning.join(''));   
             return;
         }
 
