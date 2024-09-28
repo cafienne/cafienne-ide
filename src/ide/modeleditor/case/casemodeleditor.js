@@ -92,17 +92,6 @@ export default class CaseModelEditor extends ModelEditor {
      */
     migrateDefinitions(caseDefinition) {
         this.__migrated = false;
-        const dimensions = caseDefinition.dimensions;
-        dimensions.diagram.deprecatedCaseFileItems.forEach(casefileshape => {
-            casefileshape.migrate();
-            this.migrated(`Migrating casefileshape ${casefileshape.cmmnElementRef}`);
-        })
-
-        dimensions.diagram.deprecatedTextBoxes.forEach(textbox => {
-            const textAnnotationDefinition = caseDefinition.createTextAnnotation(textbox.migrate().cmmnElementRef);
-            textAnnotationDefinition.text = textbox.content;
-            this.migrated(`Migrating textbox ${textbox.cmmnElementRef}`);
-        });
     }
 
     /**

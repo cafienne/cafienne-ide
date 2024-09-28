@@ -7,29 +7,21 @@ export default class Vertex extends DiagramElement {
     /**
      * Returns a new Vertex object for the given Edge, containing the x and y in the v object as properties.
      * (They come as x,y props through the joint library)
-     * @returns {Vertex}
-     * @param {Edge} edge 
-     * @param {*} v 
      */
-    static convert(edge, v) {
-        return new Vertex(undefined, edge.dimensions, edge, v.x, v.y);
+    static convert(edge: Edge, x: number, y: number) {
+        return new Vertex(edge.importNode.ownerDocument.createElement(Tags.WAYPOINT), edge.dimensions, edge, x, y);
     }
 
     /**
      * Simple (x,y) wrapper indicating a point in a line.
-     * @param {Element} importNode 
-     * @param {Dimensions} dimensions 
-     * @param {Edge} parent 
-     * @param {Number} x
-     * @param {Number} y
      */
-    constructor(importNode, dimensions, parent, x = undefined, y = undefined) {
+    constructor(importNode: Element, dimensions: Dimensions, parent: Edge, public x: number, public y: number) {
         super(importNode, dimensions, parent);
         this.x = this.parseNumberAttribute('x', x);
         this.y = this.parseNumberAttribute('y', y);
     }
 
-    createExportNode(parentNode) {
+    createExportNode(parentNode: Element) {
         super.createExportNode(parentNode, Tags.WAYPOINT, 'x', 'y');
     }
 }

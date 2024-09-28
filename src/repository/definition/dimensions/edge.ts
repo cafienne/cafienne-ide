@@ -4,16 +4,28 @@ import DiagramElement from "./diagramelement";
 import Dimensions from "./dimensions";
 import Tags from "./tags";
 import Vertex from "./vertex";
+import CMMNElementView from "@ide/modeleditor/case/elements/cmmnelementview";
+import XMLSerializable from "../xmlserializable";
+import XML from "@util/xml";
 
 export default class Edge extends DiagramElement {
+    private _vertices: Vertex[];
+    sourceId: string;
+    targetId: string;
+    label: string | undefined;
+
     /**
      * Create a new Edge shape that binds the two CMMNElements.
      * @param {CMMNElementView} source 
      * @param {CMMNElementView} target
      * @returns {Edge}
      */
-    static create(source, target) {
-        const edge = new Edge(undefined, source.case.dimensions, source.case.diagram);
+    static create(source: CMMNElementView, target: CMMNElementView) {
+        if (! source.case.dimensions || ! source.case.diagram) {
+            return undefined;
+        }
+        
+        const edge = new Edge(XML.loadXMLString(`<${Tags.CMMNEDGE} />`).documentElement, source.case.dimensions, source.case.diagram);
         edge.sourceId = source.id;
         edge.targetId = target.id;
         source.case.diagram.edges.push(edge);
@@ -24,11 +36,10 @@ export default class Edge extends DiagramElement {
      * Representation of a <CMMNEdge> element
      * @param {Element} importNode 
      * @param {Dimensions} dimensions 
-     * @param {Diagram} parent 
+     * @param {Diagram} diagram 
      */
-    constructor(importNode, dimensions, parent) {
-        super(importNode, dimensions, parent);
-        this.diagram = parent;
+    constructor(importNode: Element, dimensions: Dimensions, public diagram: Diagram) {
+        super(importNode, dimensions, diagram);
         this.sourceId = this.parseAttribute(Tags.SOURCECMMNELEMENTREF);
         this.targetId = this.parseAttribute(Tags.TARGETCMMNELEMENTREF);
         /** @type {Array<Vertex>} */
@@ -36,7 +47,7 @@ export default class Edge extends DiagramElement {
         this.label = this.parseAttribute('label', '');
     }
 
-    referencesElement(element) {
+    referencesElement(element: XMLSerializable) {
         return element.id === this.sourceId || element.id === this.targetId;
     }
 
@@ -44,8 +55,8 @@ export default class Edge extends DiagramElement {
         return this._vertices;
     }
 
-    set vertices(vertices) {
-        this._vertices = vertices.map(v => Vertex.convert(this, v));
+    set vertices(jointVertices) {
+        this._vertices = jointVertices.map(v => Vertex.convert(this, v.x, v.y));
     }
 
     /**
@@ -55,7 +66,7 @@ export default class Edge extends DiagramElement {
         Util.removeFromArray(this.diagram.edges, this);
     }
 
-    createExportNode(diagramNode) {
+    createExportNode(diagramNode: Element) {
         super.createExportNode(diagramNode, Tags.CMMNEDGE, 'label', 'vertices');
         super.exportProperty(Tags.SOURCECMMNELEMENTREF, this.sourceId);
         super.exportProperty(Tags.TARGETCMMNELEMENTREF, this.targetId);

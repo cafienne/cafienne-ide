@@ -11,8 +11,7 @@ export default class ConnectorStyle {
         return 'full';
     }
 
-    constructor(style) {
-        this.style = style;
+    constructor(public style?: string) {
         if (! (this.isNone || this.isDefault || this.isFull)) {
             this.style = ConnectorStyle.DEFAULT;
         }
