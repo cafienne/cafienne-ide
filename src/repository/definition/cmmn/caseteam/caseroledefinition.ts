@@ -1,11 +1,13 @@
 import CMMNElementDefinition from "../../cmmnelementdefinition";
+import CaseDefinition from "../casedefinition";
+import CaseTeamDefinition from "./caseteamdefinition";
 
 export default class CaseRoleDefinition extends CMMNElementDefinition {
-    constructor(importNode, caseDefinition, parent) {
+    constructor(importNode: Element, caseDefinition: CaseDefinition, parent: CaseTeamDefinition) {
         super(importNode, caseDefinition, parent);
     }
 
-    createExportNode(parentNode) {
+    createExportNode(parentNode: Element) {
         super.createExportNode(parentNode, 'role');
     }
 }

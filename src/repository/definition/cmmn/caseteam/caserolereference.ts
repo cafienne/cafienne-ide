@@ -1,6 +1,8 @@
 import Util from "@util/util";
 import CaseDefinition from "../casedefinition";
 import CaseRoleDefinition from "./caseroledefinition";
+import PlanItem from "../caseplan/planitem";
+import UserEventDefinition from "../caseplan/usereventdefinition";
 
 export default class CaseRoleReference {
     /**
@@ -8,9 +10,7 @@ export default class CaseRoleReference {
      * @param {CaseRoleDefinition} role 
      * @param {PlanItem|UserEventDefinition} parent
      */
-    constructor(role, parent = undefined) {
-        this.role = role;
-        this.parent = parent;
+    constructor(public role: CaseRoleDefinition, public parent?: PlanItem | UserEventDefinition) {
     }
 
     remove() {
@@ -25,14 +25,10 @@ export default class CaseRoleReference {
 
     set id(newId) {
         const otherRole = this.role.caseDefinition.getElement(newId);
-        if (otherRole) {
+        if (otherRole && otherRole instanceof CaseRoleDefinition) {
             this.role = otherRole;
         } else {
-            this.role = { // This is a 'temporary' case role definition
-                id: '',
-                name: '',
-                caseDefinition: this.role.caseDefinition
-            }
+            this.role = TEMPORARY_EMPTY_ROLE(this.role.caseDefinition);
         }
     }
 
@@ -45,13 +41,15 @@ export default class CaseRoleReference {
      * @param {CaseDefinition} caseDefinition 
      * @returns {CaseRoleReference}
      */
-    static createEmptyCaseRoleReference(caseDefinition) {
-        const newRef = new CaseRoleReference(undefined);
-        newRef.role = { // This is a 'temporary' case role definition
-            id: '',
-            name: '',
-            caseDefinition: caseDefinition
-        }
-        return newRef;
+    static createEmptyCaseRoleReference(caseDefinition: CaseDefinition) {
+        return new CaseRoleReference(TEMPORARY_EMPTY_ROLE(caseDefinition));
+    }
+}
+
+function TEMPORARY_EMPTY_ROLE(caseDefinition: CaseDefinition) {
+    return <CaseRoleDefinition>{ // This is a 'temporary' case role definition
+        id: '',
+        name: '',
+        caseDefinition
     }
 }
