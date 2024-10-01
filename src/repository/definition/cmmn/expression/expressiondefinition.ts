@@ -1,8 +1,12 @@
 import XML from "@util/xml";
 import UnnamedCMMNElementDefinition from "../../unnamedcmmnelementdefinition";
+import CaseDefinition from "../casedefinition";
+import CMMNElementDefinition from "@repository/definition/cmmnelementdefinition";
 
 export default class ExpressionDefinition extends UnnamedCMMNElementDefinition {
-    constructor(importNode, caseDefinition, parent) {
+    body: string;
+    private __language: string = '';
+    constructor(importNode: Element, caseDefinition: CaseDefinition, parent: CMMNElementDefinition) {
         super(importNode, caseDefinition, parent);
         this.language = this.parseAttribute('language', '');
         const bodyElement = XML.getChildByTagName(this.importNode, 'body');
@@ -21,7 +25,7 @@ export default class ExpressionDefinition extends UnnamedCMMNElementDefinition {
         return this.language && this.language !== this.caseDefinition.defaultExpressionLanguage;
     }
 
-    createExportNode(parentNode, tagName) {
+    createExportNode(parentNode: Element, tagName: string) {
         super.createExportNode(parentNode, tagName);
         if (this.hasCustomLanguage) {
             this.exportProperties('language');
