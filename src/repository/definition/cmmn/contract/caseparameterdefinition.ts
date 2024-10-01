@@ -1,29 +1,32 @@
 import CMMNElementDefinition from "@repository/definition/cmmnelementdefinition";
 import CaseFileItemDef from "../casefile/casefileitemdef";
 import ExpressionDefinition from "../expression/expressiondefinition";
-import ParameterDefinition from "./parameterdefinition";
+import ParameterDefinition from "../../contract/parameterdefinition";
 import CaseDefinition from "../casedefinition";
+import ModelDefinition from "@repository/definition/modeldefinition";
+import ElementDefinition from "@repository/definition/elementdefinition";
 
-export default class CaseParameterDefinition extends ParameterDefinition {
+export default class CaseParameterDefinition extends ParameterDefinition<CaseDefinition> {
+    bindingRef: string;
+    bindingRefinement?: ExpressionDefinition;
     /**
      * 
      * @param {Element} importNode 
      * @param {CaseDefinition} caseDefinition
      * @param {CMMNElementDefinition} parent optional
      */
-    constructor(importNode, caseDefinition, parent) {
+    constructor(importNode: Element, public caseDefinition: CaseDefinition, parent: CMMNElementDefinition) {
         super(importNode, caseDefinition, parent);
-        this.caseDefinition = caseDefinition;
         this.bindingRef = this.parseAttribute('bindingRef');
         this.bindingRefinement = this.parseElement('bindingRefinement', ExpressionDefinition);
     }
 
-    referencesElement(element) {
+    referencesElement<X extends ModelDefinition>(element: ElementDefinition<X>) {
         return element.id === this.bindingRef;
     }
 
-    get binding() {
-        return /** @type {CaseFileItemDef} */ (this.caseDefinition.getElement(this.bindingRef, CaseFileItemDef));
+    get binding(): CaseFileItemDef {
+        return this.caseDefinition.getElement(this.bindingRef, CaseFileItemDef);
     }
 
     get bindingName() {
@@ -62,7 +65,7 @@ export default class CaseParameterDefinition extends ParameterDefinition {
         return this.bindingRefinement;
     }
 
-    createExportNode(parentNode, tagName) {
+    createExportNode(parentNode: Element, tagName: string) {
         // Parameters have different tagnames depending on their type, so this must be passed.
         super.createExportNode(parentNode, tagName, 'bindingRef', 'bindingRefinement');
     }

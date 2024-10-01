@@ -181,7 +181,7 @@ export class ParameterRow extends RowRenderer {
     changeName(newName) {
         if (!this.parameter.bindingRef) {
             // try to find a matching case file item
-            const caseFileItem = this.parameter.caseDefinition.getCaseFile().getDescendants().find(child => child.name === newName);
+            const caseFileItem = this.parameter.caseDefinition.caseFile.getDescendants().find(child => child.name === newName);
             if (caseFileItem) {
                 this.parameter.bindingRef = caseFileItem.id;
                 this.html.find('.cfiName').html(this.parameter.bindingName);

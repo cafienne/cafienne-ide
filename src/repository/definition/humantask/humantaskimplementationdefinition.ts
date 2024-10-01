@@ -1,12 +1,12 @@
-import ParameterDefinition from "../cmmn/contract/parameterdefinition";
+import ParameterDefinition from "../contract/parameterdefinition";
 import { CAFIENNE_NAMESPACE, CAFIENNE_PREFIX, IMPLEMENTATION_TAG } from "../xmlserializable";
 import HumanTaskModelDefinition from "./humantaskmodeldefinition";
 import HumanTaskModelElementDefinition from "./humantaskmodelelementdefinition";
 import TaskModelDefinition from "./taskmodeldefinition";
 
 export default class HumanTaskImplementationDefinition extends HumanTaskModelElementDefinition {
-    input: ParameterDefinition[];
-    output: ParameterDefinition[];
+    input: ParameterDefinition<HumanTaskModelDefinition>[];
+    output: ParameterDefinition<HumanTaskModelDefinition>[];
     private _taskModel?: TaskModelDefinition;
     constructor(importNode: Element, modelDefinition: HumanTaskModelDefinition, parent?: HumanTaskModelElementDefinition) {
         super(importNode, modelDefinition, parent);

@@ -1,11 +1,11 @@
 import ProcessFile from "@repository/serverfile/processfile";
+import ParameterDefinition from "../contract/parameterdefinition";
 import ModelDefinition from "../modeldefinition";
 import ProcessImplementationDefinition from "./processimplementationdefinition";
-import ParameterDefinition from "../cmmn/contract/parameterdefinition";
 
 export default class ProcessModelDefinition extends ModelDefinition {
-    input: ParameterDefinition[] = [];
-    output: ParameterDefinition[] = [];
+    input: ParameterDefinition<ProcessModelDefinition>[] = [];
+    output: ParameterDefinition<ProcessModelDefinition>[] = [];
     implementation?: ProcessImplementationDefinition;
     /**
      * Imports an XML element and parses it into a in-memory definition structure.
@@ -21,11 +21,11 @@ export default class ProcessModelDefinition extends ModelDefinition {
     }
 
     get inputParameters() {
-        return this.input || [];
+        return this.input;
     }
 
     get outputParameters() {
-        return this.output || [];
+        return this.output;
     }
 
     toXML() {

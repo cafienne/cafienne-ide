@@ -7,7 +7,7 @@ import CMMNDocumentationDefinition from "./cmmndocumentationdefinition";
 import TypeCounter from "./typecounter";
 import ElementDefinition from "./elementdefinition";
 import XMLSerializable from "./xmlserializable";
-import ParameterDefinition from "./cmmn/contract/parameterdefinition";
+import ParameterDefinition from "./contract/parameterdefinition";
 
 /**
  * A ModelDefinition is the base class of a model, such as CaseDefinition, ProcessDefinition, HumanTaskDefinition, CaseFileDefinitionDefinition 
@@ -111,7 +111,7 @@ export default class ModelDefinition extends XMLSerializable {
      * A ModelDefinition must have input parameters.
      * @returns {Array<ParameterDefinition>}
      */
-    get inputParameters(): ParameterDefinition[] {
+    get inputParameters(): ParameterDefinition<ModelDefinition>[] {
         throw new Error('This method must be implemented in ' + this.constructor.name);
     }
 
@@ -119,7 +119,7 @@ export default class ModelDefinition extends XMLSerializable {
      * A ModelDefinition must have output parameters.
      * @returns {Array<ParameterDefinition>}
      */
-    get outputParameters(): ParameterDefinition[] {
+    get outputParameters(): ParameterDefinition<ModelDefinition>[] {
         throw new Error('This method must be implemented in ' + this.constructor.name);
     }
 

@@ -187,7 +187,7 @@ export default class CaseFileItemsEditor {
                     newNode = from.parentNode.createChild(from);
                 } else {
                     // Insert a node at root level
-                    const parentDefinition = this.case.caseDefinition.getCaseFile();
+                    const parentDefinition = this.case.caseDefinition.caseFile;
                     newNode = this.createNode(parentDefinition.createChildDefinition());
                     parentDefinition.insert(newNode.definition, from.definition);
                     newNode.html.insertAfter(from.html);
@@ -196,7 +196,7 @@ export default class CaseFileItemsEditor {
                 newNode = from.createChild();
             }
         } else {
-            newNode = this.createNode(this.case.caseDefinition.getCaseFile().createChildDefinition());
+            newNode = this.createNode(this.case.caseDefinition.caseFile.createChildDefinition());
         }
         this.case.editor.completeUserAction();
         this.selectCFINode(newNode);
@@ -363,7 +363,7 @@ export default class CaseFileItemsEditor {
      * validates this
      */
     validate() {
-        const allCaseFileItems = this.case.caseDefinition.getCaseFile().getDescendants();
+        const allCaseFileItems = this.case.caseDefinition.caseFile.getDescendants();
         if (!allCaseFileItems || allCaseFileItems.length <= 0) {
             this.raiseEditorIssue(this.case, 38, [this.case.name]);
         }

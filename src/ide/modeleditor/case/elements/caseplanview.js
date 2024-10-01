@@ -17,7 +17,7 @@ export default class CasePlanView extends StageView {
      * @param {*} y 
      */
     static create(cs, x = 10, y = 10) {
-        const definition = cs.caseDefinition.getCasePlan();
+        const definition = cs.caseDefinition.casePlan;
         const shape = cs.diagram.createShape(x, y, 800, 500, definition.id);
         return new CasePlanView(cs, definition, shape)
     }

@@ -9,24 +9,31 @@ import CasePlanDefinition from "./caseplan/caseplandefinition";
 import CaseTeamDefinition from "./caseteam/caseteamdefinition";
 import CaseParameterDefinition from "./contract/caseparameterdefinition";
 import StartCaseSchemaDefinition from "./startcaseschemadefinition";
-import ParameterDefinition from "./contract/parameterdefinition";
+import PlanItem from "./caseplan/planitem";
 
 export default class CaseDefinition extends ModelDefinition {
+    private _caseFile?: CaseFileDefinition;
+    private _casePlan?: CasePlanDefinition;
+    private _caseTeam?: CaseTeamDefinition;
+    input: CaseParameterDefinition[];
+    output: CaseParameterDefinition[];
+    annotations: TextAnnotationDefinition[];
+    startCaseSchema: StartCaseSchemaDefinition;
+    defaultExpressionLanguage: string;
+    dimensions?: Dimensions;
     /**
      * Imports an XML element and parses it into a in-memory definition structure.
      * @param {CaseFile} file
      */
-    constructor(file) {
+    constructor(public file: CaseFile) {
         super(file);
-        this.file = file;
         // First run migrations if necessary.
         Migrator.updateXMLElement(this);
-        /** @type {CaseFileDefinition} */
-        this.caseFile = this.parseElement('caseFileModel', CaseFileDefinition);
+        this._caseFile = this.parseElement('caseFileModel', CaseFileDefinition);
         /** @type {CasePlanDefinition} */
-        this.casePlan = this.parseElement('casePlanModel', CasePlanDefinition)
+        this._casePlan = this.parseElement('casePlanModel', CasePlanDefinition)
         /** @type {CaseTeamDefinition} */
-        this.caseTeam = this.parseElement('caseRoles', CaseTeamDefinition);
+        this._caseTeam = this.parseElement('caseRoles', CaseTeamDefinition);
         /** @type {Array<CaseParameterDefinition>} */
         this.input = this.parseElements('input', CaseParameterDefinition);
         /** @type {Array<CaseParameterDefinition>} */
@@ -40,9 +47,9 @@ export default class CaseDefinition extends ModelDefinition {
         return true;
     }
 
-    loadExternalReferences(callback) {
+    loadExternalReferences(callback: () => void) {
         this.resolveExternalDefinition(this.file.name + ".dimensions", definition => {
-            this.dimensions = /** @type {Dimensions} */ (definition);
+            this.dimensions = <Dimensions> definition;
             callback();
         });
     }
@@ -58,47 +65,55 @@ export default class CaseDefinition extends ModelDefinition {
      * @param {Function} constructor
      * @returns {CMMNElementDefinition}
      */
-    getElement(id, constructor = undefined) {
+    getElement<T extends CMMNElementDefinition>(id: string, constructor?: Function): T {
         // Override, just to have a generic type cast
-        return super.getElement(id, constructor);
+        return <T> super.getElement(id, constructor);
     }
 
     get inputParameters() {
-        return this.input.map(p => /** @type {ParameterDefinition} */ (p));
+        return this.input;
     }
 
     get outputParameters() {
-        return this.output.map(p => /** @type {ParameterDefinition} */ (p));
+        return this.output;
+    }
+
+    hasCasePlan() {
+        return this._casePlan !== undefined;
     }
 
     /**
-     * Returns the case plan of this case definition (and creates one with
-     * the specified position if it does not exist)
-     * @returns {CasePlanDefinition}
+     * Returns the case plan of this case definition (and creates one with if it does not exist)
      */
-    getCasePlan() {
-        if (!this.casePlan) {
-            this.casePlan = super.createDefinition(CasePlanDefinition);
+    get casePlan() {
+        if (!this._casePlan) {
+            this._casePlan = super.createDefinition(CasePlanDefinition);
         }
-        return this.casePlan;
+        return this._casePlan;
     }
 
     /**
      * Returns the case file of this case definition (and creates it if it does not exist)
-     * @returns {CaseFileDefinition}
      */
-    getCaseFile() {
-        if (!this.caseFile) {
-            this.caseFile = super.createDefinition(CaseFileDefinition);
-            this.caseFile.id = undefined;
-            this.caseFile.name = undefined;
+    get caseFile() {
+        if (!this._caseFile) {
+            this._caseFile = super.createDefinition(CaseFileDefinition);
+            this._caseFile.id = '';
+            this._caseFile.name = '';
         }
-        return this.caseFile;
+        return this._caseFile;
     }
 
-    parseStartCaseSchema() {
-        const startCaseNode = this.parseExtension(StartCaseSchemaDefinition);
-        return startCaseNode ? startCaseNode.value : '';
+    /**
+     * Returns the case team of this case definition (and creates it if it does not exist)
+     */
+    get caseTeam() {
+        if (!this._caseTeam) {
+            this._caseTeam = super.createDefinition(CaseTeamDefinition);
+            this._caseTeam.id = '';
+            this._caseTeam.name = '';
+        }
+        return this._caseTeam;
     }
 
     /**
@@ -106,21 +121,20 @@ export default class CaseDefinition extends ModelDefinition {
      * @param {String} id 
      */
     createTextAnnotation(id = undefined) {
-        const annotation = super.createDefinition(TextAnnotationDefinition, id);
+        const annotation: TextAnnotationDefinition = super.createDefinition(TextAnnotationDefinition, id);
         this.annotations.push(annotation);
         return annotation;
     }
 
     /**
      * Return all plan items in this stage and its children, including all discretionaries.
-     * @returns {Array<PlanItem>}
      */
-    getAllPlanItems() {
-        return this.getCasePlan().getAllPlanItems();
+    getAllPlanItems(): PlanItem[] {
+        return this.casePlan.getAllPlanItems();
     }
 
     toXML() {
-        const xmlDocument = super.exportModel('case', 'caseFile', 'casePlan', 'caseTeam', 'input', 'output', 'annotations', 'startCaseSchema');
+        const xmlDocument = super.exportModel('case', '_caseFile', '_casePlan', 'caseTeam', 'input', 'output', 'annotations', 'startCaseSchema');
 
         if (this.defaultExpressionLanguage) this.exportNode.setAttribute('expressionLanguage', this.defaultExpressionLanguage);
 

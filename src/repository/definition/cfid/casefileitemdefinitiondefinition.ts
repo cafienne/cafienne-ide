@@ -1,6 +1,5 @@
 import { UNSPECIFIED_URI } from "../../../ide/modeleditor/cfid/casefileitemdefinitioneditor";
 import CFIDFile from "../../serverfile/cfidfile";
-import ParameterDefinition from "../cmmn/contract/parameterdefinition";
 import ModelDefinition from "../modeldefinition";
 import PropertyDefinition from "./propertydefinition";
 
@@ -21,12 +20,12 @@ export default class CaseFileDefinitionDefinition extends ModelDefinition {
         this.properties = this.parseElements('property', PropertyDefinition)
     }
 
-    get inputParameters(): ParameterDefinition[] {
+    get inputParameters() {
         console.warn('Case file has no input/output contract');
         return [];
     }
 
-    get outputParameters(): ParameterDefinition[] {
+    get outputParameters() {
         console.warn('Case file has no input/output contract');
         return [];
     }

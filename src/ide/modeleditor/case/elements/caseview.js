@@ -94,11 +94,9 @@ export default class CaseView {
         this.startCaseEditor = new StartCaseEditor(this);
         this.debugEditor = new Debugger(this);
 
-        const casePlanDefinition = this.caseDefinition.casePlan;
-        if (casePlanDefinition) {
+        if (this.caseDefinition.hasCasePlan()) {
             this.loading = true;
-            this.casePlanModel = new CasePlanView(this, casePlanDefinition, this.diagram.getShape(casePlanDefinition));
-
+            this.casePlanModel = new CasePlanView(this, this.caseDefinition.casePlan, this.diagram.getShape(this.caseDefinition.casePlan));
 
             const getDefinition = shape => {
                 const element = caseDefinition.getElement(shape.cmmnElementRef);
