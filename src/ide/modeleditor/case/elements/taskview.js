@@ -1,12 +1,11 @@
 ﻿import TaskDefinition from "@definition/cmmn/caseplan/task/taskdefinition";
 import ShapeDefinition from "@definition/dimensions/shape";
+import ServerFileDragData from "@ide/dragdrop/serverfiledragdata";
 import ServerFile from "@repository/serverfile/serverfile";
-import { andThen } from "@util/promise/followup";
 import TaskMappingsEditor from "../editors/task/taskmappingseditor";
 import { TaskDecoratorBox } from "./decorator/box/taskdecoratorbox";
 import TaskProperties from "./properties/taskproperties";
 import TaskStageView from "./taskstageview";
-import ServerFileDragData from "@ide/dragdrop/serverfiledragdata";
 // import TaskHalo from "./halo/taskhalo";
 // BIG TODO HERE
 
@@ -91,7 +90,7 @@ export default class TaskView extends TaskStageView {
         if (existingModel) {
             this.definition.implementationRef = existingModel.fileName;
         } else {
-            const fileName = this.case.editor.ide.createNewModel(this.fileType, potentialImplementationName, this.definition.documentation.text, fileName => {
+            this.case.editor.ide.createNewModel(this.fileType, potentialImplementationName, this.definition.documentation.text).then(fileName => {
                 window.location.hash = fileName;
             });
             this.definition.implementationRef = fileName;
@@ -116,7 +115,7 @@ export default class TaskView extends TaskStageView {
         }
 
         // Now, read the file, and update the information in the task parameters.
-        this.case.editor.ide.repository.load(fileName, andThen(file => {
+        this.case.editor.ide.repository.load(fileName).then(file => {
             const model = file !== undefined && file.definition;
             if (!model) {
                 this.case.editor.ide.warning('Could not read the model ' + fileName + ' which is referenced from the task ' + this.name);
@@ -142,7 +141,7 @@ export default class TaskView extends TaskStageView {
             // Now refresh the renderers and optionally the propertiesmenu.
             this.mappingsEditor.refresh();
             this.propertiesView.show(true);
-        }));
+        });
     }
 
     /** @returns {String} */

@@ -1,9 +1,8 @@
 import IDE from "@ide/ide";
 import { CAFIENNE_NAMESPACE, CAFIENNE_PREFIX, IMPLEMENTATION_TAG } from "@repository/definition/xmlserializable";
-import ServerFile from "@repository/serverfile/serverfile";
 import HumanTaskFile from "@repository/serverfile/humantaskfile";
+import ServerFile from "@repository/serverfile/serverfile";
 import Icons from "@util/images/icons";
-import { andThen } from "@util/promise/followup";
 import ModelEditorMetadata from "../modeleditormetadata";
 import HumantaskModelEditor from "./humantaskmodeleditor";
 
@@ -42,10 +41,9 @@ export default class HumantaskModelEditorMetadata extends ModelEditorMetadata {
      * @param {IDE} ide 
      * @param {String} name 
      * @param {String} description 
-     * @param {Function} callback
-     * @returns {String} fileName of the new model
+     * @returns {Promise<String>} fileName of the new model
      */
-    createNewModel(ide, name, description, callback = (/** @type {String} */ fileName) => {}) {
+    async createNewModel(ide, name, description) {
         const newModelContent =
             `<humantask>
                 <${IMPLEMENTATION_TAG} name="${name}" description="${description}" ${CAFIENNE_PREFIX}="${CAFIENNE_NAMESPACE}" class="org.cafienne.cmmn.definition.task.WorkflowTaskDefinition">
@@ -53,7 +51,7 @@ export default class HumantaskModelEditorMetadata extends ModelEditorMetadata {
                 </${IMPLEMENTATION_TAG}>
             </humantask>`;
         const fileName = name + '.humantask';
-        ide.repository.createHumanTaskFile(fileName, newModelContent).save(andThen(() => callback(fileName)));
-        return fileName;
+        const file = ide.repository.createHumanTaskFile(fileName, newModelContent);
+        return file.save().then(() => file.parse()).then(() => fileName);
     }
 }

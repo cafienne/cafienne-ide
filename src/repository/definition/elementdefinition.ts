@@ -98,22 +98,4 @@ export default class ElementDefinition<M extends ModelDefinition> extends XMLSer
     hasExternalReferences() {
         return false;
     }
-
-    loadExternalReferences(callback: Function) {
-        callback();
-    }
-
-    /**
-     * Asynchronously load a ModelDefinition
-     * @param {String} fileName 
-     * @param {(definition: ModelDefinition|undefined) => void} callback
-     */
-    resolveExternalDefinition(fileName: string, callback: (definition: ModelDefinition|undefined) => void) {
-        console.groupCollapsed(`${this.constructor.name}${this.name ? '[' + this.name + ']' : ''} requires '${fileName}'`);
-
-        this.modelDefinition.file.loadReference(fileName, file => {
-            console.groupEnd();
-            callback(file ? file.definition : undefined)
-        });
-    }
 }

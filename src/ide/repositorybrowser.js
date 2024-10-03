@@ -1,12 +1,10 @@
-import { andThen, onFail } from "@util/promise/followup";
+import ServerFile from "@repository/serverfile/serverfile";
 import $ from "jquery";
 import "jquery-ui";
 import ServerFileDragData from "./dragdrop/serverfiledragdata";
 import IDE from "./ide";
 import ModelEditorMetadata from "./modeleditor/modeleditormetadata";
 import ModelListPanel from "./modellistpanel";
-import ServerFile from "@repository/serverfile/serverfile";
-import TaskDefinition from "@repository/definition/cmmn/caseplan/task/taskdefinition";
 
 export default class RepositoryBrowser {
     /**
@@ -57,15 +55,14 @@ export default class RepositoryBrowser {
 
         //set refresh handle on click
         this.html.find('.btnRefresh').on('click', () => {
-            this.repository.listModels(onFail(msg => this.ide.danger(msg)));
-            this.searchBox.val('');
+            this.repository.listModels().then(() => this.searchBox.val('')).catch(message => this.ide.danger(message));
         });
 
         // Add handler for hash changes, that should load the new model
         $(window).on('hashchange', () => this.loadModelFromBrowserLocation());
 
         // Now load the repository contents, and after that optionally load the first model
-        this.repository.listModels(andThen(() => this.loadModelFromBrowserLocation(), msg => this.ide.danger(msg)));
+        this.repository.listModels().then(() => this.loadModelFromBrowserLocation()).catch(msg => this.ide.danger(msg));
 
         ModelEditorMetadata.types.forEach(type => type.init(this));
     }

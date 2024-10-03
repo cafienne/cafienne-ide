@@ -182,6 +182,18 @@ export default class Util {
     static parseJSON(source: any): ParseResult {
         return new ParseResult(source);
     }
+
+    /**
+     * 
+     * @param {(() => Promise<any>)[]} promises 
+     * @returns {Promise<void>}
+     */
+    static async PromiseAllSequential(promises: (() => Promise<any>)[]) {
+        for (let i = 0; i < promises.length; i++) {
+            await promises[i]();
+        }
+
+    }
 }
 
 class ParseResult {

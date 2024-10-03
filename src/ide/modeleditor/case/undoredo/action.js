@@ -1,7 +1,6 @@
 import CaseDefinition from "@definition/cmmn/casedefinition";
-import UndoManager from "./undoredo";
 import XML from "@util/xml";
-import { andThen } from "@util/promise/followup";
+import UndoManager from "./undoredo";
 
 export default class Action {
     /**
@@ -98,13 +97,13 @@ export default class Action {
         this.caseFile.clear();        
         this.caseFile.source = this.caseString;
         this.dimensionsFile.source = this.dimensionsString;
-        this.caseFile.parse(andThen(() => {
+        this.dimensionsFile.parse().then(() => this.caseFile.parse().then(() => {
             this.undoManager.editor.loadDefinition(this.caseFile.definition);
             // Reset the "saved" flag.
             this.saved = false;
             this.save(caseChanged, dimensionsChanged);
             this.undoManager.performingBufferAction = false;
-        }))
+        }));
 
         return this;
     }

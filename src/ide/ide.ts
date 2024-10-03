@@ -74,15 +74,19 @@ export default class IDE {
      * 
      * @returns fileName of the new model
      */
-    createNewModel(modelType: string, newModelName: string, newModelDescription: string, callback: Function): string | undefined {
+    async createNewModel(modelType: string, newModelName: string, newModelDescription: string): Promise<string> {
         const editorMetadata = ModelEditorMetadata.types.find(type => type.modelType == modelType);
         if (!editorMetadata) {
             const msg = 'Cannot create new models of type ' + modelType;
             console.error(msg);
             this.danger(msg);
-            return;
+            return Promise.reject(msg);
+        } else {
+            return editorMetadata.createNewModel(this, newModelName, newModelDescription).then(name => {
+                console.log("Found name " + JSON.stringify(name, undefined, 2))
+                return name;
+            });
         }
-        return editorMetadata.createNewModel(this, newModelName, newModelDescription, callback);
     }
 
     /**

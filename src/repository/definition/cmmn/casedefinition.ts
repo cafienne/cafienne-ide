@@ -47,11 +47,10 @@ export default class CaseDefinition extends ModelDefinition {
         return true;
     }
 
-    loadExternalReferences(callback: () => void) {
-        this.resolveExternalDefinition(this.file.name + ".dimensions", definition => {
-            this.dimensions = <Dimensions> definition;
-            callback();
-        });
+    async loadExternalReferences(): Promise<void> {
+        return this
+            .resolveExternalDefinition<Dimensions>(this.file.name + ".dimensions")
+            .then(definition => { this.dimensions = definition; });
     }
 
     validateDocument() {
@@ -67,7 +66,7 @@ export default class CaseDefinition extends ModelDefinition {
      */
     getElement<T extends CMMNElementDefinition>(id: string, constructor?: Function): T {
         // Override, just to have a generic type cast
-        return <T> super.getElement(id, constructor);
+        return <T>super.getElement(id, constructor);
     }
 
     get inputParameters() {

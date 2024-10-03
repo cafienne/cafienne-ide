@@ -1,5 +1,4 @@
 import ServerFile from "@repository/serverfile/serverfile";
-import { andThen } from "@util/promise/followup";
 import Util from "@util/util";
 import ModelDefinition from "../definition/modeldefinition";
 
@@ -34,21 +33,18 @@ export default class ServerFileReferences<M extends ModelDefinition> {
         return this.all.find(reference => reference === file) !== undefined;
     }
 
-    load<X extends ModelDefinition>(fileName: string, callback: (file: ServerFile<X> | undefined) => void) {
+    async load<X extends ModelDefinition>(fileName: string): Promise<ServerFile<X>> {
         const file = this.files.find(file => file.fileName === fileName);
         if (file) {
             // console.log(this.source.fileName + " requested " + fileName + " and it is already in our list, with definition: " + file.definition)
             // @ts-ignore ==> if you cast to the wrong type, that's really your problem ;)
-            callback(file);
+            return Promise.resolve(file);
         } else {
             // console.log(this.source.fileName + " requested " + fileName + " and need to load it")
-            this.source.repository.load(fileName, andThen(file => {
-                if (file) {
-                    // console.log(this.source.fileName + " requested " + fileName + " and loaded it, with definition " + file.definition)
-                    this.files.push(file);
-                }
-                callback(file);
-            }));
+            return <Promise<ServerFile<X>>> this.source.repository.load(fileName).then(file => {
+                this.files.push(file);
+                return file;
+            });
         }
     }
 }
