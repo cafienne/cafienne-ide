@@ -2,6 +2,7 @@ import Util from "@util/util";
 import XML from "@util/xml";
 import ElementDefinition from "./elementdefinition";
 import ModelDefinition from "./modeldefinition";
+import ServerFile from "@repository/serverfile/serverfile";
 
 // Some constants
 export const EXTENSIONELEMENTS = 'extensionElements';
@@ -307,16 +308,21 @@ export default class XMLSerializable {
         return false;
     }
 
+    async loadExternalReferences(): Promise<void> {
+        return Promise.resolve();
+    }
+
     /**
      * Asynchronously load a ModelDefinition
      */
-    resolveExternalDefinition(fileName: string, callback: (definition: ModelDefinition|undefined) => void) {
+    async resolveExternalDefinition<X extends ModelDefinition>(fileName: string): Promise<X> {
         console.groupCollapsed(`${this.constructor.name}${this.name ? '[' + this.name + ']' : ''} requires '${fileName}'`);
 
-        (this as any).modelDefinition.file.loadReference(fileName, (file: any) => {
-            console.groupEnd();
-            callback(file ? file.definition : undefined)
-        });
+        const file = await (<ServerFile<X>>(this as any).modelDefinition.file).loadReference(fileName);
+
+        console.groupEnd();
+        // console.log("Loaded reference " + file.fileName +" with definition " + file.definition)
+        return <X>file.definition;
     }
 
     /**

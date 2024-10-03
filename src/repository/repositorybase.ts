@@ -1,16 +1,23 @@
-import Followup from "@util/promise/followup";
-import ServerFile from "./serverfile/serverfile";
-import Metadata from "./serverfile/metadata";
 import ModelDefinition from "./definition/modeldefinition";
+import Metadata from "./serverfile/metadata";
+import ServerFile from "./serverfile/serverfile";
 
 export default class RepositoryBase {
     public list: Array<ServerFile<ModelDefinition>> = [];
 
     isExistingModel(fileName: string): boolean {
-        return false;
+        throw new Error('This method must be implemented in ' + this.constructor.name);
     }
 
-    updateFileList(newServerFileList: Array<Metadata>, then: Followup = Followup.None) {}
+    updateMetadata(newServerFileList: Array<Metadata>) {
+        throw new Error('This method must be implemented in ' + this.constructor.name);
+    }
 
-    load(fileName: string, then: Followup = Followup.None) {}
+    async updateFileList(newServerFileList: Array<Metadata>): Promise<void> {
+        throw new Error('This method must be implemented in ' + this.constructor.name);
+    }
+
+    async load<X extends ModelDefinition>(fileName: string): Promise<ServerFile<X>> {
+        throw new Error('This method must be implemented in ' + this.constructor.name);
+    }
 }

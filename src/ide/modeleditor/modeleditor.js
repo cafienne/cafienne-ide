@@ -1,9 +1,8 @@
 ﻿import ServerFile from "@repository/serverfile/serverfile";
+import Util from "@util/util";
+import $ from "jquery";
 import MovableEditor from "../editors/movableeditor";
 import IDE from "../ide";
-import Util from "@util/util";
-import { andThen } from "@util/promise/followup";
-import $ from "jquery";
 
 export default class ModelEditor {
     /**
@@ -240,13 +239,13 @@ export default class ModelEditor {
         Util.removeFromArray(this.ide.editorRegistry.editors, this);
     }
 
-    refresh() {
+    async refresh() {
         console.groupCollapsed(`Reloading editor of ${this.file.fileName}`);
-        this.file.reload(andThen(() => {
+        await this.file.reload().then(() => {
             console.groupEnd();
             this.loadModel();
-        }, error => {
-            this.ide.warning(error)
-        }));
+        }).catch(error => {
+            this.ide.warning(error);
+        });
     }
 }

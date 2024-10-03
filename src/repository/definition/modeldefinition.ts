@@ -1,13 +1,11 @@
-import { andThen } from "@util/promise/followup";
-import SequentialFollowupList from "@util/promise/sequentialfollowuplist";
 import Util from "@util/util";
 import XML from "@util/xml";
 import ServerFile from "../serverfile/serverfile";
 import CMMNDocumentationDefinition from "./cmmndocumentationdefinition";
-import TypeCounter from "./typecounter";
-import ElementDefinition from "./elementdefinition";
-import XMLSerializable from "./xmlserializable";
 import ParameterDefinition from "./contract/parameterdefinition";
+import ElementDefinition from "./elementdefinition";
+import TypeCounter from "./typecounter";
+import XMLSerializable from "./xmlserializable";
 
 /**
  * A ModelDefinition is the base class of a model, such as CaseDefinition, ProcessDefinition, HumanTaskDefinition, CaseFileDefinitionDefinition 
@@ -87,24 +85,24 @@ export default class ModelDefinition extends XMLSerializable {
 
     /**
      * Asynchronously load all external references that this definition has.
-     * @param {() => void} callback 
      */
-    loadDependencies(callback: () => void) {
+    async loadDependencies(): Promise<void> {
         const referencingElements = this.elements.filter(element => element.hasExternalReferences());
         Util.removeDuplicates(referencingElements);
         if (referencingElements.length === 0) {
-            callback();
-            return;
+            return Promise.resolve();
         }
-        console.groupCollapsed("Loading dependencies of " + this.file.fileName);
+        console.groupCollapsed(`Loading ${referencingElements.length} dependencies inside ${this.file.fileName}`);
+       
         console.log(`${this.file.fileName} has ${referencingElements.length} elements with external dependencies (out of ${this.elements.length} elements)`);
-        const todo = new SequentialFollowupList(andThen(() => {
-            // console.log(`${this.file.fileName} completed dependencies`);
-            console.groupEnd();
-            callback();
-        }));
-        referencingElements.forEach(element => todo.add(callback => element.loadExternalReferences(callback)));
-        todo.run();
+        // Load the underlying dependencies one after the other, just to have it a bit more predictable when an error happens.
+        await Util.PromiseAllSequential(referencingElements.map(element => () => element.loadExternalReferences()))
+        console.groupEnd();
+        
+        // return Promise.all(referencingElements.map(element => element.loadExternalReferences())).then(() => {
+        //     console.log(`${this.file.fileName} completed dependencies`);
+        //     console.groupEnd();
+        // });
     }
 
     /**

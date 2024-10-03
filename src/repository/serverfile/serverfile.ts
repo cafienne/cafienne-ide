@@ -1,4 +1,3 @@
-import Followup, { andThen } from "@util/promise/followup";
 import Util from "@util/util";
 import XML from "@util/xml";
 import $ from "jquery";
@@ -73,6 +72,7 @@ export default class ServerFile<M extends ModelDefinition> {
                 this.lastModified = serverMetadata.lastModified;
             }
         } else {
+            console.log("Clearing contents of " + this.fileName +", since server indicates there is new content")
             this.clear();
         }
         if (serverMetadata.serverContent) {
@@ -147,10 +147,10 @@ export default class ServerFile<M extends ModelDefinition> {
     /**
      * Loads the data of file, and invokes the callback there-after.
      */
-    fetch(then: Followup) {
+    async fetch(): Promise<ServerFile<M>> {
         if (this.source) {
-            then.next(this);
-            return;
+            // console.log("We have a source here, no need to further fetch ")
+            return Promise.resolve(this);
         }
 
         const url = '/repository/load/' + this.fileName;
@@ -160,63 +160,65 @@ export default class ServerFile<M extends ModelDefinition> {
         // Simple method for easy checking whether the functionality is still working ...
         // this.usage();
 
-        $.ajax({
-            url, type,
-            success: (data, status, xhr) => {
-                if (xhr.responseText == '') {
-                    const msg = this.fileName + ' does not exist or is an empty file in the repository';
-                    console.warn(msg);
-                } else {
-                    this.source = data;
-                    // console.log(`Parsing ${this.fileName} during fetch`)
-                    this.parse(then);
+        return new Promise((resolve, reject) => {
+            return $ajax({
+                type,
+                url,
+            }).then(
+                ({ data, status, xhr }) => {
+                    if (xhr.responseText == '') {
+                        const msg = this.fileName + ' does not exist or is an empty file in the repository';
+                        console.warn(msg);
+                        // we could reject?
+                    } else {
+                        console.log(`Fetched ${this.fileName}, calling resolve`, data)
+                        resolve(data);
+                    }
+                },
+                ({ xhr, status, errorThrown }) => {
+                    console.warn('Could not open ' + url, errorThrown)
+                    // Cut the error message short.
+                    const str = ('' + errorThrown).split('\n')[0];
+                    reject(str);
                 }
-            },
-            error: (xhr, error, eThrown) => {
-                console.warn('Could not open ' + url, eThrown)
-                // Cut the error message short.
-                const str = ('' + eThrown).split('\n')[0];
-                then.fail(str);
-            }
+            );
+        }).then(data => this.source = data).then(() => this.parse()).then(() => {
+            console.log(`Parse ${this.fileName} is done, calling then.run`)
+            return this;
         });
     }
 
     /**
      * Parse the document and "then" callback
-     * @param {Followup} then The next action that will be triggered after parsing completed
      */
-    parse(then: Followup) {
+    async parse(): Promise<ServerFile<M>> {
         // console.groupEnd();
         // console.log("Parsing " + this.fileName);
-
         if (!this.source) {
             console.warn("No source content to parse")
-            return;
+            return Promise.resolve(this);
         }
         if (!this.xml) {
             // There is no xml definition available to parse ...
             if (this.metadata) this.metadata.error = 'This file does not contain a valid XML document to parse';
-            then.run(this);
-            return;
+            return this;
         }
         const definition = this.createModelDefinition();
         this._definition = definition;
         definition.validateDocument();
-        if (this.definition && this.definition.hasMigrated()) {
-            console.log(`${this.definition.constructor.name} of '${this.fileName}' has migrated; uploading result`);
-            this.source = this.definition.toXML();
-            this.save(andThen(() => {
-                definition.loadDependencies(() => {
-                    // console.log("File["+file.fileName+"].definition: " + file.definition);
-                    this.validateDefinition();
-                    then.run(this);
-                });
-            }));
-        } else {
-            definition.loadDependencies(() => {
+        if (definition.hasMigrated()) {
+            console.log(`${definition.constructor.name} of '${this.fileName}' has migrated; uploading result`);
+            this.source = definition.toXML();
+            return this.save().then(definition.loadDependencies).then(() => {
                 // console.log("File["+file.fileName+"].definition: " + file.definition);
                 this.validateDefinition();
-                then.run(this);
+                return this;
+            });
+        } else {
+            return definition.loadDependencies().then(() => {
+                // console.log("File["+file.fileName+"].definition: " + file.definition);
+                this.validateDefinition();
+                return this;
             });
         }
     }
@@ -231,34 +233,31 @@ export default class ServerFile<M extends ModelDefinition> {
     /**
      * Load the file and parse it.
      * If the source of the file is not present, then it will be fetched from the server.
-     * @param {Followup} then The next action that will be triggered after the file loaded (and optionally was parsed)
      */
-    load(then = Followup.None) {
-        this.fetch(andThen(_ => {
+    async load(): Promise<ServerFile<M>> {
+        return this.fetch().then(() => {
             if (!this.definition) {
                 // console.log(`Parsing ${this.fileName} upon loading`)
-                this.parse(andThen(file => then.run(file)));
+                return this.parse();
             } else {
-                then.run(this);
+                return this;
             }
-        }));
+        });
     }
 
     /**
      * Clear the contents of the file and load it again from the server.
-     * @param {Followup} then The next action that will be triggered after the file reloaded
      */
-    reload(then = Followup.None) {
+    async reload() {
         this.clear();
-        this.load(then);
+        return this.load();
     }
 
     /**
      * Uploads the XML content to the server, and invokes the callback after it.
      * Uploading to server gives also a new file list back, which we use to update the repository contents.
-     * @param {Followup} then The next action that will be triggered after the file got saved
      */
-    save(then = Followup.None) {
+    async save() {
         if (!this.repository.isExistingModel(this.fileName)) { // temporary hack (i hope). creation should take care of this, instead of saving.
             this.repository.list.push(this);
         }
@@ -266,88 +265,76 @@ export default class ServerFile<M extends ModelDefinition> {
         const xmlString = XML.prettyPrint(this.source);
         const url = '/repository/save/' + this.fileName;
         const type = 'post';
-        $.ajax({
+        console.groupCollapsed('Saving ' + this.fileName);
+        return $ajax({
             url, data: xmlString, type,
-            headers: { 'content-type': 'application/xml' },
-            success: (data, status, xhr) => {
-                this.hasBeenSavedJustNow = true;
-                this.repository.updateFileList(data, andThen(() => {
-                    this.hasBeenSavedJustNow = false;
-                    // Also print a timestampe of the new last modified information
-                    const lmDate = new Date(this.lastModified);
-                    const HHmmss = lmDate.toTimeString().substring(0, 8);
-                    const millis = ('000' + lmDate.getMilliseconds()).substr(-3);
-                    console.log('Uploaded ' + this.fileName + ' at ' + HHmmss + ':' + millis);
-
-                    then.run(data, status, xhr);
-                }));
-            },
-            error: (xhr, error, eThrown) => {
-                const msg = 'We could not save your work due to an error in the server. Please refresh the browser and make sure the server is up and running';
-                console.error(msg);
-                then.fail(msg);
-            }
+            headers: { 'content-type': 'application/xml' }
+        }).then(({ data, status, xhr }) => {
+            this.hasBeenSavedJustNow = true;
+            this.repository.updateMetadata(data);
+            this.hasBeenSavedJustNow = false;
+            // Also print a timestampe of the new last modified information
+            const lmDate = new Date(this.lastModified);
+            const HHmmss = lmDate.toTimeString().substring(0, 8);
+            const millis = ('000' + lmDate.getMilliseconds()).substr(-3);
+            console.log('Uploaded ' + this.fileName + ' at ' + HHmmss + ':' + millis);
+            console.groupEnd();
+            return { data, status, xhr };
+        }).catch(({ xhr, status, errorThrown }) => {
+            console.groupEnd();
+            const msg = 'We could not save your work due to an error in the server. Please refresh the browser and make sure the server is up and running';
+            console.error(msg, errorThrown);
+            throw msg;
         });
     }
 
     /**
      * Gives this file a new name
-     * @param {String} newName the new name for the file
-     * @param {Followup} then The next action that will be triggered after the file was renamed
+     * @param newName the new name for the file
      */
-    rename(newName: string, then = Followup.None) {
+    async rename(newName: string) {
         const oldName = this.fileName;
         const url = `/repository/rename/${oldName}?newName=${newName}`;
         const type = 'put';
-        $.ajax({
-            url, type,
-            success: (data, status, xhr) => {
-                this.hasBeenSavedJustNow = true;
-                this.fileName = newName;
-                this.repository.updateFileList(data, andThen(() => {
-                    this.hasBeenSavedJustNow = false;
-                    // Also print a timestampe of the new last modified information
-                    const lmDate = new Date(this.lastModified);
-                    const HHmmss = lmDate.toTimeString().substring(0, 8);
-                    const millis = ('000' + lmDate.getMilliseconds()).substr(-3);
+        return $ajax({
+            url, type
+        }).then(({ data, status, xhr }) => {
+            this.hasBeenSavedJustNow = true;
+            this.fileName = newName;
+            this.repository.updateMetadata(data);
+            this.hasBeenSavedJustNow = false;
+            // Also print a timestampe of the new last modified information
+            const lmDate = new Date(this.lastModified);
+            const HHmmss = lmDate.toTimeString().substring(0, 8);
+            const millis = ('000' + lmDate.getMilliseconds()).substr(-3);
 
-                    console.log(`Renamed ${oldName} to ${newName} at ${HHmmss}:${millis}`);
-                    then.run(data, status, xhr);
-                }));
-            },
-            error: (xhr, error, eThrown) => {
-                then.fail('We could not rename the file: ' + error);
-            }
+            console.log(`Renamed ${oldName} to ${newName} at ${HHmmss}:${millis}`);
+            return this;
+        }).catch(({ xhr, status, errorThrown }) => {
+            console.error(errorThrown);
+            throw new Error('We could not rename the file: ' + status)
         });
     }
 
     /**
      * Delete the file
-     * @param {Followup} then The next action that will be triggered after the file was deleted
      */
-    delete(then = Followup.None) {
+    async delete() {
         const url = '/repository/delete/' + this.fileName;
         const type = 'delete';
-        $.ajax({
-            url, type,
-            success: (data, status, xhr) => {
-                Util.removeFromArray(this.repository.list, this);
-                this.repository.updateFileList(data, andThen(() => {
-                    console.log('Deleted ' + this.fileName);
-                    then.run(data, status, xhr);
-                }));
-            },
-            error: (xhr, error, eThrown) => {
-                then.fail('Failure while deleting file ' + this.fileName + ': ' + error);
-            }
+        return $ajax({ url, type }).then(({ data, status, xhr }) => {
+            Util.removeFromArray(this.repository.list, this);
+            this.repository.updateMetadata(data);
+            console.log('Deleted ' + this.fileName);
         });
     }
 
     /**
      * Loads the references and calls back with the reference, to the type the caller of this function expects
      */
-    loadReference<X extends ModelDefinition>(fileName: string, callback: (file: ServerFile<X> | undefined) => void) {
-        this.references.load(fileName, callback);
+    async loadReference<X extends ModelDefinition>(fileName: string): Promise<ServerFile<X>> {
+        console.log("Loading reference " + fileName)
+        return this.references.load(fileName);
     }
 
     /**
@@ -356,4 +343,18 @@ export default class ServerFile<M extends ModelDefinition> {
     usedBy() {
         return Util.removeDuplicates(this.repository.list.filter(file => file.references.contains(this)));
     }
+}
+
+type JQueryResponse = {
+    xhr: JQuery.jqXHR,
+    data: any,
+    status: string
+}
+
+export function $ajax(settings: JQueryAjaxSettings): Promise<JQueryResponse> {
+    return new Promise<JQueryResponse>((resolve, reject) => $.ajax(settings).then((data, status, xhr) => resolve({ data, xhr, status }), (xhr, status, errorThrown) => {
+        console.log("Rejecting ", settings);
+        console.error(errorThrown)
+        reject({ xhr, status, errorThrown });
+    }));
 }

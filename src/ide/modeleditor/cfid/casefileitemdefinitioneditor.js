@@ -1,6 +1,6 @@
 ﻿import CaseFileDefinitionDefinition from "@repository/definition/cfid/casefileitemdefinitiondefinition";
-import { andThen } from "@util/promise/followup";
 import XML from "@util/xml";
+import $ from "jquery";
 import CaseFileItemsEditor from "../case/editors/casefileitemseditor";
 import CFIDefinitionUnknown from "./cfidefinitionunknown";
 import CFIDefinitionUnspecified from "./cfidefinitionunspecified";
@@ -14,7 +14,6 @@ export const XMLELEMENT_URI = 'http://www.omg.org/spec/CMMN/DefinitionType/XSDEl
 
 export const UNKNOWN = 'Unknown';
 export const UNKNOWN_URI = 'http://www.omg.org/spec/CMMN/DefinitionType/Unknown';
-import $ from "jquery";
 
 export default class CaseFileItemDefinitionEditor {
     /** 
@@ -145,7 +144,7 @@ export default class CaseFileItemDefinitionEditor {
     /**
      * shows the cfi definition editor for the passed activeNode from the cfi editor
      */
-    showEditor(definitionRef, isNew) {
+    async showEditor(definitionRef, isNew) {
         // Make us visible
         this.html.css('display', 'block');
 
@@ -163,10 +162,10 @@ export default class CaseFileItemDefinitionEditor {
             const newFile = this.ide.repository.createCFIDFile(definitionRef);
             newFile.source = XML.loadXMLString(`<caseFileItemDefinition name="${newFile.name}" definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified" />`);
             // Save and then render.
-            newFile.save(andThen(() => this.renderDefinition(newFile.definition)));
+            newFile.save().then(() => this.renderDefinition(newFile.definition));
         } else {
             // Read it from the repository, and only render upon callback.
-            this.ide.repository.load(definitionRef, andThen(file => this.renderDefinition(file.definition)));
+            await this.ide.repository.load(definitionRef).then(file => this.renderDefinition(file.definition));
         }
     }
 

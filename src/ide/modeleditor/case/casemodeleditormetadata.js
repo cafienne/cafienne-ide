@@ -2,7 +2,6 @@ import IDE from "@ide/ide";
 import Tags from "@repository/definition/dimensions/tags";
 import CaseFile from "@repository/serverfile/casefile";
 import Icons from "@util/images/icons";
-import { andThen } from "@util/promise/followup";
 import Util from "@util/util";
 import ModelEditorMetadata from "../modeleditormetadata";
 import CaseModelEditor from "./casemodeleditor";
@@ -43,10 +42,9 @@ export default class CaseModelEditorMetadata extends ModelEditorMetadata {
      * @param {IDE} ide
      * @param {String} name The user entered case name
      * @param {String} description The description given by the user (can be empty)
-     * @param {Function} callback 
-     * @returns {String} fileName of the new model
+     * @returns {Promise<String>} fileName of the new model
      */
-    createNewModel(ide, name, description, callback = (/** @type {String} */ fileName) => {}) {
+    async createNewModel(ide, name, description) {
         // By default we create a case plan that fills the whole canvas size;
         //  We position it left and top at 2 times the grid size, with a minimum of 10px;
         //  Width and height have to be adjusted for scrollbar size.
@@ -86,7 +84,6 @@ export default class CaseModelEditorMetadata extends ModelEditorMetadata {
         // Upload models to server, and call back
         const caseFile = this.ide.repository.createCaseFile(caseFileName, caseString);
         const dimensionsFile = this.ide.repository.createDimensionsFile(dimensionsFileName, dimensionsString);
-        dimensionsFile.save(andThen(() => caseFile.save(andThen(() => callback(caseFileName)))));
-        return caseFileName;
+        return dimensionsFile.save().then(() => caseFile.save()).then(() => caseFile.parse()).then(() => caseFileName);
     }
 }

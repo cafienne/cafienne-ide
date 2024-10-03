@@ -1,17 +1,14 @@
-import Followup, { andThen } from "@util/promise/followup";
-import FollowupList from "@util/promise/followuplist";
 import Util from "@util/util";
 import XML from "@util/xml";
-import Metadata from "./serverfile/metadata";
-import ServerFile from "./serverfile/serverfile";
+import ModelDefinition from "./definition/modeldefinition";
+import RepositoryBase from "./repositorybase";
 import CaseFile from "./serverfile/casefile";
 import CFIDFile from "./serverfile/cfidfile";
 import DimensionsFile from "./serverfile/dimensionsfile";
 import HumanTaskFile from "./serverfile/humantaskfile";
+import Metadata from "./serverfile/metadata";
 import ProcessFile from "./serverfile/processfile";
-import $ from "jquery";
-import RepositoryBase from "./repositorybase";
-import ModelDefinition from "./definition/modeldefinition";
+import ServerFile, { $ajax } from "./serverfile/serverfile";
 
 export default class Repository extends RepositoryBase {
     listeners: (() => void)[] = [];
@@ -127,17 +124,17 @@ export default class Repository extends RepositoryBase {
      * Invokes the backend to return a new copy of the list of models.
      * Optional callback that will be invoked after model list has been retrieved
      */
-    listModels(then = Followup.None) {
-        $.ajax({
+    async listModels() {
+        return $ajax({
             url: '/repository/list',
-            type: 'get',
-            success: (data, status, xhr) => {
-                this.updateFileList(data.map(Metadata.from), then);
-            },
-            error: (xhr, error, eThrown) => {
-                console.error('Could not list the repository contents', eThrown);
-                then.fail('Could not fetch the list of models: ' + error);
-            }
+            type: 'get'
+        }).then(({ data, status, xhr }) => {
+            return this.updateFileList(data.map(Metadata.from)).catch(error => 
+                console.log("Issue here ", error)
+            );
+        }).catch(({ xhr, status, errorThrown }) => {
+            console.error('Could not list the repository contents', errorThrown);
+            throw 'Could not fetch the list of models: ' + status;
         });
     }
 
@@ -157,29 +154,17 @@ export default class Repository extends RepositoryBase {
         }
     }
 
-    /**
-     * Updates the cache with the most recent 'lastModified' information from the server.
-     * This includes a full list of the filenames of all models in the server, as well as the lastModified timestamp
-     * of each file in the server. Based on this, the locally cached contents is removed if it is stale.
-     */
-    updateFileList(newServerFileList: Metadata[], then = Followup.None) {
-        console.groupCollapsed("Loading repository contents");
+    updateMetadata(newServerFileList: Array<Metadata>) {
+        console.groupCollapsed("Updating repository metadata");
         // Make a copy of the old list, to be able to clean up old models afterwards;
         const oldList = this.list;
-
-        const todo = new FollowupList(andThen(() => {
-            // After refreshing and parsing, invoke any repository listeners about the new list.
-            this.listeners.forEach(listener => listener());
-            console.groupEnd();
-            then.run();
-        }));
-
         // Map the new server list into a list of structured objects. Also re-use existing objects as much as possible.
         this.list = newServerFileList.map(fileMetadata => {
             const fileName = fileMetadata.fileName;
             const existingServerFile = oldList.find(file => file.fileName == fileName);
             if (!existingServerFile) {
                 const newFile = this.create(fileName);
+                console.log("Adding new server file " + fileName);
                 if (newFile) {
                     newFile.refreshMetadata(fileMetadata);
                     return newFile;
@@ -193,23 +178,40 @@ export default class Repository extends RepositoryBase {
         // Inform elements still in old list about their deletion.
         oldList.forEach(serverFile => serverFile.deprecate());
 
+        console.log("Informing " + this.listeners.length +" listeners about the new metadata")
+        this.listeners.forEach(listener => listener());
+        console.groupEnd();
+    }
+
+    /**
+     * Updates the cache with the most recent 'lastModified' information from the server.
+     * This includes a full list of the filenames of all models in the server, as well as the lastModified timestamp
+     * of each file in the server. Based on this, the locally cached contents is removed if it is stale.
+     */
+    async updateFileList(newServerFileList: Array<Metadata>): Promise<void> {
+        console.groupCollapsed("Loading repository contents");
+        this.updateMetadata(newServerFileList);
         // Now parse all files in the list
-        todo.run(this.list.sort((f1, f2) => f2 instanceof CaseFile ? 1 : -1).map(file => (callback => {
-            if (file.definition) callback();
-            else {
+        const filesToParse = this.list.sort((f1, f2) => f2 instanceof CaseFile ? 1 : -1);
+        // console.log("Found " + filesToParse.length +" files to be parsed:\n- ", filesToParse.map(file => file.fileName).join('\n- '))
+        for (let i = 0; i<filesToParse.length; i++) {
+            const file = filesToParse[i];
+            if (! file.definition) {
                 // console.log("Starting parse of " + file.fileName)
-                file.parse(andThen(() => {
-                    // console.log("Completed parsing " + file.fileName)
-                    callback();
-                }));
+                await file.parse()//.then(() => console.log("Completed parsing " + file.fileName));
             }
-        })));
+        }
+    
+        // After refreshing and parsing, invoke any repository listeners about the new list.
+        this.listeners.forEach(listener => listener());
+        console.groupEnd();
     }
 
     /**
      * Save xml file and upload to server
+     * @deprecated
      */
-    saveXMLFile(fileName: string, xml: Document | string, then = Followup.None) {
+    async saveXMLFile(fileName: string, xml: Document | string) {
         if (!this.isExistingModel(fileName)) { // temporary hack (i hope). creation should take care of this, instead of saving.
             const file = this.create(fileName);
             if (file) this.list.push(file);
@@ -218,14 +220,14 @@ export default class Repository extends RepositoryBase {
         if (serverFile) {
             const data = xml instanceof String ? xml : XML.prettyPrint(xml);
             serverFile.source = data;
-            serverFile.save(then);    
+            return serverFile.save();
         }
     }
 
     /**
      * Rename file and update all references to file on server and invoke the callback upon successful completion
      */
-    rename(fileName: string, newFileName: string, then = Followup.None) {
+    async rename(fileName: string, newFileName: string) {
         newFileName = newFileName.split(' ').join('');
         const serverFile = this.get(fileName);
         if (!serverFile) {
@@ -236,14 +238,14 @@ export default class Repository extends RepositoryBase {
             console.log(`Cannot rename ${fileName} to ${newFileName} as that name already exists`);
         } else {
             console.log(`Renaming '${fileName}' to '${newFileName}'`);
-            serverFile.rename(newFileName, then);
+            return serverFile.rename(newFileName);
         }
     }
 
     /**
      * Delete file and invoke the callback upon successful completion
      */
-    delete(fileName: string, andThen = Followup.None) {
+    async delete(fileName: string) {
         console.log(`Requesting to delete [${fileName}]`);
         const serverFile = this.get(fileName);
         if (!serverFile) {
@@ -251,7 +253,7 @@ export default class Repository extends RepositoryBase {
         } else {
             //TODO: Check for usage in other models
             console.log(`Deleting ${fileName}`)
-            serverFile.delete(andThen);
+            return serverFile.delete();
         }
     }
 
@@ -263,13 +265,13 @@ export default class Repository extends RepositoryBase {
      * Loads the file from the repository and invoke the callback upon successful completion.
      * If the file does not exist, it will invoke the callback with undefined.
      */
-    load(fileName: string, then: Followup) {
-        const serverFile = this.get(fileName);
+    async load<X extends ModelDefinition>(fileName: string): Promise<ServerFile<X>> {
+        const serverFile: ServerFile<X> = <ServerFile<X>>this.get(fileName);
         if (serverFile) {
-            serverFile.load(then);
+            return <Promise<ServerFile<X>>>serverFile.load();
         } else {
             console.warn(`File ${fileName} does not exist and cannot be loaded`);
-            then.run(undefined);
+            throw new Error(`File ${fileName} does not exist and cannot be loaded`);
         }
     }
 }

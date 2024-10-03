@@ -1,12 +1,10 @@
 import ServerFile from "@repository/serverfile/serverfile";
 import Util from "@util/util";
-import ModelEditorMetadata from "./modeleditor/modeleditormetadata";
-import RepositoryBrowser from "./repositorybrowser";
-import ModelEditor from "./modeleditor/modeleditor";
-import CreateNewModelDialog from "./createnewmodeldialog";
-import { andThen } from "@util/promise/followup";
 import $ from "jquery";
 import "jquery-ui";
+import CreateNewModelDialog from "./createnewmodeldialog";
+import ModelEditorMetadata from "./modeleditor/modeleditormetadata";
+import RepositoryBrowser from "./repositorybrowser";
 
 export default class ModelListPanel {
     /**
@@ -92,17 +90,17 @@ export default class ModelListPanel {
             const text = `Are you sure you want to delete '${file.fileName}'?`;
             if (confirm(text) === true) {
                 const editorCloser = () => this.ide.editorRegistry.remove(file.fileName);
-                this.ide.repository.delete(file.fileName, andThen(() => {
+                this.ide.repository.delete(file.fileName).then(() => {
                     if (file.fileType === 'case') {
                         // When we delete a .case model we also need to delete the .dimensions
-                        this.ide.repository.delete(file.name + '.dimensions', andThen(() => this.ide.editorRegistry.remove(file.fileName)));
+                        this.ide.repository.delete(file.name + '.dimensions').then(() => this.ide.editorRegistry.remove(file.fileName));
                     } else {
                         // Tell editor registry to remove any editors for this file.
                         this.ide.editorRegistry.remove(file.fileName);
                     }
-                }, msg => {
+                }).catch(msg => {
                     this.ide.danger(msg);
-                }));
+                });
             }
         }
     }
@@ -150,16 +148,16 @@ export default class ModelListPanel {
                             }
                         }
                     };
-                    this.ide.repository.rename(file.fileName, newFileName, andThen(() => {
+                    this.ide.repository.rename(file.fileName, newFileName).then(() => {
                         if (file.fileType == 'case') {
                             // when a .case file is renamed also the .dimensions file will be renamed
                             const oldDimensionsFileName = oldName + '.dimensions';
                             const newDimensionsFileName = newName + '.dimensions';
-                            this.ide.repository.rename(oldDimensionsFileName, newDimensionsFileName, andThen(locationResetter));
+                            this.ide.repository.rename(oldDimensionsFileName, newDimensionsFileName).then(locationResetter);
                         } else {
                             locationResetter();
                         }
-                    }));
+                    });
                 }
             }
         }
@@ -195,7 +193,7 @@ export default class ModelListPanel {
                     return;
                 }
 
-                this.ide.createNewModel(filetype, newModelName, newModelDescription, fileName => {
+                this.ide.createNewModel(filetype, newModelName, newModelDescription).then(fileName => {
                     window.location.hash = fileName;
                 });
             };

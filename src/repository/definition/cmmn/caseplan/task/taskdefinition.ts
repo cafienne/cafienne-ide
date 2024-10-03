@@ -1,13 +1,13 @@
+import ModelDefinition from "@repository/definition/modeldefinition";
 import Util from "@util/util";
+import ParameterDefinition from "../../../contract/parameterdefinition";
+import CaseDefinition from "../../casedefinition";
 import InputMappingDefinition from "../../contract/inputmappingdefinition";
 import OutputMappingDefinition from "../../contract/outputmappingdefinition";
-import ParameterDefinition from "../../../contract/parameterdefinition";
 import ParameterMappingDefinition from "../../contract/parametermappingdefinition";
 import { TaskStageDefinition } from "../planitem";
-import ModelDefinition from "@repository/definition/modeldefinition";
-import TaskParameterDefinition from "./taskparameterdefinition";
-import CaseDefinition from "../../casedefinition";
 import StageDefinition from "../stagedefinition";
+import TaskParameterDefinition from "./taskparameterdefinition";
 
 export default class TaskDefinition extends TaskStageDefinition {
     isBlocking: boolean = true;
@@ -69,13 +69,8 @@ export default class TaskDefinition extends TaskStageDefinition {
         return this.implementationRef !== undefined && this.implementationRef !== '';
     }
 
-    loadExternalReferences(callback: Function) {
-        this.resolveExternalDefinition(this.implementationRef, definition => {
-            if (definition) {
-                this.setImplementation(this.implementationRef, definition);
-            }
-            callback();
-        });
+    async loadExternalReferences() {
+        return this.resolveExternalDefinition(this.implementationRef).then(definition => { this.setImplementation(this.implementationRef, definition) });
     }
 
     /**
