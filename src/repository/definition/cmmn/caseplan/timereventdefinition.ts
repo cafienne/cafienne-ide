@@ -1,13 +1,19 @@
+import CaseDefinition from "../casedefinition";
 import ExpressionDefinition from "../expression/expressiondefinition";
 import OnPartDefinition from "../sentry/onpartdefinition";
 import EventListenerDefinition from "./eventlistenerdefinition";
+import { TaskStageDefinition } from "./planitem";
+import PlanningTableDefinition from "./planningtabledefinition";
 
 export default class TimerEventDefinition extends EventListenerDefinition {
+    timerExpression?: ExpressionDefinition;
+    planItemStartTrigger?: PlanItemStartTrigger;
+    caseFileItemStartTrigger?: CaseFileItemStartTrigger;
     static get infix() {
         return 'tmr';
     }
 
-    constructor(importNode, caseDefinition, parent) {
+    constructor(importNode: Element, caseDefinition: CaseDefinition, public parent: TaskStageDefinition | PlanningTableDefinition) {
         super(importNode, caseDefinition, parent);
         this.timerExpression = this.parseElement('timerExpression', ExpressionDefinition);
         this.planItemStartTrigger = this.parseElement('planItemStartTrigger', PlanItemStartTrigger);
@@ -22,7 +28,7 @@ export default class TimerEventDefinition extends EventListenerDefinition {
     getTimerExpression() {
         if (!this.timerExpression) {
             this.timerExpression = super.createDefinition(ExpressionDefinition);
-            this.timerExpression.name = undefined;
+            this.timerExpression.name = '';
         }
         return this.timerExpression;
     }
@@ -47,19 +53,19 @@ export default class TimerEventDefinition extends EventListenerDefinition {
         return this.planItemStartTrigger;
     }
 
-    createExportNode(parentNode) {
+    createExportNode(parentNode: Element) {
         super.createExportNode(parentNode, 'timerEvent', 'timerExpression', 'planItemStartTrigger', 'caseFileItemStartTrigger');
     }
 }
 
 export class PlanItemStartTrigger extends OnPartDefinition {
-    createExportNode(parentNode) {
+    createExportNode(parentNode: Element) {
         super.createExportNode(parentNode, 'planItemStartTrigger');
     }
 }
 
 export class CaseFileItemStartTrigger extends OnPartDefinition {
-    createExportNode(parentNode) {
+    createExportNode(parentNode: Element) {
         super.createExportNode(parentNode, 'caseFileItemStartTrigger');
     }
 }

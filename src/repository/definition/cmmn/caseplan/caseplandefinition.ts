@@ -1,10 +1,6 @@
 import StageDefinition from "./stagedefinition";
 
 export default class CasePlanDefinition extends StageDefinition {
-    constructor(importNode, caseDefinition, parent) {
-        super(importNode, caseDefinition, parent);
-    }
-
     get planItemDefinitions() {
         return this.planItems;
     }
@@ -13,7 +9,7 @@ export default class CasePlanDefinition extends StageDefinition {
         return 'cm';
     }
 
-    createExportNode(parentNode) {
+    createExportNode(parentNode: Element) {
         super.createExportNode(parentNode, 'casePlanModel');
     }
 

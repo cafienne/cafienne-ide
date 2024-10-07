@@ -5,11 +5,7 @@ export default class MilestoneDefinition extends MilestoneEventListenerDefinitio
         return 'ms';
     }
 
-    constructor(importNode, caseDefinition, parent) {
-        super(importNode, caseDefinition, parent);
-    }
-
-    createExportNode(parentNode) {
+    createExportNode(parentNode: Element) {
         super.createExportNode(parentNode, 'milestone');
     }
 }

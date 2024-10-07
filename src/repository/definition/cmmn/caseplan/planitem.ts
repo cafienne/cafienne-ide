@@ -1,5 +1,6 @@
 import Util from "@util/util";
 import CMMNElementDefinition from "../../cmmnelementdefinition";
+import CaseDefinition from "../casedefinition";
 import CaseRoleDefinition from "../caseteam/caseroledefinition";
 import CaseRoleReference from "../caseteam/caserolereference";
 import CriterionDefinition from "../sentry/criteriondefinition";
@@ -8,10 +9,9 @@ import ExitCriterionDefinition from "../sentry/exitcriteriondefinition";
 import ReactivateCriterionDefinition from "../sentry/reactivatecriteriondefinition";
 import ItemControlDefinition from "./itemcontroldefinition";
 import PlanningTableDefinition, { ApplicabilityRuleDefinition } from "./planningtabledefinition";
+import StageDefinition from "./stagedefinition";
 import FourEyesDefinition from "./task/workflow/foureyesdefinition";
 import RendezVousDefinition from "./task/workflow/rendezvousdefinition";
-import CaseDefinition from "../casedefinition";
-import StageDefinition from "./stagedefinition";
 
 export default class PlanItem extends CMMNElementDefinition {
     private applicabilityRuleRefs: string;
@@ -57,16 +57,10 @@ export default class PlanItem extends CMMNElementDefinition {
         return this.parent instanceof PlanningTableDefinition;
     }
 
-    /**
-     * @returns {String}
-     */
     get defaultTransition(): string {
         throw new Error('This method must be implemented in ' + this.constructor.name);
     }
 
-    /**
-     * @returns {ItemControlDefinition}
-     */
     get itemControl() {
         if (!this.planItemControl) {
             this.planItemControl = super.createDefinition(ItemControlDefinition);
@@ -74,13 +68,7 @@ export default class PlanItem extends CMMNElementDefinition {
         return this.planItemControl;
     }
 
-    /**
-     * 
-     * @param {Function} criterionConstructor 
-     * @param {Array<CriterionDefinition>} criterionCollection 
-     * @returns {CriterionDefinition}
-     */
-    createSentry(criterionConstructor: Function, criterionCollection: CriterionDefinition[]) {
+    private createSentry(criterionConstructor: Function, criterionCollection: CriterionDefinition[]) {
         const criterion: CriterionDefinition = super.createDefinition(criterionConstructor);
         criterionCollection.push(criterion);
         return criterion;
@@ -100,7 +88,6 @@ export default class PlanItem extends CMMNElementDefinition {
 
     /**
      * Method invoked when this plan item is getting a new parent (typically a stage or, if it is discretionary it can also be a human task).
-     * @param {TaskStageDefinition} newParent 
      */
     switchParent(newParent: TaskStageDefinition) {
         if (this.isDiscretionary) {
@@ -134,9 +121,8 @@ export default class PlanItem extends CMMNElementDefinition {
     /**
      * This method switches a PlanItem into a DiscretionaryItem and vice versa.
      * It also updates the underlying registrations.
-     * @returns {PlanItem}
      */
-    switchType() {
+    switchType(): PlanItem {
         if (this.isDiscretionary) {
             // Make it a regular plan item, and give it a new parent
             // Remove ourselves from the planning table.
@@ -184,9 +170,7 @@ export default class PlanItem extends CMMNElementDefinition {
         }
 
         // Resolve discretionary properties        
-        /** @type {Array<CaseRoleReference>} */
         this.authorizedRoles = this.caseDefinition.findElements(this.authorizedRoleRefs, [], CaseRoleDefinition).map(role => new CaseRoleReference(role, this));
-        /** @type {Array<ApplicabilityRuleDefinition>} */
         this.applicabilityRules = this.caseDefinition.findElements(this.applicabilityRuleRefs, [], ApplicabilityRuleDefinition);
     }
 
@@ -199,7 +183,6 @@ export default class PlanItem extends CMMNElementDefinition {
 
     /**
      * Filters the list of applicability rules to contain only those that exist in the case definition (the list on this planitem may hold stale references)
-     * @returns {Array<ApplicabilityRuleDefinition>}
      */
     filterExistingRules() {
         return this.applicabilityRules.filter(rule => this.caseDefinition.getElement(rule.id));
@@ -207,7 +190,6 @@ export default class PlanItem extends CMMNElementDefinition {
 
     /**
      * Returns a list of transitions valid for this type of plan item definition.
-     * @returns {Array<String>}
      */
     get transitions(): string[] {
         throw new Error('This method must be implemented in ' + this.constructor.name);
@@ -215,7 +197,6 @@ export default class PlanItem extends CMMNElementDefinition {
 
     /**
      * Returns the entry transition for this type of plan item definition (Task/Stage => Start, Event/Milestone => Occur)
-     * @returns {String}
      */
     get entryTransition(): string {
         throw new Error('This method must be implemented in ' + this.constructor.name);
@@ -227,7 +208,7 @@ export default class PlanItem extends CMMNElementDefinition {
  */
 export class TaskStageDefinition extends PlanItem {
     planningTable?: PlanningTableDefinition;
-    constructor(importNode: Element, caseDefinition: CaseDefinition, parent: TaskStageDefinition) {
+    constructor(importNode: Element, caseDefinition: CaseDefinition, public parent: TaskStageDefinition | PlanningTableDefinition) {
         super(importNode, caseDefinition, parent);
         this.planningTable = this.parseElement('planningTable', PlanningTableDefinition);
     }
