@@ -5,25 +5,30 @@ import ParameterDefinition from "../../contract/parameterdefinition";
 import CaseFileItemDef from "../casefile/casefileitemdef";
 import ExpressionDefinition from "../expression/expressiondefinition";
 import TaskParameterDefinition from "../caseplan/task/taskparameterdefinition";
+import CMMNElementDefinition from "@repository/definition/cmmnelementdefinition";
 
 export default class ParameterMappingDefinition extends UnnamedCMMNElementDefinition {
+    sourceRef: string;
+    targetRef: string;
+    transformation?: ExpressionDefinition;
+    private _implementationParameter?: ParameterDefinition<any>;
     /**
      * 
      * @param {Element} importNode 
      * @param {CaseDefinition} caseDefinition 
      * @param {TaskDefinition} parent 
      */
-    constructor(importNode, caseDefinition, parent) {
+    constructor(importNode: Element, caseDefinition: CaseDefinition, parent: CMMNElementDefinition) {
         super(importNode, caseDefinition, parent);
-        this.sourceRef = this.parseAttribute('sourceRef') || '';
-        this.targetRef = this.parseAttribute('targetRef') || '';
+        this.sourceRef = this.parseAttribute('sourceRef');
+        this.targetRef = this.parseAttribute('targetRef');
         this.transformation = this.parseElement('transformation', ExpressionDefinition);
     }
 
     /**
      * @returns {TaskDefinition}
      */
-    get task() {
+    get task(): TaskDefinition | undefined {
         let ancestor = this.parent;
         while (ancestor) {
             if (ancestor instanceof TaskDefinition) {
@@ -42,8 +47,9 @@ export default class ParameterMappingDefinition extends UnnamedCMMNElementDefini
      * 
      * @param {CaseFileItemDef} newBinding 
      */
-    updateBindingRef(newBinding) {
+    updateBindingRef(newBinding: CaseFileItemDef) {
         const task = this.task;
+        if (!task) return;
         // In input mappings we try to reuse parameters. In output mappings they are unique
         if (this.isInputMapping) {
             if (this.taskParameter) {
@@ -51,7 +57,7 @@ export default class ParameterMappingDefinition extends UnnamedCMMNElementDefini
                 // If we do not have a bindingRef currently, then we will get a parameter based on the new binding
                 if (task.mappings.find(m => m != this && m.taskParameter == this.taskParameter)) {
                     // The name of the new parameter is either from the new binding or we take it from the implementation parameter.
-                    const newParameterName = newBinding ? newBinding.name : this.implementationParameter.name;
+                    const newParameterName = newBinding ? newBinding.name : this.implementationParameter?.name || '';
                     this.taskParameter = task.getInputParameterWithName(newParameterName);
                 } else if (newBinding && this.taskParameter.binding != newBinding) {
                     this.taskParameter = task.getInputParameterWithName(newBinding.name);
@@ -81,13 +87,13 @@ export default class ParameterMappingDefinition extends UnnamedCMMNElementDefini
             }
         }
         // On the (potentially new) task parameter we can now set the new bindingRef
-        this.taskParameter.bindingRef = newBinding ? newBinding.id : undefined;
+        this.taskParameter.bindingRef = newBinding ? newBinding.id : '';
     }
 
     /**
      * @returns {TaskParameterDefinition}
      */
-    get taskParameter() {
+    get taskParameter(): TaskParameterDefinition | undefined {
         if (this.isInputMapping) {
             return this.source;
         } else {
@@ -98,7 +104,7 @@ export default class ParameterMappingDefinition extends UnnamedCMMNElementDefini
     /**
      * @param {TaskParameterDefinition} parameter
      */
-    set taskParameter(parameter) {
+    set taskParameter(parameter: TaskParameterDefinition) {
         if (this.isInputMapping) {
             this.source = parameter;
         } else {
@@ -106,14 +112,14 @@ export default class ParameterMappingDefinition extends UnnamedCMMNElementDefini
         }
     }
 
-    get implementationParameter() {
+    get implementationParameter(): ParameterDefinition<any> | undefined {
         return this._implementationParameter;
     }
 
     /**
      * @param {ParameterDefinition|undefined} parameter
      */
-    set implementationParameter(parameter) {
+    set implementationParameter(parameter: ParameterDefinition<any> | undefined ) {
         this._implementationParameter = parameter;
         if (this.isInputMapping) {
             this.target = parameter;
@@ -141,24 +147,24 @@ export default class ParameterMappingDefinition extends UnnamedCMMNElementDefini
      * Either source or target will be undefined, because one refers to the task-implementation's input/output parameter
      * @returns {ParameterDefinition}
      */
-    get source() {
-        return this.task.inputs.find(parameter => parameter.id === this.sourceRef);
+    get source(): TaskParameterDefinition | undefined {
+        return this.task?.inputs.find(parameter => parameter.id === this.sourceRef);
     }
 
-    set source(parameter) {
-        this.sourceRef = parameter ? parameter.id : undefined;
+    set source(parameter: ParameterDefinition<any> | undefined) {
+        this.sourceRef = parameter ? parameter.id : '';
     }
 
     /**
      * Either source or target will be undefined, because one refers to the task-implementation's input/output parameter
      * @returns {ParameterDefinition}
      */
-    get target() {
-        return this.task.outputs.find(parameter => parameter.id === this.targetRef);
+    get target(): TaskParameterDefinition | undefined {
+        return this.task?.outputs.find(parameter => parameter.id === this.targetRef);
     }
 
-    set target(parameter) {
-        this.targetRef = parameter ? parameter.id : undefined;
+    set target(parameter: ParameterDefinition<any> | undefined) {
+        this.targetRef = parameter ? parameter.id : '';
     }
 
     /**
@@ -188,6 +194,7 @@ export default class ParameterMappingDefinition extends UnnamedCMMNElementDefini
      */
     get isInputMapping() {
         const task = this.task;
+        if (!task) return false;
         if (task.inputs.find(input => input.id === this.sourceRef)) {
             return true;
         } else if (task.outputs.find(output => output.id === this.targetRef)) {
@@ -231,7 +238,7 @@ export default class ParameterMappingDefinition extends UnnamedCMMNElementDefini
                 // If it is an input mapping, we need to make sure there is an actual corresponding task input parameter as well.
                 if (!this.sourceRef) {
                     if (this.targetRef) { // Actually, a target ref always exists, otherwise there would not be a mapping option
-                        this.sourceRef = this.task.createInputParameterWithName(this.implementationParameterName || this.implementationParameterId).id;
+                        this.sourceRef = this.task?.createInputParameterWithName(this.implementationParameterName || this.implementationParameterId).id || '';
                     }
                 }
             }
@@ -263,7 +270,7 @@ export default class ParameterMappingDefinition extends UnnamedCMMNElementDefini
         return this.transformation && this.transformation.hasCustomLanguage;
     }
 
-    createExportNode(parentNode) {
+    createExportNode(parentNode: Element) {
         if (this.isEmpty()) {
             return;
         }

@@ -5,7 +5,7 @@ export default class OutputMappingDefinition extends ParameterMappingDefinition 
         return false;
     }
 
-    createExportNode(parentNode) {
+    createExportNode(parentNode: Element) {
         super.createExportNode(parentNode);
         // It is allowed to have empty sourceRef attributes for output mappings; note that there must be an export node (i.e., tranformation is available)
         if (this.exportNode !== undefined && !this.sourceRef) {
