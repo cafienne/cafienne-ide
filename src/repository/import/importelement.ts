@@ -1,34 +1,37 @@
+import Repository from "@repository/repository";
 import ServerFile from "../serverfile/serverfile";
 import Importer from "./importer";
+import XML from "@util/xml";
+import ModelDefinition from "@repository/definition/modeldefinition";
+import CaseDefinition from "@repository/definition/cmmn/casedefinition";
+import CaseFile from "@repository/serverfile/casefile";
 
 export default class ImportElement {
+    repository: Repository;
     /**
      * 
      * @param {Importer} importer 
      * @param {String} fileName 
      * @param {Element} xmlElement 
      */
-    constructor(importer, fileName, xmlElement) {
-        this.importer = importer;
+    constructor(public importer: Importer, public fileName: string, public xmlElement: Element) {
         this.repository = importer.repository;
-        this.fileName = fileName;
-        this.xmlElement = xmlElement;
     }
 
     get content() {
-        return XMLDocumentL.prettyPrint(this.xmlElement);
+        return XML.prettyPrint(this.xmlElement);
     }
 
-    save() {
+    async save() {
         const file = this.repository.get(this.fileName) || this.createFile();
-        file.source = this.content;
-        file.save();
+        file.source = this.content.replace(/xmlns="http:\/\/www.omg.org\/spec\/CMMN\/20151109\/MODEL"/g, '');
+        return file.save();
     }
 
     /**
      * @returns {ServerFile}
      */
-    createFile() {
+    createFile(): ServerFile<ModelDefinition> {
         throw new Error('This method must be implemented in ' + this.constructor.name);
     }
 }
@@ -36,6 +39,17 @@ export default class ImportElement {
 export class CaseImporter extends ImportElement {
     createFile() {
         return this.repository.createCaseFile(this.fileName, this.content);
+    }
+
+    async save() {
+        const file: CaseFile = <CaseFile> this.repository.get(this.fileName) || this.createFile();
+        file.source = this.content;
+        const definition = new CaseDefinition(file);
+
+        file.source = XML.prettyPrint(definition.toXML());
+        file.source = file.source.replace(/xmlns="http:\/\/www.omg.org\/spec\/CMMN\/20151109\/MODEL"/g, '');
+
+        return file.save();
     }
 }
 
