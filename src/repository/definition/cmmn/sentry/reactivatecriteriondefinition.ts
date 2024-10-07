@@ -1,12 +1,9 @@
 import CriterionDefinition from "./criteriondefinition";
 
 export default class ReactivateCriterionDefinition extends CriterionDefinition {
-    /**
-     * @param {Element} parentNode 
-     */
-    createExportNode(parentNode) {
+    static TAG = 'reactivateCriterion';
+
+    createExportNode(parentNode: Element) {
         super.createExtensionNode(parentNode, ReactivateCriterionDefinition.TAG, 'id', 'name', 'documentation', 'ifPart', 'caseFileItemOnParts', 'planItemOnParts');
     }
 }
-
-ReactivateCriterionDefinition.TAG = 'reactivateCriterion';

@@ -4,41 +4,31 @@ import CaseDefinition from "../casedefinition";
 import CaseFileItemDef from "../casefile/casefileitemdef";
 import PlanItem from "../caseplan/planitem";
 import CriterionDefinition from "./criteriondefinition";
+import XMLSerializable from "@repository/definition/xmlserializable";
 
 export default class OnPartDefinition extends UnnamedCMMNElementDefinition {
-    /**
-     * 
-     * @param {Element} importNode 
-     * @param {CriterionDefinition} parent 
-     * @param {CaseDefinition} caseDefinition 
-     * @param {Function} sourceConstructor 
-     */
-    constructor(importNode, caseDefinition, parent, sourceConstructor) {
+    standardEvent: string;
+    sourceRef: string;
+
+    constructor(importNode: Element, caseDefinition: CaseDefinition, parent: CriterionDefinition) {
         super(importNode, caseDefinition, parent);
-        this.sourceConstructor = sourceConstructor;
         this.standardEvent = this.parseElementText('standardEvent', '');
         this.sourceRef = this.parseAttribute('sourceRef', '');
     }
 
-    /**
-     * @returns {PlanItem | CaseFileItemDef}
-     */
-    get source() {
-        return /** @type {PlanItem | CaseFileItemDef} */(this.caseDefinition.getElement(this.sourceRef, this.sourceConstructor));
+    get source(): PlanItem | CaseFileItemDef {
+        return this.caseDefinition.getElement(this.sourceRef);
     }
 
-    referencesElement(element) {
+    referencesElement(element: XMLSerializable) {
         return element.id === this.sourceRef;
     }
 
-    /**
-     * @returns {String}
-     */
     get defaultTransition() {
         return this.source.defaultTransition;
     }
 
-    removeProperty(propertyName) {
+    removeProperty(propertyName: string) {
         super.removeProperty(propertyName);
         if (propertyName === 'sourceRef') {
             // If a PlanItem is deleted or a CaseFileItem which is refered to from this on part, then we will also delete this onpart from it's sentry.
@@ -46,7 +36,7 @@ export default class OnPartDefinition extends UnnamedCMMNElementDefinition {
         }
     }
 
-    createExportNode(parentNode, tagName, ...propertyNames) {
+    createExportNode(parentNode: Element, tagName: string, ...propertyNames: any[]) {
         super.createExportNode(parentNode, tagName, 'sourceRef', propertyNames);
         XML.createTextChild(XML.createChildElement(this.exportNode, 'standardEvent'), this.standardEvent);
     }

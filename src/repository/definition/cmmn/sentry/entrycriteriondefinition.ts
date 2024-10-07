@@ -1,10 +1,7 @@
 import CriterionDefinition from "./criteriondefinition";
 
 export default class EntryCriterionDefinition extends CriterionDefinition {
-    /**
-     * @param {Element} parentNode 
-     */
-    createExportNode(parentNode) {
+    createExportNode(parentNode: Element) {
         super.createExportNode(parentNode, 'entryCriterion');
     }
 }

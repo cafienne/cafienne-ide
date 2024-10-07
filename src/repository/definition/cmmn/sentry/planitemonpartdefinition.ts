@@ -1,9 +1,12 @@
-import PlanItem from "../caseplan/planitem";
+import CaseDefinition from "../casedefinition";
+import CriterionDefinition from "./criteriondefinition";
 import OnPartDefinition from "./onpartdefinition";
 
 export default class PlanItemOnPartDefinition extends OnPartDefinition {
-    constructor(importNode, caseDefinition, parent) {
-        super(importNode, caseDefinition, parent, PlanItem);
+    exitCriterionRef: string;
+
+    constructor(importNode: Element, caseDefinition: CaseDefinition, parent: CriterionDefinition) {
+        super(importNode, caseDefinition, parent);
         const cmmn10Ref = this.parseAttribute('sentryRef');
         const exitCriterionRef = this.parseAttribute('exitCriterionRef');
         if (cmmn10Ref && !exitCriterionRef) {
@@ -12,7 +15,7 @@ export default class PlanItemOnPartDefinition extends OnPartDefinition {
         this.exitCriterionRef = this.parseAttribute('exitCriterionRef', cmmn10Ref);
     }
 
-    createExportNode(parentNode) {
+    createExportNode(parentNode: Element) {
         super.createExportNode(parentNode, 'planItemOnPart', 'exitCriterionRef');
     }
 }
