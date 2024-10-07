@@ -4,47 +4,43 @@ import CaseDefinition from "../casedefinition";
 import CMMNElementDefinition from "@repository/definition/cmmnelementdefinition";
 
 export class CaseFileItemCollection extends CMMNElementDefinition {
+    _children: CaseFileItemDef[];
     /**
      * Helper class to share logic across CaseFile and CaseFileItem (mostly the 'children' array)
      */
-    constructor(importNode, caseDefinition, parent) {
+    constructor(importNode: Element, caseDefinition: CaseDefinition, parent: CMMNElementDefinition) {
         super(importNode, caseDefinition, parent);
         this._children = /** @type {Array<CaseFileItemDef>} */ ([]);
     }
 
     /**
      * Creates a new CaseFileItemDef child.
-     * @returns {CaseFileItemDef}
      */
-    createChildDefinition() {
-        const newCaseFileItem = this.createDefinition(CaseFileItemDef);
+    createChildDefinition(): CaseFileItemDef {
+        const newCaseFileItem: CaseFileItemDef = this.createDefinition(CaseFileItemDef);
         this.children.push(newCaseFileItem);
         newCaseFileItem.name = '';
         newCaseFileItem.multiplicity = 'ExactlyOne';
-        newCaseFileItem.usedIn = '';
-        newCaseFileItem.expanded = true;
         return newCaseFileItem;
     }
 
-    /**
-     * 
-     * @param {CaseFileItemDef} child 
-     * @param {CaseFileItemDef | undefined} after 
-     */
-    insert(child, after = undefined) {
+    insert(child: CaseFileItemDef, after?: CaseFileItemDef) {
         Util.insertInArray(this.children, child, after);
     }
 
     /**
      * Returns the case file item children of this element.
-     * @returns {Array<CaseFileItemDef>}
      */
-    get children() {
+    get children(): CaseFileItemDef[] {
         return this._children;
     }
 }
 
 export default class CaseFileItemDef extends CaseFileItemCollection {
+    defaultTransition: string;
+    multiplicity: string;
+    definitionRef: string;
+    isEmpty = false;
     /**
      * @returns {Array<String>} List of the possible events/transitions on a case file item
      */
@@ -56,24 +52,19 @@ export default class CaseFileItemDef extends CaseFileItemCollection {
         return 'cfi';
     }
 
-    /**
-     * 
-     * @param {CaseDefinition} caseDefinition 
-     * @param {String} id
-     */
-    static createEmptyDefinition(caseDefinition, id = undefined) {
-        const definition = caseDefinition.createDefinition(CaseFileItemDef, id, '');
+    static createEmptyDefinition(caseDefinition: CaseDefinition, id: string = '') {
+        const definition: CaseFileItemDef = caseDefinition.createDefinition(CaseFileItemDef, undefined, id, '');
         definition.isEmpty = true;        
         return definition;
     }
 
-    constructor(importNode, caseDefinition, parent) {
+    constructor(importNode: Element, caseDefinition: CaseDefinition, parent: CMMNElementDefinition) {
         super(importNode, caseDefinition, parent);
         this.defaultTransition = 'create';
         this.multiplicity = this.parseAttribute('multiplicity', 'Unspecified');
         this.definitionRef = this.parseAttribute('definitionRef');
         this.parseGrandChildren('caseFileItem', CaseFileItemDef, this.children);
-        this.isEmpty = false;
+        
     }
 
     get isArray() {
@@ -84,12 +75,12 @@ export default class CaseFileItemDef extends CaseFileItemCollection {
      * Returns all descending case file items including this one, recursively.
      */
     getDescendants() {
-        const descendants = [this];
+        const descendants: CaseFileItemDef[] = [this];
         this.children.forEach(child => child.getDescendants().forEach(c => descendants.push(c)));
         return descendants;
     }
 
-    parseGrandChildren(childName, constructor, collection) {
+    parseGrandChildren(childName: string, constructor: Function, collection: CaseFileItemDef[]) {
         const child = XML.getChildByTagName(this.importNode, 'children');
         if (child) {
             XML.getChildrenByTagName(child, childName).forEach(childNode => this.instantiateChild(childNode, constructor, collection));
@@ -97,7 +88,7 @@ export default class CaseFileItemDef extends CaseFileItemCollection {
         return collection;
     }
 
-    createExportNode(parentNode) {
+    createExportNode(parentNode: Element) {
         if (this.isEmpty) return;
 
         super.createExportNode(parentNode, 'caseFileItem', 'multiplicity', 'definitionRef');

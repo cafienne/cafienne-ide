@@ -1,21 +1,22 @@
+import CMMNElementDefinition from "@repository/definition/cmmnelementdefinition";
+import CaseDefinition from "../casedefinition";
 import CaseFileItemDef, { CaseFileItemCollection } from "./casefileitemdef";
 
 export default class CaseFileDefinition extends CaseFileItemCollection {
-    constructor(importNode, caseDefinition, parent) {
+    constructor(importNode: Element, caseDefinition: CaseDefinition, parent: CMMNElementDefinition) {
         super(importNode, caseDefinition, parent);
         this.parseElements('caseFileItem', CaseFileItemDef, this.children);
     }
 
-    createExportNode(parentNode) {
+    createExportNode(parentNode: Element) {
         super.createExportNode(parentNode, 'caseFileModel', 'children');
     }
 
     /**
      * Returns all case file items in the case file, recursively.
-     * @returns {Array<CaseFileItemDef>}
      */
-    getDescendants() {
-        const descendants = [];
+    getDescendants(): CaseFileItemDef[] {
+        const descendants: CaseFileItemDef[] = [];
         this.children.forEach(child => child.getDescendants().forEach(c => descendants.push(c)));
         return descendants;
     }
