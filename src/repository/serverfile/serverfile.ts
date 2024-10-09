@@ -87,7 +87,7 @@ export default class ServerFile<M extends ModelDefinition> {
 
     set source(source) {
         if (this._source !== source) {
-            this._definition = undefined;
+            // this._definition = undefined;
             this._source = source;
             const xml = XML.parseXML(source);
             this._xml = xml ? xml.documentElement : xml;
