@@ -67,7 +67,7 @@ export default class CaseFileItemTypeDefinition extends CaseFileItemDef {
         const newId = this.id;
         const newName = this.name;
         // Now update references to this property
-        // console.log(this.modelDefinition.file.fileName + ": found " + references.length +" references to " + this.getPath() + "\n- " + references.map(ref => ref.modelDefinition.file.fileName +": " + ref.constructor.name +( ref.id ? "[id=" + ref.id +"|name="+ref.name +"]" : "")).join('\n- '));
+        console.log(this.modelDefinition.file.fileName + ": found " + references.length +" references to " + this.getPath() + "\n- " + references.map(ref => ref.modelDefinition.file.fileName +": " + ref.constructor.name +( ref.id ? "[id=" + ref.id +"|name="+ref.name +"]" : "")).join('\n- '));
         references.forEach(ref => ref.updateReferences(this, oldId, newId, oldName, newName));
     }
 
