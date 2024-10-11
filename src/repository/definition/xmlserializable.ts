@@ -193,15 +193,16 @@ export default class XMLSerializable {
             } else if (value instanceof Array) {
                 const removed = Util.removeFromArray(value, removedElement);
                 // if (removed > -1) {
-                //     console.log("Removed "+element.constructor.name+" from "+this.constructor.name+"["+this.name+"]"+"."+key+"[]");
+                //     console.log("Removed " + removedElement.constructor.name + " from " + this.constructor.name + "[" + this.name + "]" + "." + key + "[]");
                 // }
             } else if (typeof (value) === 'string') {
                 // If it is a string, and it has a non-empty value, and they are equal (and 'this !== removedElement', as that is the first check)
                 if (value && removedElement.id && value === removedElement.id) {
                     // console.log("Deleting string reference "+this.constructor.name+"["+this.name+"]"+".'"+key+"'");
-                    console.log('Clearing ' + key + ' "' + removedElement.id + '" from ' + this);
+                    console.groupCollapsed(`Clearing ${this}.${key} = ${removedElement}`);
                     this.removeProperty(key);
                     delete this[key];
+                    console.groupEnd();
                 }
             } else {
                 // console.log("Found property "+key+" which is of type "+typeof(value));

@@ -31,17 +31,6 @@ export default class ShapeDefinition extends DiagramElement {
         return element.id === this.cmmnElementRef;
     }
 
-    /**
-     * removeDefinition is an "override" implementation of CMMNElementDefinition.removeDefinition.
-     * Within CMMNElementView, the __delete() method invokes this.definition.removeDefinition(), which in fact removes the CMMNElementDefinition
-     * from the CaseDefinition. However, for TextAnnotation and CaseFileItem, this.definition refers to the custom shape, instead of to a CMMNElementDefinition.
-     * Therefore we "override" this method here and update the internal registration.
-     */
-    removeShape() {
-        // Remove the shape from the dimensions as well
-        this.diagram.removeShape(this);
-    }
-
     createExportNode(diagramNode: Element) {
         super.createExportNode(diagramNode, Tags.CMMNSHAPE, 'cmmnElementRef', 'bounds');
     }

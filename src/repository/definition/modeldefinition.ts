@@ -64,6 +64,11 @@ export default class ModelDefinition extends XMLSerializable {
         return this.__documentation;
     }
 
+    addElement(element: ElementDefinition<ModelDefinition>) {
+        // console.warn(this.file.fileName +": adding a " + element.constructor.name)
+        this.elements.push(element);
+    }
+
     /**
      * Creates a new instance of the constructor with an optional id and name
      * attribute. If these are not given, the logic will generate id and name for it based
@@ -140,12 +145,12 @@ export default class ModelDefinition extends XMLSerializable {
     }
 
     /**
-     * Informs all elements in the case definition about the removal of the element
+     * Informs all elements in the model definition about the removal of the element
      * @param {ElementDefinition} removedElement 
      */
-    removeDefinitionElement<M extends ModelDefinition>(removedElement: ElementDefinition<M>) {
+    removeDefinitionElementReferences<M extends ModelDefinition>(removedElement: ElementDefinition<M>) {
         // Go through other elements and tell them to say goodbye to removedElement;
-        //  we do this in reverse order, to have removal from CaseDefinition as last.
+        //  we do this in reverse order, to have removal from ModelDefinition as last (which removes the element from this.elements[] array)
         this.elements.slice().reverse().filter(e => e != removedElement).forEach(element => element.removeDefinitionReference(removedElement));
     }
 

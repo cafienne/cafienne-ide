@@ -13,7 +13,7 @@ export default class ElementDefinition<M extends ModelDefinition> extends XMLSer
      */
     constructor(importNode: Element, public modelDefinition: M, parent?: ElementDefinition<M>) {
         super(importNode);
-        this.modelDefinition.elements.push(this);
+        this.modelDefinition.addElement(this);
         if (parent && parent instanceof ElementDefinition) {
             this.parent = parent;
             this.parent.childDefinitions.push(this);
@@ -36,7 +36,7 @@ export default class ElementDefinition<M extends ModelDefinition> extends XMLSer
     /**
      * Creates a new instance of the constructor with an optional id and name
      * attribute. If these are not given, the logic will generate id and name for it based
-     * on the type of element and the other content inside the case definition.
+     * on the type of element and the other content inside the model definition.
      * @param {Function} constructor 
      * @param {String} id 
      * @param {String} name 
@@ -50,18 +50,24 @@ export default class ElementDefinition<M extends ModelDefinition> extends XMLSer
         return true;
     }
 
-    removeDefinition(log = true) {
-        if (log) console.group("Removing " + this);
+    private removeChildDefinitions() {
         // First, delete our children in the reverse order that they were created.
         this.childDefinitions.slice().reverse().forEach(child => {
-            console.group('Removing ' + child);
-            child.removeDefinition(false);
-            // console.groupEnd();
+            console.groupCollapsed(`Removing ${child} ${child.childDefinitions.length ? 'and ' + child.childDefinitions.length + ' children' : ''}`)
+            child.removeChildDefinitions();
+            console.groupEnd();
         });
-        // Next, inform the case definition about it.
-        this.modelDefinition.removeDefinitionElement(this);
+        console.groupCollapsed(`Clean up references to ${this} inside other elements of ${this.modelDefinition.file.fileName}`);
+        // Next, inform the whole model definition about it.
+        this.modelDefinition.removeDefinitionElementReferences(this);
         // Finally remove all our properties.
         for (const key in this) delete this[key];
+        console.groupEnd();
+    }
+
+    removeDefinition() {
+        console.groupCollapsed(`Removing ${this} ${this.childDefinitions.length ? 'and ' + this.childDefinitions.length + ' children' : ''}`)
+        this.removeChildDefinitions();
         console.groupEnd();
     }
 

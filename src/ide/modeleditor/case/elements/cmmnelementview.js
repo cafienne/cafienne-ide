@@ -495,11 +495,11 @@ export default class CMMNElementView extends CanvasElement {
         // Next, inform other elements we're gonna go
         this.case.items.forEach(cmmnElement => cmmnElement.__removeReferences(this));
 
-        // Remove the shape from the definitions
-        this.shape.removeShape();
-
         // Now remove our definition element from the case (overridden in CaseFileItemView, since that only needs to remove the shape)
+        // Also let the definition side of the house know we're leaving
+        console.groupCollapsed(`Removing ${this}`);
         this.__removeElementDefinition();
+        console.groupEnd();
 
         // Delete us from the case
         Util.removeFromArray(this.case.items, this);
@@ -516,10 +516,10 @@ export default class CMMNElementView extends CanvasElement {
     }
 
     __removeElementDefinition() {
-        // Also let the definition side of the house know we're leaving
-        console.groupCollapsed(`Removing definition for ${this}`);
+        // Remove the shape
+        this.shape.removeDefinition();
+        // Remove the definition
         this.definition.removeDefinition();
-        console.groupEnd();
     }
 
     /**

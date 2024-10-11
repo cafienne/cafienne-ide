@@ -59,7 +59,9 @@ export default class CaseFileItemView extends CMMNElementView {
     }
 
     __removeElementDefinition() {
-        // Avoid removing the actual CaseFileItemDef, we should only delete the shape.
+        // Override here, because the superclass also removes the defition element,
+        //  but for case file item views, we should only remove the shape.
+        this.shape.removeDefinition();
     }
 
     refreshReferencingFields(definitionElement) {
