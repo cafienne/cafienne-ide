@@ -87,7 +87,6 @@ export default class ServerFile<M extends ModelDefinition> {
 
     set source(source) {
         if (this._source !== source) {
-            this._definition = undefined;
             this._source = source;
             const xml = XML.parseXML(source);
             this._xml = xml ? xml.documentElement : xml;
@@ -139,6 +138,7 @@ export default class ServerFile<M extends ModelDefinition> {
         console.groupCollapsed(`Clearing the contents of ${this.fileName} and ${this.references.size} referenced files`);
         this.clearing = true;
         this.source = undefined;
+        this._definition = undefined;
         this.references.clear();
         this.clearing = false;
         console.groupEnd();

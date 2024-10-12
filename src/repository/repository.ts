@@ -145,15 +145,6 @@ export default class Repository extends RepositoryBase {
         return this.list.find(model => model.fileName === fileName) !== undefined;
     }
 
-    /**
-     * Clears content for the model
-     */
-    clear(fileName: string) {
-        if (this.isExistingModel(fileName)) {
-            this.list.find(model => model.fileName === fileName)?.clear();
-        }
-    }
-
     updateMetadata(newServerFileList: Array<Metadata>) {
         console.groupCollapsed("Updating repository metadata");
         // Make a copy of the old list, to be able to clean up old models afterwards;

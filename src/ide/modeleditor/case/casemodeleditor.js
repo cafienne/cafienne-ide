@@ -103,12 +103,6 @@ export default class CaseModelEditor extends ModelEditor {
         this.__migrated = true;
     }
 
-    async refresh() {
-        // Overwrite to ensure that we also clear the dimensions file from the cache
-        this.ide.repository.clear(this.dimensionsFile.fileName);
-        super.refresh();
-    }
-
     /**
      * 
      * @param {JQuery.KeyDownEvent} e 
