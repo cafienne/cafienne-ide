@@ -458,20 +458,19 @@ export class PropertyRenderer extends TypeRenderer {
         }
     }
 
-    changeType(newType) {
+    async changeType(newType) {
         if (newType === '<new>') {
             // If <new> is selected create a new Type in repository
             const newTypeModelName = this.__getUniqueTypeName(this.property.name);
             const typeModelEditorMetadata = ModelEditorMetadata.types.find(type => type.fileType === 'type');
             if (typeModelEditorMetadata) {
-                typeModelEditorMetadata.createNewModel(this.ide, newTypeModelName, '', newTypeFileName => {
-                    this.htmlContainer.find('.selectType').first().val(newTypeFileName);
-                    this.typeSelector.typeRef = newTypeFileName;
-                    this.changeProperty('cmmnType', newTypeFileName);
-                    this.renderComplexTypeProperty();
-                    // Trigger adding a new (empty) child for easy data entry
-                    this.editor.addChild(jQuery.Event(''), this);
-                });
+                const newTypeFileName = await typeModelEditorMetadata.createNewModel(this.ide, newTypeModelName, '');
+                this.htmlContainer.find('.selectType').first().val(newTypeFileName);
+                this.typeSelector.typeRef = newTypeFileName;
+                this.changeProperty('cmmnType', newTypeFileName);
+                this.renderComplexTypeProperty();
+                // Trigger adding a new (empty) child for easy data entry
+                this.editor.addChild(jQuery.Event(''), this);
             }
         } else {
             this.typeSelector.typeRef = newType;
