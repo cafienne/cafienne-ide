@@ -6,13 +6,16 @@ import CaseView from "@ide/modeleditor/case/elements/caseview";
 import $ from "jquery";
 
 export default class StandardForm extends MovableEditor {
+    private _label: string;
+    classNames: string[];
+    _container?: JQuery<HTMLElement>;
 
     /**
      * @param {CaseView} cs 
      * @param {String} label 
      * @param {Array<String>} classNames      * 
      */
-    constructor(cs, label, ...classNames) {
+    constructor(cs: CaseView, label: string, ...classNames: string[]) {
         super(cs);
         this._label = label;
         this.classNames = classNames;

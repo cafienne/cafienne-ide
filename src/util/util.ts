@@ -1,4 +1,4 @@
-﻿import $ from "jquery"
+﻿import $ from "jquery";
 export default class Util {
     /**
      * Copies the text to clipboard
@@ -19,7 +19,9 @@ export default class Util {
     /**
      * 
      */
-    static addClassOverride(html: JQuery<HTMLElement>, ...classNames: string[]) {
+    static addClassOverride(html: JQuery<HTMLElement> | undefined, ...classNames: string[]) {
+        if (!html) return;
+
         // For some reason alpaca seems to kill the jquery-ui addClass override in some places in the editor. No clue why.
         //  It seems to be that case only on svg elements???
         //  This code gives a quick hack ( grrr.... ) around it.
@@ -33,7 +35,8 @@ export default class Util {
         html.attr('class', existingClasses.join(' '));
     }
 
-    static removeClassOverride(html: JQuery<HTMLElement>, ...classNames: string[]) {
+    static removeClassOverride(html: JQuery<HTMLElement> | undefined, ...classNames: string[]) {
+        if (!html) return;
         const currentClassNames = html.attr('class');
         const existingClasses = currentClassNames ? currentClassNames.split(' ') : [];
         classNames.forEach(name => Util.removeFromArray(existingClasses, name));
@@ -62,7 +65,8 @@ export default class Util {
     /**
      * Clears the html content of the element and detaches all underlying event handlers
      */
-    static clearHTML(html: JQuery<HTMLElement>) {
+    static clearHTML(html: JQuery<HTMLElement> | undefined) {
+        if (!html) return;
         Util.detachEventHandlers(html);
         $(html).empty();
     }
@@ -70,7 +74,8 @@ export default class Util {
     /**
      * Deletes the html content of the element and detaches all underlying event handlers
      */
-    static removeHTML(html: JQuery<HTMLElement>) {
+    static removeHTML(html: JQuery<HTMLElement> | undefined) {
+        if (!html) return;
         Util.detachEventHandlers(html);
         $(html).remove();
     }
@@ -98,8 +103,6 @@ export default class Util {
     /**
      * Simple helper function that removes an element from an array, if it is in the array.
      * Returns the arrayIndex the element had in the array, or -1.
-     * @param {Array} array 
-     * @param {*} element 
      */
     static removeFromArray(array: any[], element: any) {
         const arrayIndex = array.indexOf(element);
@@ -109,12 +112,6 @@ export default class Util {
         return arrayIndex;
     }
 
-    /**
-     * 
-     * @param {Array} array 
-     * @param {*} element 
-     * @param {*} after 
-     */
     static insertInArray(array: any[], element: any, after?: any) {
         Util.removeFromArray(array, element);
         const index = array.indexOf(after);
@@ -127,8 +124,6 @@ export default class Util {
 
     /**
      * Remove duplicate elements from an array
-     * @param {Array} array 
-     * @returns {Array}
      */
     static removeDuplicates(array: any[]) {
         const size = array.length;
@@ -143,17 +138,12 @@ export default class Util {
 
     /**
      * Simple helper function that removes all elements from an array.
-     * @param {Array} array 
      */
     static clearArray(array: any[]) {
         array.splice(0, array.length);
         return array;
     }
 
-    /**
-     * 
-     * @param {String} str 
-     */
     static withoutNewlinesAndTabs(str: string) {
         if (typeof (str) !== 'string') return str;
         return str ? str.replace(/\n/g, ' ').replace(/\r/g, ' ').replace(/\t/g, ' ') : str;
@@ -161,8 +151,6 @@ export default class Util {
 
     /**
      * Returns true if sub class extends superclass somewhere in the type chain.
-     * @param {Function} superClass 
-     * @param {Function} subClass 
      */
     static isSubClassOf(superClass: Function, subClass: Function): boolean {
         if (!subClass) {
@@ -176,18 +164,11 @@ export default class Util {
 
     /**
      * Parse (any) content, but typically a string into a JSON structure.
-     * @returns {ParseResult}
-     * @param {*} source 
      */
     static parseJSON(source: any): ParseResult {
         return new ParseResult(source);
     }
 
-    /**
-     * 
-     * @param {(() => Promise<any>)[]} promises 
-     * @returns {Promise<void>}
-     */
     static async PromiseAllSequential(promises: (() => Promise<any>)[]) {
         for (let i = 0; i < promises.length; i++) {
             await promises[i]();

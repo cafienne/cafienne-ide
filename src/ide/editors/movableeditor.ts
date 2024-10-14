@@ -1,23 +1,31 @@
 import CMMNElementDefinition from "@definition/cmmnelementdefinition";
+import CaseModelEditor from "@ide/modeleditor/case/casemodeleditor";
 import CaseView from "@ide/modeleditor/case/elements/caseview";
 import Util from "@util/util";
 import $ from "jquery";
 
 export default class MovableEditor {
+    case: CaseView;
+    modelEditor: CaseModelEditor;
+    htmlParent: JQuery<HTMLElement>;
+    private _visible: boolean = false;
+    protected _html?: JQuery<HTMLElement>;
+    private _changingVisiblity: any;
     /**
      * A movable editor resides typically within the context of a case.
      * Usually it is something that pops up upon button click (e.g., Properties of an element, Roles Editor, Parameters Editor, etc)
      * It can be moved around and resized.
      * @param {CaseView} cs 
      */
-    constructor(cs) {
+    constructor(cs: CaseView) {
         this.case = cs;
         this.modelEditor = cs.editor;
         this.htmlParent = this.modelEditor.divMovableEditors;
         this.modelEditor.registerMovableEditor(this);
     }
 
-    get html() {
+    get html(): JQuery<HTMLElement> {
+        // @ts-ignore
         return $(this._html);
     }
 
@@ -104,10 +112,8 @@ export default class MovableEditor {
 
     /**
      * Move the editor x pixels to the right, and y pixels down. Negative numbers move it in the opposite direction.
-     * @param {Number} x 
-     * @param {Number} y 
      */
-    move(x, y) {
+    move(x: number, y: number) {
         const top = parseInt(this.html.css('top'));
         const left = parseInt(this.html.css('left'));
         this.html.css('left', left + x);
@@ -119,9 +125,8 @@ export default class MovableEditor {
 
     /**
      * Method invoked after a role or case file item has changed
-     * @param {CMMNElementDefinition} definitionElement 
      */
-    refreshReferencingFields(definitionElement) {}
+    refreshReferencingFields(definitionElement: CMMNElementDefinition) {}
 
     toString() {
         return this.constructor.name;
