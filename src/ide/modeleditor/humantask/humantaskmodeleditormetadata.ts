@@ -5,6 +5,7 @@ import ServerFile from "@repository/serverfile/serverfile";
 import Icons from "@util/images/icons";
 import ModelEditorMetadata from "../modeleditormetadata";
 import HumantaskModelEditor from "./humantaskmodeleditor";
+import ModelDefinition from "@repository/definition/modeldefinition";
 
 export default class HumantaskModelEditorMetadata extends ModelEditorMetadata {
     static register() {
@@ -13,18 +14,18 @@ export default class HumantaskModelEditorMetadata extends ModelEditorMetadata {
 
     /** @returns {Array<ServerFile>} */
     get modelList() {
-        return this.ide.repository.getHumanTasks();
+        return this.ide?.repository.getHumanTasks() || [];
     }
 
-    supportsFile(file) {
+    supportsFile(file: ServerFile<ModelDefinition>) {
         return file instanceof HumanTaskFile;
     }
 
-    createEditor(ide, file) {
+    createEditor(ide: IDE, file: HumanTaskFile) {
         return new HumantaskModelEditor(ide, file);
     }
 
-    get modelType() {
+    get fileType() {
         return 'humantask';
     }
 
@@ -43,7 +44,7 @@ export default class HumantaskModelEditorMetadata extends ModelEditorMetadata {
      * @param {String} description 
      * @returns {Promise<String>} fileName of the new model
      */
-    async createNewModel(ide, name, description) {
+    async createNewModel(ide: IDE, name: string, description: string) {
         const newModelContent =
             `<humantask>
                 <${IMPLEMENTATION_TAG} name="${name}" description="${description}" ${CAFIENNE_PREFIX}="${CAFIENNE_NAMESPACE}" class="org.cafienne.cmmn.definition.task.WorkflowTaskDefinition">

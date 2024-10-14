@@ -9,8 +9,18 @@ import UndoManager from "./undoredo/undoredo";
 import $ from "jquery";
 import ModelEditorMetadata from "../modeleditormetadata";
 import CaseModelEditorMetadata from "./casemodeleditormetadata";
+import DimensionsFile from "@repository/serverfile/dimensionsfile";
+import CMMNElementView from "./elements/cmmnelementview";
 
 export default class CaseModelEditor extends ModelEditor {
+    caseFile: CaseFile;
+    dimensionsFile?: DimensionsFile;
+    ideCaseFooter: JQuery<HTMLElement>;
+    undoManager: UndoManager;
+    case?: CaseView;
+    trackChanges: boolean = false;
+    private __migrated: any;
+    autoSaveTimer: any;
     static register() {
         ModelEditorMetadata.registerEditorType(new CaseModelEditorMetadata());
     }
@@ -20,11 +30,11 @@ export default class CaseModelEditor extends ModelEditor {
      * @param {IDE} ide 
      * @param {CaseFile} file The full file name to be loaded, e.g. 'helloworld.case', 'sendresponse.humantask'
      */
-    constructor(ide, file) {
+    constructor(public ide: IDE, public file: CaseFile) {
         super(ide, file);
         this.file = file;
         this.caseFile = file;
-        this.dimensionsFile = this.file.definition.dimensions.file;
+        this.dimensionsFile = this.file.definition?.dimensions?.file;
         this.ideCaseFooter = $('.ideCaseFooter');
         this.undoManager = new UndoManager(this);
 
@@ -40,14 +50,10 @@ export default class CaseModelEditor extends ModelEditor {
      * Loads the model and makes the editor visible
      */
     loadModel() {
-        this.open(this.file.definition);
+        if (this.file.definition) this.open(this.file.definition);
     }
 
-    /**
-     * 
-     * @param {CaseDefinition} caseDefinition 
-     */
-    open(caseDefinition) {
+    open(caseDefinition: CaseDefinition) {
         // Reset the undo manager.
         this.undoManager.resetActionBuffer(caseDefinition);
 
@@ -59,13 +65,11 @@ export default class CaseModelEditor extends ModelEditor {
 
     /**
      * Imports the source and tries to visualize it
-     * @param {CaseDefinition} caseDefinition 
      */
-    loadDefinition(caseDefinition = this.caseFile.definition) {
+    loadDefinition(caseDefinition: CaseDefinition | undefined = this.caseFile.definition) {
+        if (!caseDefinition) return;
         // During import no live validation and storage of changes
         this.trackChanges = false;
-
-        this.migrateDefinitions(caseDefinition);
 
         // First, remove current case content; but without tracking changes...
         if (this.case) {
@@ -83,31 +87,15 @@ export default class CaseModelEditor extends ModelEditor {
         this.trackChanges = true;
 
         // Do a first time validation.
-        window.setTimeout(() => this.case.runValidation(), 100);
+        window.setTimeout(() => this.case?.runValidation(), 100);
     }
 
-    /**
-     * Imports the source and tries to visualize it
-     * @param {CaseDefinition} caseDefinition 
-     */
-    migrateDefinitions(caseDefinition) {
-        this.__migrated = false;
-    }
-
-    /**
-     * 
-     * @param {String} msg 
-     */
-    migrated(msg) {
+    migrated(msg: string) {
         console.log(msg);
         this.__migrated = true;
     }
 
-    /**
-     * 
-     * @param {JQuery.KeyDownEvent} e 
-     */
-    keyStrokeHandler(e) {
+    keyStrokeHandler(e: JQuery.KeyDownEvent) {
         if (!this.case) {
             console.log("No case, but already pressing a key?! You're too quick ;)");
             return;
@@ -115,75 +103,72 @@ export default class CaseModelEditor extends ModelEditor {
         const visibleMovableEditor = this.movableEditors.find(e => e.visible);
         const selectedElement = this.case.selectedElement;
         switch (e.keyCode) {
-        case 27: // esc
-            // Clicking Escape closes Movable editors one by one, and if none is left, it deselects current selection
-            //  First check if source editor is currently open, and if so, close that one.
-            if (this.case.sourceEditor.visible) {
-                this.case.sourceEditor.close();
-            } else if (!this.hideTopEditor()) {
-                if (this.case) {
+            case 27: // esc
+                // Clicking Escape closes Movable editors one by one, and if none is left, it deselects current selection
+                //  First check if source editor is currently open, and if so, close that one.
+                if (this.case.sourceEditor.visible) {
+                    this.case.sourceEditor.close();
+                } else if (!this.hideTopEditor()) {
+                    if (this.case) {
+                        this.case.clearSelection();
+                    }
+                }
+                break;
+            case 46: //del
+                if (!visibleMovableEditor && selectedElement) {
+                    this.case.__removeElement(selectedElement);
                     this.case.clearSelection();
                 }
-            }
-            break;
-        case 46: //del
-            if (!visibleMovableEditor && selectedElement) {
-                this.case.__removeElement(selectedElement);
-                this.case.clearSelection();
-            }
-            break;
-        case 37: //arrow left;
-        case 38: //arrow up;
-        case 39: //arrow right;
-        case 40: //arrow down;
-            // Pressing one of the arrow keys will move any selected editor or element according to the grid size
-            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
-                // Arrow press should not have effect when you're in an input or textarea.
                 break;
-            }
-            return this.handleArrowPress(e.keyCode, visibleMovableEditor, selectedElement);
-        case 97: //1;
-            break;
-        case 98: //2;
-            break;
-        case 99: //3;
-            break;
-        case 100: //4;
-            break;
-        case 76: //L
-            if (e.ctrlKey) {
-                if (!this.case.sourceEditor.visible) {
+            case 37: //arrow left;
+            case 38: //arrow up;
+            case 39: //arrow right;
+            case 40: //arrow down;
+                // Pressing one of the arrow keys will move any selected editor or element according to the grid size
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                    // Arrow press should not have effect when you're in an input or textarea.
+                    break;
+                }
+                return this.handleArrowPress(e.keyCode, visibleMovableEditor, selectedElement);
+            case 97: //1;
+                break;
+            case 98: //2;
+                break;
+            case 99: //3;
+                break;
+            case 100: //4;
+                break;
+            case 76: //L
+                if (e.ctrlKey) {
+                    if (!this.case.sourceEditor.visible) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        this.case.switchLabels();
+                    }
+                }
+                break;
+            case 83: //S
+                if (e.ctrlKey) { // Avoid the browser's save, and save the current model.
                     e.stopPropagation();
                     e.preventDefault();
-                    this.case.switchLabels();
+                    this.saveModel();
                 }
-            }
-            break;
-        case 83: //S
-            if (e.ctrlKey) { // Avoid the browser's save, and save the current model.
-                e.stopPropagation();
-                e.preventDefault();
-                this.saveModel();
-            }
-            break;
-        case 89: //y
-            if (e.ctrlKey) this.undoManager.redo();
-            break;
-        case 90: //z
-            if (e.ctrlKey) this.undoManager.undo();
-        default:
-            break;
+                break;
+            case 89: //y
+                if (e.ctrlKey) this.undoManager.redo();
+                break;
+            case 90: //z
+                if (e.ctrlKey) this.undoManager.undo();
+            default:
+                break;
         }
     }
 
     /**
      * Handles pressing an arrow key. Moves either top editor or selected element around.
-     * @param {Number} keyCode 
-     * @param {MovableEditor} visibleMovableEditor 
-     * @param {CMMNElementView} selectedElement 
-     * @returns {Boolean} false if the event must be canceled, true if the arrow press was not handled.
+     * @returns false if the event must be canceled, true if the arrow press was not handled.
      */
-    handleArrowPress(keyCode, visibleMovableEditor, selectedElement) {
+    handleArrowPress(keyCode: number, visibleMovableEditor?: MovableEditor, selectedElement?: CMMNElementView) {
         // 37: arrow left, 39: arrow right, 38: arrow up, 40: arrow down 
         const xMove = (keyCode == 37 ? -1 : keyCode == 39 ? 1 : 0) * Grid.Size;
         const yMove = (keyCode == 38 ? -1 : keyCode == 40 ? 1 : 0) * Grid.Size;
@@ -223,8 +208,10 @@ export default class CaseModelEditor extends ModelEditor {
      */
     saveModel() {
         // Validate all models currently active in the ide
-        if (this.case) this.case.runValidation();
-        this.undoManager.saveCaseModel(this.case.caseDefinition);
+        if (this.case) {
+            this.case.runValidation();
+            this.undoManager.saveCaseModel(this.case.caseDefinition);
+        }
     }
 
     onShow() {
@@ -235,5 +222,4 @@ export default class CaseModelEditor extends ModelEditor {
     onHide() {
         this.ideCaseFooter.css('display', 'none');
     }
-
 }

@@ -1,32 +1,40 @@
-﻿import ElementDefinition from "@definition/elementdefinition";
-import HumanTaskModelDefinition from "@definition/humantask/humantaskmodeldefinition";
+﻿import HumanTaskModelDefinition from "@definition/humantask/humantaskmodeldefinition";
+import IDE from "@ide/ide";
+import RightSplitter from "@ide/splitter/rightsplitter";
 import HumanTaskFile from "@repository/serverfile/humantaskfile";
-import CodeMirrorConfig from "@util/codemirrorconfig";
 import AlpacaPreview from "@util/alpacapreview";
+import CodeMirrorConfig from "@util/codemirrorconfig";
 import Util from "@util/util";
 import XML from "@util/xml";
-import IDE from "@ide/ide";
+import $ from "jquery";
 import ModelEditor from "../modeleditor";
+import ModelEditorMetadata from "../modeleditormetadata";
 import ModelParameters from "../xmleditor/modelparameters";
 import ModelSourceEditor from "../xmleditor/modelsourceeditor";
-import RightSplitter from "@ide/splitter/rightsplitter";
-import $ from "jquery";
-import ModelEditorMetadata from "../modeleditormetadata";
 import HumantaskModelEditorMetadata from "./humantaskmodeleditormetadata";
 
 export default class HumantaskModelEditor extends ModelEditor {
+    inputParametersControl: ModelParameters;
+    outputParametersControl: ModelParameters;
+    viewSourceEditor: ModelSourceEditor;
+    freeContentEditor: any;
+    private _changed: any;
+    private _currentAutoSaveTimer?: number;
+    private _model?: HumanTaskModelDefinition;
+    contentViewer: JQuery<HTMLElement>;
+    taskPreview: JQuery<HTMLElement>;
+    taskPreviewErrors: JQuery<HTMLElement>;
+    jsonErrorDiv: JQuery<HTMLElement>;
+
     static register() {
         ModelEditorMetadata.registerEditorType(new HumantaskModelEditorMetadata());
     }
 
     /**
      * This object handles human task models, includes ui-editor and source editor
-     * @param {IDE} ide 
-     * @param {HumanTaskFile} file The full file name to be loaded, e.g. 'helloworld.case', 'sendresponse.humantask'
      */
-    constructor(ide, file) {
+    constructor(ide: IDE, public file: HumanTaskFile) {
         super(ide, file);
-        this.file = file;
         const html = $(`
             <div class="basicbox model-source-tabs">
                 <ul>
@@ -74,8 +82,8 @@ export default class HumantaskModelEditor extends ModelEditor {
         this.htmlContainer.append(html);
 
         //add change event to input fields
-        this.htmlContainer.find('.inputName').on('change', e => this.change('name', e.currentTarget.value));
-        this.htmlContainer.find('.inputDocumentation').on('change', e => this.change('text', e.currentTarget.value, this.model.implementation.documentation));
+        this.htmlContainer.find('.inputName').on('change', (e: any) => this.changeName(e.currentTarget.value));
+        this.htmlContainer.find('.inputDocumentation').on('change', (e: any) => this.changeDescription(e.currentTarget.value));
 
         new RightSplitter(this.htmlContainer.find('#modelEditor'), '675px');
 
@@ -85,12 +93,13 @@ export default class HumantaskModelEditor extends ModelEditor {
 
         //add the tab control
         this.htmlContainer.find('.model-source-tabs').tabs({
-            activate: (e, ui) => {
+            activate: (e: any, ui: any) => {
                 if (ui.newPanel.hasClass('model-source-editor')) {
-                    this.viewSourceEditor.render(XML.prettyPrint(this.model.toXML()));
+                    this.viewSourceEditor.render(XML.prettyPrint(this.model?.toXML()));
                 }
             }
         });
+
 
         // add the source part
         this.viewSourceEditor = new ModelSourceEditor(this.html.find('.model-source-tabs .model-source-editor'), this);
@@ -101,7 +110,7 @@ export default class HumantaskModelEditor extends ModelEditor {
         this.createCodeMirrorEditor();
     }
 
-    onEscapeKey(e) {
+    onEscapeKey(e: JQuery.KeyDownEvent) {
         if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
             return;
         }
@@ -130,18 +139,25 @@ export default class HumantaskModelEditor extends ModelEditor {
         this.freeContentEditor.on('change', () => this.taskModelChanged());
     }
 
-    /**
-     * 
-     * @param {String} propertyName 
-     * @param {String} propertyValue 
-     * @param {ElementDefinition} element
-     */
-    change(propertyName, propertyValue, element = this.model.implementation) {
-        element[propertyName] = propertyValue;
-        this.saveModel();
+    changeName(newName: string) {
+        if (this.model) {
+            this.model.name = newName;
+            this.saveModel();
+        }
+    }
+
+    changeDescription(newDescription: string) {
+        if (this.model) {
+            this.model.implementation.documentation.text = newDescription;
+            this.saveModel();
+        }
     }
 
     render() {
+        if (!this.model) return;
+        if (!this.model.implementation) return;
+
+
         // Render name and description
         this.htmlContainer.find('.inputName').val(this.model.name);
         this.htmlContainer.find('.inputDocumentation').val(this.model.implementation.documentation.text);
@@ -156,6 +172,9 @@ export default class HumantaskModelEditor extends ModelEditor {
     }
 
     renderPreview() {
+        if (!this.model) return;
+        if (!this.model.implementation) return;
+
         // Clear current content
         this.taskPreview.html('');
         this.taskPreviewErrors.html('');
@@ -167,7 +186,7 @@ export default class HumantaskModelEditor extends ModelEditor {
             return;
         }
 
-        const errorHandler = e => this.taskPreviewErrors.html(`Alpaca Error Message: ${e.message}`);
+        const errorHandler = (e: any) => this.taskPreviewErrors.html(`Alpaca Error Message: ${e.message}`);
 
         const parseResult = Util.parseJSON(taskModel);
         if (parseResult.object) {
@@ -187,12 +206,14 @@ export default class HumantaskModelEditor extends ModelEditor {
      * Sets or replaces the auto save timer (which runs 10 seconds after the last change)
      */
     taskModelChanged() {
+        if (!this.model) return;
+        if (!this.model.implementation) return;
+
         // Set 'changed' flag.
         this._changed = true;
 
         // Take latest and greatest json schema
         this.model.implementation.taskModel.value = this.freeContentEditor.getValue();
-
 
         this.renderPreview();
         this.setAutoSaveTimer();
@@ -244,7 +265,7 @@ export default class HumantaskModelEditor extends ModelEditor {
     /**
      * handle the change of the source (in 2nd tab)
      */
-    loadSource(source) {
+    loadSource(source: string) {
         this.file.source = source;
         this.loadModel();
         this.saveModel();
@@ -253,7 +274,7 @@ export default class HumantaskModelEditor extends ModelEditor {
     saveModel() {
         // Remove 'changed' flag just prior to saving
         this._changed = false;
-        this.file.source = this.model.toXML();
+        this.file.source = this.model?.toXML();
         this.file.save();
     }
 

@@ -3,22 +3,21 @@ import Util from "@util/util";
 import $ from "jquery";
 import MovableEditor from "../editors/movableeditor";
 import IDE from "../ide";
+import ModelDefinition from "@repository/definition/modeldefinition";
 
 export default class ModelEditor {
+    movableEditors: MovableEditor[] = [];
+    htmlContainer: any;
+    divMovableEditors: any;
+    keyStrokeListener: (e: any) => void;
+    private _html: JQuery<HTMLElement>;
     /**
-     * Basic model editor
-     * @param {IDE} ide 
-     * @param {ServerFile} file The full file name to be loaded, e.g. 'helloworld.case', 'sendresponse.humantask'
+     * Base class for model editor
      */
-    constructor(ide, file) {
-        this.ide = ide;
+    constructor(public ide: IDE, public file: ServerFile<ModelDefinition>) {
         this.ide.editorRegistry.add(this);
-        this.file = file;
-        this.modelType = file.fileType;
-        /** @type {Array<MovableEditor>} */
-        this.movableEditors = [];
-        this.html = $(
-`<div class="model-editor-base">
+        this._html = $(
+`<div class="model-editor-base" editor="${this.constructor.name}" model="${this.fileName}">
     <div class="model-editor-header">
         <label>${this.label}</label>
         <div class="refreshButton" title="Refresh">
@@ -31,6 +30,8 @@ export default class ModelEditor {
     <div class="divMovableEditors"></div>
     <div class="model-editor-content"></div>
 </div>`);
+        this.ide.divModelEditors.append(this._html);
+
         this.htmlContainer = this.html.find('.model-editor-content');
         this.divMovableEditors = this.html.find('.divMovableEditors');
 
@@ -38,34 +39,33 @@ export default class ModelEditor {
         this.keyStrokeListener = e => {
             const keyHandler = `on${e.key}Key`;
             // console.log("Pressed key " + e.key + " with code " + e.keyCode +"  from target " + e.target +" custom handler: " + keyHandler +" = " + this[keyHandler]);
-            if (this[keyHandler]) {
+            if ((this as any)[keyHandler]) {
                 // console.log("Invoking specific key handler")
-                this[keyHandler](e);
+                (this as any)[keyHandler](e);
             } else {
                 this.keyStrokeHandler(e);
             }
         }
-        this.html.find('.closeButton').on('click', e => this.close());
-        this.html.find('.refreshButton').on('click', e => this.refresh());
+        this.html.find('.closeButton').on('click', (e: JQuery.ClickEvent) => this.close());
+        this.html.find('.refreshButton').on('click', (e: JQuery.ClickEvent) => this.refresh());
     }
 
-    get fileName() {
+    get html(): JQuery<HTMLElement> {
+        return this._html;
+    }
+
+    get fileName(): string {
         return this.file.fileName;
     }
 
-    /**
-     * 
-     * @param {MovableEditor} editor 
-     */
-    registerMovableEditor(editor) {
+    registerMovableEditor(editor: MovableEditor) {
         this.movableEditors.push(editor);
     }
 
     /**
      * Make sure the editor is on top of the others
-     * @param {MovableEditor} editor 
      */
-    selectMovableEditor(editor) {
+    selectMovableEditor(editor: MovableEditor) {
         Util.removeFromArray(this.movableEditors, editor);
         this.movableEditors.push(editor);
         // Now reset z-index of editors, oldest at bottom, newest (this) at top.
@@ -74,10 +74,10 @@ export default class ModelEditor {
 
     /**
      * Give the editor an (initial) position
-     * @param {MovableEditor} editor 
      */
-    positionMovableEditor(editor) {
+    positionMovableEditor(editor: MovableEditor) {
         const newPosition = editor.html.offset();
+        if (! newPosition) return;
         if (newPosition.left == 0) {
             newPosition.left = 220;
         }
@@ -92,6 +92,7 @@ export default class ModelEditor {
         this.movableEditors.forEach(sibling => {
             if (sibling != editor && sibling.html.css('display') == 'block') {
                 const editorOffset = sibling.html.offset();
+                if (! editorOffset) return;
 
                 const leftMargin = editorOffset.left - MINIMUM_MARGIN_BETWEEN_EDITORS;
                 const rightMargin = editorOffset.left + MINIMUM_MARGIN_BETWEEN_EDITORS;
@@ -110,11 +111,15 @@ export default class ModelEditor {
         // Also keep editor inside the browser window
         const bodyWidth = document.body.offsetWidth;
         const bodyHeight = document.body.offsetHeight;
-        if ((newPosition.left + editor.html.width()) > bodyWidth) {
-            newPosition.left = Math.max(0, bodyWidth - editor.html.width() - MINIMUM_MARGIN_BETWEEN_EDITORS);
-        }
-        if ((newPosition.top + editor.html.height()) > bodyHeight) {
-            newPosition.top = Math.max(0, bodyHeight - editor.html.height() - MINIMUM_MARGIN_BETWEEN_EDITORS);
+        const editorWidth = editor.html.width();
+        const editorHeight = editor.html.height();
+        if (editorWidth && editorHeight) {
+            if ((newPosition.left + editorWidth) > bodyWidth) {
+                newPosition.left = Math.max(0, bodyWidth - editorWidth - MINIMUM_MARGIN_BETWEEN_EDITORS);
+            }
+            if ((newPosition.top + editorHeight) > bodyHeight) {
+                newPosition.top = Math.max(0, bodyHeight - editorHeight - MINIMUM_MARGIN_BETWEEN_EDITORS);
+            }    
         }
 
         editor.html.css('top', newPosition.top);
@@ -130,9 +135,9 @@ export default class ModelEditor {
 
     /**
      * Hides the movable editor on top.
-     * @returns {Boolean} true if an editor was hidden, false if no editors are visible
+     * @returns true if an editor was hidden, false if no editors are visible
      */
-    hideTopEditor() {
+    hideTopEditor(): boolean {
         const editorsReversed = Array.from(this.movableEditors).reverse();
         const visibleEditor = editorsReversed.find(editor => editor.visible)
         if (visibleEditor) {
@@ -143,10 +148,7 @@ export default class ModelEditor {
         }
     }
 
-    /**
-     * @returns {String}
-     */
-    get label() {
+    get label(): string {
         throw new Error('This method must be implemented in ' + this.constructor.name);
     }
 
@@ -163,24 +165,8 @@ export default class ModelEditor {
         throw new Error('This method must be implemented in ' + this.constructor.name);
     }
 
-    /**
-     * 
-     * @param {string} source 
-     */
-    loadSource(source) {
+    loadSource(source: string) {
         throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
-
-    /** @returns {JQuery<HTMLElement>} */
-    get html() {
-        return this._html;
-    }
-
-    set html(html) {
-        this._html = html;
-        html.attr('editor', this.constructor.name);
-        html.attr('model', this.fileName);
-        this.ide.divModelEditors.append(html);
     }
 
     toString() {
@@ -199,11 +185,7 @@ export default class ModelEditor {
     onHide() {
     }
 
-    /**
-     * 
-     * @param {JQuery.KeyDownEvent} e 
-     */
-    keyStrokeHandler(e) {
+    keyStrokeHandler(e: JQuery.KeyDownEvent) {
     }
 
     get visible() {

@@ -4,19 +4,16 @@ import ParameterDefinition from "@repository/definition/contract/parameterdefini
 import ModelEditor from "../modeleditor";
 import Util from "@util/util";
 import $ from "jquery";
+import ModelDefinition from "@repository/definition/modeldefinition";
 
 export default class ModelParameters {
+    html: JQuery<HTMLElement>;
+    parameters: ParameterDefinition<ModelDefinition>[] = [];
     /**
      * This object handles the input and output parameters of task model editor.
      * 
-     * @param {ModelEditor} editor 
-     * @param {JQuery<HTMLElement>} htmlContainer 
-     * @param {String} label 
      */
-    constructor(editor, htmlContainer, label) {
-        this.editor = editor;
-        this.htmlContainer = htmlContainer;
-        this.label = label;
+    constructor(public editor: ModelEditor, public htmlContainer: JQuery<HTMLElement>, public label: string) {
         this.html = $(
     `<div class='modelparametertable'>
         <label>${this.label}</label>
@@ -46,7 +43,7 @@ export default class ModelParameters {
      * 
      * @param {Array<ParameterDefinition>} parameters 
      */
-    renderParameters(parameters) {
+    renderParameters(parameters: ParameterDefinition<ModelDefinition>[]) {
         // First clean the old content
         Util.clearHTML(this.html.find('tbody'));
 
@@ -58,7 +55,7 @@ export default class ModelParameters {
         this.addParameter();
     }
 
-    changeParameter(html, parameter, name, id) {
+    changeParameter(html: JQuery<HTMLElement>, parameter: ParameterDefinition<ModelDefinition>, name: string, id: string) {
         if (parameter.isNew) {
             // No longer transient parameter
             parameter.isNew = false;
@@ -67,8 +64,8 @@ export default class ModelParameters {
         }
         parameter.name = name;
         parameter.id = id;
-        if (! parameter.id) parameter.id = Util.createID('_', 4) + '_' + name.replace(/\s/g, '');
-        if (! parameter.name) parameter.name = parameter.id;
+        if (!parameter.id) parameter.id = Util.createID('_', 4) + '_' + name.replace(/\s/g, '');
+        if (!parameter.name) parameter.name = parameter.id;
         // Make sure a newly generated id is rendered as well.
         html.find('.inputParameterName').val(parameter.name);
         html.find('.inputParameterId').val(parameter.id);
@@ -80,10 +77,11 @@ export default class ModelParameters {
      * 
      * @param {ParameterDefinition} parameter 
      */
-    addParameter(parameter = undefined) {
+    addParameter(parameter?: ParameterDefinition<ModelDefinition>) {
         if (parameter === undefined) {
             // create a new, empty parameter at the end of the table
-            parameter = this.editor.model.createDefinition(ParameterDefinition);
+            parameter = this.editor.file?.definition?.createDefinition(ParameterDefinition);
+            if (!parameter) return;
             parameter.id = parameter.name = '';
             parameter.isNew = true;
         }
@@ -101,11 +99,10 @@ export default class ModelParameters {
             Util.removeHTML(html);
             this.editor.completeUserAction();
         });
-        html.find('.inputParameterName').on('change', e => this.changeParameter(html, parameter, e.currentTarget.value, parameter.id));
-        // Remove "readonly" upon dblclick; id's are typically generated because they must be unique across multiple models
-        html.find('.inputParameterId').on('dblclick', e => $(e.currentTarget).attr('readonly', false));
-        html.find('.inputParameterId').on('change', e => this.changeParameter(html, parameter, parameter.name, e.currentTarget.value));
-
+        html.find('.inputParameterName').on('change', e => this.changeParameter(html, parameter, (e.currentTarget as any).value, parameter.id));
+        // // Remove "readonly" upon dblclick; id's are typically generated because they must be unique across multiple models
+        html.find('.inputParameterId').on('dblclick', e => $(e.currentTarget).attr('readonly', <any>false));
+        html.find('.inputParameterId').on('change', e => this.changeParameter(html, parameter, parameter.name, (e.currentTarget as any).value));
         this.html.find('tbody').append(html);
     }
 }

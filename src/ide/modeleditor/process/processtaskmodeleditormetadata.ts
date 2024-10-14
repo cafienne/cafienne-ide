@@ -5,22 +5,24 @@ import ServerFile from "@repository/serverfile/serverfile";
 import Icons from "@util/images/icons";
 import ModelEditorMetadata from "../modeleditormetadata";
 import ProcessModelEditor from "./processmodeleditor";
+import ModelDefinition from "@repository/definition/modeldefinition";
+import ModelEditor from "../modeleditor";
 
 export default class ProcessModelEditorMetadata extends ModelEditorMetadata {
     /** @returns {Array<ServerFile>} */
     get modelList() {
-        return this.ide.repository.getProcesses();
+        return this.ide?.repository.getProcesses() || [];
     }
 
-    supportsFile(file) {
+    supportsFile(file: ServerFile<ModelDefinition>) {
         return file instanceof ProcessFile;
     }
 
-    createEditor(ide, file) {
+    createEditor(ide: IDE, file: ProcessFile) {
         return new ProcessModelEditor(ide, file);
     }
 
-    get modelType() {
+    get fileType() {
         return 'process';
     }
 
@@ -44,7 +46,7 @@ export default class ProcessModelEditorMetadata extends ModelEditorMetadata {
      * @param {String} description 
      * @returns {Promise<String>} fileName of the new model
      */
-    async createNewModel(ide, name, description) {
+    async createNewModel(ide: IDE, name: string, description: string) {
         const newModelContent =
 `<process name="${name}" description="${description}">
     <${EXTENSIONELEMENTS}>

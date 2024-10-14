@@ -5,16 +5,14 @@ import XML from "@util/xml";
 import ModelEditor from "../modeleditor";
 
 export default class ModelSourceEditor {
+    private _changed: boolean = false;
+    private _codeMirrorEditor: any;
     /**
      * 
      * @param {JQuery<HTMLElement>} html 
      * @param {ModelEditor} editor 
      */
-    constructor(html, editor) {
-        this.editor = editor;
-        this.html = html;
-        this._changed = false;
-
+    constructor(public html: JQuery<HTMLElement>, public editor: ModelEditor) {
         // Add the code mirror object to the model-container
         this._codeMirrorEditor = CodeMirrorConfig.createXMLEditor(this.html);
 
@@ -25,7 +23,7 @@ export default class ModelSourceEditor {
         this._codeMirrorEditor.on('change', () => this._changed = true);
     }
 
-    render(source) {
+    render(source: string) {
         this._codeMirrorEditor.setValue(source);
         //this refresh, is a workaround for defect in codemirror
         //not rendered properly when html is hidden

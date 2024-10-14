@@ -1,6 +1,5 @@
 ﻿'use strict';
 
-import ElementDefinition from "@definition/elementdefinition";
 import ProcessModelDefinition from "@definition/process/processmodeldefinition";
 import IDE from "@ide/ide";
 import ProcessFile from "@repository/serverfile/processfile";
@@ -29,18 +28,22 @@ const CUSTOM_IMPLEMENTATION_DEFINITION = ' ';
 const CUSTOM_IMPLEMENTATION_DEFINITION_IMPLEMENTATION_CLASS = 'SPECIFY_IMPLEMENTATION_CLASS_HERE';
 
 export default class ProcessModelEditor extends ModelEditor {
+    inputParametersControl?: ModelParameters;
+    outputParametersControl?: ModelParameters;
+    viewSourceEditor?: ModelSourceEditor;
+    freeContentEditor: any;
+    private _changed: any;
+    private _currentAutoSaveTimer?: number;
+    private _model?: ProcessModelDefinition;
     static register() {
         ModelEditorMetadata.registerEditorType(new ProcessModelEditorMetadata());
     }
 
     /** 
      * This editor handles process models; only validates the xml
-     * @param {IDE} ide 
-     * @param {ProcessFile} file The full file name to be loaded, e.g. 'helloworld.case', 'sendresponse.humantask'
      */
-    constructor(ide, file) {
+    constructor(ide: IDE, public file: ProcessFile) {
         super(ide, file);
-        this.file = file;
         this.generateHTML();
     }
 
@@ -93,9 +96,9 @@ export default class ProcessModelEditor extends ModelEditor {
         this.htmlContainer.append(html);
 
         //add change event to input fields
-        this.htmlContainer.find('.inputName').on('change', e => this.change('name', e.currentTarget.value));
-        this.htmlContainer.find('.inputDocumentation').on('change', e => this.change('text', e.currentTarget.value, this.model.implementation.documentation));
-        this.htmlContainer.find('.selectImplementationType').on('change', e => this.changeImplementationType(e.currentTarget.value));
+        this.htmlContainer.find('.inputName').on('change', (e: any) => this.changeName(e.currentTarget.value));
+        this.htmlContainer.find('.inputDocumentation').on('change', (e: any) => this.changeDescription(e.currentTarget.value));
+        this.htmlContainer.find('.selectImplementationType').on('change', (e: any) => this.changeImplementationType(e.currentTarget.value));
 
         // Render input parameters
         this.inputParametersControl = new ModelParameters(this, this.html.find('.model-input-parameters'), 'Input Parameters');
@@ -103,9 +106,9 @@ export default class ProcessModelEditor extends ModelEditor {
 
         //add the tab control
         this.htmlContainer.find('.model-source-tabs').tabs({
-            activate: (e, ui) => {
+            activate: (e: any, ui: any) => {
                 if (ui.newPanel.hasClass('model-source-editor')) {
-                    this.viewSourceEditor.render(XML.prettyPrint(this.model.toXML()));
+                    this.viewSourceEditor?.render(XML.prettyPrint(this.model?.toXML()));
                 }
             }
         });
@@ -136,29 +139,30 @@ export default class ProcessModelEditor extends ModelEditor {
         this.viewSourceEditor = new ModelSourceEditor(this.html.find('.model-source-tabs .model-source-editor'), this);
     }
 
-    onEscapeKey(e) {
+    onEscapeKey(e: JQuery.KeyDownEvent) {
         if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
             return;
         }
         this.close();
     }
 
-    /**
-     * 
-     * @param {String} propertyName 
-     * @param {String} propertyValue 
-     * @param {ElementDefinition} element
-     */
-    change(propertyName, propertyValue, element = this.model) {
-        element[propertyName] = propertyValue;
-        this.saveModel();
+    changeName(newName: string) {
+        if (this.model) {
+            this.model.name = newName;
+            this.saveModel();
+        }
     }
 
-    /**
-     * 
-     * @param {String} propertyValue 
-     */
-    changeImplementationType(propertyValue) {
+    changeDescription(newDescription: string) {
+        if (this.model) {
+            this.model.documentation.text = newDescription;
+            this.saveModel();
+        }
+    }
+
+    changeImplementationType(propertyValue: string) {
+        if (!this.model) return;
+        if (!this.model.implementation) return;
         const modelImplementation = XML.loadXMLString(this.model.implementation.xml).documentElement;
         modelImplementation.setAttribute("class", propertyValue);
         this.model.implementation.xml = XML.prettyPrint(modelImplementation);
@@ -167,12 +171,15 @@ export default class ProcessModelEditor extends ModelEditor {
     }
 
     render() {
+        if (!this.model) return;
+        if (!this.model.implementation) return;
+
         // Render name, description and implementationType
         this.htmlContainer.find('.inputName').val(this.model.name);
         this.htmlContainer.find('.inputDocumentation').val(this.model.documentation.text);
         this.renderImplementationType();
-        this.inputParametersControl.renderParameters(this.model.inputParameters);
-        this.outputParametersControl.renderParameters(this.model.outputParameters);
+        this.inputParametersControl?.renderParameters(this.model.inputParameters);
+        this.outputParametersControl?.renderParameters(this.model.outputParameters);
 
         // Set the implementation content in the code mirror editor and
         this.freeContentEditor.setValue(this.model.implementation.xml);
@@ -180,12 +187,15 @@ export default class ProcessModelEditor extends ModelEditor {
     }
 
     renderImplementationType() {
+        if (!this.model) return;
+        if (!this.model.implementation) return;
+
         const modelImplementationDocument = XML.loadXMLString(this.model.implementation.xml).documentElement;
         const implementationType = modelImplementationDocument.getAttribute("class");
         const implementationTypeSelect = this.htmlContainer.find('.selectImplementationType');
         implementationTypeSelect.val(implementationType);
 
-        if(implementationTypeSelect.val() != implementationType) {
+        if (implementationTypeSelect.val() != implementationType) {
             //Unknown value in the select, reset select to custom value
             implementationTypeSelect.val(CUSTOM_IMPLEMENTATION_DEFINITION_IMPLEMENTATION_CLASS);
         }
@@ -243,7 +253,7 @@ export default class ProcessModelEditor extends ModelEditor {
     /**
      * handle the change of the source (in 2nd tab)
      */
-    loadSource(newSource) {
+    loadSource(newSource: any) {
         this.file.source = newSource;
         this.loadModel();
         this.saveModel();
@@ -252,13 +262,10 @@ export default class ProcessModelEditor extends ModelEditor {
     saveModel() {
         // Remove 'changed' flag just prior to saving
         this._changed = false;
-        this.file.source = this.model.toXML();
+        this.file.source = this.model?.toXML();
         this.file.save();
     }
 
-    /**
-     * @returns {ProcessModelDefinition}
-     */
     get model() {
         return this._model;
     }
@@ -274,7 +281,7 @@ export default class ProcessModelEditor extends ModelEditor {
             return;
         }
 
-        this.model.implementation.xml = value;
+        if (this.model && this.model.implementation) this.model.implementation.xml = value;
         this.renderImplementationType();
 
         this.saveModel();

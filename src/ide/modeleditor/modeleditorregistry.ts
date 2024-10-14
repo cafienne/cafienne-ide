@@ -8,7 +8,7 @@ import ModelEditorMetadata from "./modeleditormetadata";
 import ProcessModelEditor from "./process/processmodeleditor";
 
 export default class ModelEditorRegistry {
-    private editors: Array<ModelEditor> = [];
+    editors: Array<ModelEditor> = [];
 
     /**
      * 

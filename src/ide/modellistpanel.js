@@ -5,20 +5,15 @@ import "jquery-ui";
 import CreateNewModelDialog from "./createnewmodeldialog";
 import ModelEditorMetadata from "./modeleditor/modeleditormetadata";
 import RepositoryBrowser from "./repositorybrowser";
-import IDE from "./ide";
-import ModelDefinition from "@repository/definition/modeldefinition";
 
 export default class ModelListPanel {
-    ide: IDE;
-    htmlPanel: JQuery<HTMLElement>;
-    container: JQuery<HTMLElement>;
     /**
      * 
      * @param {RepositoryBrowser} repositoryBrowser
      * @param {JQuery<HTMLElement>} accordion 
      * @param {ModelEditorMetadata} type 
      */
-    constructor(public repositoryBrowser: RepositoryBrowser, public accordion: JQuery<HTMLElement>, public type: ModelEditorMetadata) {
+    constructor(repositoryBrowser, accordion, type) {
         this.accordion = accordion;
         this.repositoryBrowser = repositoryBrowser;
         this.ide = repositoryBrowser.ide;
@@ -33,7 +28,10 @@ export default class ModelListPanel {
         this.accordion.append(this.htmlPanel);
         this.accordion.accordion('refresh');
         this.container = this.accordion.find('.file-list-' + type.fileType);
-        this.htmlPanel.find('.plus-icon').on('click', e => this.create(e));
+        this.htmlPanel.find('.plus-icon').on('click', e => {
+            e.stopPropagation();
+            this.create(e)
+        });
 
         this.ide.repository.onListRefresh(() => this.setModelList());
     }
@@ -44,6 +42,7 @@ export default class ModelListPanel {
      */
     setModelList() {
         const files = this.type.modelList;
+        const shapeType = this.type.shapeType;
         // First create a big HTML string with for each model an <a> element
         const urlPrefix = window.location.origin + '/#';
 
@@ -81,8 +80,10 @@ export default class ModelListPanel {
 
     /**
      * Delete a file, when a .case file is deleted also delete the .dimensions file. 
+     * 
+     * @param {ServerFile} file 
      */
-    async delete(file: ServerFile<ModelDefinition>) {
+    async delete(file) {
         if (file.usage.length) {
             this.ide.danger(`Cannot delete '${file.fileName}' because the model is used in ${file.usage.length} other model${file.usage.length == 1 ? '' : 's'}\n${file.usage.length ? file.usage.map(e => '- ' + e.id).join('\n') : ''}`);
         } else {
@@ -102,9 +103,11 @@ export default class ModelListPanel {
     /**
      * Rename a file
      * all references to the model in other models will be renamed as well.
+     * 
+     * @param {ServerFile} file
      */
-    async rename(file: ServerFile<ModelDefinition>) {
-        const prompter = (previousProposal: string = ''): string | null => {
+    async rename(file) {
+        const prompter = (/** @type {String} */ previousProposal = '') => {
             const warningMsg = previousProposal !== file.name ? `\n   ${this.type} '${previousProposal}' already exists` : '';
             const text = `Specify a new name for ${this.type} '${file.name}'${warningMsg}`;
             const newName = prompt(text, previousProposal);
@@ -150,19 +153,20 @@ export default class ModelListPanel {
         }
     }
 
-    deploy(file: ServerFile<ModelDefinition>) {
+    deploy(file) {
         window.location.hash = file.fileName + '?deploy=true';
     }
 
     /**
      * Creates a new model based on name
+     * @param {*} e The click event
      */
-    async create(e: JQuery.ClickEvent<HTMLElement, undefined, HTMLElement, HTMLElement>) {
+    async create(e) {
         e.stopPropagation();
         const filetype = this.type.fileType;
         const text = `Create a new ${this.type}`;
         const dialog = new CreateNewModelDialog(this.ide, text);
-        dialog.showModalDialog(async (newModelInfo: {name: string, description: string}) => {
+        dialog.showModalDialog(async (newModelInfo) => {
             if (newModelInfo) {
                 const newModelName = newModelInfo.name;
                 const newModelDescription = newModelInfo.description;

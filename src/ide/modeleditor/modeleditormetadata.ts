@@ -59,7 +59,7 @@ export default class ModelEditorMetadata {
         throw new Error('This method must be implemented in ' + this.constructor.name);
     }
 
-    get modelType(): string {
+    get fileType(): string {
         throw new Error('This method must be implemented in ' + this.constructor.name);
     }
 
