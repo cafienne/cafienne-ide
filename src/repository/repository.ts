@@ -1,3 +1,4 @@
+import { $read, AjaxError } from "@util/ajax";
 import Util from "@util/util";
 import XML from "@util/xml";
 import ModelDefinition from "./definition/modeldefinition";
@@ -8,7 +9,7 @@ import DimensionsFile from "./serverfile/dimensionsfile";
 import HumanTaskFile from "./serverfile/humantaskfile";
 import Metadata from "./serverfile/metadata";
 import ProcessFile from "./serverfile/processfile";
-import ServerFile, { $ajax } from "./serverfile/serverfile";
+import ServerFile from "./serverfile/serverfile";
 
 export default class Repository extends RepositoryBase {
     listeners: (() => void)[] = [];
@@ -125,17 +126,9 @@ export default class Repository extends RepositoryBase {
      * Optional callback that will be invoked after model list has been retrieved
      */
     async listModels() {
-        return $ajax({
-            url: '/repository/list',
-            type: 'get'
-        }).then(({ data, status, xhr }) => {
-            return this.updateFileList(data.map(Metadata.from)).catch(error => 
-                console.log("Issue here ", error)
-            );
-        }).catch(({ xhr, status, errorThrown }) => {
-            console.error('Could not list the repository contents', errorThrown);
-            throw 'Could not fetch the list of models: ' + status;
-        });
+        await $read('list')
+            .then(models => this.updateFileList(models.map(Metadata.from)))
+            .catch((error: AjaxError) => { throw 'Could not fetch the list of models: ' + error.message });
     }
 
     /**
@@ -169,7 +162,7 @@ export default class Repository extends RepositoryBase {
         // Inform elements still in old list about their deletion.
         oldList.forEach(serverFile => serverFile.deprecate());
 
-        console.log("Informing " + this.listeners.length +" listeners about the new metadata")
+        console.log("Informing " + this.listeners.length + " listeners about the new metadata")
         this.listeners.forEach(listener => listener());
         console.groupEnd();
     }
@@ -185,14 +178,14 @@ export default class Repository extends RepositoryBase {
         // Now parse all files in the list
         const filesToParse = this.list.sort((f1, f2) => f2 instanceof CaseFile ? 1 : -1);
         // console.log("Found " + filesToParse.length +" files to be parsed:\n- ", filesToParse.map(file => file.fileName).join('\n- '))
-        for (let i = 0; i<filesToParse.length; i++) {
+        for (let i = 0; i < filesToParse.length; i++) {
             const file = filesToParse[i];
-            if (! file.definition) {
+            if (!file.definition) {
                 // console.log("Starting parse of " + file.fileName)
                 await file.parse()//.then(() => console.log("Completed parsing " + file.fileName));
             }
         }
-    
+
         // After refreshing and parsing, invoke any repository listeners about the new list.
         this.listeners.forEach(listener => listener());
         console.groupEnd();

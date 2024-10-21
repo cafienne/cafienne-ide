@@ -1,6 +1,6 @@
+import $ajax, { AjaxError } from "@util/ajax";
 import Util from "@util/util";
 import XML from "@util/xml";
-import $ from "jquery";
 import ModelDefinition from "../definition/modeldefinition";
 import RepositoryBase from "../repositorybase";
 import Metadata from "./metadata";
@@ -72,7 +72,7 @@ export default class ServerFile<M extends ModelDefinition> {
                 this.lastModified = serverMetadata.lastModified;
             }
         } else {
-            console.log("Clearing contents of " + this.fileName +", since server indicates there is new content")
+            console.log("Clearing contents of " + this.fileName + ", since server indicates there is new content")
             this.clear();
         }
         if (serverMetadata.serverContent) {
@@ -145,7 +145,7 @@ export default class ServerFile<M extends ModelDefinition> {
     }
 
     /**
-     * Loads the data of file, and invokes the callback there-after.
+     * Loads the data of file and parses it to a definition.
      */
     async fetch(): Promise<ServerFile<M>> {
         if (this.source) {
@@ -160,32 +160,23 @@ export default class ServerFile<M extends ModelDefinition> {
         // Simple method for easy checking whether the functionality is still working ...
         // this.usage();
 
-        return new Promise((resolve, reject) => {
-            return $ajax({
-                type,
-                url,
-            }).then(
-                ({ data, status, xhr }) => {
-                    if (xhr.responseText == '') {
-                        const msg = this.fileName + ' does not exist or is an empty file in the repository';
-                        console.warn(msg);
-                        // we could reject?
-                    } else {
-                        console.log(`Fetched ${this.fileName}, calling resolve`, data)
-                        resolve(data);
-                    }
-                },
-                ({ xhr, status, errorThrown }) => {
-                    console.warn('Could not open ' + url, errorThrown)
-                    // Cut the error message short.
-                    const str = ('' + errorThrown).split('\n')[0];
-                    reject(str);
-                }
-            );
-        }).then(data => this.source = data).then(() => this.parse()).then(() => {
-            console.log(`Parse ${this.fileName} is done, calling then.run`)
-            return this;
+        const response = await $ajax({ type, url }).catch((error: AjaxError) => {
+            if (error.xhr && error.xhr.status === 404) {
+                throw `File "${this.fileName}" cannot be found in the repository. Perhaps it has been deleted`;
+            } else {
+                throw error;
+            }
         });
+        if (response.xhr.responseText === '') {
+            const msg = this.fileName + ' does not exist or is an empty file in the repository';
+            console.warn(msg);
+            // we could reject?
+        }
+        console.log(`Fetched ${this.fileName}, calling parse with data `, response.data);
+        this.source = response.data;
+        await this.parse();
+        console.log(`Parse ${this.fileName} is done`);
+        return this;
     }
 
     /**
@@ -209,18 +200,12 @@ export default class ServerFile<M extends ModelDefinition> {
         if (definition.hasMigrated()) {
             console.log(`${definition.constructor.name} of '${this.fileName}' has migrated; uploading result`);
             this.source = definition.toXML();
-            return this.save().then(definition.loadDependencies).then(() => {
-                // console.log("File["+file.fileName+"].definition: " + file.definition);
-                this.validateDefinition();
-                return this;
-            });
-        } else {
-            return definition.loadDependencies().then(() => {
-                // console.log("File["+file.fileName+"].definition: " + file.definition);
-                this.validateDefinition();
-                return this;
-            });
+            await this.save();
         }
+        await definition.loadDependencies();
+        // console.log("File["+file.fileName+"].definition: " + file.definition);
+        this.validateDefinition();
+        return this;
     }
 
     /**
@@ -235,14 +220,12 @@ export default class ServerFile<M extends ModelDefinition> {
      * If the source of the file is not present, then it will be fetched from the server.
      */
     async load(): Promise<ServerFile<M>> {
-        return this.fetch().then(() => {
-            if (!this.definition) {
-                // console.log(`Parsing ${this.fileName} upon loading`)
-                return this.parse();
-            } else {
-                return this;
-            }
-        });
+        await this.fetch();
+        if (!this.definition) {
+            // console.log(`Parsing ${this.fileName} upon loading`)
+            await this.parse();
+        }
+        return this;
     }
 
     /**
@@ -266,26 +249,20 @@ export default class ServerFile<M extends ModelDefinition> {
         const url = '/repository/save/' + this.fileName;
         const type = 'post';
         console.groupCollapsed('Saving ' + this.fileName);
-        return $ajax({
-            url, data: xmlString, type,
-            headers: { 'content-type': 'application/xml' }
-        }).then(({ data, status, xhr }) => {
-            this.hasBeenSavedJustNow = true;
-            this.repository.updateMetadata(data);
-            this.hasBeenSavedJustNow = false;
-            // Also print a timestampe of the new last modified information
-            const lmDate = new Date(this.lastModified);
-            const HHmmss = lmDate.toTimeString().substring(0, 8);
-            const millis = ('000' + lmDate.getMilliseconds()).substr(-3);
-            console.log('Uploaded ' + this.fileName + ' at ' + HHmmss + ':' + millis);
+        const response = await $ajax({ url, data: xmlString, type, headers: { 'content-type': 'application/xml' } }).catch(() => {
             console.groupEnd();
-            return { data, status, xhr };
-        }).catch(({ xhr, status, errorThrown }) => {
-            console.groupEnd();
-            const msg = 'We could not save your work due to an error in the server. Please refresh the browser and make sure the server is up and running';
-            console.error(msg, errorThrown);
-            throw msg;
+            throw 'We could not save your work due to an error in the server. Please refresh the browser and make sure the server is up and running';
         });
+        this.hasBeenSavedJustNow = true;
+        this.repository.updateMetadata(response.data);
+        this.hasBeenSavedJustNow = false;
+        // Also print a timestampe of the new last modified information
+        const lmDate = new Date(this.lastModified);
+        const HHmmss = lmDate.toTimeString().substring(0, 8);
+        const millis = ('000' + lmDate.getMilliseconds()).substr(-3);
+        console.log('Uploaded ' + this.fileName + ' at ' + HHmmss + ':' + millis);
+        console.groupEnd();
+        return response;
     }
 
     /**
@@ -294,26 +271,21 @@ export default class ServerFile<M extends ModelDefinition> {
      */
     async rename(newName: string) {
         const oldName = this.fileName;
-        const url = `/repository/rename/${oldName}?newName=${newName}`;
+        const url = '/repository/rename/' + oldName + '?newName=' + newName;
         const type = 'put';
-        return $ajax({
-            url, type
-        }).then(({ data, status, xhr }) => {
-            this.hasBeenSavedJustNow = true;
-            this.fileName = newName;
-            this.repository.updateMetadata(data);
-            this.hasBeenSavedJustNow = false;
-            // Also print a timestampe of the new last modified information
-            const lmDate = new Date(this.lastModified);
-            const HHmmss = lmDate.toTimeString().substring(0, 8);
-            const millis = ('000' + lmDate.getMilliseconds()).substr(-3);
 
-            console.log(`Renamed ${oldName} to ${newName} at ${HHmmss}:${millis}`);
-            return this;
-        }).catch(({ xhr, status, errorThrown }) => {
-            console.error(errorThrown);
-            throw new Error('We could not rename the file: ' + status)
-        });
+        const response = await $ajax({ url, type }).catch((error: AjaxError) => { throw new Error('We could not rename the file: ' + error.message) });
+        this.hasBeenSavedJustNow = true;
+        this.fileName = newName;
+        this.repository.updateMetadata(response.data);
+        this.hasBeenSavedJustNow = false;
+        // Also print a timestampe of the new last modified information
+        const lmDate = new Date(this.lastModified);
+        const HHmmss = lmDate.toTimeString().substring(0, 8);
+        const millis = ('000' + lmDate.getMilliseconds()).substr(-3);
+
+        console.log(`Renamed ${oldName} to ${newName} at ${HHmmss}:${millis}`);
+        return this;
     }
 
     /**
@@ -322,11 +294,10 @@ export default class ServerFile<M extends ModelDefinition> {
     async delete() {
         const url = '/repository/delete/' + this.fileName;
         const type = 'delete';
-        return $ajax({ url, type }).then(({ data, status, xhr }) => {
-            Util.removeFromArray(this.repository.list, this);
-            this.repository.updateMetadata(data);
-            console.log('Deleted ' + this.fileName);
-        });
+        const response = await $ajax({ url, type });
+        Util.removeFromArray(this.repository.list, this);
+        this.repository.updateMetadata(response.data);
+        console.log('Deleted ' + this.fileName);
     }
 
     /**
@@ -343,18 +314,4 @@ export default class ServerFile<M extends ModelDefinition> {
     usedBy() {
         return Util.removeDuplicates(this.repository.list.filter(file => file.references.contains(this)));
     }
-}
-
-type JQueryResponse = {
-    xhr: JQuery.jqXHR,
-    data: any,
-    status: string
-}
-
-export function $ajax(settings: JQueryAjaxSettings): Promise<JQueryResponse> {
-    return new Promise<JQueryResponse>((resolve, reject) => $.ajax(settings).then((data, status, xhr) => resolve({ data, xhr, status }), (xhr, status, errorThrown) => {
-        console.log("Rejecting ", settings);
-        console.error(errorThrown)
-        reject({ xhr, status, errorThrown });
-    }));
 }

@@ -55,14 +55,14 @@ export default class RepositoryBrowser {
 
         //set refresh handle on click
         this.html.find('.btnRefresh').on('click', () => {
-            this.repository.listModels().then(() => this.searchBox.val('')).catch(message => this.ide.danger(message));
+            this.repository.listModels().then(() => this.searchBox.val('')).catch(message => this.ide.danger(message, 5000));
         });
 
         // Add handler for hash changes, that should load the new model
         $(window).on('hashchange', () => this.loadModelFromBrowserLocation());
 
         // Now load the repository contents, and after that optionally load the first model
-        this.repository.listModels().then(() => this.loadModelFromBrowserLocation()).catch(msg => this.ide.danger(msg));
+        this.repository.listModels().then(() => this.loadModelFromBrowserLocation()).catch(msg => this.ide.danger(msg, 5000));
 
         ModelEditorMetadata.types.forEach(type => type.init(this));
     }

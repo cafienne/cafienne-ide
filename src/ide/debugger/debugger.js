@@ -1,11 +1,12 @@
 'use strict';
 
 import CaseView from "@ide/modeleditor/case/elements/caseview";
+import { $read } from "@util/ajax";
 import CodeMirrorConfig from "@util/codemirrorconfig";
 import Util from "@util/util";
+import $ from "jquery";
 import StandardForm from "../editors/standardform";
 import RightSplitter from "../splitter/rightsplitter";
-import $ from "jquery";
 
 /**
  * This class implements the logic to call the repository REST service to debug a case instance.
@@ -372,7 +373,7 @@ export default class Debugger extends StandardForm {
     }
 
     isDefinitionEvent(event) {
-        return (event.content && event.content.definition && event.content.definition.source && (''+event.content.definition.source).startsWith('<?xml'));
+        return (event.content && event.content.definition && event.content.definition.source && ('' + event.content.definition.source).startsWith('<?xml'));
     }
 
     getEventButton(event) {
@@ -578,7 +579,7 @@ export default class Debugger extends StandardForm {
         this.events = [];
     }
 
-    showEvents() {
+    async showEvents() {
         const caseInstanceId = this.html.find('.caseInstanceId').val();
         const from = this.html.find('.from').val();
         const to = this.html.find('.to').val();
@@ -590,17 +591,15 @@ export default class Debugger extends StandardForm {
             parameters.push(`to=${to}`)
         }
 
-        $.get(`/repository/api/events/${caseInstanceId}?${parameters.join('&')}`)
-            .done(data => {
-                this.events = data;
-                if (this.events.length > 0) {
-                    // Only overwrite the previous identifier if we have actually found events.
-                    localStorage.setItem('debug-case-id', caseInstanceId.toString());
-                    localStorage.setItem('from', '' + from);
-                    localStorage.setItem('to', '' + to);
-                }
-            })
-            .fail(data => this.modelEditor.ide.danger(data.responseText));
+        $read(`api/events/${caseInstanceId}?${parameters.join('&')}`).then(data => {
+            this.events = data;
+            if (this.events.length > 0) {
+                // Only overwrite the previous identifier if we have actually found events.
+                localStorage.setItem('debug-case-id', caseInstanceId.toString());
+                localStorage.setItem('from', '' + from);
+                localStorage.setItem('to', '' + to);
+            }
+        }).catch(error => this.modelEditor.ide.danger(error.message, 5000));
     }
 }
 

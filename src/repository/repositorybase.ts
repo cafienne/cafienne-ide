@@ -13,10 +13,6 @@ export default class RepositoryBase {
         throw new Error('This method must be implemented in ' + this.constructor.name);
     }
 
-    async updateFileList(newServerFileList: Array<Metadata>): Promise<void> {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
-
     async load<X extends ModelDefinition>(fileName: string): Promise<ServerFile<X>> {
         throw new Error('This method must be implemented in ' + this.constructor.name);
     }

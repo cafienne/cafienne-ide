@@ -1,7 +1,7 @@
 ﻿import StandardForm from "@ide/editors/standardform";
+import { $read, AjaxError } from "@util/ajax";
 import CodeMirrorConfig from "@util/codemirrorconfig";
 import CaseView from "../elements/caseview";
-import $ from "jquery";
 
 export default class Deploy extends StandardForm {
     /**
@@ -70,36 +70,35 @@ export default class Deploy extends StandardForm {
         this._setContent('Server validation messages', text);
     }
 
-    deploy() {
+    async deploy() {
         // By logging the deploy action in a group, we can see in the console how many times the file has been deployed. UI only shows latest...
         console.group("Deploying case file " + this.case.editor.fileName);
-        $.get('/repository/deploy/' + this.case.editor.fileName)
-            .done(data => {
+        $read('deploy', this.case.editor.fileName)
+            .then(() => {
                 const now = new Date().toISOString().replace('T', ' ').substring(0, 19);
                 const msg = 'Deployed at ' + now;
                 console.log(msg);
                 console.groupEnd();
                 this._setDeployedTimestamp(msg);
-            })
-            .fail(data => {
+            }).catch((error) => {
                 console.groupEnd();
-                this._setDeployTextArea(data.responseText);
+                this._setDeployTextArea(error.message);
                 this._setDeployedTimestamp('');
                 this.case.editor.ide.danger('Deploy of CMMN model ' + this.case.name + ' failed');
-            });
+            })
     }
 
-    viewCMMN() {
+    async viewCMMN() {
         this._setDeployTextArea('Fetching CMMN ...');
-        $.get('/repository/viewCMMN/' + this.case.editor.fileName)
-            .done(data => this._setDeployTextArea((new XMLSerializer()).serializeToString(data)))
-            .fail(data => this._setDeployTextArea(data.responseText));
+        $read('viewCMMN', this.case.editor.fileName)
+            .then(data => this._setDeployTextArea((new XMLSerializer()).serializeToString(data)))
+            .catch(error => this._setDeployTextArea(error.message));
     }
 
-    runServerValidation() {
+    async runServerValidation() {
         this._setValidationResult('Validating ...');
-        $.get('/repository/validate/' + this.case.editor.fileName)
-            .done(data => this._setValidationResult(data.join('\n')))
-            .fail(data => this._setValidationResult(data.responseText));
+        await $read('validate', this.case.editor.fileName)
+            .then(data => this._setValidationResult(data.join('\n')))
+            .catch(error => this._setValidationResult(error.message));
     }
 }
