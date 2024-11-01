@@ -4,7 +4,7 @@ const devMode = process.env.DEV_MODE ? process.env.DEV_MODE.trim().toLowerCase()
 var buildNumber = 1;
 
 module.exports = {
-    entry: './src/index.ts',
+    entry: './src/client/index.ts',
     output: {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'dist/app'),
@@ -42,10 +42,10 @@ module.exports = {
     resolve: {
         extensions: ['.tsx', '.ts', '.js', '.html'],
         alias: {
-            '@util': path.resolve(__dirname, 'src/util'),
-            '@repository': path.resolve(__dirname, 'src/repository'),
-            '@definition': path.resolve(__dirname, 'src/repository/definition'),
-            '@ide': path.resolve(__dirname, 'src/ide'),
+            '@util': path.resolve(__dirname, 'src/client/util'),
+            '@repository': path.resolve(__dirname, 'src/client/repository'),
+            '@definition': path.resolve(__dirname, 'src/client/repository/definition'),
+            '@ide': path.resolve(__dirname, 'src/client/ide'),
             '@styles': path.resolve(__dirname, 'app/styles'),
             '_images_': path.resolve(__dirname, 'app/images'),
             'jquery': path.resolve(__dirname, 'node_modules/jquery/dist/jquery'),

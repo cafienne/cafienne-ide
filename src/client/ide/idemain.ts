@@ -4,13 +4,13 @@ import LeftSplitter from "./splitter/leftsplitter";
 import $ from "jquery";
 
 // NO ALT SHIFT O (Do not apply sorting on imports of stylesheets.)
-import "../../node_modules/jointjs/dist/joint.css";
-import "../../node_modules/bootstrap/dist/css/bootstrap.css";
-import "../../node_modules/jquery-ui/dist/themes/base/jquery-ui.css";
-import "../../node_modules/codemirror/lib/codemirror.css";
-import "../../node_modules/codemirror/addon/fold/foldgutter.css";
-import "../../node_modules/codemirror/addon/hint/show-hint.css";
-import "../../node_modules/alpaca/dist/alpaca/bootstrap/alpaca.min.css";
+import "../../../node_modules/jointjs/dist/joint.css";
+import "../../../node_modules/bootstrap/dist/css/bootstrap.css";
+import "../../../node_modules/jquery-ui/dist/themes/base/jquery-ui.css";
+import "../../../node_modules/codemirror/lib/codemirror.css";
+import "../../../node_modules/codemirror/addon/fold/foldgutter.css";
+import "../../../node_modules/codemirror/addon/hint/show-hint.css";
+import "../../../node_modules/alpaca/dist/alpaca/bootstrap/alpaca.min.css";
 
 import "@styles/ide/ide.css";
 import "@styles/ide/dragdata.css";
