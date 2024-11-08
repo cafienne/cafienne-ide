@@ -44,6 +44,9 @@ module.exports = {
             },
         ],
     },
+    externals: {
+        fs: 'require("fs")'
+    },
     resolve: {
         extensions: ['.tsx', '.ts', '.js', '.html'],
         alias: {
