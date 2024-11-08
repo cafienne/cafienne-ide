@@ -1,0 +1,5 @@
+<type id="MainType.type" name="MainType">
+    <schema>
+        <property id="sp__Yo6iV_0" name="ReusedGreeting" type="Greeting.type" multiplicity="ExactlyOne"/>
+    </schema>
+</type>

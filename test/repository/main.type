@@ -1,0 +1,5 @@
+<type id="main.type" name="main">
+    <schema>
+        <property id="sp__tkAy0_0" name="MainGreeting" type="Greeting.type" multiplicity="ExactlyOne"/>
+    </schema>
+</type>

@@ -1,0 +1,97 @@
+<definitions xmlns="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:cafienne="org.cafienne">
+    <caseFileItemDefinition name="MainType" definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified" id="MainType.type"/>
+    <caseFileItemDefinition name="Greeting" definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified" id="Greeting.type">
+        <property name="Message" type="http://www.omg.org/spec/CMMN/PropertyType/string">
+            <extensionElements mustUnderstand="false">
+                <cafienne:implementation xmlns:cafienne="org.cafienne" isBusinessIdentifier="true"/>
+            </extensionElements>
+        </property>
+        <property name="To" type="http://www.omg.org/spec/CMMN/PropertyType/string">
+            <extensionElements mustUnderstand="false">
+                <cafienne:implementation xmlns:cafienne="org.cafienne" isBusinessIdentifier="true"/>
+            </extensionElements>
+        </property>
+        <property name="From" type="http://www.omg.org/spec/CMMN/PropertyType/string"/>
+    </caseFileItemDefinition>
+    <caseFileItemDefinition name="SubType" definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified" id="SubType.type"/>
+    <case id="maintype.case" name="maintype" expressionLanguage="spel">
+        <caseFileModel cafienne:typeRef="MainType.type">
+            <caseFileItem id="ReusedGreeting" name="ReusedGreeting" multiplicity="ExactlyOne" definitionRef="Greeting.type"/>
+        </caseFileModel>
+        <casePlanModel id="cm__wnM5j_0" name="maintype" autoComplete="true">
+            <planItem id="pi_ct__wnM5j_0" name="subtype" definitionRef="ct__wnM5j_0">
+                <entryCriterion id="_wnM5j_3" name="EntryCriterion_0" sentryRef="crit__wnM5j_0"/>
+                <itemControl id="_wnM5j_0">
+                    <repetitionRule id="_wnM5j_1" contextRef="ReusedGreeting">
+                        <condition id="_wnM5j_2">
+                            <body>
+                                <![CDATA[true]]>
+                            </body>
+                        </condition>
+                    </repetitionRule>
+                </itemControl>
+            </planItem>
+            <sentry id="crit__wnM5j_0">
+                <caseFileItemOnPart id="_wnM5j_4" sourceRef="ReusedGreeting">
+                    <standardEvent>create</standardEvent>
+                </caseFileItemOnPart>
+            </sentry>
+            <caseTask id="ct__wnM5j_0" name="subtype" isBlocking="true" caseRef="subtype.case"/>
+        </casePlanModel>
+    </case>
+    <case id="subtype.case" name="subtype" expressionLanguage="spel">
+        <caseFileModel cafienne:typeRef="SubType.type">
+            <caseFileItem id="subtype/ReusedGreeting" name="ReusedGreeting" multiplicity="ExactlyOne" definitionRef="Greeting.type"/>
+        </caseFileModel>
+        <casePlanModel id="cm__RfkLC_0" name="subtype" autoComplete="true">
+            <planItem id="pi_ht__RfkLC_0" name="HumanTask_0" definitionRef="ht__RfkLC_0">
+                <entryCriterion id="_RfkLC_1" name="EntryCriterion_0" sentryRef="crit__RfkLC_0"/>
+                <itemControl id="_RfkLC_0">
+                    <repetitionRule id="_RfkLC_3" contextRef="subtype/ReusedGreeting">
+                        <condition id="_RfkLC_4">
+                            <body>
+                                <![CDATA[true]]>
+                            </body>
+                        </condition>
+                    </repetitionRule>
+                </itemControl>
+            </planItem>
+            <sentry id="crit__RfkLC_0">
+                <caseFileItemOnPart id="_RfkLC_2" sourceRef="subtype/ReusedGreeting">
+                    <standardEvent>create</standardEvent>
+                </caseFileItemOnPart>
+            </sentry>
+            <humanTask id="ht__RfkLC_0" name="HumanTask_0" isBlocking="true"/>
+        </casePlanModel>
+    </case>
+    <CMMNDI>
+        <CMMNDiagram>
+            <CMMNShape cmmnElementRef="cm__wnM5j_0">
+                <Bounds x="20" y="20" width="800" height="500"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="pi_ct__wnM5j_0">
+                <Bounds x="140" y="190" width="140" height="80"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="ReusedGreeting">
+                <Bounds x="152" y="398" width="25" height="40"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="_wnM5j_3">
+                <Bounds x="164" y="260" width="12" height="20"/>
+            </CMMNShape>
+            <CMMNEdge sourceCMMNElementRef="ReusedGreeting" targetCMMNElementRef="_wnM5j_3"/>
+            <CMMNShape cmmnElementRef="cm__RfkLC_0">
+                <Bounds x="20" y="20" width="800" height="500"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="pi_ht__RfkLC_0">
+                <Bounds x="160" y="160" width="140" height="80"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="subtype/ReusedGreeting">
+                <Bounds x="186.79165649414062" y="382" width="25" height="40"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="_RfkLC_1">
+                <Bounds x="194" y="230" width="12" height="20"/>
+            </CMMNShape>
+            <CMMNEdge sourceCMMNElementRef="subtype/ReusedGreeting" targetCMMNElementRef="_RfkLC_1"/>
+        </CMMNDiagram>
+    </CMMNDI>
+</definitions>

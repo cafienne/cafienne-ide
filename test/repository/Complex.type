@@ -1,0 +1,16 @@
+<type id="Complex.type" name="Complex">
+    <schema>
+        <property id="sp__C64hp_1" name="Nesting" type="object" multiplicity="ExactlyOne">
+            <schema>
+                <property id="sp__C64hp_3" name="Greeting" type="Greeting.type" multiplicity="ExactlyOne"/>
+                <property id="sp__BtvE9_0" name="Response" type="Response.type" multiplicity="ExactlyOne"/>
+            </schema>
+        </property>
+        <property id="sp__WQnSY_3" name="AnotherNesting" type="object" multiplicity="ExactlyOne">
+            <schema>
+                <property id="sp__WQnSY_5" name="Greeting" type="Greeting.type" multiplicity="ExactlyOne"/>
+                <property id="sp__XluI7_1" name="Reponse" type="Response.type" multiplicity="ExactlyOne"/>
+            </schema>
+        </property>
+    </schema>
+</type>

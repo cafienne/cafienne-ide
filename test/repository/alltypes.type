@@ -1,0 +1,17 @@
+<type id="alltypes.type" name="alltypes">
+    <schema>
+        <property id="sp__gR5Ui_10" name="AllTypes" type="object" multiplicity="ExactlyOne">
+            <schema>
+                <property id="sp__gR5Ui_12" name="string" type="string" multiplicity="ExactlyOne"/>
+                <property id="sp__BBxLy_0" name="integer" type="integer" multiplicity="ExactlyOne"/>
+                <property id="sp__BBxLy_2" name="number" type="number" multiplicity="ExactlyOne"/>
+                <property id="sp__BBxLy_3" name="boolean" type="boolean" multiplicity="ExactlyOne"/>
+                <property id="sp__BBxLy_4" name="time" type="string" multiplicity="ExactlyOne" format="time"/>
+                <property id="sp__BBxLy_5" name="date" type="string" multiplicity="ExactlyOne" format="date"/>
+                <property id="sp__BBxLy_6" name="date-time" type="string" multiplicity="ExactlyOne" format="date-time"/>
+                <property id="sp__BBxLy_7" name="any URI" type="string" multiplicity="ExactlyOne" format="uri"/>
+                <property id="sp__BBxLy_8" name="QName" type="string" multiplicity="ExactlyOne" format="QName"/>
+            </schema>
+        </property>
+    </schema>
+</type>

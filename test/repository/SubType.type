@@ -1,0 +1,5 @@
+<type id="SubType.type" name="SubType">
+    <schema>
+        <property id="sp__YLA7I_0" name="ReusedGreeting" type="Greeting.type" multiplicity="ExactlyOne"/>
+    </schema>
+</type>

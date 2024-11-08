@@ -1,0 +1,66 @@
+<case id="main.case" name="main" expressionLanguage="spel" guid="_UpzV4">
+    <caseFileModel typeRef="main.type"/>
+    <casePlanModel id="cm__UpzV4_0" name="main" autoComplete="true">
+        <humanTask id="pi_ht__UpzV4_0" name="HumanTask_0" isBlocking="true">
+            <itemControl id="_UpzV4_0">
+                <repetitionRule id="_UpzV4_1" contextRef="MainGreeting">
+                    <condition id="_UpzV4_2">
+                        <body>
+                            <![CDATA[true]]>
+                        </body>
+                    </condition>
+                </repetitionRule>
+            </itemControl>
+        </humanTask>
+        <caseTask id="pi_ct__UpzV4_0" name="sub" isBlocking="true" caseRef="sub.case">
+            <entryCriterion id="_UpzV4_8" name="EntryCriterion_0">
+                <ifPart id="_UpzV4_10" contextRef="MainGreeting">
+                    <condition id="_UpzV4_11">
+                        <body>
+                            <![CDATA[]]>
+                        </body>
+                    </condition>
+                </ifPart>
+                <caseFileItemOnPart id="_UpzV4_9" sourceRef="MainGreeting">
+                    <standardEvent>create</standardEvent>
+                </caseFileItemOnPart>
+            </entryCriterion>
+            <entryCriterion id="_UpzV4_13" name="EntryCriterion_1">
+                <caseFileItemOnPart id="_UpzV4_15" sourceRef="MainGreeting">
+                    <standardEvent>create</standardEvent>
+                </caseFileItemOnPart>
+                <planItemOnPart id="_UpzV4_14" sourceRef="pi_ms__UpzV4_0">
+                    <standardEvent>occur</standardEvent>
+                </planItemOnPart>
+            </entryCriterion>
+            <entryCriterion id="_UpzV4_21" name="EntryCriterion_3">
+                <caseFileItemOnPart id="_UpzV4_23" sourceRef="MainGreeting">
+                    <standardEvent>create</standardEvent>
+                </caseFileItemOnPart>
+                <planItemOnPart id="_UpzV4_22" sourceRef="pi_ue__UpzV4_0">
+                    <standardEvent>occur</standardEvent>
+                </planItemOnPart>
+            </entryCriterion>
+        </caseTask>
+        <milestone id="pi_ms__UpzV4_0" name="Milestone_0">
+            <entryCriterion id="_UpzV4_16" name="EntryCriterion_2">
+                <ifPart id="_UpzV4_19" contextRef="MainGreeting">
+                    <condition id="_UpzV4_20">
+                        <body>
+                            <![CDATA[]]>
+                        </body>
+                    </condition>
+                </ifPart>
+                <caseFileItemOnPart id="_UpzV4_18" sourceRef="MainGreeting">
+                    <standardEvent>create</standardEvent>
+                </caseFileItemOnPart>
+                <planItemOnPart id="_UpzV4_17" sourceRef="pi_ct__UpzV4_0">
+                    <standardEvent>complete</standardEvent>
+                </planItemOnPart>
+            </entryCriterion>
+        </milestone>
+        <userEvent id="pi_ue__UpzV4_0" name="UserEvent_0"/>
+    </casePlanModel>
+    <input id="_UpzV4_6" name="MainGreeting" bindingRef="MainGreeting"/>
+    <output id="_UpzV4_7" name="MainGreeting" bindingRef="MainGreeting"/>
+</case>

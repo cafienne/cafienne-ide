@@ -1,0 +1,39 @@
+<case id="complex_subcase.case" name="complex_subcase" expressionLanguage="spel" guid="_bpsen">
+    <caseFileModel typeRef="Complex.type"/>
+    <casePlanModel id="cm__bpsen_0" name="complex_subcase" autoComplete="true">
+        <humanTask id="pi_ht__bpsen_0" name="Handle input/output" isBlocking="true">
+            <entryCriterion id="_bpsen_7" name="EntryCriterion_0">
+                <caseFileItemOnPart id="_bpsen_8" sourceRef="Nesting/Greeting">
+                    <standardEvent>create</standardEvent>
+                </caseFileItemOnPart>
+            </entryCriterion>
+            <entryCriterion id="_bpsen_9" name="EntryCriterion_1">
+                <caseFileItemOnPart id="_bpsen_10" sourceRef="AnotherNesting/Greeting">
+                    <standardEvent>create</standardEvent>
+                </caseFileItemOnPart>
+            </entryCriterion>
+            <itemControl id="_bpsen_2">
+                <repetitionRule id="_bpsen_5" contextRef="Nesting/Greeting">
+                    <condition id="_bpsen_6">
+                        <body>
+                            <![CDATA[true]]>
+                        </body>
+                    </condition>
+                </repetitionRule>
+            </itemControl>
+        </humanTask>
+    </casePlanModel>
+    <input id="_bpsen_0" name="&gt; Greeting" bindingRef="sp__ZLyUZ_3"/>
+    <output id="_bpsen_1" name="&gt; Response" bindingRef="sp__7fMqa_1"/>
+    <textAnnotation id="_bpsen_11">
+        <text>
+            <![CDATA[complex_subcase/Nesting/Greeting
+]]>
+        </text>
+    </textAnnotation>
+    <textAnnotation id="_bpsen_12">
+        <text>
+            <![CDATA[complex_subcase/AnotherNesting/Greeting]]>
+        </text>
+    </textAnnotation>
+</case>

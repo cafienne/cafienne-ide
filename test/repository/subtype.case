@@ -1,0 +1,21 @@
+<case id="subtype.case" name="subtype" expressionLanguage="spel" guid="_RfkLC">
+    <caseFileModel typeRef="SubType.type"/>
+    <casePlanModel id="cm__RfkLC_0" name="subtype" autoComplete="true">
+        <humanTask id="pi_ht__RfkLC_0" name="HumanTask_0" isBlocking="true">
+            <entryCriterion id="_RfkLC_1" name="EntryCriterion_0">
+                <caseFileItemOnPart id="_RfkLC_2" sourceRef="ReusedGreeting">
+                    <standardEvent>create</standardEvent>
+                </caseFileItemOnPart>
+            </entryCriterion>
+            <itemControl id="_RfkLC_0">
+                <repetitionRule id="_RfkLC_3" contextRef="ReusedGreeting">
+                    <condition id="_RfkLC_4">
+                        <body>
+                            <![CDATA[true]]>
+                        </body>
+                    </condition>
+                </repetitionRule>
+            </itemControl>
+        </humanTask>
+    </casePlanModel>
+</case>

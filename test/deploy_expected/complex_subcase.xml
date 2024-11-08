@@ -1,0 +1,111 @@
+<definitions xmlns="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:cafienne="org.cafienne">
+    <caseFileItemDefinition name="Nesting" definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified" id="Complex_type_Nesting.object"/>
+    <caseFileItemDefinition name="AnotherNesting" definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified" id="Complex_type_AnotherNesting.object"/>
+    <caseFileItemDefinition name="Complex" definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified" id="Complex.type"/>
+    <caseFileItemDefinition name="Greeting" definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified" id="Greeting.type">
+        <property name="Message" type="http://www.omg.org/spec/CMMN/PropertyType/string">
+            <extensionElements mustUnderstand="false">
+                <cafienne:implementation xmlns:cafienne="org.cafienne" isBusinessIdentifier="true"/>
+            </extensionElements>
+        </property>
+        <property name="To" type="http://www.omg.org/spec/CMMN/PropertyType/string">
+            <extensionElements mustUnderstand="false">
+                <cafienne:implementation xmlns:cafienne="org.cafienne" isBusinessIdentifier="true"/>
+            </extensionElements>
+        </property>
+        <property name="From" type="http://www.omg.org/spec/CMMN/PropertyType/string"/>
+    </caseFileItemDefinition>
+    <caseFileItemDefinition name="Response" definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified" id="Response.type">
+        <property name="Message" type="http://www.omg.org/spec/CMMN/PropertyType/string"/>
+        <property name="Date" type="http://www.omg.org/spec/CMMN/PropertyType/string"/>
+        <property name="Time" type="http://www.omg.org/spec/CMMN/PropertyType/string"/>
+        <property name="SomeBoolean" type="http://www.omg.org/spec/CMMN/PropertyType/boolean"/>
+    </caseFileItemDefinition>
+    <case id="complex_subcase.case" name="complex_subcase" expressionLanguage="spel">
+        <caseFileModel cafienne:typeRef="Complex.type">
+            <caseFileItem id="Nesting" name="Nesting" multiplicity="ExactlyOne" definitionRef="Complex_type_Nesting.object">
+                <children>
+                    <caseFileItem id="Nesting/Greeting" name="Greeting" multiplicity="ExactlyOne" definitionRef="Greeting.type"/>
+                    <caseFileItem id="Nesting/Response" name="Response" multiplicity="ExactlyOne" definitionRef="Response.type"/>
+                </children>
+            </caseFileItem>
+            <caseFileItem id="AnotherNesting" name="AnotherNesting" multiplicity="ExactlyOne" definitionRef="Complex_type_AnotherNesting.object">
+                <children>
+                    <caseFileItem id="AnotherNesting/Greeting" name="Greeting" multiplicity="ExactlyOne" definitionRef="Greeting.type"/>
+                    <caseFileItem id="AnotherNesting/Reponse" name="Reponse" multiplicity="ExactlyOne" definitionRef="Response.type"/>
+                </children>
+            </caseFileItem>
+        </caseFileModel>
+        <casePlanModel id="cm__bpsen_0" name="complex_subcase" autoComplete="true">
+            <planItem id="pi_ht__bpsen_0" name="Handle input/output" definitionRef="ht__bpsen_0">
+                <entryCriterion id="_bpsen_7" name="EntryCriterion_0" sentryRef="s__bpsen_7"/>
+                <entryCriterion id="_bpsen_9" name="EntryCriterion_1" sentryRef="s__bpsen_9"/>
+                <itemControl id="_bpsen_2">
+                    <repetitionRule id="_bpsen_5" contextRef="Nesting/Greeting">
+                        <condition id="_bpsen_6">
+                            <body>
+                                <![CDATA[true]]>
+                            </body>
+                        </condition>
+                    </repetitionRule>
+                </itemControl>
+            </planItem>
+            <sentry id="s__bpsen_7">
+                <caseFileItemOnPart id="_bpsen_8" sourceRef="Nesting/Greeting">
+                    <standardEvent>create</standardEvent>
+                </caseFileItemOnPart>
+            </sentry>
+            <sentry id="s__bpsen_9">
+                <caseFileItemOnPart id="_bpsen_10" sourceRef="AnotherNesting/Greeting">
+                    <standardEvent>create</standardEvent>
+                </caseFileItemOnPart>
+            </sentry>
+            <humanTask id="ht__bpsen_0" name="Handle input/output" isBlocking="true"/>
+        </casePlanModel>
+        <input id="_bpsen_0" name="> Greeting" bindingRef="sp__ZLyUZ_3"/>
+        <output id="_bpsen_1" name="> Response" bindingRef="sp__7fMqa_1"/>
+        <textAnnotation id="_bpsen_11">
+            <text>
+                <![CDATA[complex_subcase/Nesting/Greeting
+]]>
+            </text>
+        </textAnnotation>
+        <textAnnotation id="_bpsen_12">
+            <text>
+                <![CDATA[complex_subcase/AnotherNesting/Greeting]]>
+            </text>
+        </textAnnotation>
+    </case>
+    <CMMNDI>
+        <CMMNDiagram>
+            <CMMNShape cmmnElementRef="cm__bpsen_0">
+                <Bounds x="20" y="20" width="800" height="500"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="pi_ht__bpsen_0">
+                <Bounds x="310" y="120" width="140" height="80"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="Nesting/Greeting">
+                <Bounds x="290" y="320" width="25" height="40"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="AnotherNesting/Greeting">
+                <Bounds x="460" y="320" width="25" height="40"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="_bpsen_7">
+                <Bounds x="324" y="190" width="12" height="20"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="_bpsen_9">
+                <Bounds x="424" y="190" width="12" height="20"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="_bpsen_11">
+                <Bounds x="70" y="420" width="280" height="60"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="_bpsen_12">
+                <Bounds x="400" y="420" width="310" height="60"/>
+            </CMMNShape>
+            <CMMNEdge sourceCMMNElementRef="Nesting/Greeting" targetCMMNElementRef="_bpsen_7"/>
+            <CMMNEdge sourceCMMNElementRef="AnotherNesting/Greeting" targetCMMNElementRef="_bpsen_9"/>
+            <CMMNEdge sourceCMMNElementRef="_bpsen_11" targetCMMNElementRef="Nesting/Greeting"/>
+            <CMMNEdge sourceCMMNElementRef="_bpsen_12" targetCMMNElementRef="AnotherNesting/Greeting"/>
+        </CMMNDiagram>
+    </CMMNDI>
+</definitions>

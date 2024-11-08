@@ -1,0 +1,5 @@
+<case id="typeref.case" name="typeref" expressionLanguage="spel" guid="_6h3hH">
+    <caseFileModel typeRef="typeref.type"/>
+    <casePlanModel id="cm__6h3hH_0" name="simple" autoComplete="true"/>
+</case>
+

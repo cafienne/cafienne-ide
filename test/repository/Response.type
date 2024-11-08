@@ -1,0 +1,8 @@
+<type id="Response.type" name="Response">
+    <schema>
+        <property id="sp__WYTzO_1" name="Message" type="string" multiplicity="ExactlyOne"/>
+        <property id="sp__WYTzO_2" name="Date" type="string" multiplicity="ExactlyOne"/>
+        <property id="sp__WYTzO_3" name="Time" type="string" multiplicity="ExactlyOne"/>
+        <property id="sp__E5Wia_0" name="SomeBoolean" type="boolean" multiplicity="ExactlyOne"/>
+    </schema>
+</type>

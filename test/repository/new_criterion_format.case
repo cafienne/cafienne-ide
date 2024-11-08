@@ -1,0 +1,22 @@
+<case id="new_criterion_format.case" name="new_criterion_format" expressionLanguage="spel" guid="_AIJ9V">
+    <caseFileModel/>
+    <casePlanModel id="cm__AIJ9V_0" name="new_criterion_format" autoComplete="true">
+        <stage id="pi__AIJ9V_0" name="Stage_0" autoComplete="true">
+            <humanTask id="pi_ht__AIJ9V_0" name="HumanTask_0" isBlocking="true"/>
+            <humanTask id="pi_ht__AIJ9V_1" name="HumanTask_1" isBlocking="true">
+                <exitCriterion id="crit__AIJ9V_1">
+                    <planItemOnPart id="_AIJ9V_6" sourceRef="pi_ht__AIJ9V_0">
+                        <standardEvent>complete</standardEvent>
+                    </planItemOnPart>
+                </exitCriterion>
+            </humanTask>
+        </stage>
+        <humanTask id="pi_ht__AIJ9V_2" name="HumanTask_2" isBlocking="true">
+            <entryCriterion id="crit__AIJ9V_0">
+                <planItemOnPart id="_AIJ9V_5" sourceRef="pi_ht__AIJ9V_0">
+                    <standardEvent>complete</standardEvent>
+                </planItemOnPart>
+            </entryCriterion>
+        </humanTask>
+    </casePlanModel>
+</case>

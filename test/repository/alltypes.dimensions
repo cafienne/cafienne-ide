@@ -1,0 +1,10 @@
+<CMMNDI>
+    <CMMNDiagram>
+        <CMMNShape cmmnElementRef="cm__2jcm0_0">
+            <Bounds x="30" y="30" width="800" height="500"/>
+        </CMMNShape>
+        <CMMNShape cmmnElementRef="AllTypes">
+            <Bounds x="162.55001831054688" y="161.80003356933594" width="25" height="40"/>
+        </CMMNShape>
+    </CMMNDiagram>
+</CMMNDI>

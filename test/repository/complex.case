@@ -1,0 +1,32 @@
+<case id="complex.case" name="complex" expressionLanguage="spel" guid="_VdERT">
+    <caseFileModel typeRef="Complex.type"/>
+    <casePlanModel id="cm__VdERT_0" name="complex" autoComplete="true">
+        <caseTask id="pi_ct__VdERT_0" name="complex_subcase" isBlocking="true" caseRef="complex_subcase.case">
+            <entryCriterion id="_VdERT_7" name="EntryCriterion_0">
+                <caseFileItemOnPart id="_VdERT_8" sourceRef="Nesting/Greeting">
+                    <standardEvent>create</standardEvent>
+                </caseFileItemOnPart>
+            </entryCriterion>
+            <entryCriterion id="_VdERT_10" name="EntryCriterion_1">
+                <caseFileItemOnPart id="_VdERT_11" sourceRef="AnotherNesting/Greeting">
+                    <standardEvent>create</standardEvent>
+                </caseFileItemOnPart>
+            </entryCriterion>
+            <inputs id="_VdERT_14" name="+Greeting" bindingRef="Nesting/Greeting"/>
+            <outputs id="_VdERT_5" name="+Response" bindingRef="Nesting/Response"/>
+            <parameterMapping id="_VdERT_1" sourceRef="_VdERT_14" targetRef="_bpsen_0"/>
+            <parameterMapping id="_VdERT_2" sourceRef="_bpsen_1" targetRef="_VdERT_5"/>
+        </caseTask>
+    </casePlanModel>
+    <textAnnotation id="_VdERT_17">
+        <text>
+            <![CDATA[AnotherNesting/Greeting
+]]>
+        </text>
+    </textAnnotation>
+    <textAnnotation id="_VdERT_18">
+        <text>
+            <![CDATA[Nesting/Greeting]]>
+        </text>
+    </textAnnotation>
+</case>

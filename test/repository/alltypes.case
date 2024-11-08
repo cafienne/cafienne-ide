@@ -1,0 +1,4 @@
+<case id="alltypes.case" name="alltypes" expressionLanguage="spel" guid="_2jcm0">
+    <caseFileModel typeRef="alltypes.type"/>
+    <casePlanModel id="cm__2jcm0_0" name="alltypes" autoComplete="true"/>
+</case>

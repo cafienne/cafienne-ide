@@ -1,0 +1,5 @@
+<type id="typeref.type" name="typeref">
+    <schema>
+        <property id="sp__Fjvfe_0" name="TypeRefGreeting" type="Greeting.type" multiplicity="ExactlyOne"/>
+    </schema>
+</type>

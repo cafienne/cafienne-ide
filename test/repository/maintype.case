@@ -1,0 +1,21 @@
+<case id="maintype.case" name="maintype" expressionLanguage="spel" guid="_wnM5j">
+    <caseFileModel typeRef="MainType.type"/>
+    <casePlanModel id="cm__wnM5j_0" name="maintype" autoComplete="true">
+        <caseTask id="pi_ct__wnM5j_0" name="subtype" isBlocking="true" caseRef="subtype.case">
+            <entryCriterion id="_wnM5j_3" name="EntryCriterion_0">
+                <caseFileItemOnPart id="_wnM5j_4" sourceRef="ReusedGreeting">
+                    <standardEvent>create</standardEvent>
+                </caseFileItemOnPart>
+            </entryCriterion>
+            <itemControl id="_wnM5j_0">
+                <repetitionRule id="_wnM5j_1" contextRef="ReusedGreeting">
+                    <condition id="_wnM5j_2">
+                        <body>
+                            <![CDATA[true]]>
+                        </body>
+                    </condition>
+                </repetitionRule>
+            </itemControl>
+        </caseTask>
+    </casePlanModel>
+</case>

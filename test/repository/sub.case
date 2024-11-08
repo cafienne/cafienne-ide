@@ -1,0 +1,147 @@
+<case id="sub.case" name="sub" expressionLanguage="spel" guid="_eDHHH">
+    <caseFileModel typeRef="main.type"/>
+    <casePlanModel id="cm__eDHHH_0" name="sub" autoComplete="true">
+        <humanTask id="pi_ht__eDHHH_0" name="SubGreeting" isBlocking="true">
+            <entryCriterion id="_eDHHH_18" name="EntryCriterion_1">
+                <ifPart id="_eDHHH_21" contextRef="MainGreeting">
+                    <condition id="_eDHHH_22">
+                        <body>
+                            <![CDATA[]]>
+                        </body>
+                    </condition>
+                </ifPart>
+                <caseFileItemOnPart id="_eDHHH_20" sourceRef="MainGreeting">
+                    <standardEvent>create</standardEvent>
+                </caseFileItemOnPart>
+                <planItemOnPart id="_eDHHH_19" sourceRef="pi_ht__eDHHH_1">
+                    <standardEvent>complete</standardEvent>
+                </planItemOnPart>
+            </entryCriterion>
+            <entryCriterion id="_eDHHH_38" name="EntryCriterion_2">
+                <caseFileItemOnPart id="_eDHHH_40" sourceRef="MainGreeting">
+                    <standardEvent>create</standardEvent>
+                </caseFileItemOnPart>
+                <planItemOnPart id="_eDHHH_39" sourceRef="pi_tmr__eDHHH_0">
+                    <standardEvent>occur</standardEvent>
+                </planItemOnPart>
+            </entryCriterion>
+            <itemControl id="_eDHHH_0">
+                <repetitionRule id="_eDHHH_1" contextRef="MainGreeting">
+                    <condition id="_eDHHH_2">
+                        <body>
+                            <![CDATA[true]]>
+                        </body>
+                    </condition>
+                </repetitionRule>
+            </itemControl>
+        </humanTask>
+        <humanTask id="pi_ht__eDHHH_1" name="MainGreeting" isBlocking="true">
+            <entryCriterion id="_eDHHH_16" name="EntryCriterion_0">
+                <caseFileItemOnPart id="_eDHHH_17" sourceRef="MainGreeting">
+                    <standardEvent>create</standardEvent>
+                </caseFileItemOnPart>
+            </entryCriterion>
+            <entryCriterion id="_eDHHH_48" name="EntryCriterion_3">
+                <planItemOnPart id="_eDHHH_49" sourceRef="pi_ms__eDHHH_0">
+                    <standardEvent>occur</standardEvent>
+                </planItemOnPart>
+            </entryCriterion>
+            <itemControl id="_eDHHH_3">
+                <repetitionRule id="_eDHHH_4" contextRef="MainGreeting">
+                    <condition id="_eDHHH_5">
+                        <body>
+                            <![CDATA[true]]>
+                        </body>
+                    </condition>
+                </repetitionRule>
+            </itemControl>
+            <inputs id="_eDHHH_27" name="+MainGreeting" bindingRef="MainGreeting"/>
+            <outputs id="_eDHHH_32" name="+MainGreeting" bindingRef="MainGreeting"/>
+            <extensionElements mustUnderstand="false">
+                <cafienne:implementation xmlns:cafienne="org.cafienne" humanTaskRef="readresponse.humantask">
+                    <parameterMapping id="_eDHHH_23" sourceRef="_eDHHH_27" targetRef="Response"/>
+                    <parameterMapping id="_eDHHH_30" sourceRef="_tt2S_Greeting" targetRef="_eDHHH_32"/>
+                </cafienne:implementation>
+            </extensionElements>
+        </humanTask>
+        <timerEvent id="pi_tmr__eDHHH_0" name="TimerEvent_0">
+            <planItemStartTrigger id="_eDHHH_37" sourceRef="cm__eDHHH_0">
+                <standardEvent></standardEvent>
+            </planItemStartTrigger>
+        </timerEvent>
+        <milestone id="pi_ms__eDHHH_0" name="Milestone_0">
+            <entryCriterion id="_eDHHH_50" name="EntryCriterion_4">
+                <ifPart id="_eDHHH_53" contextRef="MainGreeting">
+                    <condition id="_eDHHH_54">
+                        <body>
+                            <![CDATA[]]>
+                        </body>
+                    </condition>
+                </ifPart>
+                <caseFileItemOnPart id="_eDHHH_52" sourceRef="MainGreeting">
+                    <standardEvent>create</standardEvent>
+                </caseFileItemOnPart>
+                <planItemOnPart id="_eDHHH_51" sourceRef="pi_ht__eDHHH_1">
+                    <standardEvent>complete</standardEvent>
+                </planItemOnPart>
+            </entryCriterion>
+            <itemControl id="_eDHHH_43">
+                <repetitionRule id="_eDHHH_44" contextRef="MainGreeting">
+                    <condition id="_eDHHH_45">
+                        <body>
+                            <![CDATA[true]]>
+                        </body>
+                    </condition>
+                </repetitionRule>
+                <requiredRule id="_eDHHH_46" contextRef="MainGreeting">
+                    <condition id="_eDHHH_47">
+                        <body>
+                            <![CDATA[true]]>
+                        </body>
+                    </condition>
+                </requiredRule>
+            </itemControl>
+        </milestone>
+        <planningTable id="_eDHHH_12">
+            <stage id="pi__eDHHH_8" name="Stage_0" autoComplete="true">
+                <entryCriterion id="_eDHHH_55" name="EntryCriterion_5">
+                    <caseFileItemOnPart id="_eDHHH_57" sourceRef="MainGreeting">
+                        <standardEvent>create</standardEvent>
+                    </caseFileItemOnPart>
+                    <planItemOnPart id="_eDHHH_56" sourceRef="pi_ht__eDHHH_0">
+                        <standardEvent>complete</standardEvent>
+                    </planItemOnPart>
+                </entryCriterion>
+                <itemControl id="_eDHHH_9">
+                    <repetitionRule id="_eDHHH_10" contextRef="MainGreeting">
+                        <condition id="_eDHHH_11">
+                            <body>
+                                <![CDATA[true]]>
+                            </body>
+                        </condition>
+                    </repetitionRule>
+                    <requiredRule id="_eDHHH_33" contextRef="MainGreeting">
+                        <condition id="_eDHHH_34">
+                            <body>
+                                <![CDATA[true]]>
+                            </body>
+                        </condition>
+                    </requiredRule>
+                    <manualActivationRule id="_eDHHH_35" contextRef="MainGreeting">
+                        <condition id="_eDHHH_36">
+                            <body>
+                                <![CDATA[false]]>
+                            </body>
+                        </condition>
+                    </manualActivationRule>
+                </itemControl>
+                <planningTable id="_eDHHH_13">
+                    <applicabilityRule id="_eDHHH_14" name="ApplicabilityRule_0" contextRef="MainGreeting"/>
+                </planningTable>
+            </stage>
+            <applicabilityRule id="_eDHHH_15" name="ApplicabilityRule_1" contextRef="MainGreeting"/>
+        </planningTable>
+    </casePlanModel>
+    <input id="_eDHHH_6" name="MainGreeting" bindingRef="MainGreeting"/>
+    <output id="_eDHHH_7" name="MainGreeting" bindingRef="MainGreeting"/>
+</case>

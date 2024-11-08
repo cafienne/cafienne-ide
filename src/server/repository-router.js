@@ -5,8 +5,15 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const config = require('../../config/config');
 
-const Repository = require('@cafienne/repository').Repository;
-const Backend = require('@cafienne/repository').Backend;
+// const Repository = require('@cafienne/repository').Repository;
+// const Backend = require('@cafienne/repository').Backend;
+// import Repository from "src/server/repository";
+// import Backend from "src/server/backend_rest";
+// const Repository = require('./repository');
+// const Backend = require('./backend_rest');
+const Repository = require('./server_bundle.js').Repository;
+const Backend = require('./server_bundle.js').Backend;
+
 
 const repository = new Repository(config);
 const caseService = new Backend(config.backendUrl);

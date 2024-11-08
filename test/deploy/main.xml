@@ -1,0 +1,377 @@
+<definitions xmlns="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:cafienne="org.cafienne">
+    <caseFileItemDefinition name="main" definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified" id="main.type"/>
+    <caseFileItemDefinition name="Greeting" definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified" id="Greeting.type">
+        <property name="Message" type="http://www.omg.org/spec/CMMN/PropertyType/string">
+            <extensionElements mustUnderstand="false">
+                <cafienne:implementation xmlns:cafienne="org.cafienne" isBusinessIdentifier="true"/>
+            </extensionElements>
+        </property>
+        <property name="To" type="http://www.omg.org/spec/CMMN/PropertyType/string">
+            <extensionElements mustUnderstand="false">
+                <cafienne:implementation xmlns:cafienne="org.cafienne" isBusinessIdentifier="true"/>
+            </extensionElements>
+        </property>
+        <property name="From" type="http://www.omg.org/spec/CMMN/PropertyType/string"/>
+    </caseFileItemDefinition>
+    <case id="main.case" name="main" expressionLanguage="spel">
+        <caseFileModel cafienne:typeRef="main.type">
+            <caseFileItem id="MainGreeting" name="MainGreeting" multiplicity="ExactlyOne" definitionRef="Greeting.type"/>
+        </caseFileModel>
+        <casePlanModel id="cm__UpzV4_0" name="main" autoComplete="true">
+            <planItem id="pi_ht__UpzV4_0" name="HumanTask_0" definitionRef="ht__UpzV4_0">
+                <itemControl id="_UpzV4_0">
+                    <repetitionRule id="_UpzV4_1" contextRef="MainGreeting">
+                        <condition id="_UpzV4_2">
+                            <body>
+                                <![CDATA[true]]>
+                            </body>
+                        </condition>
+                    </repetitionRule>
+                </itemControl>
+            </planItem>
+            <planItem id="pi_ct__UpzV4_0" name="sub" definitionRef="ct__UpzV4_0">
+                <entryCriterion id="_UpzV4_8" name="EntryCriterion_0" sentryRef="crit__UpzV4_0"/>
+                <entryCriterion id="_UpzV4_13" name="EntryCriterion_1" sentryRef="crit__UpzV4_1"/>
+                <entryCriterion id="_UpzV4_21" name="EntryCriterion_3" sentryRef="crit__UpzV4_3"/>
+            </planItem>
+            <planItem id="pi_ms__UpzV4_0" name="Milestone_0" definitionRef="ms__UpzV4_0">
+                <entryCriterion id="_UpzV4_16" name="EntryCriterion_2" sentryRef="crit__UpzV4_2"/>
+            </planItem>
+            <planItem id="pi_ue__UpzV4_0" name="UserEvent_0" definitionRef="ue__UpzV4_0"/>
+            <sentry id="crit__UpzV4_0">
+                <ifPart id="_UpzV4_10" contextRef="MainGreeting">
+                    <condition id="_UpzV4_11">
+                        <body></body>
+                    </condition>
+                </ifPart>
+                <caseFileItemOnPart id="_UpzV4_9" sourceRef="MainGreeting">
+                    <standardEvent>create</standardEvent>
+                </caseFileItemOnPart>
+            </sentry>
+            <sentry id="crit__UpzV4_1">
+                <caseFileItemOnPart id="_UpzV4_15" sourceRef="MainGreeting">
+                    <standardEvent>create</standardEvent>
+                </caseFileItemOnPart>
+                <planItemOnPart id="_UpzV4_14" sourceRef="pi_ms__UpzV4_0">
+                    <standardEvent>occur</standardEvent>
+                </planItemOnPart>
+            </sentry>
+            <sentry id="crit__UpzV4_2">
+                <ifPart id="_UpzV4_19" contextRef="MainGreeting">
+                    <condition id="_UpzV4_20">
+                        <body></body>
+                    </condition>
+                </ifPart>
+                <caseFileItemOnPart id="_UpzV4_18" sourceRef="MainGreeting">
+                    <standardEvent>create</standardEvent>
+                </caseFileItemOnPart>
+                <planItemOnPart id="_UpzV4_17" sourceRef="pi_ct__UpzV4_0">
+                    <standardEvent>complete</standardEvent>
+                </planItemOnPart>
+            </sentry>
+            <sentry id="crit__UpzV4_3">
+                <caseFileItemOnPart id="_UpzV4_23" sourceRef="MainGreeting">
+                    <standardEvent>create</standardEvent>
+                </caseFileItemOnPart>
+                <planItemOnPart id="_UpzV4_22" sourceRef="pi_ue__UpzV4_0">
+                    <standardEvent>occur</standardEvent>
+                </planItemOnPart>
+            </sentry>
+            <humanTask id="ht__UpzV4_0" name="HumanTask_0" isBlocking="true"/>
+            <caseTask id="ct__UpzV4_0" name="sub" isBlocking="true" caseRef="sub.case"/>
+            <milestone id="ms__UpzV4_0" name="Milestone_0"/>
+            <userEvent id="ue__UpzV4_0" name="UserEvent_0"/>
+        </casePlanModel>
+        <input id="_UpzV4_6" name="MainGreeting" bindingRef="MainGreeting"/>
+        <output id="_UpzV4_7" name="MainGreeting" bindingRef="MainGreeting"/>
+    </case>
+    <case id="sub.case" name="sub" expressionLanguage="spel">
+        <caseFileModel cafienne:typeRef="main.type">
+            <caseFileItem id="sub/MainGreeting" name="MainGreeting" multiplicity="ExactlyOne" definitionRef="Greeting.type"/>
+        </caseFileModel>
+        <casePlanModel id="cm__eDHHH_0" name="sub" autoComplete="true">
+            <planItem id="pi_ht__eDHHH_0" name="SubGreeting" definitionRef="ht__eDHHH_0">
+                <entryCriterion id="_eDHHH_18" name="EntryCriterion_1" sentryRef="crit__eDHHH_1"/>
+                <entryCriterion id="_eDHHH_38" name="EntryCriterion_2" sentryRef="crit__eDHHH_2"/>
+                <itemControl id="_eDHHH_0">
+                    <repetitionRule id="_eDHHH_1" contextRef="sub/MainGreeting">
+                        <condition id="_eDHHH_2">
+                            <body>
+                                <![CDATA[true]]>
+                            </body>
+                        </condition>
+                    </repetitionRule>
+                </itemControl>
+            </planItem>
+            <planItem id="pi_ht__eDHHH_1" name="MainGreeting" definitionRef="ht__eDHHH_1">
+                <entryCriterion id="_eDHHH_16" name="EntryCriterion_0" sentryRef="crit__eDHHH_0"/>
+                <entryCriterion id="_eDHHH_48" name="EntryCriterion_3" sentryRef="crit__eDHHH_3"/>
+                <itemControl id="_eDHHH_3">
+                    <repetitionRule id="_eDHHH_4" contextRef="sub/MainGreeting">
+                        <condition id="_eDHHH_5">
+                            <body>
+                                <![CDATA[true]]>
+                            </body>
+                        </condition>
+                    </repetitionRule>
+                </itemControl>
+            </planItem>
+            <planItem id="pi_tmr__eDHHH_0" name="TimerEvent_0" definitionRef="tmr__eDHHH_0"/>
+            <planItem id="pi_ms__eDHHH_0" name="Milestone_0" definitionRef="ms__eDHHH_0">
+                <entryCriterion id="_eDHHH_50" name="EntryCriterion_4" sentryRef="crit__eDHHH_4"/>
+                <itemControl id="_eDHHH_43">
+                    <repetitionRule id="_eDHHH_44" contextRef="sub/MainGreeting">
+                        <condition id="_eDHHH_45">
+                            <body>
+                                <![CDATA[true]]>
+                            </body>
+                        </condition>
+                    </repetitionRule>
+                    <requiredRule id="_eDHHH_46" contextRef="sub/MainGreeting">
+                        <condition id="_eDHHH_47">
+                            <body>
+                                <![CDATA[true]]>
+                            </body>
+                        </condition>
+                    </requiredRule>
+                </itemControl>
+            </planItem>
+            <sentry id="crit__eDHHH_0">
+                <caseFileItemOnPart id="_eDHHH_17" sourceRef="sub/MainGreeting">
+                    <standardEvent>create</standardEvent>
+                </caseFileItemOnPart>
+            </sentry>
+            <sentry id="crit__eDHHH_1">
+                <ifPart id="_eDHHH_21" contextRef="sub/MainGreeting">
+                    <condition id="_eDHHH_22">
+                        <body></body>
+                    </condition>
+                </ifPart>
+                <caseFileItemOnPart id="_eDHHH_20" sourceRef="sub/MainGreeting">
+                    <standardEvent>create</standardEvent>
+                </caseFileItemOnPart>
+                <planItemOnPart id="_eDHHH_19" sourceRef="pi_ht__eDHHH_1">
+                    <standardEvent>complete</standardEvent>
+                </planItemOnPart>
+            </sentry>
+            <sentry id="crit__eDHHH_2">
+                <caseFileItemOnPart id="_eDHHH_40" sourceRef="sub/MainGreeting">
+                    <standardEvent>create</standardEvent>
+                </caseFileItemOnPart>
+                <planItemOnPart id="_eDHHH_39" sourceRef="pi_tmr__eDHHH_0">
+                    <standardEvent>occur</standardEvent>
+                </planItemOnPart>
+            </sentry>
+            <sentry id="crit__eDHHH_3">
+                <planItemOnPart id="_eDHHH_49" sourceRef="pi_ms__eDHHH_0">
+                    <standardEvent>occur</standardEvent>
+                </planItemOnPart>
+            </sentry>
+            <sentry id="crit__eDHHH_4">
+                <ifPart id="_eDHHH_53" contextRef="sub/MainGreeting">
+                    <condition id="_eDHHH_54">
+                        <body></body>
+                    </condition>
+                </ifPart>
+                <caseFileItemOnPart id="_eDHHH_52" sourceRef="sub/MainGreeting">
+                    <standardEvent>create</standardEvent>
+                </caseFileItemOnPart>
+                <planItemOnPart id="_eDHHH_51" sourceRef="pi_ht__eDHHH_1">
+                    <standardEvent>complete</standardEvent>
+                </planItemOnPart>
+            </sentry>
+            <sentry id="crit__eDHHH_5">
+                <caseFileItemOnPart id="_eDHHH_57" sourceRef="sub/MainGreeting">
+                    <standardEvent>create</standardEvent>
+                </caseFileItemOnPart>
+                <planItemOnPart id="_eDHHH_56" sourceRef="pi_ht__eDHHH_0">
+                    <standardEvent>complete</standardEvent>
+                </planItemOnPart>
+            </sentry>
+            <planningTable id="_eDHHH_12">
+                <discretionaryItem id="pi__eDHHH_8" name="Stage_0" definitionRef="_eDHHH_8">
+                    <entryCriterion id="_eDHHH_55" name="EntryCriterion_5" sentryRef="crit__eDHHH_5"/>
+                    <itemControl id="_eDHHH_9">
+                        <repetitionRule id="_eDHHH_10" contextRef="sub/MainGreeting">
+                            <condition id="_eDHHH_11">
+                                <body>
+                                    <![CDATA[true]]>
+                                </body>
+                            </condition>
+                        </repetitionRule>
+                        <requiredRule id="_eDHHH_33" contextRef="sub/MainGreeting">
+                            <condition id="_eDHHH_34">
+                                <body>
+                                    <![CDATA[true]]>
+                                </body>
+                            </condition>
+                        </requiredRule>
+                        <manualActivationRule id="_eDHHH_35" contextRef="sub/MainGreeting">
+                            <condition id="_eDHHH_36">
+                                <body>
+                                    <![CDATA[false]]>
+                                </body>
+                            </condition>
+                        </manualActivationRule>
+                    </itemControl>
+                </discretionaryItem>
+                <applicabilityRule id="_eDHHH_15" name="ApplicabilityRule_1" contextRef="sub/MainGreeting"/>
+            </planningTable>
+            <humanTask id="ht__eDHHH_0" name="SubGreeting" isBlocking="true"/>
+            <humanTask id="ht__eDHHH_1" name="MainGreeting" isBlocking="true">
+                <inputs id="_eDHHH_27" name="+MainGreeting" bindingRef="sub/MainGreeting"/>
+                <outputs id="_eDHHH_32" name="+MainGreeting" bindingRef="sub/MainGreeting"/>
+                <extensionElements mustUnderstand="false">
+                    <cafienne:implementation xmlns:cafienne="org.cafienne" class="org.cafienne.cmmn.definition.task.WorkflowTaskDefinition" humanTaskRef="readresponse.humantask">
+                        <input name="Response" id="Response"/>
+                        <input name="DueDate" id="DueDate"/>
+                        <input id="_VOzX_Assignee" name="Assignee"/>
+                        <task-model>
+			{
+				"schema": {
+					"title": "Read response",
+					"type": "object",
+					"properties": {
+						"Response": {
+							"title": "Your response",
+							"type": "object",
+							"properties": {
+								"Message": {
+									"type": "string",
+									"title": "Your response message"
+								},
+								"Date": {
+									"type": "string",
+									"format": "date",
+									"title": "Pick a date"
+								},
+								"Time": {
+									"type": "string",
+									"format": "time",
+									"title": "Pick a time"
+								},
+								"SomeBoolean": {
+									"type": "boolean",
+									"title": "Check this"
+								}
+							}
+						}
+					}
+				},
+				"uiSchema": {
+					"Message": {
+						"ui:widget": "textarea"
+					}
+				}
+			}
+		</task-model>
+                        <parameterMapping id="_eDHHH_23" sourceRef="_eDHHH_27" targetRef="Response"/>
+                        <parameterMapping id="_eDHHH_30" sourceRef="_tt2S_Greeting" targetRef="_eDHHH_32"/>
+                    </cafienne:implementation>
+                </extensionElements>
+            </humanTask>
+            <timerEvent id="tmr__eDHHH_0" name="TimerEvent_0">
+                <planItemStartTrigger id="_eDHHH_37" sourceRef="cm__eDHHH_0">
+                    <standardEvent/>
+                </planItemStartTrigger>
+            </timerEvent>
+            <stage id="_eDHHH_8" name="Stage_0" autoComplete="true">
+                <planningTable id="_eDHHH_13">
+                    <applicabilityRule id="_eDHHH_14" name="ApplicabilityRule_0" contextRef="sub/MainGreeting"/>
+                </planningTable>
+            </stage>
+            <milestone id="ms__eDHHH_0" name="Milestone_0"/>
+        </casePlanModel>
+        <input id="_eDHHH_6" name="MainGreeting" bindingRef="sub/MainGreeting"/>
+        <output id="_eDHHH_7" name="MainGreeting" bindingRef="sub/MainGreeting"/>
+    </case>
+    <CMMNDI>
+        <CMMNDiagram>
+            <CMMNShape cmmnElementRef="cm__UpzV4_0">
+                <Bounds x="20" y="20" width="800" height="500"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="pi_ht__UpzV4_0">
+                <Bounds x="120" y="110" width="140" height="80"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="pi_ct__UpzV4_0">
+                <Bounds x="120" y="270" width="140" height="80"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="MainGreeting">
+                <Bounds x="130" y="430" width="25" height="40"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="_UpzV4_8">
+                <Bounds x="134" y="340" width="12" height="20"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="pi_ms__UpzV4_0">
+                <Bounds x="270" y="430" width="100" height="40"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="_UpzV4_13">
+                <Bounds x="204" y="340" width="12" height="20"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="_UpzV4_16">
+                <Bounds x="324" y="420" width="12" height="20"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="pi_ue__UpzV4_0">
+                <Bounds x="480" y="440" width="32" height="32"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="_UpzV4_21">
+                <Bounds x="254" y="290" width="12" height="20"/>
+            </CMMNShape>
+            <CMMNEdge sourceCMMNElementRef="MainGreeting" targetCMMNElementRef="_UpzV4_8"/>
+            <CMMNEdge sourceCMMNElementRef="pi_ms__UpzV4_0" targetCMMNElementRef="_UpzV4_13"/>
+            <CMMNEdge sourceCMMNElementRef="pi_ct__UpzV4_0" targetCMMNElementRef="_UpzV4_16"/>
+            <CMMNEdge sourceCMMNElementRef="pi_ue__UpzV4_0" targetCMMNElementRef="_UpzV4_21"/>
+            <CMMNShape cmmnElementRef="cm__eDHHH_0">
+                <Bounds x="20" y="20" width="800" height="500"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="pi_ht__eDHHH_0">
+                <Bounds x="70" y="90" width="140" height="80"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="pi_ht__eDHHH_1">
+                <Bounds x="80" y="230" width="140" height="80"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="sub/MainGreeting">
+                <Bounds x="60" y="420" width="25" height="40"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="pi__eDHHH_8">
+                <Bounds x="310" y="90" width="420" height="140"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="_eDHHH_12">
+                <Bounds x="300" y="33" width="24" height="16"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="_eDHHH_13">
+                <Bounds x="360" y="81" width="24" height="16"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="_eDHHH_16">
+                <Bounds x="124" y="300" width="12" height="20"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="_eDHHH_18">
+                <Bounds x="114" y="160" width="12" height="20"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="pi_tmr__eDHHH_0">
+                <Bounds x="310" y="260" width="32" height="32"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="_eDHHH_38">
+                <Bounds x="174" y="160" width="12" height="20"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="pi_ms__eDHHH_0">
+                <Bounds x="320" y="430" width="100" height="40"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="_eDHHH_48">
+                <Bounds x="174" y="300" width="12" height="20"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="_eDHHH_50">
+                <Bounds x="414" y="440" width="12" height="20"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="_eDHHH_55">
+                <Bounds x="304" y="120" width="12" height="20"/>
+            </CMMNShape>
+            <CMMNEdge sourceCMMNElementRef="sub/MainGreeting" targetCMMNElementRef="_eDHHH_16"/>
+            <CMMNEdge sourceCMMNElementRef="pi_ht__eDHHH_1" targetCMMNElementRef="_eDHHH_18"/>
+            <CMMNEdge sourceCMMNElementRef="pi_tmr__eDHHH_0" targetCMMNElementRef="_eDHHH_38"/>
+            <CMMNEdge sourceCMMNElementRef="pi_ms__eDHHH_0" targetCMMNElementRef="_eDHHH_48"/>
+            <CMMNEdge sourceCMMNElementRef="pi_ht__eDHHH_1" targetCMMNElementRef="_eDHHH_50"/>
+            <CMMNEdge sourceCMMNElementRef="pi_ht__eDHHH_0" targetCMMNElementRef="_eDHHH_55"/>
+        </CMMNDiagram>
+    </CMMNDI>
+</definitions>

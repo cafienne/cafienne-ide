@@ -1,0 +1,30 @@
+<definitions xmlns="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:cafienne="org.cafienne">
+    <caseFileItemDefinition name="AllTypes" definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified" id="alltypes_type_AllTypes.object">
+        <property name="string" type="http://www.omg.org/spec/CMMN/PropertyType/string"/>
+        <property name="integer" type="http://www.omg.org/spec/CMMN/PropertyType/integer"/>
+        <property name="number" type="http://www.omg.org/spec/CMMN/PropertyType/float"/>
+        <property name="boolean" type="http://www.omg.org/spec/CMMN/PropertyType/boolean"/>
+        <property name="time" type="http://www.omg.org/spec/CMMN/PropertyType/time"/>
+        <property name="date" type="http://www.omg.org/spec/CMMN/PropertyType/date"/>
+        <property name="date-time" type="http://www.omg.org/spec/CMMN/PropertyType/dateTime"/>
+        <property name="any URI" type="http://www.omg.org/spec/CMMN/PropertyType/anyURI"/>
+        <property name="QName" type="http://www.omg.org/spec/CMMN/PropertyType/QName"/>
+    </caseFileItemDefinition>
+    <caseFileItemDefinition name="alltypes" definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified" id="alltypes.type"/>
+    <case id="alltypes.case" name="alltypes" expressionLanguage="spel">
+        <caseFileModel cafienne:typeRef="alltypes.type">
+            <caseFileItem id="AllTypes" name="AllTypes" multiplicity="ExactlyOne" definitionRef="alltypes_type_AllTypes.object"/>
+        </caseFileModel>
+        <casePlanModel id="cm__2jcm0_0" name="alltypes" autoComplete="true"/>
+    </case>
+    <CMMNDI>
+        <CMMNDiagram>
+            <CMMNShape cmmnElementRef="cm__2jcm0_0">
+                <Bounds x="30" y="30" width="800" height="500"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="AllTypes">
+                <Bounds x="162.55001831054688" y="161.80003356933594" width="25" height="40"/>
+            </CMMNShape>
+        </CMMNDiagram>
+    </CMMNDI>
+</definitions>

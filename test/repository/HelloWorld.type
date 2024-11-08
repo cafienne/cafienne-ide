@@ -1,0 +1,6 @@
+<type id="HelloWorld.type" name="HelloWorld">
+    <schema>
+        <property id="sp__ZLyUZ_3" name="Greeting" type="Greeting.type" multiplicity="ExactlyOne"/>
+        <property id="sp__7fMqa_1" name="Response" type="Response.type" multiplicity="ExactlyOne"/>
+    </schema>
+</type>

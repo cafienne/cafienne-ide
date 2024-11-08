@@ -1,0 +1,23 @@
+# This compose will work with docker 1.13.1+
+#
+# To run, call:
+#   $ docker-compose up
+#
+services:
+  ide-on-cafienne-repository-tests:
+    image: cafienne/ide:latest
+    labels: 
+      component: ide-on-cafienne-repository-tests
+    expose:
+      - 12082
+    ports:
+      - "12082:2081"
+    hostname: ide-on-cafienne-repository-tests
+    container_name: ide-on-cafienne-repository-tests
+    environment:
+      BACKEND_API_URL: ${BACKEND_API_URL:-http://host.docker.internal:2027}
+    volumes:
+      - ../test/deploy_expected:/usr/src/app/repository_deploy
+      - ../test/repository:/usr/src/app/repository
+
+  

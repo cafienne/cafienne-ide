@@ -4,9 +4,12 @@ const devMode = process.env.DEV_MODE ? process.env.DEV_MODE.trim().toLowerCase()
 var buildNumber = 1;
 
 module.exports = {
-    entry: './src/client/index.ts',
+    entry: {
+        client: './src/client/index.ts',
+        server: './src/server/index.ts'
+    },
     output: {
-        filename: 'bundle.js',
+        filename: '[name]_bundle.js',
         path: path.resolve(__dirname, 'dist/app'),
     },
     plugins: [
@@ -18,7 +21,9 @@ module.exports = {
         new CopyWebpackPlugin({
             patterns: [
                 { from: 'config', to: '../config' },
-                { from: 'server', to: '../server' },
+                { from: 'src/server/server.js', to: '../server' },
+                { from: 'src/server/repository-router.js', to: '../server' },
+                { from: 'src/server/favicon.ico', to: '../server' },
                 { from: 'app' },
             ]
         })
@@ -50,6 +55,9 @@ module.exports = {
             '_images_': path.resolve(__dirname, 'app/images'),
             'jquery': path.resolve(__dirname, 'node_modules/jquery/dist/jquery'),
             'jquery-ui': path.resolve(__dirname, 'node_modules/jquery-ui/dist/jquery-ui'),
+        },
+        fallback: {
+            "fs": false
         },
     },
     devtool: 'source-map',
