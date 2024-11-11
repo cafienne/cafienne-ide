@@ -22,7 +22,6 @@ module.exports = {
             patterns: [
                 { from: 'config', to: '../config' },
                 { from: 'src/server/server.js', to: '../server' },
-                { from: 'src/server/repository-router.js', to: '../server' },
                 { from: 'src/server/favicon.ico', to: '../server' },
                 { from: 'app' },
             ]
@@ -58,9 +57,6 @@ module.exports = {
             '_images_': path.resolve(__dirname, 'app/images'),
             'jquery': path.resolve(__dirname, 'node_modules/jquery/dist/jquery'),
             'jquery-ui': path.resolve(__dirname, 'node_modules/jquery-ui/dist/jquery-ui'),
-        },
-        fallback: {
-            "fs": false
         },
     },
     devtool: 'source-map',

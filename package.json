@@ -37,7 +37,7 @@
     "clean": "shx rm -rf ./dist",
     "clean-build": "npm run build",
     "build-server": "shx mkdir ./dist/config & shx cp ./config/config.js ./dist/config/ & shx cp server.js ./dist & shx mkdir ./dist/server & shx mkdir ./dist/server/repository & shx cp ./server/repository/repository-router.js ./dist/server/repository/",
-    "build": "npm run clean & webpack & shx mv ./dist/app/server_bundle.js ./dist/server",
+    "build": "npm run clean & webpack & shx mv ./dist/app/server_bundle.* ./dist/server",
     "watch": "npm run clean & set DEV_MODE=true &  webpack",
     "start": "webpack serve",
     "try": "webpack-dev-server",
