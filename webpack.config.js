@@ -22,7 +22,6 @@ module.exports = {
             patterns: [
                 { from: 'config', to: '../config' },
                 { from: 'src/server/server.js', to: '../server' },
-                { from: 'src/server/favicon.ico', to: '../server' },
                 { from: 'app' },
             ]
         })

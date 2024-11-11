@@ -214,8 +214,6 @@ app.use('/node_modules', express.static(path.join(__dirname, '/../../node_module
 if (app.get('env') !== 'docker') {
   app.use(express.static(path.join(__dirname, '/../app')));
 }
-app.use(favicon(path.join(__dirname, 'favicon.ico')));
-
 
 app.use('/repository', router);
 
