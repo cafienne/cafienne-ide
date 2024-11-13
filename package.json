@@ -16,7 +16,6 @@
     "lodash": "~4.17.4",
     "morgan": "^1.10.0",
     "path": "^0.12.7",
-    "serve-favicon": "^2.5.0",
     "walk-sync": "~0.3.1"
   },
   "devDependencies": {
@@ -40,7 +39,7 @@
     "clean-build": "npm run build",
     "build-server": "shx mkdir ./dist/config & shx cp ./config/config.js ./dist/config/ & shx cp server.js ./dist & shx mkdir ./dist/server & shx mkdir ./dist/server/repository & shx cp ./server/repository/repository-router.js ./dist/server/repository/",
     "build": "npm run clean & webpack & shx mv ./dist/app/server_bundle.* ./dist/server",
-    "watch": "npm run clean & set DEV_MODE=true &  webpack",
+    "watch": "npm run build & set DEV_MODE=true & webpack",
     "start": "webpack serve",
     "try": "webpack-dev-server",
     "go": "set LOG_TRAFFIC=false & node ./dist/server/server.js"

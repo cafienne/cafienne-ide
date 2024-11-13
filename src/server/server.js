@@ -5,7 +5,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const config = require('../../config/config');
 const path = require('path');
-const favicon = require('serve-favicon');
 const logger = require('morgan');
 
 const Repository = require('./server_bundle.js').Repository;
