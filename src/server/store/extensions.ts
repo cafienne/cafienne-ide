@@ -6,6 +6,7 @@ export default class Extensions {
     static CFID = '.cfid';
     static TYPE = '.type';
     static DEFINITIONS = '.xml';
+    static ROLE = '.role';
 
     static isKnown(extension: string): boolean {
         return extension == Extensions.CASE
@@ -14,7 +15,8 @@ export default class Extensions {
             || extension == Extensions.DEFINITIONS
             || extension == Extensions.HUMANTASK
             || extension == Extensions.CFID
-            || extension == Extensions.TYPE;
+            || extension == Extensions.TYPE
+            || extension == Extensions.ROLE;
     }
 
     static getRootTag(extension: string): string {
@@ -25,6 +27,7 @@ export default class Extensions {
         if (extension == Extensions.HUMANTASK) return 'humantask';
         if (extension == Extensions.CFID) return 'caseFileItemDefinition';
         if (extension == Extensions.TYPE) return 'type';
+        if (extension == Extensions.ROLE) return 'role'; // not quite needed here, but ok.
         return '';
     }
 }

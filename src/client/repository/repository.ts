@@ -11,6 +11,7 @@ import Metadata from "./serverfile/metadata";
 import ProcessFile from "./serverfile/processfile";
 import ServerFile from "./serverfile/serverfile";
 import TypeFile from "./serverfile/typefile";
+import RoleFile from "./serverfile/rolefile";
 
 export default class Repository extends RepositoryBase {
     listeners: (() => void)[] = [];
@@ -38,6 +39,7 @@ export default class Repository extends RepositoryBase {
             case 'humantask': return this.createHumanTaskFile(fileName, source);
             case 'cfid': return this.createCFIDFile(fileName, source);
             case 'type': return this.createTypeFile(fileName, source);
+            case 'role': return this.createRoleFile(fileName, source);
             default: {
                 console.warn(`Extension '${fileType}' is not supported on the client for file ${fileName}`);
                 return undefined;
@@ -122,11 +124,19 @@ export default class Repository extends RepositoryBase {
         return <TypeFile[]>this.list.filter(serverFile => serverFile instanceof TypeFile);
     }
 
+    getRoles() {
+        return <TypeFile[]>this.list.filter(serverFile => serverFile.fileName.endsWith(".role"));
+    }
+
     /**
      * Create a new TypeFile that can parse and write server side .type files
      */
     createTypeFile(fileName: string, source: any) {
         return new TypeFile(this, fileName, source);
+    }
+
+    createRoleFile(fileName: string, source: any) {
+        return new RoleFile(this, fileName, source);
     }
 
     /**

@@ -5,6 +5,7 @@ import Properties from "./properties";
 import Util from "@util/util";
 import $ from "jquery";
 import Images from "@util/images/images";
+import RoleFile from "@repository/serverfile/rolefile";
 
 export default class PlanItemProperties extends Properties {
     /**
@@ -141,11 +142,13 @@ export default class PlanItemProperties extends Properties {
      */
     getRolesAsHTMLSelect(currentRoleId, buttonClass) {
         const existingRolesAsOptions = this.case.caseDefinition.caseTeam.roles.map(role => `<option value="${role.id}" ${role.id == currentRoleId?' selected':''}>${role.name}</option>`).join('');
+        const existingRolesModels = this.case.editor.ide.repository.getRoles().map(roleFile => `<option value="${roleFile.definition.id}" ${roleFile.definition.id == currentRoleId?' selected':''}>${roleFile.definition.id}</option>`).join('');
         return `<div class="role-selector">
                     <span>
                         <select>
                             <option value="">select a role ...</option>
                             ${existingRolesAsOptions}
+                            ${existingRolesModels}
                         </select>
                     </span>
                     <button class="${buttonClass}"></button>
