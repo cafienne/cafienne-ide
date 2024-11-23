@@ -1,0 +1,38 @@
+.caseteam-selector {
+    display: grid;
+    grid-column-gap: 10px;
+    grid-template-columns: 1fr 1fr;
+}
+
+.caseteam-selector .caseteam-list {
+    overflow: auto;
+    max-height: calc(40vh - 50px);
+    border: 1px solid #bbb;
+    padding: 10px;
+}
+
+.caseteam-selector .roles-list {
+    overflow: auto;
+    max-height: calc(40vh - 50px);
+    padding: 10px;
+}
+
+.caseteam-selector .buttonOk {
+    background-color: steelblue;
+    color: #fff;
+}
+
+.caseteam-selector .caseteam-icon {
+    width: 14px;
+    margin: 2px;
+}
+
+.caseteam-selector .caseteam-list .caseteam-summary:hover {
+    background-color: #f6f6f6;
+    cursor: pointer;
+}
+
+.caseteam-selector .caseteam-list .caseteam-summary.caseteam-selected {
+    background-color: steelblue;
+    color: #fff;
+}
