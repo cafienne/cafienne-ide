@@ -1,8 +1,9 @@
+import TeamSelectorDialog from "@ide/modeleditor/caseteam/editor/caseteamselectordialog";
+import $ from "jquery";
 import CasePlanView from "../caseplanview";
 import Halo from "./halo";
 import HaloClickItem, { DeleteHaloItem, PropertiesHaloItem } from "./item/haloclickitems";
 import HaloItem from "./item/haloitem";
-import $ from "jquery";
 
 export default class CasePlanHalo extends Halo {
     /**
@@ -19,7 +20,7 @@ export default class CasePlanHalo extends Halo {
         this.topBar.addItems(
             PropertiesHaloItem, DeleteHaloItem,
             SeparatorHaloItem,
-            CaseInputParametersHaloItem, CaseOutputParametersHaloItem,StartCaseSchemaHaloItem, CaseRolesHaloItem,
+            CaseInputParametersHaloItem, CaseOutputParametersHaloItem, StartCaseSchemaHaloItem, CaseRolesHaloItem,
             SeparatorHaloItem,
             ViewSourceHaloItem, DeployHaloItem, DebuggerHaloItem
         );
@@ -57,7 +58,19 @@ class CaseOutputParametersHaloItem extends HaloClickItem {
 
 class CaseRolesHaloItem extends HaloClickItem {
     constructor(halo) {
-        super(halo, 'images/roles_128.png', 'Edit case team', e => this.halo.element.case.rolesEditor.show());
+        super(halo, 'images/roles_128.png', 'Edit case team', e => {
+            const cs = this.halo.element.case;
+            if (cs.caseDefinition.caseTeam.isOldStyle) {
+                cs.rolesEditor.show();
+            } else {
+                new TeamSelectorDialog(cs, cs.caseDefinition.caseTeam.caseTeamRef.file).showModalDialog((/** @type CaseTeamModelDefinition */ caseTeam) => {
+                    if (caseTeam) {
+                        cs.caseDefinition.caseTeam.caseTeamRef.update(caseTeam.fileName);
+                        cs.editor.completeUserAction(); //Save the case model
+                    }
+                });
+            }
+        });
     }
 }
 

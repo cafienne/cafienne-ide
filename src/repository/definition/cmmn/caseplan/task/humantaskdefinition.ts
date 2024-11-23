@@ -1,6 +1,6 @@
 import HumanTaskFile from "@repository/serverfile/humantaskfile";
 import CaseDefinition from "../../casedefinition";
-import CaseRoleDefinition from "../../caseteam/caseroledefinition";
+import ClassicCaseRoleDefinition from "../../caseteam/classiccaseroledefinition";
 import StageDefinition from "../stagedefinition";
 import TaskDefinition from "./taskdefinition";
 import CafienneWorkflowDefinition from "./workflow/cafienneworkflowdefinition";
@@ -23,8 +23,8 @@ export default class HumanTaskDefinition extends TaskDefinition {
         super.createExportNode(parentNode, 'humanTask', 'planningTable', 'performerRef', 'workflow');
     }
 
-    get performer(): CaseRoleDefinition | undefined {
-        return <CaseRoleDefinition> this.caseDefinition.getElement(this.performerRef);
+    get performer(): ClassicCaseRoleDefinition | undefined {
+        return <ClassicCaseRoleDefinition> this.caseDefinition.getElement(this.performerRef);
     }
 
     /**

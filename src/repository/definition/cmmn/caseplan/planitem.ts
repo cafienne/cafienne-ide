@@ -1,7 +1,7 @@
 import Util from "@util/util";
 import CMMNElementDefinition from "../../cmmnelementdefinition";
 import CaseDefinition from "../casedefinition";
-import CaseRoleDefinition from "../caseteam/caseroledefinition";
+import ClassicCaseRoleDefinition from "../caseteam/classiccaseroledefinition";
 import CaseRoleReference from "../caseteam/caserolereference";
 import CriterionDefinition from "../sentry/criteriondefinition";
 import EntryCriterionDefinition from "../sentry/entrycriteriondefinition";
@@ -167,8 +167,12 @@ export default class PlanItem extends CMMNElementDefinition {
             });
         }
 
-        // Resolve discretionary properties        
-        this.authorizedRoles = this.caseDefinition.findElements(this.authorizedRoleRefs, [], CaseRoleDefinition).map(role => new CaseRoleReference(role, this));
+        // Resolve discretionary properties
+        if (this.caseDefinition.caseTeam.isOldStyle) {
+            this.authorizedRoles = this.caseDefinition.findElements(this.authorizedRoleRefs, [], ClassicCaseRoleDefinition).map(role => new CaseRoleReference(role, this));
+        } else {
+            this.authorizedRoles = this.authorizedRoleRefs.split(' ').map(roleName => new CaseRoleReference(roleName, this));
+        }       
         this.applicabilityRules = this.caseDefinition.findElements(this.applicabilityRuleRefs, [], ApplicabilityRuleDefinition);
     }
 

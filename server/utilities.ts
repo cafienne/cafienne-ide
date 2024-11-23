@@ -5,7 +5,7 @@ import path from "path";
 import { Entry, entries } from "walk-sync";
 
 function isKnownExtension(extension: string): boolean {
-    return ['.case', '.process', '.humantask', '.dimensions', '.cfid', '.type', '.xml'].indexOf(extension) >= 0;
+    return ['.case', '.process', '.humantask', '.dimensions', '.cfid', '.type', '.caseteam', '.xml'].indexOf(extension) >= 0;
 }
 
 export class Utilities {
