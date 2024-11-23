@@ -8,6 +8,7 @@ import HumanTaskFile from "./serverfile/humantaskfile";
 import Metadata from "./serverfile/metadata";
 import ProcessFile from "./serverfile/processfile";
 import ServerFile from "./serverfile/serverfile";
+import CaseTeamFile from "./serverfile/caseteamfile";
 import TypeFile from "./serverfile/typefile";
 import FileStorage from "./storage/filestorage";
 
@@ -38,6 +39,7 @@ export default class Repository {
             case 'humantask': return this.createHumanTaskFile(fileName, source);
             case 'cfid': return this.createCFIDFile(fileName, source);
             case 'type': return this.createTypeFile(fileName, source);
+            case 'caseteam': return this.createCaseTeamFile(fileName, source);
             default: {
                 console.warn(`Extension '${fileType}' is not supported on the client for file ${fileName}`);
                 return undefined;
@@ -127,6 +129,14 @@ export default class Repository {
      */
     createTypeFile(fileName: string, source: any): TypeFile {
         return new TypeFile(this, fileName, source);
+    }
+
+    getCaseTeams() {
+        return <CaseTeamFile[]>this.list.filter(serverFile => serverFile instanceof CaseTeamFile);
+    }
+
+    createCaseTeamFile(fileName: string, source: any) {
+        return new CaseTeamFile(this, fileName, source);
     }
 
     /**

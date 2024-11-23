@@ -1,3 +1,4 @@
+import caseTeam from '../../../../app/images/roles_128.png';
 import humanTaskImageUrl from '../../../../app/images/svg/blockinghumantaskmenu.svg';
 import caseFileItemImageUrl from '../../../../app/images/svg/casefileitem.svg';
 import casePlanImageUrl from '../../../../app/images/svg/caseplanmodel.svg';
@@ -25,4 +26,6 @@ export default class Shapes {
     static CasePlan = casePlanImageUrl;
     static CaseFileItem = caseFileItemImageUrl;
     static TextAnnotation = textAnnotationImageUrl;
+    static CaseTeam = caseTeam;
+
 }

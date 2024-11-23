@@ -141,12 +141,8 @@ export default class TypeEditor {
                 if (e.which === 27) { // Esc pressed for blur or deselect
                     e.preventDefault();
                     e.stopPropagation();
-                    if (this.selectedPropertyRenderer.inputPropertyName?.attr('readonly')) {
-                        this.deselectPropertyRenderers();
-                    } else {
-                        this.selectedPropertyRenderer.inputPropertyName?.trigger('blur');
-                        this.removeEmptyPropertyRenderers();
-                    }
+                    this.selectedPropertyRenderer.inputPropertyName?.trigger('blur');
+                    this.deselectPropertyRenderers();
                 }
                 if (e.which === 113) { // F2 pressed for edit 
                     e.preventDefault();

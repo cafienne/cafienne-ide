@@ -2,6 +2,8 @@ export { default as RepositoryConfiguration } from "./config/config";
 export { default as ArtifactDefinition } from "./repository/definition/artifact/artifactdefinition";
 export { default as TextAnnotationDefinition } from "./repository/definition/artifact/textannotation";
 export { default as AttributeDefinition } from "./repository/definition/attributedefinition";
+export { default as CaseTeamModelDefinition } from "./repository/definition/caseteam/caseteammodeldefinition";
+export { default as CaseTeamRoleDefinition } from "./repository/definition/caseteam/caseteamroledefinition";
 export { default as CaseFileDefinitionDefinition } from "./repository/definition/cfid/casefileitemdefinitiondefinition";
 export { default as PropertyDefinition } from "./repository/definition/cfid/propertydefinition";
 export { default as CaseDefinition } from "./repository/definition/cmmn/casedefinition";
@@ -108,6 +110,7 @@ export { CaseImporter, CFIDImporter, DimensionsImporter, HumanTaskImporter, defa
 export { default as Importer } from "./repository/import/importer";
 export { default as Repository } from "./repository/repository";
 export { default as CaseFile } from "./repository/serverfile/casefile";
+export { default as CaseTeamFile } from "./repository/serverfile/caseteamfile";
 export { default as CFIDFile } from "./repository/serverfile/cfidfile";
 export { default as DimensionsFile } from "./repository/serverfile/dimensionsfile";
 export { default as HumanTaskFile } from "./repository/serverfile/humantaskfile";

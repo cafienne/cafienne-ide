@@ -1,0 +1,211 @@
+/* Styling for CaseTeamModelEditor */
+.ui-widget.ui-widget-content {
+    border: 1px solid rgb(221, 221, 221);
+}
+
+.caseteam-editor {
+    /* needed for tabs: | Editor | Source | */
+    position: absolute;
+    top: 33px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    border: 0px;
+    background-color: #f5f5f5 !important;
+}
+
+.caseteam-editor>div {
+    position: absolute;
+    top: 5px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    background-color: white;
+    border: 1px solid rgb(221, 221, 221);
+}
+
+/** In the type model editor the model generic fields can be modified */
+.caseteam-editor .modelgenericfields {
+    display: block;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+
+.caseteam-editor .modelgenericfields input {
+    width: 200px;
+}
+
+.model-source-editor>div {
+    position: absolute;
+    top: 5px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    border: 1px solid rgb(221, 221, 221);
+}
+
+.caseteam-editor .caseteam-container {
+    position: absolute;
+    top: 27px;
+    left: 3px;
+    right: 0px;
+    bottom: 0px;
+    overflow: auto;
+}
+
+.caseteam-editor .roles-container {
+    display: none;
+}
+
+/* Header will not scroll with content container */
+.caseteam-editor .property-header-container {
+    position: sticky;
+    top: 0px;
+    background-color: #f5f5f5;
+    height: 38px;
+    padding-top: 3px;
+    z-index: 1;
+}
+
+.caseteam-editor .property-header-container div {
+    padding-left: 3px;
+    border-left: 1px solid white;
+}
+
+.caseteam-editor .property-renderer {
+    position: relative;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    margin: 0px;
+    padding: 0px;
+    background-color: inherit;
+}
+
+.caseteam-editor .menu-container {
+    position: absolute;
+    top: 3px;
+    left: 0px;
+    padding: 3px;
+}
+
+.caseteam-editor .menu-container .action-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.caseteam-editor .formheader {
+    border-top-right-radius: 0px !important;
+}
+
+.caseteam-editor .formheader label {
+    cursor: default;
+}
+
+/* Header will not scroll with content container */
+.caseteam-editor .property-container {
+    display: grid;
+    grid-column-gap: 10px;
+    grid-template-columns: 250px auto;
+    border-bottom: 1px solid #eee;
+}
+
+.caseteam-editor .property-container .input-name-container {
+    position: relative;
+    overflow: hidden;
+    text-wrap: nowrap;
+}
+
+.caseteam-editor .property-container .inputPropertyName,
+.caseteam-editor .property-container .inputDocumentation {
+    height: 18px;
+    width: calc(100% - 22px);
+    min-width: 80px;
+    margin: 1px 0px 1px 0px;
+    text-overflow: ellipsis;
+    background-color: inherit;
+    border: 0px;
+    padding: 2px;
+    outline: none;
+}
+
+.caseteam-editor .cfi-icon {
+    height: 18px;
+    padding: 2px;
+}
+
+.caseteam-editor .property-container .action-icon {
+    display: none;
+}
+
+.caseteam-editor .property-container .action-icon-container {
+    padding: 1px;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+
+.caseteam-editor .property-container:hover .action-icon-container {
+    padding-left: 10px;
+    background-color: #f6f6f6;
+}
+
+.caseteam-editor .property-container.property-selected:hover .action-icon-container {
+    background-color: rgb(156, 175, 226);
+}
+
+.caseteam-editor .property-container.property-selected:hover .action-icon-container {
+    background-color: rgb(156, 175, 226);
+}
+
+/* When inputName has the input focus then hide the action-icon-container to save space for typing text */
+.caseteam-editor .property-container .inputPropertyName:not(:read-only):focus+.action-icon-container {
+    display: none;
+}
+
+/* When inputName or select has focus background should be white */
+.caseteam-editor .property-container .inputPropertyName:not(:read-only),
+.caseteam-editor .property-container .inputDocumentation:not(:read-only),
+.caseteam-editor .property-container select:focus {
+    background-color: white;
+    outline: auto;
+}
+
+.caseteam-editor .property-container:hover .action-icon {
+    display: block;
+    float: right;
+    width: 18px;
+    height: 18px;
+}
+
+.caseteam-editor .property-container:hover {
+    background-color: #f6f6f6;
+}
+
+.caseteam-editor .property-container.property-selected {
+    background-color: rgb(156, 175, 226);
+}
+
+.caseteam-editor .property-container img:hover,
+.caseteam-editor .menu-container img:hover {
+    background-color: #ddd;
+}
+
+.caseteam-editor .menu-container .delete-icon,
+.caseteam-editor .menu-container .add-child-icon {
+    opacity: 0.2;
+}
+
+.caseteam-editor .menu-container.property-selected .delete-icon {
+    opacity: 1;
+}
+
+.caseteam-editor .property-container.primitive-type .add-child-icon {
+    visibility: hidden;
+}
+
+.caseteam-editor .property-container.complex-type .add-child-icon {
+    visibility: visible;
+}
