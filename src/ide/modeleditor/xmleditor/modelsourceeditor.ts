@@ -4,12 +4,13 @@ import XML from "../../../util/xml";
 import CodeMirrorConfig from "../../editors/external/codemirrorconfig";
 import ModelEditor from "../modeleditor";
 import TypeEditor from "../type/editor/typeeditor";
+import CaseTeamEditor from "../caseteam/editor/caseteameditor";
 
 export default class ModelSourceEditor {
     private _changed: boolean = false;
     private _codeMirrorEditor: any;
 
-    constructor(public html: JQuery<HTMLElement>, public editor: ModelEditor | TypeEditor) {
+    constructor(public html: JQuery<HTMLElement>, public editor: ModelEditor | TypeEditor | CaseTeamEditor) {
         // Add the code mirror object to the model-container
         this._codeMirrorEditor = CodeMirrorConfig.createXMLEditor(this.html);
 

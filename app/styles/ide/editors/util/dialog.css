@@ -12,7 +12,7 @@ dialog .dialogHeader {
     border-bottom:1px solid lightgray;
 }
 
-dialog .inputName, dialog .inputDescription, dialog .selectType {
+dialog .inputName, dialog .inputDescription, dialog .selectType, dialog .selectCaseTeam {
     height: 25px;
     width: 200px;
 }

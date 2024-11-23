@@ -1,3 +1,4 @@
+import CaseTeamModelDefinition from "../../../repository/definition/caseteam/caseteammodeldefinition";
 import ModelDefinition from "../../../repository/definition/modeldefinition";
 import Tags from "../../../repository/definition/tags";
 import TypeDefinition from "../../../repository/definition/type/typedefinition";
@@ -53,6 +54,7 @@ export default class CaseModelEditorMetadata extends ModelEditorMetadata {
                 const newModelName = newModelInfo.name;
                 const newModelDescription = newModelInfo.description;
                 const newTypeRef = newModelInfo.typeRef;
+                const newCaseTeamRef = newModelInfo.caseTeamRef;
 
                 //check if a valid name is used
                 if (!this.ide.repositoryBrowser.isValidEntryName(newModelName)) {
@@ -67,7 +69,7 @@ export default class CaseModelEditorMetadata extends ModelEditorMetadata {
                 }
 
                 // Simply create the case file, either with an empty or with an existing type definition.
-                await this.createNewCaseModelWithTypeRef(this.ide, newModelName, newModelDescription, newTypeRef);
+                await this.createNewCaseModelWithTypeRef(this.ide, newModelName, newModelDescription, newTypeRef, newCaseTeamRef);
                 window.location.hash = fileName;
                 console.groupEnd();
             };
@@ -78,13 +80,13 @@ export default class CaseModelEditorMetadata extends ModelEditorMetadata {
      * Creates a new case model
      */
     async createNewModel(ide: IDE, name: string, description: string) {
-        return this.createNewCaseModelWithTypeRef(ide, name, description, '');
+        return this.createNewCaseModelWithTypeRef(ide, name, description, '', '');
     }
 
     /**
      * Creates a new case model
      */
-    async createNewCaseModelWithTypeRef(ide: IDE, name: string, description: string, typeRef = '') {
+    async createNewCaseModelWithTypeRef(ide: IDE, name: string, description: string, typeRef = '', caseTeamRef = '') {
         // By default we create a case plan that fills the whole canvas size;
         //  We position it left and top at 2 times the grid size, with a minimum of 10px;
         //  Width and height have to be adjusted for scrollbar size.
@@ -106,6 +108,7 @@ export default class CaseModelEditorMetadata extends ModelEditorMetadata {
     ${documentation}
     <caseFileModel typeRef="${typeRef}"/>
     <casePlanModel id="${casePlanId}" name="${name}"/>
+    <caseRoles caseTeamRef="${caseTeamRef}"/>
 </case>`;
 
         const dimensionsString =
@@ -123,12 +126,15 @@ export default class CaseModelEditorMetadata extends ModelEditorMetadata {
 
         // Optionally create a new type file
         const typeFile = typeRef && typeRef.endsWith('.type') && !ide.repository.hasFile(typeRef) ? ide.repository.createTypeFile(typeRef, TypeDefinition.createDefinitionSource(name)) : undefined;
+        // Optionally create a new caseTeam file
+        const caseTeamFile = caseTeamRef && caseTeamRef.endsWith('.caseteam') && !ide.repository.hasFile(caseTeamRef) ? ide.repository.createCaseTeamFile(caseTeamRef, CaseTeamModelDefinition.createDefinitionSource(name)) : undefined;
         // Create dimensions and case files
         const dimensionsFile = ide.repository.createDimensionsFile(dimensionsFileName, dimensionsString);
         const caseFile = ide.repository.createCaseFile(caseFileName, caseString);
 
         // Upload the new files to the server, in this particular order
         if (typeFile) await typeFile.save();
+        if (caseTeamFile) await caseTeamFile.save();
         await dimensionsFile.save();
         await caseFile.save();
         return caseFileName;
