@@ -204,6 +204,17 @@ export default class Importer {
         }
     }
 
+    loadCaseRoleItem(caseTeamModelDefinition: CaseTeamModelDefinition, caseRoleItem: Element) {
+        if (caseRoleItem.nodeName === 'role') {
+            const caseRole: CaseRoleDefinition = caseTeamModelDefinition.createCaseRole(caseRoleItem.getAttribute('name') || '');
+            caseRole.id = caseRoleItem.getAttribute('id') || ''; // Import id's as well as we can have references to this role using that id (performerRef and authorizedRoleRefs)
+            if (caseRoleItem.firstElementChild) {
+                const textElement = XML.getChildByTagName(caseRoleItem.firstElementChild, 'text');
+                caseRole.documentation.text = textElement ? XML.getCDATANodeOrSelf(textElement).textContent : '';    
+            }
+        }
+    }
+
     async uploadFiles() {
         console.group("Uploading " + this.importFiles.length +" new files");
         for (let i = 0; i < this.importFiles.length; i++) {
