@@ -10,6 +10,7 @@ export default class Shapes {
     static ReactivateCriterion = 'images/svg/reactivatecriterion.svg';
     static ExitCriterion = 'images/svg/exitcriterion.svg';
     static CasePlan = 'images/svg/caseplanmodel.svg';
+    static CaseTeam = 'images/roles_128.png';
     static CaseFileItem = 'images/svg/casefileitem.svg';
     static TextAnnotation = 'images/svg/textannotation.svg';
 

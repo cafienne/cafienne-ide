@@ -1,6 +1,7 @@
 import CasePlanView from "../caseplanview";
 import StageProperties from "./stageproperties";
 import $ from "jquery";
+import CaseTeamSelector from "@ide/modeleditor/caseteam/editor/caseteamselector";
 
 export default class CasePlanProperties extends StageProperties {
     /**
@@ -17,7 +18,7 @@ export default class CasePlanProperties extends StageProperties {
         this.addInputField('Case Name', 'name', this.cmmnElement.definition.caseDefinition);
         this.addTextField('Case Documentation', 'text', this.cmmnElement.definition.caseDefinition.documentation);
         this.addSeparator();
-        this.addCaseRolesButton();
+        this.addCaseTeam();
         this.addSeparator();
         this.addCaseParameters();
         this.addSeparator();
@@ -35,6 +36,14 @@ export default class CasePlanProperties extends StageProperties {
         this.addIdField();
     }
 
+    addCaseTeam() {
+        if (this.case.caseDefinition.caseTeam.isOldStyle) {
+            this.addCaseRolesButton();
+        } else {
+            this.addCaseTeamSelector();        
+        }
+    }
+
     addCaseRolesButton() {
         const html = $(`<div title="Edit the case roles" class="propertyBlock">
                             <label>Case Team</label>
@@ -42,16 +51,42 @@ export default class CasePlanProperties extends StageProperties {
                                 <img src="images/roles_128.png" />
                                 <button class="btnCaseRolesEditor">Edit Roles</button>
                             </div>
-                        </div>
-                        <span class="separator" />
-                        <div title="Edit the 'start case schema'" class="propertyBlock">
+                        </div>`);
+        html.find('.btnCaseRolesEditor').on('click', e => this.cmmnElement.case.rolesEditor.show());
+        this.htmlContainer.append(html);
+        return html;
+    }
+
+    addCaseTeamSelector() {
+        const html = $(`<div class="propertyBlock" title="Select a Case Team with roles which can be assigned to any task in this Case Plan">
+                            <label><img src="images/roles_128.png"/> Case Team</label>                          
+                            <div>
+                                <select class="selectTeam">
+                                </select>
+                            </div>
+                        </div>`);
+        html.find('.removeCaseTeamButton').on('click', e => {
+            html.find('select').val(undefined);
+            this.cmmnElement.case.caseDefinition.caseTeam.caseTeamRef.update(undefined);
+            this.done();
+        });
+        new CaseTeamSelector(this.case.editor.ide.repository, html.find('.selectTeam'), this.cmmnElement.case.caseDefinition.caseTeam.caseTeamRef.toString(), (v) => {
+            this.cmmnElement.case.caseDefinition.caseTeam.caseTeamRef.update(v);
+            this.done();
+        });
+        this.htmlContainer.append(html);
+        html.find('select').val(this.cmmnElement.case.caseDefinition.caseTeam.caseTeamRef.toString());
+        return html;
+    }
+
+    addCaseSchemaButton() {
+        const html = $(`<div title="Edit the 'start case schema'" class="propertyBlock">
                             <label>Start Case Schema</label>
                             <div>
                                 <img src="images/startcaseschema_128.png" />
                                 <button class="btnCaseSchemaEditor">Edit Schema</button>
                             </div>
                         </div>`);
-        html.find('.btnCaseRolesEditor').on('click', e => this.cmmnElement.case.rolesEditor.show());
         html.find('.btnCaseSchemaEditor').on('click', e => this.cmmnElement.case.startCaseEditor.show());
         this.htmlContainer.append(html);
         return html;

@@ -1,4 +1,4 @@
-﻿import CaseRoleDefinition from "@definition/cmmn/caseteam/caseroledefinition";
+﻿import ClassicCaseRoleDefinition from "@repository/definition/cmmn/caseteam/classiccaseroledefinition";
 import TableEditor, { RowEditor, TableEditorColumn } from "./tableeditor/tableeditor";
 import $ from "jquery";
 
@@ -16,14 +16,14 @@ export default class RolesEditor extends TableEditor {
         ];
     }
 
-    /** @returns {Array<CaseRoleDefinition>} */
+    /** @returns {Array<ClassicCaseRoleDefinition>} */
     get data() {
         return this.case.caseDefinition.caseTeam.roles;
     }
 
     /**
      * 
-     * @param {CaseRoleDefinition} role 
+     * @param {ClassicCaseRoleDefinition} role 
      * @returns {RoleRenderer}
      */
     addRenderer(role = undefined) {
@@ -42,7 +42,7 @@ export default class RolesEditor extends TableEditor {
 export class RoleRenderer extends RowEditor {
     /**
      * @param {RolesEditor} editor 
-     * @param {CaseRoleDefinition} role 
+     * @param {ClassicCaseRoleDefinition} role 
      */
     constructor(editor, role = undefined) {
         super(editor, role);
@@ -65,10 +65,10 @@ export class RoleRenderer extends RowEditor {
     }
 
     /**
-     * @returns {CaseRoleDefinition}
+     * @returns {ClassicCaseRoleDefinition}
      */
     createElement() {
-        const newRole = this.editor.case.caseDefinition.createDefinition(CaseRoleDefinition);
+        const newRole = this.editor.case.caseDefinition.createDefinition(ClassicCaseRoleDefinition);
         return newRole;
     }
 }
