@@ -7,6 +7,7 @@ import ModelEditor from "./modeleditor";
 import ModelEditorMetadata from "./modeleditormetadata";
 import ProcessModelEditor from "./process/processmodeleditor";
 import TypeModelEditor from "./type/typemodeleditor";
+import CaseTeamModelEditor from "./caseteam/caseteammodeleditor";
 
 export default class ModelEditorRegistry {
     editors: Array<ModelEditor> = [];
@@ -16,6 +17,7 @@ export default class ModelEditorRegistry {
 
         // Register the known editors, e.g. HumanTaskEditor, CaseModelEditor, ProcessModelEditor
         CaseModelEditor.register();
+        CaseTeamModelEditor.register();
         HumantaskModelEditor.register();
         ProcessModelEditor.register();
         TypeModelEditor.register();

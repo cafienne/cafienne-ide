@@ -47,6 +47,8 @@ import "@styles/ide/modeleditors/process/processmodeleditor.css";
 import "@styles/ide/modeleditors/case/casemodeleditor.css";
 import "@styles/ide/modeleditors/case/caseparameters.css";
 import "@styles/ide/modeleditors/case/deploy.css";
+import "@styles/ide/modeleditors/caseteam/caseteammodeleditor.css";
+import "@styles/ide/modeleditors/caseteam/caseteamselector.css";
 import "@styles/ide/debugger/debugger.css";
 import "@styles/ide/modeleditors/case/undoredobox.css";
 import "@styles/ide/modeleditors/case/shapebox.css";
