@@ -1,3 +1,7 @@
-import { RepositoryRouter } from "./repository/repository-router";
+import RepositoryConfiguration from "./config/config";
+import Repository from "./repository";
+import Backend from "./backend_rest";
 
-export default RepositoryRouter;
+exports.Config = RepositoryConfiguration;
+exports.Repository = Repository;
+exports.Backend = Backend;
