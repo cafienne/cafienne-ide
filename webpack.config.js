@@ -1,8 +1,8 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const devMode = process.env.DEV_MODE ? process.env.DEV_MODE.trim().toLowerCase() === 'true' : false;
-var buildNumber = 1;
-var clientBuild = 1;
+
+var ideBuild = 1;
 var serverBuild = 1;
 
 function buildPrinter(buildName, buildNumber) {
@@ -83,8 +83,28 @@ module.exports = [{
         errorDetails: true
     },
     watch: devMode,
-}, {
-    entry: './src/index.ts',
+},
+{
+    entry: {
+        repository: './src/repository/index.ts',
+    },
+    output: {
+        filename: 'repository_bundle.js',
+        path: path.resolve(__dirname, 'dist/repository'),
+    },
+    module: moduleRules,
+    resolve: repositoryResolvers,
+    devtool: 'source-map',
+    mode: 'development',
+    stats: {
+        errorDetails: true
+    },
+    watch: devMode,
+},
+{
+    entry: {
+        ide: './src/ide/index.ts',
+    },
     output: {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'dist/app'),
@@ -92,7 +112,7 @@ module.exports = [{
     plugins: [
         new function () {
             this.apply = (compiler) => {
-                compiler.hooks.done.tap("ide", () => buildPrinter("ide", clientBuild++));
+                compiler.hooks.done.tap("ide", () => buildPrinter("ide", ideBuild++));
             };
         },
         new CopyWebpackPlugin({

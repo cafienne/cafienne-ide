@@ -1,10 +1,10 @@
-﻿﻿import CaseView from "@ide/modeleditor/case/elements/caseview";
+﻿﻿import StandardForm from "@ide/editors/standardform";
+import CaseView from "@ide/modeleditor/case/elements/caseview";
 import Settings from "@ide/settings/settings";
 import Util from "@util/util";
-import StandardForm from "../ide/editors/standardform";
+import $ from "jquery";
 import ProblemType from "./problemtype";
 import ValidationSettings from "./validationsettings";
-import $ from "jquery";
 
 export default class ValidateForm extends StandardForm {
     /** @returns {ValidationSettings} */
