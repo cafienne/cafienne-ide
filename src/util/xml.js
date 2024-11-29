@@ -29,7 +29,7 @@ export default class XML {
         const errors = [];
         if (DOMParser) { // code for all but IE
             const parseErrors = xmlDocument.getElementsByTagName('parsererror');
-            for (let i = 0; i<parseErrors.length; i++) {
+            for (let i = 0; i < parseErrors.length; i++) {
                 errors.push(parseErrors.item(i).textContent);
             }
         }
@@ -42,7 +42,7 @@ export default class XML {
      * @returns {Boolean}
      */
     static isValid(xmlDocument) {
-        return this.getParseErrors(xmlDocument).length  === 0;
+        return this.getParseErrors(xmlDocument).length === 0;
     }
 
     /**
@@ -72,13 +72,24 @@ export default class XML {
     }
 
     /**
-     * Creates a child element with the specified tagName and appends it to the parentNode
-     * @param {Node} parentNode 
+     * Creates a child element with the specified tagName.
+     * If the parentNode is of type Element the new child will be appended to it.
+     * If the parentNode is a Document, then the new child is not appended.
+     * 
+     * @param {Element | Document} parentNode 
      * @param {String} tagName 
+     * @param {String} namespace 
      * @returns {Element} The newly created element
      */
-    static createChildElement(parentNode, tagName) {
-        return parentNode.appendChild(parentNode.ownerDocument.createElement(tagName));
+    static createChildElement(parentNode, tagName, namespace = "http://www.omg.org/spec/CMMN/20151109/MODEL") {
+        if (tagName.indexOf('cafienne:') === 0) {
+            namespace = 'org.cafienne';
+        }
+        if (parentNode instanceof Document) {
+            return parentNode.createElementNS(namespace, tagName);
+        } else {
+            return parentNode.appendChild(parentNode.ownerDocument.createElementNS(namespace, tagName));
+        }
     }
 
     /**
@@ -116,6 +127,83 @@ export default class XML {
         });
         return elementsArray;
     }
+    /**
+     * Returns all children of the node as an array. Easier to iterate ...
+     * @param {Node} xmlNode 
+     * @returns {Array<Node>}
+     */
+    static children(xmlNode) {
+        if (xmlNode == undefined) return [];
+        const array = [];
+        const nodes = xmlNode.childNodes;
+        for (let i = 0; i < nodes.length; i++) {
+            array.push(nodes[i]);
+        }
+        return array;
+    }
+
+    /**
+    * Returns all elements of the node as an array. Easier to iterate ...
+    * @param {Node} xmlNode 
+    * @returns {Array<Element>}
+    */
+    static elements(xmlNode) {
+        return this.children(xmlNode).filter(node => node.nodeType === Node.ELEMENT_NODE);
+    }
+
+    /**
+     * Cleans any empty Text children from the element, but only if there are no other children in it.
+     * @param {Element} element 
+     */
+    static cleanElement(element) {
+        const children = XML.children(element);
+        if (children.length === 0) {
+            // No children, nothing to clean
+            return;
+        }
+
+        // First check if we have content other than text nodes.
+        if (children.filter(node => node.nodeType !== Node.TEXT_NODE).length > 0) {
+            // Other content present, nothing to clean
+            return;
+        }
+
+        const textContent = children.filter(node => node.nodeValue !== null).map(node => node.nodeValue).join('');
+        if (textContent.trim().length === 0) {
+            // Apparently only empty content, let's remove the nodes.
+            children.forEach(node => element.removeChild(node));
+        }
+    }
+
+    /**
+     * Clones the node, but only with local names.
+     * Note: this method invokes Node.cloneNode(deep) if node is not of type Element.
+     * This effectively drops the namespace and makes the node adopt the default namespace of a target
+     * that it can be attached to.
+     * @param {Node} node 
+     * @param {Boolean} deep Whether to include any children of the node if it is of type element, defaults to true
+     */
+    static cloneWithoutNamespace(node, deep = true) {
+        if (node.nodeType === 1) {
+            const element = /** @type {Element} */ (node);
+            const newNode = this.createChildElement(element.ownerDocument, element.localName);
+            const attributes = element.attributes;
+            if (attributes !== null) {
+                for (let i = 0; i < attributes.length; i++) {
+                    const attribute = attributes.item(i);
+                    if (attribute && attribute.nodeValue) {
+                        newNode.setAttribute(attribute.localName, attribute.nodeValue);
+                    }
+                }
+            }
+            if (deep) {
+                XML.children(element).forEach(child => newNode.appendChild(this.cloneWithoutNamespace(child, deep)));
+            }
+            return newNode;
+        } else {
+            return node.cloneNode(deep);
+        }
+    }
 
     /**
      * Returns an array with all elements under the given XML node
@@ -150,6 +238,17 @@ export default class XML {
     }
 
     /**
+     * Return the first element in the node that has the requested tag name
+     * @param {Element | Document} xmlNode 
+     * @param {String} tagName 
+     * @returns {Element | undefined}
+     */
+    static getElement(xmlNode, tagName) {
+        const elements = this.getElementsByTagName(xmlNode, tagName);
+        return elements.length > 0 ? elements[0] : undefined;
+    }
+
+    /**
      * returns the <![CDATA[..]]> node which is a child of the parentNode. If there is no such node
      * then the parentNode will be returned.
      * For most browsers the CDATA node is the second child of the parentNode, but not always. So look for 'cdata' in the nodename
@@ -166,13 +265,39 @@ export default class XML {
     }
 
     /**
+     * Removes any attributes from the tree that have the exact same namespace attribute (including the prefix) as the parent element.
+     * E.g. a parent and child both having xmlns:cmmn="http://www.omg.org/spec/CMMN/20151109/MODEL", then it will remove it from the child.
+     * This is typically needed when an element is created independently and then appended to a new parent.
+     * 
+     * This method is invoked by default from pretty-printing
+     * @param {any} tree 
+     */
+    static removeUnnecessaryNamespaceAttributes(tree) {
+        if (!tree instanceof Element && !tree instanceof Document) {
+            return;
+        }
+        XML.allElements(tree).forEach(element => {
+            const parent = element.parentElement;
+            if (parent !== null) {
+                const xmlnsAttributes = element.getAttributeNames().filter(name => name.startsWith("xmlns"));
+                xmlnsAttributes.forEach(name => {
+                    if (parent.getAttribute(name) === element.getAttribute(name)) {
+                        element.removeAttribute(name);
+                    }
+                });
+            }
+        });
+    }
+
+    /**
      * Pretty prints an XML string or node, based on regular expressions.
      * @param {*} object 
      */
     static prettyPrint(object) {
-        if (! object) return '';
+        if (!object) return '';
         // Algorithm below takes a string and formats it; if an XML node is passed, we first serialize it to string.
         const xml = typeof (object) == 'string' ? this.parseXML(object) : object;
+        this.removeUnnecessaryNamespaceAttributes(xml);
         const text = new XMLSerializer().serializeToString(xml);
         //  This code is based on jquery.format.js by Zach Shelton
         //  https://github.com/zachofalltrades/jquery.format        
@@ -216,7 +341,7 @@ export default class XML {
 
                         if (!inComment) {
                             --deep;
-                        }                        
+                        }
                         str = (!inComment && str.endsWith('/>')) ? str += shift[deep] + ar[ix] : str += ar[ix];
                     } else
 
