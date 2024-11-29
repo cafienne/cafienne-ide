@@ -1,0 +1,5 @@
+<type id="case_faulthandling_subcase.type" name="case_faulthandling_subcase">
+    <schema>
+        <property id="sp__7PTL2_0" name="data" type="data.type" multiplicity="ExactlyOne"/>
+    </schema>
+</type>

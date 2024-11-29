@@ -1,0 +1,6 @@
+<type id="case_elements.type" name="case_elements">
+    <schema>
+        <property id="sp__Z7GOD_0" name="casefileitem" type="root.type" multiplicity="ExactlyOne"/>
+        <property id="sp__Z7GOD_1" name="casefileitem2" type="root.type" multiplicity="ExactlyOne"/>
+    </schema>
+</type>

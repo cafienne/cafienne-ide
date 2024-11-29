@@ -1,0 +1,69 @@
+<definitions xmlns="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:cafienne="org.cafienne">
+    <caseFileItemDefinition name="test_cfi_def_01" definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified" id="test_cfi_def_01.cfid">
+        <property name="cfidefprop_01" type="http://www.omg.org/spec/CMMN/PropertyType/string"/>
+        <property name="cfidefprop_02" type="http://www.omg.org/spec/CMMN/PropertyType/boolean"/>
+        <property name="cfidefprop_03" type="http://www.omg.org/spec/CMMN/PropertyType/date"/>
+    </caseFileItemDefinition>
+    <case id="testTimerEvent.case" name="testTimerEvent" expressionLanguage="spel">
+        <caseFileModel>
+            <caseFileItem id="cfi_testTimerEvent.case_0" name="CFI" multiplicity="ExactlyOne" definitionRef="test_cfi_def_01.cfid"/>
+        </caseFileModel>
+        <casePlanModel id="cm_testTimerEvent.case_0" name="testTimerEvent" autoComplete="true">
+            <planItem id="cm_testTimerEvent.case_2" name="Task_1" definitionRef="ht_cm_testTimerEvent.case_2"/>
+            <planItem id="cm_testTimerEvent.case_4" name="CFI-StartedTimer" definitionRef="tmr_cm_testTimerEvent.case_4"/>
+            <planItem id="cm_testTimerEvent.case_5" name="EventListener_2" definitionRef="tmr_cm_testTimerEvent.case_5"/>
+            <humanTask id="ht_cm_testTimerEvent.case_2" name="Task_1" isBlocking="true"/>
+            <timerEvent id="tmr_cm_testTimerEvent.case_4" name="CFI-StartedTimer">
+                <timerExpression>
+                    <body>
+                        <![CDATA[cfi-expression]]>
+                    </body>
+                </timerExpression>
+                <caseFileItemStartTrigger sourceRef="cfi_testTimerEvent.case_0">
+                    <standardEvent>create</standardEvent>
+                </caseFileItemStartTrigger>
+            </timerEvent>
+            <timerEvent id="tmr_cm_testTimerEvent.case_5" name="EventListener_2">
+                <timerExpression>
+                    <body>
+                        <![CDATA[task-triggered-expression]]>
+                    </body>
+                </timerExpression>
+                <planItemStartTrigger sourceRef="cm_testTimerEvent.case_2">
+                    <standardEvent>complete</standardEvent>
+                </planItemStartTrigger>
+            </timerEvent>
+        </casePlanModel>
+        <extensionElements mustUnderstand="false">
+            <cafienne:start-case-model xmlns:cafienne="org.cafienne">{
+  "schema":{
+    "title": "",
+    "type": "object",
+    "properties":{
+    }
+  }
+}</cafienne:start-case-model>
+        </extensionElements>
+    </case>
+    <CMMNDI>
+        <CMMNDiagram>
+            <CMMNShape cmmnElementRef="cm_testTimerEvent.case_0">
+                <Bounds x="10" y="10" width="650" height="370"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="cm_testTimerEvent.case_4">
+                <Bounds x="410" y="80" width="32" height="32"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="cm_testTimerEvent.case_5">
+                <Bounds x="414" y="204" width="32" height="32"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="cm_testTimerEvent.case_2">
+                <Bounds x="160" y="190" width="100" height="60"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="cm_testTimerEvent.case_6">
+                <Bounds x="196" y="79" width="25" height="40"/>
+            </CMMNShape>
+            <CMMNEdge sourceCMMNElementRef="cm_testTimerEvent.case_2" targetCMMNElementRef="cm_testTimerEvent.case_5"/>
+            <CMMNEdge sourceCMMNElementRef="cm_testTimerEvent.case_6" targetCMMNElementRef="cm_testTimerEvent.case_4"/>
+        </CMMNDiagram>
+    </CMMNDI>
+</definitions>

@@ -1,5 +1,5 @@
 <case id="testRoles.case" name="testRoles" expressionLanguage="spel" guid="_3GznZ">
-    <caseFileModel/>
+    <caseFileModel typeRef="Helloworld.type"/>
     <casePlanModel id="cm__3GznZ_0" name="testRoles" autoComplete="true">
         <humanTask id="pi_ht__3GznZ_0" name="HumanTask_0" isBlocking="true" performerRef="_3GznZ_4">
             <itemControl id="_3GznZ_1">

@@ -1,12 +1,9 @@
 <case id="elements.case" name="elements" expressionLanguage="spel" guid="_Z6eH1">
-    <caseFileModel>
-        <caseFileItem id="_Z6eH1_4" name="casefileitem" multiplicity="ExactlyOne" definitionRef="root.cfid"/>
-        <caseFileItem id="_Z6eH1_20" name="casefileitem2" multiplicity="ExactlyOne" definitionRef="root.cfid"/>
-    </caseFileModel>
+    <caseFileModel typeRef="case_elements.type"/>
     <casePlanModel id="cm__Z6eH1_0" name="elements" autoComplete="true">
         <processTask id="pi_pt__Z6eH1_0" name="ProcessTask_1" isBlocking="true" processRef="checkapprover.process">
             <itemControl id="_Z6eH1_12" name="ItemControl_1">
-                <repetitionRule id="_Z6eH1_13" name="Constraint_1" contextRef="_Z6eH1_4"/>
+                <repetitionRule id="_Z6eH1_13" name="Constraint_1" contextRef="casefileitem"/>
                 <manualActivationRule id="_Z6eH1_14" name="Constraint_2">
                     <condition id="_Z6eH1_18" name="Expression_1">
                         <body>
@@ -20,7 +17,7 @@
         </processTask>
         <milestone id="pi_ms__Z6eH1_0" name="Milestone_1">
             <itemControl id="_Z6eH1_19" name="ItemControl_2">
-                <requiredRule id="_Z6eH1_21" name="Constraint_4" contextRef="_Z6eH1_4">
+                <requiredRule id="_Z6eH1_21" name="Constraint_4" contextRef="casefileitem">
                     <condition id="_Z6eH1_22" name="Expression_2">
                         <body>
                             <![CDATA[true]]>
@@ -31,10 +28,10 @@
         </milestone>
         <stage id="pi__Z6eH1_0" name="Stage_1" autoComplete="true">
             <entryCriterion id="_Z6eH1_23" name="EntryCriterion_0">
-                <caseFileItemOnPart id="_Z6eH1_25" name="CaseFileItemOnPart_1" sourceRef="_Z6eH1_20">
+                <caseFileItemOnPart id="_Z6eH1_25" name="CaseFileItemOnPart_1" sourceRef="casefileitem2">
                     <standardEvent>create</standardEvent>
                 </caseFileItemOnPart>
-                <caseFileItemOnPart id="_Z6eH1_39" name="CaseFileItemOnPart_0" sourceRef="_Z6eH1_4">
+                <caseFileItemOnPart id="_Z6eH1_39" name="CaseFileItemOnPart_0" sourceRef="casefileitem">
                     <standardEvent>create</standardEvent>
                 </caseFileItemOnPart>
                 <planItemOnPart id="_Z6eH1_2" name="PlanItemOnPart_1" sourceRef="pi_pt__Z6eH1_0">
@@ -57,7 +54,7 @@
             <planningTable id="_Z6eH1_9" name="PlanningTable_2"/>
         </humanTask>
         <caseTask id="pi_ct__Z6eH1_0" name="CaseTask_1" isBlocking="true">
-            <outputs id="_Z6eH1_34" name="tab" bindingRef="_Z6eH1_4"/>
+            <outputs id="_Z6eH1_34" name="tab" bindingRef="casefileitem"/>
             <parameterMapping id="_Z6eH1_31" name="ParameterMapping_5" targetRef="_Z6eH1_34">
                 <transformation id="_Z6eH1_33" name="Expression_4">
                     <body>
@@ -74,7 +71,7 @@
             <humanTask id="pi_ht__Z6eH1_3" name="HumanTask_4" isBlocking="true"/>
             <stage id="pi__Z6eH1_37" name="Discretionary Stage" autoComplete="true"/>
             <applicabilityRule id="_Z6eH1_7" name="ApplicabilityRule_1"/>
-            <applicabilityRule id="_Z6eH1_8" name="ApplicabilityRule_2" contextRef="_Z6eH1_4"/>
+            <applicabilityRule id="_Z6eH1_8" name="ApplicabilityRule_2" contextRef="casefileitem"/>
         </planningTable>
     </casePlanModel>
     <caseRoles>

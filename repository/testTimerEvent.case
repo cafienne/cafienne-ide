@@ -1,7 +1,5 @@
 <case id="testTimerEvent.case" name="testTimerEvent" expressionLanguage="spel" guid="_nrtSA">
-    <caseFileModel>
-        <caseFileItem id="cfi_testTimerEvent.case_0" name="CFI" multiplicity="ExactlyOne" definitionRef="test_cfi_def_01.cfid"/>
-    </caseFileModel>
+    <caseFileModel typeRef="case_testTimerEvent.type"/>
     <casePlanModel id="cm_testTimerEvent.case_0" name="testTimerEvent" autoComplete="true">
         <humanTask id="cm_testTimerEvent.case_2" name="Task_1" isBlocking="true"/>
         <timerEvent id="cm_testTimerEvent.case_4" name="CFI-StartedTimer">
@@ -25,6 +23,7 @@
             </planItemStartTrigger>
         </timerEvent>
     </casePlanModel>
+    <caseRoles/>
     <extensionElements mustUnderstand="false">
         <cafienne:start-case-model xmlns:cafienne="org.cafienne">{
   "schema":{

@@ -1,0 +1,9 @@
+<type id="meeting.type" name="meeting">
+    <schema>
+        <property id="sp__yzVVU_0" name="StartDate" type="string" multiplicity="ExactlyOne" format="date"/>
+        <property id="sp__yzVVU_1" name="StartTime" type="string" multiplicity="ExactlyOne" format="time"/>
+        <property id="sp__yzVVU_2" name="EndDate" type="string" multiplicity="ExactlyOne" format="date"/>
+        <property id="sp__yzVVU_3" name="EndTime" type="string" multiplicity="ExactlyOne" format="time"/>
+        <property id="sp__yzVVU_4" name="DurationIncLeave" type="integer" multiplicity="ExactlyOne"/>
+    </schema>
+</type>

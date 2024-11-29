@@ -1,11 +1,9 @@
 <case id="faulthandling_subcase.case" name="faulthandling_subcase" expressionLanguage="spel" guid="_y2XPO">
-    <caseFileModel>
-        <caseFileItem id="_y2XPO_2" name="data" multiplicity="ExactlyOne" definitionRef="data.cfid"/>
-    </caseFileModel>
+    <caseFileModel typeRef="case_faulthandling_subcase.type"/>
     <casePlanModel id="cm__y2XPO_0" name="faulthandling_subcase" autoComplete="true">
         <stage id="pi__y2XPO_0" name="Stage Without Fault Handling" autoComplete="true">
             <processTask id="pi_pt__y2XPO_0" name="Call without Fault Handling" isBlocking="true" processRef="GetResponse2.process">
-                <inputs id="_y2XPO_13" name="data" bindingRef="_y2XPO_2"/>
+                <inputs id="_y2XPO_13" name="data" bindingRef="data"/>
                 <parameterMapping id="_y2XPO_7" sourceRef="_y2XPO_13" targetRef="_FcAX_data"/>
             </processTask>
             <humanTask id="pi_ht__y2XPO_0" name="Task" isBlocking="true"/>
@@ -19,7 +17,7 @@
                         </planItemOnPart>
                     </reactivateCriterion>
                 </extensionElements>
-                <inputs id="_y2XPO_30" name="data" bindingRef="_y2XPO_2"/>
+                <inputs id="_y2XPO_30" name="data" bindingRef="data"/>
                 <parameterMapping id="_y2XPO_15" sourceRef="_y2XPO_30" targetRef="_FcAX_data"/>
             </processTask>
             <stage id="pi__y2XPO_21" name="Failure Handling" autoComplete="true">
@@ -64,5 +62,5 @@
         </stage>
     </casePlanModel>
     <caseRoles/>
-    <input id="_y2XPO_3" name="data" bindingRef="_y2XPO_2"/>
+    <input id="_y2XPO_3" name="data" bindingRef="data"/>
 </case>

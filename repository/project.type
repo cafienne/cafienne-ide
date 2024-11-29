@@ -1,0 +1,9 @@
+<type id="project.type" name="project">
+    <schema>
+        <property id="sp__H7HEh_0" name="IMIS-code" type="string" multiplicity="ExactlyOne"/>
+        <property id="sp__H7HEh_1" name="IMIS-activity-code" type="string" multiplicity="ExactlyOne"/>
+        <property id="sp__H7HEh_2" name="Manager" type="string" multiplicity="ExactlyOne"/>
+        <property id="sp__H7HEh_3" name="ChiefServiceLine" type="string" multiplicity="ExactlyOne"/>
+        <property id="sp__H7HEh_4" name="Assistant" type="string" multiplicity="ExactlyOne"/>
+    </schema>
+</type>

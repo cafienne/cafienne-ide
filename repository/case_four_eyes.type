@@ -1,0 +1,5 @@
+<type id="case_four_eyes.type" name="case_four_eyes">
+    <schema>
+        <property id="sp__TTE6J_0" name="file" type="root.type" multiplicity="ExactlyOne"/>
+    </schema>
+</type>

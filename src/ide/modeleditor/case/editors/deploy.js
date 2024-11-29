@@ -47,6 +47,16 @@ export default class Deploy extends StandardForm {
         }
     }
 
+    onShow() {
+        const deployQuery = 'deploy=true';
+        if (window.location.hash.indexOf(deployQuery) < 0) {
+            if (!window.location.hash.endsWith('?')) { // make sure we only add a question mark when it is not yet there.
+                window.location.hash = window.location.hash + '?'
+            }
+            window.location.hash = window.location.hash + deployQuery;
+        }
+    }
+
     onHide() {
         window.location.hash = window.location.hash.replace('deploy=true', '');
         if (window.location.hash.endsWith('?')) window.location.hash = window.location.hash.replace('?', '');

@@ -1,0 +1,8 @@
+<type id="travellerdetails.type" name="travellerdetails">
+    <schema>
+        <property id="sp__lLj8v_0" name="RequestDate" type="string" multiplicity="ExactlyOne"/>
+        <property id="sp__lLj8v_1" name="Requestor" type="string" multiplicity="ExactlyOne"/>
+        <property id="sp__lLj8v_2" name="PointOfContact" type="string" multiplicity="ExactlyOne"/>
+        <property id="sp__lLj8v_3" name="Traveller" type="traveller.type" multiplicity="ZeroOrMore"/>
+    </schema>
+</type>

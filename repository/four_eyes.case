@@ -1,7 +1,5 @@
 <case id="four_eyes.case" name="four_eyes" expressionLanguage="spel" guid="_mlHqQ">
-    <caseFileModel>
-        <caseFileItem id="_mlHqQ_11" name="file" multiplicity="ExactlyOne" definitionRef="root.cfid"/>
-    </caseFileModel>
+    <caseFileModel typeRef="case_four_eyes.type"/>
     <casePlanModel id="cm__mlHqQ_0" name="four_eyes" autoComplete="true">
         <humanTask id="pi_ht__mlHqQ_0" name="Task1" isBlocking="true">
             <extensionElements mustUnderstand="false">
@@ -46,6 +44,7 @@
             </extensionElements>
         </humanTask>
     </casePlanModel>
+    <caseRoles/>
     <textAnnotation id="_mlHqQ_47">
         <text>
             <![CDATA[RendezVous between Task1 and Task2]]>

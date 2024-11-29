@@ -1,0 +1,188 @@
+<definitions xmlns="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:cafienne="org.cafienne">
+    <caseFileItemDefinition name="Response" definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified" id="Helloworld_type_Response.object">
+        <property name="Message" type="http://www.omg.org/spec/CMMN/PropertyType/string"/>
+        <property name="SomeBoolean" type="http://www.omg.org/spec/CMMN/PropertyType/boolean"/>
+    </caseFileItemDefinition>
+    <caseFileItemDefinition name="HelloWorld" definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified" id="Helloworld.type"/>
+    <caseFileItemDefinition name="Greeting" definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified" id="Greeting.type">
+        <property name="Message" type="http://www.omg.org/spec/CMMN/PropertyType/string"/>
+        <property name="From" type="http://www.omg.org/spec/CMMN/PropertyType/string"/>
+        <property name="To" type="http://www.omg.org/spec/CMMN/PropertyType/string"/>
+    </caseFileItemDefinition>
+    <case id="testRoles.case" name="testRoles" expressionLanguage="spel">
+        <caseFileModel cafienne:typeRef="Helloworld.type">
+            <caseFileItem id="Greeting" name="Greeting" multiplicity="ExactlyOne" definitionRef="Greeting.type"/>
+            <caseFileItem id="Response" name="Response" multiplicity="ExactlyOne" definitionRef="Helloworld_type_Response.object">
+                <children>
+                    <caseFileItem id="Response/GreetingInResponse" name="GreetingInResponse" multiplicity="ExactlyOne" definitionRef="Greeting.type"/>
+                </children>
+            </caseFileItem>
+            <caseFileItem id="AnotherGreeting" name="AnotherGreeting" multiplicity="ExactlyOne" definitionRef="Greeting.type"/>
+        </caseFileModel>
+        <casePlanModel id="cm__3GznZ_0" name="testRoles" autoComplete="true">
+            <planItem id="pi_ht__3GznZ_0" name="HumanTask_0" definitionRef="ht__3GznZ_0">
+                <itemControl id="_3GznZ_1">
+                    <repetitionRule id="_3GznZ_12">
+                        <condition id="_3GznZ_13">
+                            <body>
+                                <![CDATA[true]]>
+                            </body>
+                        </condition>
+                    </repetitionRule>
+                </itemControl>
+            </planItem>
+            <planItem id="pi_ht__3GznZ_1" name="HumanTask_1" definitionRef="ht__3GznZ_1">
+                <itemControl id="_3GznZ_2">
+                    <repetitionRule id="_3GznZ_10">
+                        <condition id="_3GznZ_11">
+                            <body>
+                                <![CDATA[true]]>
+                            </body>
+                        </condition>
+                    </repetitionRule>
+                </itemControl>
+            </planItem>
+            <planItem id="pi_ue__3GznZ_0" name="UserEvent_0 " definitionRef="ue__3GznZ_0">
+                <documentation textFormat="text/plain">
+                    <text>
+                        <![CDATA[UserEvent_0
+]]>
+                    </text>
+                </documentation>
+            </planItem>
+            <planningTable id="_3GznZ_3">
+                <discretionaryItem id="pi_ht__3GznZ_2" name="HumanTask_2" definitionRef="ht__3GznZ_2" authorizedRoleRefs="_3GznZ_6 _3GznZ_7">
+                    <itemControl id="_3GznZ_0">
+                        <repetitionRule id="_3GznZ_8">
+                            <condition id="_3GznZ_9">
+                                <body>
+                                    <![CDATA[true]]>
+                                </body>
+                            </condition>
+                        </repetitionRule>
+                    </itemControl>
+                </discretionaryItem>
+            </planningTable>
+            <humanTask id="ht__3GznZ_0" name="HumanTask_0" isBlocking="true" performerRef="_3GznZ_4">
+                <outputs id="_3GznZ_20" name="Response"/>
+                <extensionElements mustUnderstand="false">
+                    <cafienne:implementation name="SendResponse" xmlns:cafienne="org.cafienne" class="org.cafienne.cmmn.definition.task.WorkflowTaskDefinition" humanTaskRef="sendresponse.humantask">
+                        <documentation textFormat="text/plain">
+                            <text>
+                                <![CDATA[Sends a response back to the initiator of the hello world case]]>
+                            </text>
+                        </documentation>
+                        <input id="Greeting" name="Greeting"/>
+                        <output id="Response" name="Response"/>
+                        <task-model>{
+  "schema" : {
+    "title" : "You have received a greeting",
+    "type" : "object",
+    "required" : [
+      "Response"
+    ],
+    "properties" : {
+      "Greeting" : {
+        "title" : " ",
+        "type" : "object",
+        "properties" : {
+          "Message" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Response" : {
+        "title" : "Your response",
+        "type" : "object",
+        "properties" : {
+          "Message" : {
+            "type" : "string",
+            "title" : "Your response message"
+          },
+          "Date" : {
+            "type" : "string",
+            "format" : "date",
+            "title" : "Pick a date"
+          },
+          "Time" : {
+            "type" : "string",
+            "format" : "time",
+            "title" : "Pick a time"
+          },
+          "SomeBoolean" : {
+            "type" : "boolean",
+            "title" : "Check this"
+          }
+        }
+      }
+    }
+  },
+  "uiSchema" : {
+    "ui:order": [ "Greeting", "Response" ],
+    "Greeting" : {
+      "Message" : {
+        "ui:widget" : "textarea",
+        "ui:readonly" : true
+      },
+      "To" : {
+        "ui:readonly" : true
+      }
+    },
+    "Response" : {
+      "Message" : {
+        "ui:widget" : "textarea"
+      }
+    }
+  }
+}
+</task-model>
+                        <parameterMapping id="_3GznZ_21" sourceRef="Response" targetRef="_3GznZ_20"/>
+                    </cafienne:implementation>
+                </extensionElements>
+            </humanTask>
+            <humanTask id="ht__3GznZ_1" name="HumanTask_1" isBlocking="true"/>
+            <userEvent id="ue__3GznZ_0" name="UserEvent_0 "/>
+            <humanTask id="ht__3GznZ_2" name="HumanTask_2" isBlocking="true"/>
+        </casePlanModel>
+        <caseRoles>
+            <role id="_3GznZ_4" name="Role1">
+                <documentation textFormat="text/plain">
+                    <text>
+                        <![CDATA[Role ABC]]>
+                    </text>
+                </documentation>
+            </role>
+            <role id="_3GznZ_5" name="Role2">
+                <documentation textFormat="text/plain">
+                    <text>
+                        <![CDATA[Role 2]]>
+                    </text>
+                </documentation>
+            </role>
+            <role id="_3GznZ_6" name="Role 3"/>
+            <role id="_3GznZ_7" name="Role - With - Character"/>
+        </caseRoles>
+    </case>
+    <CMMNDI>
+        <CMMNDiagram>
+            <CMMNShape cmmnElementRef="cm__3GznZ_0">
+                <Bounds x="20" y="20" width="800" height="500"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="pi_ht__3GznZ_0">
+                <Bounds x="80" y="110" width="100" height="60"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="pi_ht__3GznZ_1">
+                <Bounds x="300" y="110" width="100" height="60"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="pi_ht__3GznZ_2">
+                <Bounds x="90" y="210" width="100" height="60"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="pi_ue__3GznZ_0">
+                <Bounds x="310" y="230" width="32" height="32"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="_3GznZ_3">
+                <Bounds x="300" y="33" width="24" height="16"/>
+            </CMMNShape>
+        </CMMNDiagram>
+    </CMMNDI>
+</definitions>

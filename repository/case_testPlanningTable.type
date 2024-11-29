@@ -1,0 +1,5 @@
+<type id="case_testPlanningTable.type" name="case_testPlanningTable">
+    <schema>
+        <property id="sp__w1Oba_0" name="test" type="Greeting.type" multiplicity="ExactlyOne"/>
+    </schema>
+</type>

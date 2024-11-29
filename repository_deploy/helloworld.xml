@@ -110,13 +110,8 @@
   }
 }
 </task-model>
-                        <duedate id="_nTPPc_9">
-                            <condition id="_nTPPc_10">
-                                <body>
-                                    <![CDATA[T(java.time.Instant).now()]]>
-                                </body>
-                            </condition>
-                        </duedate>
+                        <parameterMapping id="inPM_cm_cshJq_4_0" sourceRef="inTP_cm_cs2F1_174_1" targetRef="Greeting"/>
+                        <parameterMapping id="outPM_cm_csuYs_174_0" sourceRef="Response" targetRef="outTP_cm_cs2F1_174_1"/>
                         <assignment id="_nTPPc_3" contextRef="cfi_csVQy_0">
                             <condition id="_nTPPc_4">
                                 <body>
@@ -124,8 +119,13 @@
                                 </body>
                             </condition>
                         </assignment>
-                        <parameterMapping id="inPM_cm_cshJq_4_0" sourceRef="inTP_cm_cs2F1_174_1" targetRef="Greeting"/>
-                        <parameterMapping id="outPM_cm_csuYs_174_0" sourceRef="Response" targetRef="outTP_cm_cs2F1_174_1"/>
+                        <duedate id="_nTPPc_9">
+                            <condition id="_nTPPc_10">
+                                <body>
+                                    <![CDATA[T(java.time.Instant).now()]]>
+                                </body>
+                            </condition>
+                        </duedate>
                     </cafienne:implementation>
                 </extensionElements>
             </humanTask>
@@ -177,13 +177,7 @@
   }
 }
 </task-model>
-                        <duedate id="_nTPPc_14">
-                            <condition id="_nTPPc_15">
-                                <body>
-                                    <![CDATA[T(java.time.Instant).now()]]>
-                                </body>
-                            </condition>
-                        </duedate>
+                        <parameterMapping id="inPM_cm_cs3hg_196_0" sourceRef="inTP_cm_cs3hg_196_0" targetRef="Response"/>
                         <assignment id="_nTPPc_12" contextRef="cfi_csVQy_0">
                             <condition id="_nTPPc_13">
                                 <body>
@@ -191,7 +185,13 @@
                                 </body>
                             </condition>
                         </assignment>
-                        <parameterMapping id="inPM_cm_cs3hg_196_0" sourceRef="inTP_cm_cs3hg_196_0" targetRef="Response"/>
+                        <duedate id="_nTPPc_14">
+                            <condition id="_nTPPc_15">
+                                <body>
+                                    <![CDATA[T(java.time.Instant).now()]]>
+                                </body>
+                            </condition>
+                        </duedate>
                     </cafienne:implementation>
                 </extensionElements>
             </humanTask>

@@ -1,0 +1,5 @@
+<type id="case_testTimerEvent.type" name="case_testTimerEvent">
+    <schema>
+        <property id="sp__nsBj8_0" name="CFI" type="test_cfi_def_01.type" multiplicity="ExactlyOne"/>
+    </schema>
+</type>
