@@ -1,6 +1,7 @@
 ﻿import CodeMirrorConfig from "@ide/editors/external/codemirrorconfig";
 import StandardForm from "@ide/editors/standardform";
-import { $read } from "@util/ajax";
+import Definitions from "@repository/deploy/definitions";
+import $ajax, { $read } from "@util/ajax";
 import CaseView from "../elements/caseview";
 
 export default class Deploy extends StandardForm {
@@ -81,28 +82,30 @@ export default class Deploy extends StandardForm {
     }
 
     async deploy() {
-        // By logging the deploy action in a group, we can see in the console how many times the file has been deployed. UI only shows latest...
-        console.group("Deploying case file " + this.case.editor.fileName);
-        $read('deploy', this.case.editor.fileName)
-            .then(() => {
-                const now = new Date().toISOString().replace('T', ' ').substring(0, 19);
-                const msg = 'Deployed at ' + now;
-                console.log(msg);
-                console.groupEnd();
-                this._setDeployedTimestamp(msg);
-            }).catch((error) => {
-                console.groupEnd();
-                this._setDeployTextArea(error.message);
-                this._setDeployedTimestamp('');
-                this.case.editor.ide.danger('Deploy of CMMN model ' + this.case.name + ' failed');
-            })
+        const deployment = new Definitions(this.case.caseDefinition);
+        const data = deployment.contents();
+        const url = '/repository/deploy/' + deployment.fileName;
+        const type = 'post';
+        console.log('Posting deployment to ' + url);
+        await $ajax({ url, data, type, headers: { 'content-type': 'application/xml' } }).catch((error) => {
+            console.error('Deployment failed', error);
+            console.groupEnd();
+            this._setDeployTextArea(error.message);
+            this._setDeployedTimestamp('');
+            this.case.editor.ide.danger('Deploy of CMMN model ' + this.case.name + ' failed');
+        });
+        const now = new Date().toISOString().replace('T', ' ').substring(0, 19);
+        const msg = 'Deployed at ' + now;
+
+        this._setDeployedTimestamp(msg);
+        console.groupEnd();
+
     }
 
-    async viewCMMN() {
-        this._setDeployTextArea('Fetching CMMN ...');
-        $read('viewCMMN', this.case.editor.fileName)
-            .then(data => this._setDeployTextArea((new XMLSerializer()).serializeToString(data)))
-            .catch(error => this._setDeployTextArea(error.message));
+    viewCMMN() {
+        this._setDeployTextArea('Fetching MY CMMN ...');
+        const deploy = new Definitions(this.case.caseDefinition);
+        this._setDeployTextArea(deploy.contents());
     }
 
     async runServerValidation() {
