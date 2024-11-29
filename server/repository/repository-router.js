@@ -4,6 +4,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const config = require('../../config/config');
+const { Utilities } = require('../utilities');
 
 const Repository = require('@cafienne/repository').Repository;
 const Backend = require('@cafienne/repository').Backend;
@@ -101,11 +102,12 @@ router.delete('/delete/*', function (req, res, next) {
 /**
  * Deploy a file and it's dependencies from the repository to the deployment folder
  */
-router.get('/deploy/*', xmlParser, function (req, res, next) {
+router.post('/deploy/*', xmlParser, function (req, res, next) {
     const artifactToDeploy = req.params[0];
     try {
-        const deployedFile = repository.deploy(artifactToDeploy);
-        console.log('Deployed ' + artifactToDeploy + ' to ' + deployedFile);
+        // const deployedFile = repository.deploy(artifactToDeploy);
+        Utilities.writeFile(config.deploy, artifactToDeploy, req.body);
+        console.log('Deployed ' + artifactToDeploy);
         res.setHeader('Content-Type', 'application/xml');
         res.status(201).end();
     } catch (err) {
