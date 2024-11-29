@@ -193,7 +193,7 @@ export default class ModelDefinition extends XMLSerializable {
     }
 
     exportModel(tagName: string, ...propertyNames: any[]) {
-        const xmlDocument = XML.loadXMLString(`<${tagName} />`); // TODO: add proper namespace and so.
+        const xmlDocument = XML.loadXMLString(`<${tagName} xmlns="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:cafienne="org.cafienne" />`);
         this.exportNode = xmlDocument.documentElement;
         this.exportProperties('id', 'name', 'documentation', propertyNames);
         return xmlDocument;
