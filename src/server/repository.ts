@@ -1,7 +1,6 @@
 'use strict';
 
 import path from "path";
-import Definitions from "./deploy/definitions";
 import RepositoryConfiguration from "./config/config";
 import Store from "./store/store";
 import Utilities from "./util/utilities";
@@ -37,17 +36,9 @@ export default class Repository {
         return this.store.delete(artifactName);
     }
 
-    composeDefinitionsDocument(artifactName: string) {
-        return new Definitions(artifactName, this.store);
-    }
-
-    deploy(artifactName: string) {
-        const definitions = this.composeDefinitionsDocument(artifactName);
-        if (definitions.hasErrors()) {
-            throw new Error('Cannot deploy ' + artifactName + ' due to ' + definitions.getErrors());
-        }
-        const file = Utilities.createAbsolutePath(this.deployPath, definitions.deployFileName);
-        Utilities.saveFile(file, definitions.deployContents);
+    deploy(deployFileName: string, deployContents: string) {
+        const file = Utilities.createAbsolutePath(this.deployPath, deployFileName);
+        Utilities.saveFile(file, deployContents);
         return file;
     }
 

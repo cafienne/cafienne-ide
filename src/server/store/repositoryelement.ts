@@ -1,7 +1,6 @@
 'use strict';
 
 import path from "path";
-import Tags from "../deploy/tags";
 import Reference from "./reference";
 import Store from "./store";
 import { XML } from "../util/xml";

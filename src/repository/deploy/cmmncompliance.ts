@@ -1,4 +1,4 @@
-import { XML } from "../util/xml";
+import XML from "@util/xml";
 
 export default class CMMNCompliance {
     static convert(element: Element): void {
@@ -12,7 +12,7 @@ export default class CMMNCompliance {
             // Nothing to convert, this is an old style model
             return;
         }
-        const casePlan = XML.findElement(element, 'casePlanModel');
+        const casePlan = XML.getChildByTagName(element, 'casePlanModel');
         if (!casePlan) {
             // Deploying a case without a plan, interesting ;)
             return;
@@ -92,12 +92,12 @@ export default class CMMNCompliance {
         const splitItemDefinition = (itemDefinition: Element) => {
             const tagName = itemDefinition.parentNode?.nodeName === 'planningTable' ? 'discretionaryItem' : 'planItem';
             // console.log("Adding " + tagName +" for a " + itemDefinition.tagName)
-            const item = itemDefinition.ownerDocument.createElement(tagName);
+            const item = XML.createChildElement(itemDefinition, tagName);
             // First split the attributes across new item and it's definition, and put a definitionRef to link both
             splitAttributes(itemDefinition, item);
 
             // Move some children to the new item node
-            XML.findChildrenWithTag(itemDefinition, '*').filter(isPlanItemChild).forEach(child => {
+            XML.getChildrenByTagName(itemDefinition, '*').filter(isPlanItemChild).forEach(child => {
                 if (child.tagName === 'extensionElements') {
                     const planItemExtensions = XML.elements(child).filter(isPlanItemExtension);
                     if (planItemExtensions.length > 0) {
@@ -127,7 +127,7 @@ export default class CMMNCompliance {
     }
 
     static splitCriteriaAndSentries(element: Element): void {
-        const sentryElements = XML.findElementsWithTag(element, 'sentry');
+        const sentryElements = XML.getElementsByTagName(element, 'sentry');
         if (sentryElements.length > 0) {
             // Nothing to convert, as sentries are available the old way.
             return;
@@ -139,11 +139,11 @@ export default class CMMNCompliance {
         }
         const lastPlanItemOrSentryFinder = (element: Element): Element | undefined => {
             if (element.tagName === 'stage' || element.tagName === 'casePlanModel') {
-                const sentries = XML.findChildrenWithTag(element, 'sentry');
+                const sentries = XML.getChildrenByTagName(element, 'sentry');
                 if (sentries.length > 0) {
                     return sentries[sentries.length - 1];
                 }
-                const planItems = XML.findChildrenWithTag(element, 'planItem');
+                const planItems = XML.getChildrenByTagName(element, 'planItem');
                 return planItems[planItems.length - 1];
             }
             if (element.tagName === 'case') {
@@ -157,7 +157,7 @@ export default class CMMNCompliance {
         criteria.forEach(criterion => {
             const lastPlanItem = lastPlanItemOrSentryFinder(criterion);
             if (lastPlanItem) {
-                const sentry = criterion.ownerDocument.createElement('sentry');
+                const sentry = XML.createChildElement(criterion, 'sentry');
                 const criterionId = criterion.getAttribute('id');
                 const sentryId = `s_${criterionId}`
                 sentry.setAttribute('id', sentryId);
@@ -170,7 +170,7 @@ export default class CMMNCompliance {
                     lastPlanItem.parentNode?.appendChild(sentry);
                 }
                 // Move the criterion content into the <sentry> element
-                XML.children(criterion).forEach(child => sentry.appendChild(XML.cloneWithoutNamespace(child)));
+                XML.elements(criterion).forEach(child => sentry.appendChild(XML.cloneWithoutNamespace(child)));
             }
         });
     }

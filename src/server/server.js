@@ -99,31 +99,13 @@ router.delete('/delete/*', function (req, res, next) {
 /**
  * Deploy a file and it's dependencies from the repository to the deployment folder
  */
-router.get('/deploy/*', xmlParser, function (req, res, next) {
-    const artifactToDeploy = req.params[0];
-    try {
-        const deployedFile = repository.deploy(artifactToDeploy);
-        console.log('Deployed ' + artifactToDeploy + ' to ' + deployedFile);
-        res.setHeader('Content-Type', 'application/xml');
-        res.status(201).end();
-    } catch (err) {
-        console.error(err);
-        res.status(500).send(err);
-    }
-});
-
-/**
- * Preview what the deployment of a file and it's dependencies looks like
- */
-router.get('/viewCMMN/*', (req, res, next) => {
+router.post('/deploy/*', xmlParser, function (req, res, next) {
     try {
         const fileName = req.params[0];
-
-        const definitions = repository.composeDefinitionsDocument(fileName);
-        const response = definitions.deployContents;
+        repository.deploy(fileName, req.body);
+        console.log('Deployed ' + fileName);
         res.setHeader('Content-Type', 'application/xml');
-        res.setHeader('x-sent', 'true');
-        res.send(response);
+        res.status(201).end();
     } catch (err) {
         console.error(err);
         res.status(500).send(err);
