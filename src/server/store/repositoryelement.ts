@@ -103,7 +103,6 @@ export default class RepositoryElement {
             fileName: this.fileName,
             type: this.type,
             lastModified: this.lastModified,
-            usage: this.usage,
             error: this.error,
             content: this.content
         }

@@ -75,11 +75,11 @@ export default class Store {
     }
 
     contents() {
-        return new StoreAnalyzer(this).resolveUsageInformation().contents;
+        return new StoreAnalyzer(this).contents;
     }
 
     list() {
-        return new StoreAnalyzer(this).resolveUsageInformation().list;
+        return new StoreAnalyzer(this).list;
     }
 }
 

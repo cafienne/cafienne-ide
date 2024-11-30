@@ -21,14 +21,6 @@ export default class StoreAnalyzer {
     }
 
     /**
-     * Extend the model information with the usage information
-     */
-    resolveUsageInformation() {
-        this.models.forEach(source => source.usage.push(...this.findReferences(source).map(reference => reference.usage)));
-        return this;
-    }
-
-    /**
      * 
      * @param {RepositoryElement} source 
      * @returns {Array<Reference>}
