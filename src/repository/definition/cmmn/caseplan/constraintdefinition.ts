@@ -1,3 +1,4 @@
+import ValidationContext from "@repository/validate/validation";
 import ExpressionContainer from "../expression/expressioncontainer";
 
 export default class ConstraintDefinition extends ExpressionContainer {

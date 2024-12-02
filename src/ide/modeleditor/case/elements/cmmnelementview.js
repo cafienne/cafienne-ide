@@ -630,24 +630,6 @@ export default class CMMNElementView extends CanvasElement {
     }
 
     /**
-     * validate: all steps to check this element
-     */
-    __validate() { }
-
-    /**
-     * Raises a validation error/warning with the Case
-     * @param {Number} number 
-     * @param {Array<String>} parameters 
-     */
-    raiseValidationIssue(number, parameters = []) {
-        if (parameters.length == 0) { // Default parameters are element name and case name
-            parameters.push(this.name);
-            parameters.push(this.case.name);
-        }
-        this.case.validator.raiseProblem(this.id, number, parameters);
-    }
-
-    /**
      * returns an array with all the joint (!) descendants of the element
      * @returns {Array<CMMNElementView>}
      */

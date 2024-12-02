@@ -2,6 +2,7 @@ import CMMNElementDefinition from "@repository/definition/cmmnelementdefinition"
 import UnnamedCMMNElementDefinition from "../../unnamedcmmnelementdefinition";
 import CaseDefinition from "../casedefinition";
 import CaseRoleDefinition from "./caseroledefinition";
+import ValidationContext from "@repository/validate/validation";
 
 export default class CaseTeamDefinition extends UnnamedCMMNElementDefinition {
     roles: CaseRoleDefinition[];
@@ -16,5 +17,17 @@ export default class CaseTeamDefinition extends UnnamedCMMNElementDefinition {
 
     createExportNode(parentNode: Element) {
         super.createExportNode(parentNode, 'caseRoles', 'roles');
+    }
+    validate(validationContext: ValidationContext) {
+        super.validate(validationContext);
+
+        for (let role of this.roles) {
+            role.validate(validationContext);
+        }
+
+        let duplicatesRoles = this.roles.filter((role, index) => this.roles.indexOf(role) !== index);
+        if (duplicatesRoles.length > 0) {
+            this.raiseError('The case team has duplicate roles', []);
+        }
     }
 }

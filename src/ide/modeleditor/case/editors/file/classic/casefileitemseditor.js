@@ -332,33 +332,4 @@ export default class CaseFileItemsEditor {
         }
         return references;
     }
-
-    /**
-     * Raises an issue found during validation. The context in which the issue has occured and the issue number must be passed, 
-     * along with some parameters that are used to provide a meaningful description of the issue
-     * @param {*} context
-     * @param {Number} number 
-     * @param {Array<String>} parameters 
-     */
-    raiseEditorIssue(context, number, parameters) {
-        this.case.validator.raiseProblem(context.id, number, parameters);
-    }
-
-    /**
-     * validates this
-     */
-    validate() {
-        const allCaseFileItems = this.case.caseDefinition.caseFile.getDescendants();
-        if ((!allCaseFileItems || allCaseFileItems.length <= 0) && !this.case.caseDefinition.caseFile.typeRef) {
-            this.raiseEditorIssue(this.case, 38, [this.case.name]);
-        }
-        allCaseFileItems.forEach(item => {
-            if (!item.name) {
-                this.raiseEditorIssue(item, 1, ['Case File Item', this.case.name, item.multiplicity]);
-            }
-            if (!item.definitionRef) {
-                this.raiseEditorIssue(item, 31, [item.name, this.case.name]);
-            }
-        });
-    }
 }

@@ -1,3 +1,4 @@
+import ValidationContext from "@repository/validate/validation";
 import ElementDefinition from "../elementdefinition";
 import CMMNExtensionDefinition from "../extensions/cmmnextensiondefinition";
 import CaseDefinition from "./casedefinition";
@@ -26,5 +27,9 @@ export default class StartCaseSchemaDefinition extends CMMNExtensionDefinition<C
             super.createExportNode(parentNode, StartCaseSchemaDefinition.TAG)
             this.exportNode.textContent = this.value;
         }
+    }
+    validate(validationContext: ValidationContext) {
+        super.validate(validationContext);
+        // no validations yet
     }
 }

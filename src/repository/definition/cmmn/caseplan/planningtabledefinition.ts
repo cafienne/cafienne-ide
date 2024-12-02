@@ -1,3 +1,4 @@
+import ValidationContext from "@repository/validate/validation";
 import ElementDefinition from "@repository/definition/elementdefinition";
 import UnnamedCMMNElementDefinition from "../../unnamedcmmnelementdefinition";
 import CaseDefinition from "../casedefinition";
@@ -57,6 +58,16 @@ export default class PlanningTableDefinition extends UnnamedCMMNElementDefinitio
         this.ruleDefinitions.push(newRule);
         return newRule;
     }
+
+    validate(validationContext: ValidationContext) {
+        super.validate(validationContext);
+
+        StageDefinition.validatePlanItems(validationContext, this.tableItems);
+
+        for (let rule of this.ruleDefinitions) {
+            rule.validate(validationContext);
+        }
+    }
 }
 
 export class ApplicabilityRuleDefinition extends ConstraintDefinition {
@@ -79,5 +90,8 @@ export class ApplicabilityRuleDefinition extends ConstraintDefinition {
 
     createExportNode(parentNode: Element) {
         super.createExportNode(parentNode, 'applicabilityRule');
+    }
+    validate(validationContext: ValidationContext) {
+        super.validate(validationContext);
     }
 }

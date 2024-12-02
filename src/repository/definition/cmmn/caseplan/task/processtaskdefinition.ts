@@ -2,6 +2,7 @@ import ProcessFile from "@repository/serverfile/processfile";
 import TaskDefinition from "./taskdefinition";
 import CaseDefinition from "../../casedefinition";
 import StageDefinition from "../stagedefinition";
+import ValidationContext from "@repository/validate/validation";
 
 export default class ProcessTaskDefinition extends TaskDefinition {
     processRef: string;
@@ -28,5 +29,25 @@ export default class ProcessTaskDefinition extends TaskDefinition {
 
     set implementationRef(ref) {
         this.processRef = ref;
+    }
+    validate(validationContext: ValidationContext): void {
+        super.validate(validationContext);
+
+        if (this.processRef !== undefined && this.processRef !== "")
+        {
+            let processModel = validationContext.repository.getProcesses().find(c => c.fileName === this.processRef);
+            if (processModel === undefined) {
+                this.raiseError('The process task "-par0-" refers to a process that is not defined', 
+                    [this.name]);
+            }
+            else {
+                if (processModel.definition === undefined) {
+                    this.raiseError('The process file "-par0-" does not contain a process definition', 
+                        [processModel.name]);
+                } else {
+                    processModel.definition.validate(validationContext);
+                }
+            }
+        }
     }
 }

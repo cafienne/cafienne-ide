@@ -108,14 +108,6 @@ export default class CaseFileItemView extends CMMNElementView {
                 <text class="cmmn-text" text-anchor="middle" x="10" y="55" />`;
     }
 
-    //validate: all steps to check this element
-    __validate() {
-        if (!this.name) {
-            const message = this.parent ? this.parent.name : '-no parent-';
-            this.raiseValidationIssue(0, [message, this.case.name]);
-        }
-    }
-
     referencesDefinitionElement(definitionId) {
         return this.definition && this.definition.id === definitionId;
     }

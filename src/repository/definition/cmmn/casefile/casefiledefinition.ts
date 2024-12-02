@@ -5,6 +5,7 @@ import CaseFileItemDef, { CaseFileItemCollection } from "./casefileitemdef";
 import CaseFileItemTypeDefinition from "./casefileitemtypedefinition";
 import XMLSerializable from "@repository/definition/xmlserializable";
 import SchemaPropertyDefinition from "@repository/definition/type/schemapropertydefinition";
+import ValidationContext from "@repository/validate/validation";
 
 export default class CaseFileDefinition extends CaseFileItemCollection {
     isOldStyle: boolean;
@@ -51,5 +52,36 @@ export default class CaseFileDefinition extends CaseFileItemCollection {
         const descendants: CaseFileItemDef[] = [];
         this.children.forEach(child => child.getDescendants().forEach(c => descendants.push(c)));
         return descendants;
+    }
+
+    validate(validationContext: ValidationContext): void {
+        super.validate(validationContext);
+
+        if (this.isOldStyle) {
+            this.raiseWarning('The case file is in old style and will not be validated', []);
+        }
+        else
+        {
+            if (this.typeRef === "")  
+            {
+                this.raiseError(`The case file has no type`, []);
+                return;
+            }
+
+            const typeFile = validationContext.repository.getTypes().find(type => type.fileName === this.typeRef);
+            if (typeFile === undefined || typeFile.definition === undefined)
+            {
+                this.raiseError(`The type "-par0-" of the case file is not defined`, [this.typeRef]);
+            }
+            else
+            {
+                if (typeFile.definition === undefined) {
+                    this.raiseError(`The type "-par0-" of the case file is not defined`, [this.typeRef]);
+                }
+                else {
+                    typeFile.definition.validate(validationContext);
+                }
+            }
+        }
     }
 }

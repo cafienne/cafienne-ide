@@ -1,8 +1,11 @@
+import Problem, { ProblemSeverity } from "@repository/validate/problem";
 import ModelDefinition from "./modeldefinition";
 import XMLSerializable from "./xmlserializable";
+import ValidationContext from "@repository/validate/validation";
 
 export default class ElementDefinition<M extends ModelDefinition> extends XMLSerializable {
     childDefinitions: ElementDefinition<M>[] = [];
+    problems: Problem<M>[] = [];
 
     /**
      * Creates a new ElementDefinition that belongs to the Definition object.
@@ -90,5 +93,26 @@ export default class ElementDefinition<M extends ModelDefinition> extends XMLSer
 
     hasExternalReferences() {
         return false;
+    }
+
+    raiseWarning(messageTemplate: string, parameters: string[]){
+        this.createProblem(messageTemplate, this, parameters, ProblemSeverity.WARNING);
+    }
+    raiseError(messageTemplate: string, parameters: string[]){
+        this.createProblem(messageTemplate, this, parameters, ProblemSeverity.ERROR);
+    }
+
+    validate(validationContext: ValidationContext) {
+        // no validations yet
+    }
+
+    private createProblem(messageTemplate: string, element: ElementDefinition<M>, parameters: string[], 
+        severity:ProblemSeverity) : Problem<M> 
+    {
+        const problem = new Problem(element, messageTemplate, parameters, severity);
+
+        element.problems.push(problem);
+
+        return problem;
     }
 }

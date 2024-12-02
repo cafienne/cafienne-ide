@@ -124,36 +124,6 @@ export default class TaskStageView extends PlanItemView {
         return super.referencesDefinitionElement(definitionId);
     }
 
-    __validate() {
-        super.__validate();
-
-        // Check discretionary
-        if (this.definition.isDiscretionary) {
-            // ------- check if connected to a stage or task with a planning table first check connected to element with planningTable
-            const numberOfConnectionsToPlanningTable = this.__getConnectedElements().filter(item => item.isTaskOrStage && item.definition.planningTable).length;
-            //not connected check if inside stage/case plan model with plannnigTable
-            if (numberOfConnectionsToPlanningTable == 0) {
-                // not connected to task with planningTable check if parent is stage or case plan
-                // model with planningTable
-                const cmmnParent = this.parent;
-                if (cmmnParent && cmmnParent.isTaskOrStage) {
-                    if (!cmmnParent.definition.planningTable) {
-                        this.raiseValidationIssue(20);
-                    }
-                } else {
-                    this.raiseValidationIssue(20);
-                }
-            } else {
-                if (numberOfConnectionsToPlanningTable >= 2) {
-                    this.raiseValidationIssue(21);
-                }
-            }
-
-            // Authorized roles must be filled with an ID attribute.
-            this.definition.authorizedRoles.filter(r => !r.id).forEach(r => this.raiseValidationIssue(40));
-        }
-    }
-
     canHaveCriterion(criterionType) {
         return criterionType == EntryCriterionView || criterionType == ReactivateCriterionView || criterionType == ExitCriterionView;
     }

@@ -2,6 +2,7 @@ import XML from "@util/xml";
 import ArtifactDefinition from "./artifactdefinition";
 import CaseDefinition from "../cmmn/casedefinition";
 import CMMNElementDefinition from "../cmmnelementdefinition";
+import ValidationContext from "@repository/validate/validation";
 
 export default class TextAnnotationDefinition extends ArtifactDefinition {
     textFormat: string;
@@ -19,5 +20,9 @@ export default class TextAnnotationDefinition extends ArtifactDefinition {
         const textElement = XML.createChildElement(this.exportNode, 'text');
         const textCDataNode = this.exportNode.ownerDocument.createCDATASection(this.text);
         textElement.appendChild(textCDataNode);
+    }
+    validate(validationContext: ValidationContext): void {
+        super.validate(validationContext);
+        // no validations yet
     }
 }

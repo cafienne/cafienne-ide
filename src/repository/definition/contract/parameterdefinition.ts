@@ -2,6 +2,7 @@ import CafienneImplementationDefinition from "@repository/definition/extensions/
 import ReferableElementDefinition from "@repository/definition/referableelementdefinition";
 import ModelDefinition from "../modeldefinition";
 import ElementDefinition from "../elementdefinition";
+import ValidationContext from "@repository/validate/validation";
 
 export default class ParameterDefinition<M extends ModelDefinition> extends ReferableElementDefinition<M> {
     required: boolean = false;
@@ -18,5 +19,9 @@ export default class ParameterDefinition<M extends ModelDefinition> extends Refe
         if (this.required) { // Required is a customization to the spec, put in an extension element
             this.createImplementationNode().setAttribute('required', 'true');
         }
+    }
+
+    validate(validationContext: ValidationContext) {
+        // no validations yet
     }
 }

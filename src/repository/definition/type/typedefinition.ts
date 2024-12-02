@@ -1,9 +1,10 @@
 import TypeFile from "@repository/serverfile/typefile";
 import SchemaDefinition from "./schemadefinition";
 import ModelDefinition from "../modeldefinition";
+import ValidationContext from "@repository/validate/validation";
 
 export default class TypeDefinition extends ModelDefinition {
-    private _schema?: SchemaDefinition;
+   private _schema?: SchemaDefinition;
 
     static createDefinitionSource(name: string) {
         return `<type id="${name + '.type'}" name="${name}"><schema/></type>`;
@@ -42,4 +43,13 @@ export default class TypeDefinition extends ModelDefinition {
         this.schema?.toJSONSchema(jsonSchema.schema, jsonSchema.schema)
         return jsonSchema;
     }
-}
+
+    validate(validationContext: ValidationContext) {
+        if (validationContext.alreadyValidated(this)) {
+            return;
+        }
+
+        super.validate(validationContext);
+        this.schema.validate(validationContext);
+    }
+ }

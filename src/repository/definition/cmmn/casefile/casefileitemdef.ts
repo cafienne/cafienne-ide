@@ -2,6 +2,7 @@ import Util from "@util/util";
 import XML from "@util/xml";
 import CaseDefinition from "../casedefinition";
 import CMMNElementDefinition from "@repository/definition/cmmnelementdefinition";
+import ValidationContext from "@repository/validate/validation";
 
 export class CaseFileItemCollection extends CMMNElementDefinition {
     _children: CaseFileItemDef[];
@@ -33,6 +34,10 @@ export class CaseFileItemCollection extends CMMNElementDefinition {
      */
     get children(): CaseFileItemDef[] {
         return this._children;
+    }
+
+    validate(validationContext: ValidationContext) {
+        // no validations yet
     }
 }
 

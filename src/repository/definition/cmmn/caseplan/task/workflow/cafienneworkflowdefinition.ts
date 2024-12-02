@@ -4,6 +4,7 @@ import CafienneImplementationDefinition from "../../../../extensions/cafienneimp
 import HumanTaskDefinition from "../humantaskdefinition";
 import AssignmentDefinition from "./assignmentdefinition";
 import DueDateDefinition from "./duedatedefinition";
+import ValidationContext from "@repository/validate/validation";
 
 export default class CafienneWorkflowDefinition extends CafienneImplementationDefinition<CaseDefinition> {
     humanTaskRef: string;
@@ -28,5 +29,38 @@ export default class CafienneWorkflowDefinition extends CafienneImplementationDe
         if (this.mappings.length > 0 || this.humanTaskRef || this.assignment || this.dueDate || this.validatorRef) {
             super.createExtensionNode(parentNode, (CafienneImplementationDefinition as any).TAG, 'humanTaskRef', 'validatorRef', 'mappings', 'assignment', 'dueDate')
         }
+    }
+    validate(validationContext: ValidationContext) {
+        super.validate(validationContext);
+
+        var eleemntName = this.parent?.name ?? '';
+        // due date
+        if (this.dueDate) {
+            const dueDate = this.dueDate;
+            if (!dueDate.body) {
+                this.raiseError('The due date of task "-par0-" has no due date expression', 
+                    [eleemntName]);
+            }
+            if (!dueDate.contextRef && dueDate.body !== 'true' && dueDate.body !== 'false') {
+                this.raiseWarning('The due date of task "-par0-" has no context (case file item)',
+                    [eleemntName]);
+            }
+        }
+
+        // assignment
+        if (this.assignment) {
+            const assignment = this.assignment;
+            if (!assignment.body) {
+                this.raiseError('The dynamic assignment of task "-par0-" has no due date expression', 
+                    [eleemntName]);
+            }
+            if (!assignment.contextRef && assignment.body !== 'true' && assignment.body !== 'false') {
+                this.raiseWarning('The dynamic assignment of task "-par0-" has no context (case file item)',
+                    [eleemntName]);
+            }
+        }
+
+        // 4-eyes
+        // rendex-vous
     }
 }

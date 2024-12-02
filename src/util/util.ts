@@ -101,6 +101,26 @@ export default class Util {
     }
 
     /**
+     * Calculates a hash of a string. Same string will always return the same hash.
+     * 
+     * @param input text to be hashed
+     * @returns number representing the hash of the input
+     */
+    static hashCode(input: string): number {
+        let hash = 0;
+      
+        if (input.length === 0) return hash;
+      
+        for (let i = 0; i < input.length; i++) {
+            const char = input.charCodeAt(i);
+            hash = (hash << 5) - hash + char;
+            hash |= 0;
+        }
+      
+        return hash;
+}    
+
+    /**
      * Simple helper function that removes an element from an array, if it is in the array.
      * Returns the arrayIndex the element had in the array, or -1.
      */

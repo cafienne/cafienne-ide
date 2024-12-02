@@ -4,6 +4,7 @@ import CaseRoleDefinition from "../../caseteam/caseroledefinition";
 import StageDefinition from "../stagedefinition";
 import TaskDefinition from "./taskdefinition";
 import CafienneWorkflowDefinition from "./workflow/cafienneworkflowdefinition";
+import ValidationContext from "@repository/validate/validation";
 
 export default class HumanTaskDefinition extends TaskDefinition {
     performerRef: string;
@@ -76,5 +77,17 @@ export default class HumanTaskDefinition extends TaskDefinition {
 
     set validatorRef(ref) {
         this.workflow.validatorRef = ref;
+    }
+    validate(validationContext: ValidationContext) {
+        super.validate(validationContext);
+        
+        if (this.performerRef !== undefined && this.performerRef !== "") {
+            if (this.caseDefinition.caseTeam.roles.filter(role => role.id === this.performerRef).length === 0) {
+                this.raiseError('The performer "-par0-" of task "-par1-" is not defined in the case team', 
+                    [this.performerRef, this.name]);
+            }
+        }
+
+        this.workflow.validate(validationContext);
     }
 }

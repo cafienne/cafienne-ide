@@ -12,6 +12,7 @@ import PlanningTableDefinition, { ApplicabilityRuleDefinition } from "./planning
 import StageDefinition from "./stagedefinition";
 import FourEyesDefinition from "./task/workflow/foureyesdefinition";
 import RendezVousDefinition from "./task/workflow/rendezvousdefinition";
+import ValidationContext from "@repository/validate/validation";
 
 export default class PlanItem extends CMMNElementDefinition {
     private applicabilityRuleRefs: string;
@@ -199,6 +200,64 @@ export default class PlanItem extends CMMNElementDefinition {
     get entryTransition(): string {
         throw new Error('This method must be implemented in ' + this.constructor.name);
     }
+
+    validate(validationContext: ValidationContext) {
+        super.validate(validationContext);
+
+        if (this.itemControl !== undefined) 
+        {
+            this.itemControl.repetitionRule?.validate(validationContext, 'Repetition');
+            this.itemControl.requiredRule?.validate(validationContext, 'Required');
+            this.itemControl.manualActivationRule?.validate(validationContext, 'Manual activation');
+
+            if (this.itemControl.repetitionRule) {
+                if (this.entryCriteria.length > 0 &&
+                    this.entryCriteria
+                        .filter(criterion => 
+                                    criterion.caseFileItemOnParts.length !== 0 
+                                || criterion.planItemOnParts.length !== 0)
+                        .length == 0) {
+                        this.raiseError('Item "-par0-" has a repetition rule defined, but no entry criteria with at least one on part. This is mandatory.',
+                            [this.name]);
+                }
+            }
+        }
+
+        for (let sentry of this.entryCriteria) {
+            sentry.validate(validationContext);
+        }
+        for (let sentry of this.exitCriteria) {
+            sentry.validate(validationContext);
+        }
+        for (let sentry of this.reactivateCriteria) {
+            sentry.validate(validationContext);
+        }
+
+        for (let role of this.authorizedRoles) {
+            if (this.caseDefinition.caseTeam.roles.filter(r => r.id === role.id).length === 0) {
+                this.raiseError('An authorized role of user event "-par0-" is not defined in the case team', 
+                    [this.name]);
+            }
+        }
+
+        this.validateTaskPairingConstraints(validationContext);
+    }
+
+    validateTaskPairingConstraints(validationContext: ValidationContext) {
+        if (this.rendezVous && this.fourEyes) {
+            let counterparts = this.rendezVous.references;
+            let opposites = this.fourEyes.references;
+            // Verify that we cannot have "rendez-vous" with items that we also have "4-eyes" with.
+            opposites.forEach((item) => {
+                if (counterparts.filter(counter => item.id === counter.id).length > 0) {
+                    this.raiseError('"-par0-" has a 4-eyes defined with "-par1-", but also rendez-vous (either directly or indirectly). This is not valid.',
+                        [this.name, item.name]);
+                }
+            });
+        }
+
+    }
+
 }
 
 /**

@@ -2,6 +2,7 @@ import ProcessFile from "@repository/serverfile/processfile";
 import ParameterDefinition from "../contract/parameterdefinition";
 import ModelDefinition from "../modeldefinition";
 import ProcessImplementationDefinition from "./processimplementationdefinition";
+import ValidationContext from "@repository/validate/validation";
 
 export default class ProcessModelDefinition extends ModelDefinition {
     input: ParameterDefinition<ProcessModelDefinition>[] = [];
@@ -31,5 +32,13 @@ export default class ProcessModelDefinition extends ModelDefinition {
         const xmlDocument = super.exportModel('process', 'input', 'output', 'implementation');
         this.exportNode.setAttribute('implementationType', 'http://www.omg.org/spec/CMMN/ProcessType/Unspecified');
         return xmlDocument;
+    }
+
+    validate(validationContext: ValidationContext) {
+        super.validate(validationContext);
+
+        // TODO: implement validation for input/output parameters
+        // TODO: implement validation for implementation XML, e.g. mapping to output parameters
+        //          based on the classname a fixed set of source parameters can be defined
     }
 }

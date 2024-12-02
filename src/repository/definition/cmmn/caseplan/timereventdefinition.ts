@@ -1,3 +1,4 @@
+import ValidationContext from "@repository/validate/validation";
 import CaseDefinition from "../casedefinition";
 import ExpressionDefinition from "../expression/expressiondefinition";
 import OnPartDefinition from "../sentry/onpartdefinition";
@@ -55,6 +56,33 @@ export default class TimerEventDefinition extends EventListenerDefinition {
 
     createExportNode(parentNode: Element) {
         super.createExportNode(parentNode, 'timerEvent', 'timerExpression', 'planItemStartTrigger', 'caseFileItemStartTrigger');
+    }
+    validate(validationContext: ValidationContext) {
+        super.validate(validationContext);
+
+        if (!this.timerExpression) {
+            this.raiseError('The timer event "-par0-" has no timer expression', 
+                [this.name]);
+        }
+
+        if (this.planItemStartTrigger) {
+            const planItemStartTrigger = this.planItemStartTrigger;
+            if (planItemStartTrigger.sourceRef && !planItemStartTrigger.standardEvent) {
+                this.raiseError('The plan item start trigger for timer event "-par0-" has no standard event', 
+                    [this.name]);
+            }
+        }
+
+        if (this.caseFileItemStartTrigger) {
+            if (!this.caseFileItemStartTrigger.standardEvent) {
+                this.raiseError('The case file item start trigger for timer event "-par0-" has no standard event', 
+                    [this.name]);
+            }
+            if (!this.caseFileItemStartTrigger.sourceRef) {
+                this.raiseError('The case file item start trigger for timer event "-par0-" has no source reference', 
+                    [this.name]);
+            }
+        }
     }
 }
 

@@ -188,43 +188,6 @@ export default class TaskView extends TaskStageView {
         this.mappingsEditor.delete();
     }
 
-    //validate: all steps to check this element
-    __validate() {
-        super.__validate();
-
-        if (!this.definition.implementationRef) {
-            this.raiseValidationIssue(3);
-        }
-
-        if (this.definition.isBlocking == false) {
-            //non blocking task cannot have exit sentries
-            if (this.definition.exitCriteria.length > 0) {
-                this.raiseValidationIssue(5);
-            }
-
-            //non blocking task cannot have output parameters
-            if (this.definition.outputs.length > 0) {
-                this.raiseValidationIssue(6);
-            }
-
-            //non blocking human task cannot have a planningtable
-            if (this.definition.planningTable) {
-                this.raiseValidationIssue(8);
-            }
-        }
-
-        this.validateParameterMappings(this.definition.inputMappings, 'sourceRef', 'input');
-        this.validateParameterMappings(this.definition.inputMappings, 'targetRef', 'input');
-    }
-
-    validateParameterMappings(mappings, referenceProperty, mappingType) {
-        mappings.forEach(mapping => {
-            if (!mapping[referenceProperty]) {
-                this.raiseValidationIssue(37, [this.name, this.case.name, mappingType]);
-            }
-        });
-    }
-
     /**
      * @returns {String}
      */

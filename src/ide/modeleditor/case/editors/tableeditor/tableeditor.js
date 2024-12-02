@@ -142,17 +142,6 @@ export default class TableEditor extends MovableEditor {
     }
 
     /**
-     * Raises an issue found during validation. The context in which the issue has occured and the issue number must be passed, 
-     * along with some parameters that are used to provide a meaningful description of the issue
-     * @param {*} context
-     * @param {Number} number 
-     * @param {Array<String>} parameters 
-     */
-    raiseEditorIssue(context, number, parameters) {
-        this.case.validator.raiseProblem(context.id, number, parameters);
-    }
-
-    /**
      * when the description of a case file item is changed the zoom fields must be updated
      * @param {CMMNElementDefinition} definitionElement 
      */

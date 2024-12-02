@@ -1,3 +1,4 @@
+import ValidationContext from "@repository/validate/validation";
 import CaseDefinition from "./cmmn/casedefinition";
 import DocumentableElementDefinition from "./documentableelementdefinition";
 
@@ -19,5 +20,8 @@ export default class CMMNElementDefinition extends DocumentableElementDefinition
     toString() {
         const name = this.name ? ` '${this.name}'` : '';
         return `${this.constructor.name}${name}`;
+    }
+    validate(validationContext: ValidationContext) {
+        // no validations yet
     }
 }

@@ -1,6 +1,6 @@
 ﻿#validateformid{
-    width:500px;
-    height:200px;
+    width: 700px;
+    height:300px;
     top:300px;
     left:640px;
     overflow:hidden;
@@ -75,11 +75,29 @@
     top:0px;
 }
 
-#validateformid .problemrow .problemdescription{
+#validateformid .headerrowlabels .filename{
+    width:120px;    
+    border-right:1px solid #DDDDDD;
+    overflow: hidden;
+}
+
+#validateformid .problemrow .filename{
+   width:120px;
+   font-style: italic;
    padding:2px 0px 0px 3px;
    -webkit-user-select:auto;  
    -khtml-user-select: auto;   
    -moz-user-select:text; 
    -o-user-select:text;   
    user-select:text;
+   overflow: hidden;
 }
+
+#validateformid .problemrow .problemdescription{
+    padding:2px 0px 0px 3px;
+    -webkit-user-select:auto;  
+    -khtml-user-select: auto;   
+    -moz-user-select:text; 
+    -o-user-select:text;   
+    user-select:text;
+ }

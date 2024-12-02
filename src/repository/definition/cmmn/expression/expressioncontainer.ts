@@ -5,6 +5,7 @@ import CMMNElementDefinition from "@repository/definition/cmmnelementdefinition"
 import XMLSerializable from "@repository/definition/xmlserializable";
 import ModelDefinition from "@repository/definition/modeldefinition";
 import ElementDefinition from "@repository/definition/elementdefinition";
+import ValidationContext from "@repository/validate/validation";
 
 /**
  * Simple class that does basic expression parsing 
@@ -74,6 +75,21 @@ export default class ExpressionContainer extends UnnamedCMMNElementDefinition {
         super.createExportNode(parentNode, tagName, 'contextRef', propertyNames);
         if (this._expression) {
             this._expression.createExportNode(this.exportNode, this.expressionTagName);
+        }
+    }
+    validate(validationContext: ValidationContext, ruleType: (string | undefined) = undefined) {
+        super.validate(validationContext);
+
+        const elementName = this.parent?.name ?? '';
+        ruleType = ruleType ?? this.constructor.name.substring(0, this.constructor.name.length - "RuleDefinition".length);
+
+        if (!this.body) {
+            this.raiseError('-par2- rule "-par1-" of element "-par0-" has no expression', 
+                [elementName, this.name, ruleType]);
+        }
+        if (!this.contextRef && this.body !== 'true' && this.body !== 'false') {
+            this.raiseWarning('-par2- rule "-par1-" of element "-par0-" has no context (case file item)',
+                [elementName, this.name, ruleType]);
         }
     }
 }

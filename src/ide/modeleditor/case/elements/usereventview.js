@@ -37,16 +37,6 @@ export default class UserEventView extends EventListenerView {
         return 'images/svg/userevent.svg';
     }
 
-    /**
-     * validate: all steps to check this element
-     */
-    __validate() {
-        super.__validate();
-
-        // Authorized roles must be filled with an ID attribute.
-        this.definition.authorizedRoles.filter(r => !r.id).forEach(r => this.raiseValidationIssue(40));
-    }
-
     referencesDefinitionElement(definitionId) {
         if (this.definition.authorizedRoles.find(role => role.id == definitionId)) {
             return true;

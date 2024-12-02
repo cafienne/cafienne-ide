@@ -3,6 +3,7 @@ import ReferableElementDefinition from "../referableelementdefinition";
 import SchemaDefinition from "./schemadefinition";
 import TypeDefinition from "./typedefinition";
 import CaseFileItemTypeDefinition from "../cmmn/casefile/casefileitemtypedefinition";
+import ValidationContext from "@repository/validate/validation";
 
 export default class SchemaPropertyDefinition extends ReferableElementDefinition<TypeDefinition> {
     _type: string;
@@ -239,5 +240,51 @@ export default class SchemaPropertyDefinition extends ReferableElementDefinition
         strippedCMMNType = strippedCMMNType === 'float' ? 'number' : strippedCMMNType === 'anyURI' ? 'uri' : strippedCMMNType === 'dateTime' ? 'date-time' : strippedCMMNType;
         this.cmmnType = strippedCMMNType;
         return this;
+    }
+
+    validate(validationContext: ValidationContext) {
+        super.validate(validationContext);
+
+        if (this.name === "") 
+        {
+            this.raiseError(`A case file item element has no name`, []);
+        }
+        if (["ExactlyOne", "ZeroOrOne", "ZeroOrMore", "OneOrMore", "Unspecified", "Unknown"].
+            indexOf(this.multiplicity) === -1) 
+        {
+            this.raiseError('"-par0-" is not a valid multiplicity for property "-par1-")', [this.multiplicity, this.name]);
+        }
+        if (this.isComplexType) 
+        {
+            if (this.type === "object")
+            {
+                if (this.childDefinitions.length === 0) 
+                {
+                    this.raiseError('The structured property "-par0-" has no child properties', [this.name]);
+                }
+                for (let childDef of this.childDefinitions)  {
+                    if (childDef instanceof SchemaDefinition) {
+                        childDef.validate(validationContext);
+                    }
+                    else
+                    {
+                        this.raiseWarning('The property of type "-par0-" cannot be validated', [childDef.constructor.name]);
+                    }
+                }
+            }
+            else if (this.subType === undefined) {
+                this.raiseError('The property "-par0-" does not have a type', [this.name]);
+            }
+            else{
+                this.subType.validate(validationContext);
+            }
+        }
+        else
+        {
+            if (this.type === "") 
+            {
+                this.raiseError('The property "-par0-" has no type', [this.name]);
+            }
+        }
     }
 }

@@ -3,6 +3,7 @@ import ElementDefinition from "../elementdefinition";
 import SchemaPropertyDefinition from "./schemapropertydefinition";
 import TypeDefinition from "./typedefinition";
 import ModelDefinition from "../modeldefinition";
+import ValidationContext from "@repository/validate/validation";
 
 export default class SchemaDefinition extends ElementDefinition<TypeDefinition> {
     static TAG: string = 'schema';
@@ -49,5 +50,30 @@ export default class SchemaDefinition extends ElementDefinition<TypeDefinition> 
             }
         });
         return jsonSchema;
+    }
+    validate(validationContext: ValidationContext) {
+        super.validate(validationContext);
+
+        if (this.childDefinitions.length === 0) 
+        {
+            const propertyName = this.parent.name;
+            if (propertyName === undefined)
+            {
+                this.raiseError('The type  "-par0-" has no child properties', [this.modelDefinition.name]);
+            }
+            else
+            {
+                this.raiseError('The structured property "-par0-" has no child properties', [propertyName]);
+            }
+        }
+        for (let childDef of this.childDefinitions)  {
+            if (childDef instanceof SchemaPropertyDefinition) {
+                childDef.validate(validationContext);
+            }
+            else
+            {
+                this.raiseError('Unexpected child definition in schema: "-par0-"', [childDef.constructor.name]);
+            }
+        }
     }
 }

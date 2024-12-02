@@ -3,6 +3,7 @@ import CaseDefinition from "../casedefinition";
 import CriterionDefinition from "./criteriondefinition";
 import OnPartDefinition from "./onpartdefinition";
 import ElementDefinition from "@repository/definition/elementdefinition";
+import ValidationContext from "@repository/validate/validation";
 
 export default class CaseFileItemOnPartDefinition extends OnPartDefinition {
     constructor(importNode: Element, caseDefinition: CaseDefinition, parent: CriterionDefinition) {

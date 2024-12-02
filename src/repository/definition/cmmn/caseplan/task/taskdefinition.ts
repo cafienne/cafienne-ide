@@ -8,6 +8,7 @@ import ParameterMappingDefinition from "../../contract/parametermappingdefinitio
 import { TaskStageDefinition } from "../planitem";
 import StageDefinition from "../stagedefinition";
 import TaskParameterDefinition from "./taskparameterdefinition";
+import ValidationContext from "@repository/validate/validation";
 
 export default class TaskDefinition extends TaskStageDefinition {
     isBlocking: boolean = true;
@@ -243,5 +244,59 @@ export default class TaskDefinition extends TaskStageDefinition {
 
     createExportNode(parentNode: Element, tagName: string, ...propertyNames: any[]) {
         super.createExportNode(parentNode, tagName, 'isBlocking', 'inputs', 'outputs', propertyNames);
+    }
+
+    validate(validationContext: ValidationContext) {
+        super.validate(validationContext);
+
+        if (!this.implementationRef || this.implementationRef === "") {
+            this.raiseWarning('No implementation attached to task "-par0-"', 
+                [this.name]);
+        }
+
+        if (this.isBlocking == false) {
+            //non blocking task cannot have exit sentries
+            if (this.exitCriteria.length > 0) {
+                this.raiseError('Non-blocking task "-par0-" has an exit sentry, this is not allowed', 
+                    [this.name]);
+            }
+
+            //non blocking task cannot have output parameters
+            if (this.outputs.length > 0) {
+                this.raiseError('Non-blocking task "-par0-" has output parameters, this is not allowed.',
+                    [this.name]);
+            }
+
+            //non blocking task cannot have a planningtable
+            if (this.planningTable) {
+                this.raiseError('Non-blocking task "-par0-" has a planning table, this is not allowed.',
+                    [this.name]);
+            }
+        }
+
+        // validate input/output parameters
+        this.mappings.forEach(mapping => {
+            if (!mapping['sourceRef']) {
+                this.raiseWarning('The input mapping "-par1-" of element "-par0-" has empty task parameter(s)',
+                    [this.name, mapping.implementationParameter?.name ?? "unnamed"]);
+            }
+        });
+        this.mappings.forEach(mapping => {
+            if (!mapping['targetRef']) {
+                this.raiseWarning('The output mapping "-par1-" of element "-par0-" has empty task parameter(s)',
+                    [this.name, mapping.implementationParameter?.name ?? "unnamed"]);
+            }
+        });
+
+        if (this.planningTable) {
+            this.planningTable.validate(validationContext);
+        }
+
+        for (let role of this.authorizedRoles) {
+            if (this.caseDefinition.caseTeam.roles.filter(r => r.id === role.id).length === 0) {
+                this.raiseError('An authorized role of task "-par0-" is not defined in the case team', 
+                    [this.name]);
+            }
+        }
     }
 }

@@ -5,6 +5,7 @@ import CaseFileItemDef from "../casefile/casefileitemdef";
 import PlanItem from "../caseplan/planitem";
 import CriterionDefinition from "./criteriondefinition";
 import XMLSerializable from "@repository/definition/xmlserializable";
+import ValidationContext from "@repository/validate/validation";
 
 export default class OnPartDefinition extends UnnamedCMMNElementDefinition {
     standardEvent: string;
@@ -35,5 +36,21 @@ export default class OnPartDefinition extends UnnamedCMMNElementDefinition {
     createExportNode(parentNode: Element, tagName: string, ...propertyNames: any[]) {
         super.createExportNode(parentNode, tagName, 'sourceRef', propertyNames);
         XML.createTextChild(XML.createChildElement(this.exportNode, 'standardEvent'), this.standardEvent);
+    }
+
+    validate(validationContext: ValidationContext) {
+        super.validate(validationContext);
+
+        const parent = this.parent as CriterionDefinition;
+        const planItem = this.parent?.parent as PlanItem;
+
+        if (!this.sourceRef) {
+            this.raiseError('A -par0- of element "-par1-" has an onPart case file item entry without a reference to a case file item)', 
+                [parent.typeDescription, planItem.name]);
+        }
+        if (!this.standardEvent) {
+            this.raiseWarning('A -par0- of element "-par1-" has an onPart case file item entry without a standard event',
+                [parent.typeDescription, planItem.name]);
+        }
     }
 }

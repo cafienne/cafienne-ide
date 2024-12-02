@@ -6,6 +6,7 @@ import ParameterDefinition from "./contract/parameterdefinition";
 import ElementDefinition from "./elementdefinition";
 import TypeCounter from "./typecounter";
 import XMLSerializable from "./xmlserializable";
+import ValidationContext from "@repository/validate/validation";
 
 /**
  * A ModelDefinition is the base class of a model, such as CaseDefinition, ProcessDefinition, HumanTaskDefinition, CaseFileDefinitionDefinition 
@@ -34,6 +35,10 @@ export default class ModelDefinition extends XMLSerializable {
         /** @type {Array<ElementDefinition>} */
         (this.elements as any).push(this);
         this.parseDocumentationElement();
+    }
+
+    clearProblems() {
+        this.elements.forEach(element => element.problems = [])
     }
 
     validateDocument() {
@@ -209,5 +214,8 @@ export default class ModelDefinition extends XMLSerializable {
         console.log(msg);
         // console.warn(`Setting migrated to ${migrated} for ${this.modelDocument.fileName}`);
         this.__migrated = true;
+    }
+    validate(validationContext: ValidationContext) {
+        this.clearProblems();
     }
 }

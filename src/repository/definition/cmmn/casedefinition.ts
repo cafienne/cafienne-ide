@@ -10,6 +10,7 @@ import CaseTeamDefinition from "./caseteam/caseteamdefinition";
 import CaseParameterDefinition from "./contract/caseparameterdefinition";
 import StartCaseSchemaDefinition from "./startcaseschemadefinition";
 import PlanItem from "./caseplan/planitem";
+import ValidationContext from "@repository/validate/validation";
 
 export default class CaseDefinition extends ModelDefinition {
     private _caseFile?: CaseFileDefinition;
@@ -135,5 +136,23 @@ export default class CaseDefinition extends ModelDefinition {
         // Also export the guid that is used to generate new elements in the case. This must be removed upon deployment.
         this.exportNode.setAttribute('guid', this.typeCounters.guid);
         return xmlDocument;
+    }
+
+    validate(validationContext: ValidationContext):void {
+        if (validationContext.alreadyValidated(this)) {
+            return;
+        }
+
+        super.validate(validationContext);
+
+        
+
+        this.caseFile.validate(validationContext);
+        this.casePlan.validate(validationContext);
+        this.caseTeam.validate(validationContext);
+        this.input.forEach(param => param.validate(validationContext));
+        this.output.forEach(param => param.validate(validationContext));
+        this.annotations.forEach(annotation => annotation.validate(validationContext));
+        this.startCaseSchema.validate(validationContext);
     }
 }

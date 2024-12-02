@@ -1,3 +1,4 @@
+import ValidationContext from "@repository/validate/validation";
 import CMMNElementDefinition from "./cmmnelementdefinition";
 
 /**
@@ -7,4 +8,9 @@ export default class UnnamedCMMNElementDefinition extends CMMNElementDefinition 
     isNamedElement() {
         return false;
     }
+
+    validate(validationContext: ValidationContext) {
+        // no validations yet
+    }
+        
 }

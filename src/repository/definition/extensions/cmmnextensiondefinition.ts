@@ -1,3 +1,4 @@
+import ValidationContext from "@repository/validate/validation";
 import ElementDefinition from "../elementdefinition";
 import ModelDefinition from "../modeldefinition";
 
@@ -11,5 +12,8 @@ export default class CMMNExtensionDefinition<M extends ModelDefinition> extends 
 
     createExportNode(parentNode: Element, tagName: string, ...propertyNames: any[]) {
         super.createExtensionNode(parentNode, tagName, propertyNames);
+    }
+    validate(validationContext: ValidationContext) {
+        // no validations yet
     }
 }

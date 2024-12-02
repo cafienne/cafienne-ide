@@ -68,12 +68,6 @@ export default class CaseFileEditor {
         this.typeEditor.delete();
     }
 
-    validate() {
-        if (this.classicEditor) {
-            this.classicEditor.validate();
-        }
-    }
-
     /**
      * Registers a function handler that is invoked upon dropping an element.
      * If an item from the editor is moved over the canvas, elements and form properties can register themselves as a drop handler

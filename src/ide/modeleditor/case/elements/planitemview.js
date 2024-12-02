@@ -115,38 +115,6 @@ export default class PlanItemView extends CMMNElementView {
         }
     }
 
-    __validate() {
-        super.__validate();
-
-        // Plan items must have a name.
-        if (!this.name) {
-            this.raiseValidationIssue(0, [this.typeDescription, this.case.name]);
-        }
-
-        // Validate ItemControl rules
-        const itemControl = this.definition.planItemControl;
-        if (itemControl) {
-            this.validateRule(itemControl.repetitionRule, 'repeat');
-            this.validateRule(itemControl.requiredRule, 'required');
-            this.validateRule(itemControl.manualActivationRule, 'manualactivation');
-        }
-    }
-
-    /**
-     * @param {ConstraintDefinition} rule 
-     * @param {String} ruleType 
-     */
-    validateRule(rule, ruleType) {
-        //the rule exists for this element and is used
-        if (rule && !rule.body) {
-            this.raiseValidationIssue(24, [this.name, this.case.name, ruleType, 'rule expression']);
-        }
-
-        if (rule && !rule.contextRef && rule.body !== 'true' && rule.body !== 'false') {
-            this.raiseValidationIssue(39, [this.name, this.case.name, ruleType, 'context (case file item)']);
-        }
-    }
-
     get isPlanItem() {
         return true;
     }

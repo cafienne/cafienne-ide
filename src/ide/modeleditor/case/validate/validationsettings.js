@@ -15,7 +15,6 @@ export default class ValidationSettings {
     }
 
     /**
-     * Returns the settings for the ProblemType with the specified number
      * @param {Number} number 
      * @returns {Boolean}
      */
