@@ -1,12 +1,13 @@
 'use strict';
 
-import CaseView from "@ide/modeleditor/case/elements/caseview";
-import { $read } from "@util/ajax";
 import CodeMirrorConfig from "@ide/editors/external/codemirrorconfig";
+import CaseView from "@ide/modeleditor/case/elements/caseview";
+import { $get } from "@util/ajax";
 import Util from "@util/util";
 import $ from "jquery";
 import StandardForm from "../editors/standardform";
 import RightSplitter from "../splitter/rightsplitter";
+import Settings from "@ide/settings/settings";
 
 /**
  * This class implements the logic to call the repository REST service to debug a case instance.
@@ -72,6 +73,10 @@ export default class Debugger extends StandardForm {
                 </tr>
             </table>
         </span>
+        <span style="top:-90px;position:relative;">
+            <label>Server to use</label>
+            <input style="margin-left:4px" class="serverURL" value="${Settings.serverURL}" type="text"></input>
+        </span>
     </div>
     <div class="event-container">
         <div>
@@ -104,9 +109,9 @@ export default class Debugger extends StandardForm {
 </div>`);
 
         this.html.find('.caseInstanceId').val(localStorage.getItem('debug-case-id'))
+        this.html.find('.serverURL').on('change', e => Settings.serverURL = e.currentTarget.value);
         this.html.find('.from').val(localStorage.getItem('from'))
         this.html.find('.to').val(localStorage.getItem('to'))
-        this.login = JSON.parse(localStorage.getItem('login') || '{}')
         this.html.find('.inputShowPathInformation').prop('checked', this.showPathInformation);
         this.html.find('.inputShowPathInformation').on('change', e => {
             this.showPathInformation = e.currentTarget.checked;
@@ -591,7 +596,7 @@ export default class Debugger extends StandardForm {
             parameters.push(`to=${to}`)
         }
 
-        $read(`api/events/${caseInstanceId}?${parameters.join('&')}`).then(data => {
+        $get(`${Settings.serverURL}/debug/${caseInstanceId}?${parameters.join('&')}`).then(data => {
             this.events = data;
             if (this.events.length > 0) {
                 // Only overwrite the previous identifier if we have actually found events.

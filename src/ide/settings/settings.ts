@@ -2,6 +2,7 @@
 
 import SettingsStorage from "./settingsstorage";
 
+const SERVER_URL = 'server';
 const GRID_SIZE = 'grid_size';
 const GRID_VISIBILITY = 'grid_visible';
 const VALIDATION_SETTINGS = 'validation_settings';
@@ -10,6 +11,18 @@ const SPLITTER_SETTINGS = 'splitter_settings';
 export default class Settings {
 
     constructor() {
+    }
+
+    static get serverURL() {
+        const host = window.location.hostname;
+        const protocol = window.location.protocol;
+        const port = '2027';
+        const defaultURL = protocol + '//' + host + ':' + port;
+        return SettingsStorage.getItem(SERVER_URL) || defaultURL;
+    }
+
+    static set serverURL(url) {
+        SettingsStorage.setItem(SERVER_URL, url);
     }
 
     static get gridSize() {
