@@ -7,6 +7,7 @@ const exclusionPatterns = [
     /^\.\/ide\//,
     /^\.\/validate\//,
     /^\.\/deploy\//,
+    /^\.\/testharness\//,
 ];
 
 function extractClassNames(filePath) {
