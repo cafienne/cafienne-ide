@@ -1,7 +1,7 @@
 ﻿import CodeMirrorConfig from "@ide/editors/external/codemirrorconfig";
 import StandardForm from "@ide/editors/standardform";
 import Definitions from "@repository/deploy/definitions";
-import $ajax, { $read } from "@util/ajax";
+import $ajax from "@util/ajax";
 import CaseView from "../elements/caseview";
 
 export default class Deploy extends StandardForm {
@@ -12,6 +12,12 @@ export default class Deploy extends StandardForm {
      */
     constructor(cs) {
         super(cs, 'Deploy CMMN Model - ' + cs.case.name, 'deployform');
+        this.init();
+    }
+
+    async init() {
+        const config = await this.modelEditor.ide.repository.getConfig();
+        this.server = config.server;
     }
 
     renderData() {
@@ -67,7 +73,7 @@ export default class Deploy extends StandardForm {
         this.html.find('.deployed_timestamp').text(text);
     }
 
-    _setContent(label, content) {
+    _setContent(label, content, color) {
         this.html.find('.deployFormLabel').text(label);
         this.codeMirrorCaseXML.setValue(content);
         this.codeMirrorCaseXML.refresh();
@@ -88,7 +94,7 @@ export default class Deploy extends StandardForm {
         const type = 'post';
         console.log('Posting deployment to ' + url);
         await $ajax({ url, data, type, headers: { 'content-type': 'application/xml' } }).catch((error) => {
-            console.error('Deployment failed', error);
+            console.error('Deployment failed ', error);
             console.groupEnd();
             this._setDeployTextArea(error.message);
             this._setDeployedTimestamp('');
@@ -109,9 +115,32 @@ export default class Deploy extends StandardForm {
     }
 
     async runServerValidation() {
+        console.groupCollapsed('Running server validation')
+        const deployment = new Definitions(this.case.caseDefinition);
+        const data = deployment.contents();
+        const url = `${this.server}/repository/validate`;
+        const type = 'post';
+        const headers = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/xml'
+        }
         this._setValidationResult('Validating ...');
-        await $read('validate', this.case.editor.fileName)
-            .then(data => this._setValidationResult(data.join('\n')))
-            .catch(error => this._setValidationResult(error.message));
+        await $ajax({ url, data, type, headers }).then(data => {
+            this._setValidationResult('The model is valid');
+            console.groupEnd();
+        }).catch((error) => {
+            if (error.status === 400) {
+                console.groupEnd();
+                this._setDeployTextArea(JSON.parse(error.xhr.responseText).join('\n'));
+            } else if (error.status === 0) {
+                console.groupEnd();
+                console.error('Could not run validation', error);
+                this._setDeployTextArea('Could not run validation (url: ' + url + ')\n\n' + error.message);
+            } else {
+                console.groupEnd();
+                console.error('Validation failed', error);
+                this._setDeployTextArea(error.message);    
+            }
+        });
     }
 }
