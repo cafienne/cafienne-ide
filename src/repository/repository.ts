@@ -10,6 +10,7 @@ import Metadata from "./serverfile/metadata";
 import ProcessFile from "./serverfile/processfile";
 import ServerFile from "./serverfile/serverfile";
 import TypeFile from "./serverfile/typefile";
+import TestcaseFile from "./serverfile/testcasefile";
 
 export default class Repository extends RepositoryBase {
     listeners: (() => void)[] = [];
@@ -34,6 +35,7 @@ export default class Repository extends RepositoryBase {
             case 'case': return this.createCaseFile(fileName, source);
             case 'dimensions': return this.createDimensionsFile(fileName, source);
             case 'process': return this.createProcessFile(fileName, source);
+            case 'testcase': return this.createTestcaseFile(fileName, source);
             case 'humantask': return this.createHumanTaskFile(fileName, source);
             case 'cfid': return this.createCFIDFile(fileName, source);
             case 'type': return this.createTypeFile(fileName, source);
@@ -84,6 +86,20 @@ export default class Repository extends RepositoryBase {
      */
     createProcessFile(fileName: string, source: any) {
         return new ProcessFile(this, fileName, source);
+    }
+
+    /**
+     * Returns the list of testcases in the repository
+     */
+    getTestcases() {
+        return <TestcaseFile[]>this.list.filter(serverFile => serverFile instanceof TestcaseFile);
+    }
+
+    /**
+     * Create a new ProcessFile that can parse and write server side .process files
+     */
+    createTestcaseFile(fileName: string, source: any) {
+        return new TestcaseFile(this, fileName, source);
     }
 
     /**
