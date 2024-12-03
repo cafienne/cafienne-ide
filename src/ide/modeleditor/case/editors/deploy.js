@@ -1,8 +1,9 @@
 ﻿import CodeMirrorConfig from "@ide/editors/external/codemirrorconfig";
 import StandardForm from "@ide/editors/standardform";
 import Definitions from "@repository/deploy/definitions";
-import $ajax, { $read } from "@util/ajax";
+import $ajax from "@util/ajax";
 import CaseView from "../elements/caseview";
+import Settings from "@ide/settings/settings";
 
 export default class Deploy extends StandardForm {
     /**
@@ -19,10 +20,15 @@ export default class Deploy extends StandardForm {
 `<div>
     <div>
         <button class="btn btn-default btnViewCMMN">View CMMN</button>
-        <button class="btn btn-default btnServerValidation">Server validation</button>
         <button class="btn btn-default btnDeploy">Deploy</button>
+        <button class="btn btn-default btnServerValidation">Server validation</button>
+
     </div>
     <span class="deployed_timestamp"></span>
+    <div style="top:8px;position:relative" title="Click the URL to edit it">
+        <label>Server validation goes to</label>
+        <input style="border:0px;background-color:inherit" class="serverURL" value="${Settings.serverURL}" type="text"></input>
+    </div>
     <div class="where_used_content">
         <br/>
         <div class="whereUsedContent"/>
@@ -36,13 +42,14 @@ export default class Deploy extends StandardForm {
         this.html.find('.btnDeploy').on('click', () => this.deploy());
         this.html.find('.btnViewCMMN').on('click', () => this.viewCMMN());
         this.html.find('.btnServerValidation').on('click', () => this.runServerValidation());
+        this.html.find('.serverURL').on('change', e => Settings.serverURL = e.currentTarget.value);
 
         this.codeMirrorCaseXML = CodeMirrorConfig.createXMLEditor(this.htmlContainer.find('.deployFormContent'));
 
         const model = this.modelEditor.ide.repository.get(this.case.editor.fileName);
         if (model.usage.length > 0) {
             const modelRenderer = file => `<a href="./#${file.fileName}?deploy=true" title="Click to open the deploy form of ${file.fileName}">${file.name}</a>`;
-            const whereUsedCounter = `Used in ${model.usage.length} other model${model.usage.length == 1 ? '' : 's'}`;
+            const whereUsedCounter = `Case '${this.case.caseDefinition.file.name}' is used in ${model.usage.length} other model${model.usage.length == 1 ? '' : 's'}`;
             const whereUsedModels = `${model.usage.map(modelRenderer).join(",&nbsp;&nbsp;")}`;
             this.html.find('.whereUsedContent').html(whereUsedCounter + ": " + whereUsedModels);
         }
@@ -67,7 +74,7 @@ export default class Deploy extends StandardForm {
         this.html.find('.deployed_timestamp').text(text);
     }
 
-    _setContent(label, content) {
+    _setContent(label, content, color) {
         this.html.find('.deployFormLabel').text(label);
         this.codeMirrorCaseXML.setValue(content);
         this.codeMirrorCaseXML.refresh();
@@ -88,7 +95,7 @@ export default class Deploy extends StandardForm {
         const type = 'post';
         console.log('Posting deployment to ' + url);
         await $ajax({ url, data, type, headers: { 'content-type': 'application/xml' } }).catch((error) => {
-            console.error('Deployment failed', error);
+            console.error('Deployment failed ', error);
             console.groupEnd();
             this._setDeployTextArea(error.message);
             this._setDeployedTimestamp('');
@@ -109,9 +116,32 @@ export default class Deploy extends StandardForm {
     }
 
     async runServerValidation() {
+        console.groupCollapsed('Running server validation')
+        const deployment = new Definitions(this.case.caseDefinition);
+        const data = deployment.contents();
+        const url = `${Settings.serverURL}/repository/validate`;
+        const type = 'post';
+        const headers = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/xml'
+        }
         this._setValidationResult('Validating ...');
-        await $read('validate', this.case.editor.fileName)
-            .then(data => this._setValidationResult(data.join('\n')))
-            .catch(error => this._setValidationResult(error.message));
+        await $ajax({ url, data, type, headers }).then(data => {
+            this._setValidationResult('The model is valid');
+            console.groupEnd();
+        }).catch((error) => {
+            if (error.status === 400) {
+                console.groupEnd();
+                this._setDeployTextArea(JSON.parse(error.xhr.responseText).join('\n'));
+            } else if (error.status === 0) {
+                console.groupEnd();
+                console.error('Could not run validation', error);
+                this._setDeployTextArea('Could not run validation (url: ' + url + ')\n\n' + error.message);
+            } else {
+                console.groupEnd();
+                console.error('Validation failed', error);
+                this._setDeployTextArea(error.message);    
+            }
+        });
     }
 }
