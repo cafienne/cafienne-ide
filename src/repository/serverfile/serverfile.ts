@@ -314,7 +314,12 @@ export default abstract class ServerFile<M extends ModelDefinition = ModelDefini
      */
     get references(): ServerFile[] {
         if (this.definition) {
-            return <ServerFile[]>Util.removeDuplicates(this.definition.elements.map(element => element.externalReferences.all).flat().map(ref => ref.file).filter(file => file !== undefined));
+            return Util.removeDuplicates(this.definition.elements
+                .map(element => element.externalReferences.all)
+                .flat()
+                .map(ref => ref.file)
+                .filter(file => file !== undefined)
+                .map(file => file as ServerFile<ModelDefinition>));
         } else {
             return [];
         }

@@ -8,6 +8,7 @@ const exclusionPatterns = [
     /^\.\/validate\//,
     /^\.\/server\//,
     /^\.\/deploy\//,
+    /^\.\/testharness\//,
 ];
 
 

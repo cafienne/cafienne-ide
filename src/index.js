@@ -95,6 +95,7 @@ export { ExternalReferenceList, InternalReferenceList } from "./repository/defin
 export { ReferenceSet } from "./repository/definition/references/referenceset";
 export { default as ReferencingAttribute } from "./repository/definition/references/referencingattribute";
 export { default as Tags } from "./repository/definition/tags";
+export { default as TestcaseModelDefinition } from "./repository/definition/testcase/testcasemodeldefinition";
 export { default as Multiplicity } from "./repository/definition/type/multiplicity";
 export { default as SchemaDefinition } from "./repository/definition/type/schemadefinition";
 export { default as SchemaPropertyDefinition } from "./repository/definition/type/schemapropertydefinition";
@@ -121,6 +122,7 @@ export { default as HumanTaskFile } from "./repository/serverfile/humantaskfile"
 export { default as Metadata } from "./repository/serverfile/metadata";
 export { default as ProcessFile } from "./repository/serverfile/processfile";
 export { default as ServerFile } from "./repository/serverfile/serverfile";
+export { default as TestcaseFile } from "./repository/serverfile/testcasefile";
 export { default as TypeFile } from "./repository/serverfile/typefile";
 export { default as FileStorage } from "./repository/storage/filestorage";
 export { default as LocalFileStorage } from "./repository/storage/localfilestorage";
