@@ -295,19 +295,22 @@ export default class ServerFile<M extends ModelDefinition> {
             }
         }
 
-        const filesToBeSaved = <ServerFile<ModelDefinition>[]>this.usage.map(file => {
-            let changed = false;
-            if (file.definition) {
-                // console.log("Checkign whether file " + file.fileName +" is using " + this.fileName)
-                if (!file.isRenaming) {
-                    file.definition.elements.map(e => e.externalReferences.all.flat().forEach(reference => {
-                        // console.log("Found potential reference inside " + reference.element)                        
-                        changed = changed || reference.rename(oldFileName, newFileName);;
-                    }));
+        const filesToBeSaved = this.usage
+            .map(file => {
+                let changed = false;
+                if (file.definition) {
+                    // console.log("Checkign whether file " + file.fileName +" is using " + this.fileName)
+                    if (!file.isRenaming) {
+                        file.definition.elements.map(e => e.externalReferences.all.flat().forEach(reference => {
+                            // console.log("Found potential reference inside " + reference.element)                        
+                            changed = changed || reference.rename(oldFileName, newFileName);;
+                        }));
+                    }
                 }
-            }
-            return changed ? file : undefined;
-        }).filter(file => file !== undefined);
+                return changed ? file : undefined;
+            })
+            .filter(file => file !== undefined)
+            .map(file => file as ServerFile<ModelDefinition>);
 
         console.log(`Renaming '${oldFileName}' to '${newFileName}'`);
         const url = '/repository/rename/' + oldFileName + '?newName=' + newFileName;
@@ -351,7 +354,12 @@ export default class ServerFile<M extends ModelDefinition> {
      */
     get references(): ServerFile<ModelDefinition>[] {
         if (this.definition) {
-            return <ServerFile<ModelDefinition>[]>Util.removeDuplicates(this.definition.elements.map(element => element.externalReferences.all).flat().map(ref => ref.file).filter(file => file !== undefined));
+            return Util.removeDuplicates(this.definition.elements
+                    .map(element => element.externalReferences.all)
+                    .flat()
+                    .map(ref => ref.file)
+                    .filter(file => file !== undefined)
+                    .map(file => file as ServerFile<ModelDefinition>));
         } else {
             return [];
         }
