@@ -126,13 +126,7 @@ export default class ModelListPanel {
                     this.ide.danger(`Cannot rename ${file.fileName} to ${newFileName} as that name already exists`, 3000);
                     return;
                 }
-                await this.ide.repository.rename(file.fileName, newFileName);
-                if (file.fileType == 'case') {
-                    // when a .case file is renamed also the .dimensions file must be renamed
-                    const oldDimensionsFileName = oldName + '.dimensions';
-                    const newDimensionsFileName = newName + '.dimensions';
-                    await this.ide.repository.rename(oldDimensionsFileName, newDimensionsFileName);
-                }
+                await file.rename(newFileName);
                 // Check if the file that is being renamed is currently visible, and if so, change the hash and refresh the editor
                 if (this.repositoryBrowser.currentFileName === oldFileName) {
                     window.location.hash = newFileName;
