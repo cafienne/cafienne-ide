@@ -182,7 +182,7 @@ export default class ModelDefinition extends XMLSerializable {
             const definitions = this.file.repository.list.map(file => file.definition);
             const elements = definitions.map(definition => definition ? definition.elements : []).flat();
             const references = elements.filter(element => element.referencesElement(this));
-            console.log(`${this.file}: Returning ${references.length} inbound referneces`)
+            console.log(`${this.file}: Returning ${references.length} inbound referneces`);
             return references;
         }
         return [];
