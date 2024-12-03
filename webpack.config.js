@@ -4,6 +4,7 @@ const devMode = process.env.DEV_MODE ? process.env.DEV_MODE.trim().toLowerCase()
 
 var ideBuild = 1;
 var serverBuild = 1;
+var testharnessBuild = 1;
 
 function buildPrinter(buildName, buildNumber) {
     setTimeout(() => console.log(`\n=== ${new Date().toTimeString().split(' ')[0]} completed ${buildName} build ${buildNumber} ===\n`), 0)
@@ -35,6 +36,17 @@ const repositoryResolvers = {
         '@definition': path.resolve(__dirname, 'src/repository/definition'),
     },
 }
+const testharnessResolvers = {
+    extensions: ['.ts', '.js'],
+    alias: {
+        '@util': path.resolve(__dirname, 'src/util'),
+        '@repository': path.resolve(__dirname, 'src/repository'),
+        '@server': path.resolve(__dirname, 'src/server'),
+        '@testharness': path.resolve(__dirname, 'src/testharness'),
+        '@definition': path.resolve(__dirname, 'src/repository/definition'),
+    },
+}
+
 
 const ideResolvers = {
     extensions: ['.tsx', '.ts', '.js', '.html'],
@@ -123,6 +135,39 @@ module.exports = [{
     ],
     module: moduleRules,
     resolve: ideResolvers,
+    devtool: 'source-map',
+    mode: 'development',
+    stats: {
+        errorDetails: true
+    },
+    watch: devMode,
+},
+{
+    entry: {
+        testharness: './src/testharness/index.ts',
+    },
+    output: {
+        filename: 'testharness.mjs',
+        path: path.resolve(__dirname, 'dist/testharness'),
+        library: {
+            type: 'commonjs2',
+        },
+    },
+    plugins: [
+        new function () {
+            this.apply = (compiler) => {
+                compiler.hooks.done.tap("testharness", () => buildPrinter("testharness", testharnessBuild++));
+            };
+        },
+        new CopyWebpackPlugin({
+            patterns: [
+                { from: 'config', to: '../config' },
+                { from: 'src/testharness/runner.js', to: '../testharness' },
+            ]
+        })
+    ],
+    module: moduleRules,
+    resolve: testharnessResolvers,
     devtool: 'source-map',
     mode: 'development',
     stats: {
