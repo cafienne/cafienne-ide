@@ -4,7 +4,7 @@ import XMLSerializable from "./xmlserializable";
 
 export default class ExternalReference<M extends ModelDefinition> {
     private _file?: ServerFile<M>;
-    constructor(protected element: XMLSerializable, private ref: string) {
+    constructor(protected element: XMLSerializable, protected ref: string) {
     }
 
     /**
@@ -19,7 +19,8 @@ export default class ExternalReference<M extends ModelDefinition> {
      */
     get fileName() {
         // this.fileName is "read-only", and can only be changed by calling update
-        return this.ref;
+        // Preferably we take the name from the file itself (especially in case of rename this is required)
+        return this.file ? this.file.fileName : this.ref;
     }
 
     get file() {
