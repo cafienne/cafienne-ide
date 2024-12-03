@@ -312,7 +312,12 @@ export default class ServerFile<M extends ModelDefinition> {
      */
     get references(): ServerFile<ModelDefinition>[] {
         if (this.definition) {
-            return <ServerFile<ModelDefinition>[]>Util.removeDuplicates(this.definition.elements.map(element => element.externalReferences.all).flat().map(ref => ref.file).filter(file => file !== undefined));
+            return Util.removeDuplicates(this.definition.elements
+                    .map(element => element.externalReferences.all)
+                    .flat()
+                    .map(ref => ref.file)
+                    .filter(file => file !== undefined)
+                    .map(file => file as ServerFile<ModelDefinition>));
         } else {
             return [];
         }
