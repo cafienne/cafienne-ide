@@ -5,7 +5,7 @@ import Metadata from "../serverfile/metadata";
 import FileStorage from "./filestorage";
 
 function isKnownExtension(extension: string): boolean {
-    return ['.case', '.process', '.humantask', '.dimensions', '.cfid', '.type', '.caseteam', '.xml'].indexOf(extension) >= 0;
+    return ['.case', '.process', '.testcase', '.humantask', '.dimensions', '.cfid', '.type', '.caseteam', '.xml'].indexOf(extension) >= 0;
 }
 
 export default class LocalFileStorage extends FileStorage {
