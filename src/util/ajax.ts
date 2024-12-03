@@ -10,7 +10,7 @@ export type JQueryResponse = {
  * Wrapper class around JQuery Ajax Error object, to have the stringification of the different types of error in only one place.
  */
 export class AjaxError {
-    constructor(public xhr: JQuery.jqXHR, public error: JQuery.Ajax.ErrorTextStatus, public errorThrown: string) { }
+    constructor(public xhr: JQuery.jqXHR, public error: JQuery.Ajax.ErrorTextStatus, public errorThrown: string, public status: any) { }
 
     get message(): string {
         if (this.xhr.responseText) {
@@ -51,7 +51,7 @@ export async function $read(url: string, fileName?: string): Promise<any> {
     return $get('/repository/' + url);
 }
 
-async function $get(url: string): Promise<any> {
+export async function $get(url: string): Promise<any> {
     return $ajax({ method: 'get', url }).then(response => response.data);
 }
 
@@ -64,7 +64,7 @@ export default function $ajax(settings: JQueryAjaxSettings): Promise<JQueryRespo
     return new Promise<JQueryResponse>((resolve, reject) => {
         settings.success = (data, status, xhr) => resolve({ data, xhr, status });
         settings.error = (xhr, error, errorThrown) => {
-            const throwable = new AjaxError(xhr, error, errorThrown);
+            const throwable = new AjaxError(xhr, error, errorThrown, xhr.status);
             console.groupCollapsed("Server Call Failed");
             console.log("Request", settings);
             console.log("Error", throwable);

@@ -44,6 +44,10 @@ export default class Repository extends RepositoryBase {
         }
     }
 
+    async getConfig() {
+        return $read('config');
+    }
+
     /**
      * Returns the list of case models in the repository
      */
