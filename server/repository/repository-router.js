@@ -72,10 +72,11 @@ router.put('/rename/:fileName', xmlParser, function (req, res, next) {
     // Note: this code takes the new name from the query parameter ?newName=
     try {
         const fileName = req.params.fileName;
-        const newFileName = req.query.newName;
-        console.log(`RENAME /${fileName} to /${newFileName}`);
-        repository.rename(fileName, newFileName);
-
+        const newName = req.query.newName;
+        const newContent = req.body;
+        // logMessage(`RENAME  /${fileName} to /${newName}`);
+        Utilities.renameFile(config.repository, fileName, newName);
+        Utilities.writeFile(config.repository, newName, newContent);
         const list = repository.contents();
         res.json(list);
     } catch (err) {

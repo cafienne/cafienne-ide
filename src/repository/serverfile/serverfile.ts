@@ -275,26 +275,52 @@ export default class ServerFile<M extends ModelDefinition> {
         return response;
     }
 
+    protected isRenaming = false;
+
     /**
      * Gives this file a new name
-     * @param newName the new name for the file
+     * @param newFileName the new name for the file
      */
-    async rename(newName: string) {
-        const oldName = this.fileName;
-        const url = '/repository/rename/' + oldName + '?newName=' + newName;
-        const type = 'put';
+    async rename(newFileName: string) {
+        if (this.isRenaming) {
+            console.warn(`Already renaming ${this.fileName}`);
+            return;
+        }
+        this.isRenaming = true;
+        newFileName = newFileName.split(' ').join('');
+        const oldFileName = this.fileName;
+        if (oldFileName === newFileName) {
+            console.log(`Renaming ${oldFileName} to ${newFileName} requested, but new name is the same as the current name`);
+        } else if (this.repository.hasFile(newFileName)) {
+            console.log(`Cannot rename ${oldFileName} to ${newFileName} as that name already exists`);
+        }
 
-        const response = await $ajax({ url, type }).catch((error: AjaxError) => { throw new Error('We could not rename the file: ' + error.message) });
+        if (this.definition && this.definition.id === oldFileName) {
+            this.definition.id = newFileName;
+            if (this.definition.name === this.name) {
+                this.definition.name = newFileName.substring(0, newFileName.length - this.fileType.length - 1);
+            }
+        }
+
+        console.groupCollapsed(`Renaming '${oldFileName}' to '${newFileName}'`);
+        const url = '/repository/rename/' + oldFileName + '?newName=' + newFileName;
+        const type = 'put';
+        const xmlString = XML.prettyPrint(this.definition?.toXMLString());
+
+        console.log(`Sending server request to rename '${oldFileName}' to '${newFileName}'`);
+        const response = await $ajax({ url, type, data: xmlString, headers: { 'content-type': 'application/xml' } }).catch((error: AjaxError) => { throw new Error('We could not rename the file: ' + error.message) });
         this.hasBeenSavedJustNow = true;
-        this.fileName = newName;
+        this.fileName = newFileName;
         await this.repository.updateMetadata(response.data);
         this.hasBeenSavedJustNow = false;
-        // Also print a timestampe of the new last modified information
-        const lmDate = new Date(this.lastModified);
-        const HHmmss = lmDate.toTimeString().substring(0, 8);
-        const millis = ('000' + lmDate.getMilliseconds()).substr(-3);
-
-        console.log(`Renamed ${oldName} to ${newName} at ${HHmmss}:${millis}`);
+        const filesToBeSaved = this.usage;
+        console.log(`Updating ${filesToBeSaved.length} files that have references to ${oldFileName}`)
+        for (let i = 0; i < filesToBeSaved.length; i++) {
+            filesToBeSaved[i].source = filesToBeSaved[i].definition?.toXMLString();
+            await filesToBeSaved[i].save();
+        }
+        console.groupEnd();
+        this.isRenaming = false;
         return this;
     }
 
