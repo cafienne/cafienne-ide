@@ -49,6 +49,16 @@ export default class ExternalReference<M extends ModelDefinition> {
         return this._file?.definition;
     }
 
+    rename(oldFileName: string, newFileName: string) {
+        if (this.ref === oldFileName) {
+            // console.log(`${(<any>this.element).modelDefinition.file.fileName}: renaming reference ${oldFileName} in ${this.element} to ${newFileName}`);
+            this.ref = newFileName;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     update(newFileName: string) {
         if (this.ref !== newFileName) {
             // console.log("Setting new reference inside " + this.element +" to value " + newFileName +" (old value was: " + this.ref +")");
