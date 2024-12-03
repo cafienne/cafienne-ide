@@ -3,7 +3,10 @@
 import { existsSync, mkdirSync, readFileSync, renameSync, unlinkSync, writeFileSync } from "fs";
 import path from "path";
 import { WalkSyncEntry, entries } from "walk-sync";
-import Extensions from "../store/extensions";
+
+function isKnownExtension(extension: string): boolean {
+    return ['.case', '.process', '.humantask', '.dimensions', '.cfid', '.type', '.xml'].indexOf(extension) >= 0;
+}
 
 export default class Utilities {
 
@@ -13,7 +16,7 @@ export default class Utilities {
     }
 
     static getRepositoryFiles(directory: string) {
-        return this.getFiles(directory).filter(file => Extensions.isKnown(path.extname(file.relativePath)));
+        return this.getFiles(directory).filter(file => isKnownExtension(path.extname(file.relativePath)));
     }
 
     static ensureDirectory(fileName: string) {
@@ -26,25 +29,36 @@ export default class Utilities {
         return existsSync(fileName);
     }
 
-    static readFile(fileName: string) {
-        const content = readFileSync(fileName, { encoding: 'utf8' });
+    static readFile(folder: string, fileName: string) {
+        const file = this.createAbsolutePath(folder, fileName);
+        const content = readFileSync(file, { encoding: 'utf8' });
         return content;
     }
 
-    static saveFile(fileName: string, content: any) {
-        this.ensureDirectory(fileName);
-        // Always add a newline, because most XML serializations don't print it, and then it looks ugly in git
-        writeFileSync(fileName, content + '\n');
+    static saveFile(folder: string, fileName: string, content: any) {
+        console.log(`SAVE /${fileName}`);
+        const file = this.createAbsolutePath(folder, fileName);
+        this.ensureDirectory(file);
+        // Add a newline, since some XML serializations don't print it, and then it looks ugly in git
+        if (typeof content === 'string' && !content.endsWith('\n')) {
+            content = content + '\n';
+        }
+        writeFileSync(file, content);
     }
 
-    static deleteFile(fileName: string) {
-        unlinkSync(fileName);
+    static deleteFile(folder: string, fileName: string) {
+        console.log(`DELETE /${fileName}`);
+        const file = this.createAbsolutePath(folder, fileName);
+        unlinkSync(file);
     }
 
-    static renameFile(currentFileName: string, newFileName: string) {
-        this.ensureDirectory(currentFileName);
-        this.ensureDirectory(newFileName);
-        renameSync(currentFileName, newFileName);
+    static renameFile(folder: string, currentFileName: string, newFileName: string) {
+        console.log(`RENAME /${currentFileName} to /${newFileName}`);
+        const currentFile = this.createAbsolutePath(folder, currentFileName);
+        const newFile = this.createAbsolutePath(folder, newFileName);
+        this.ensureDirectory(currentFile);
+        this.ensureDirectory(newFile);
+        renameSync(currentFile, newFile);
     }
 
     static createAbsolutePath(rootFolder: string, artifactName: string) {
@@ -57,7 +71,7 @@ export default class Utilities {
 
         // Check for valid extension; cannot just load anything from the server
         const extension = path.extname(fullPathOfArtifact);
-        if (!Extensions.isKnown(extension)) {
+        if (!isKnownExtension(extension)) {
             throw new Error('Invalid extension for file ' + artifactName);
         }
         return fullPathOfArtifact;

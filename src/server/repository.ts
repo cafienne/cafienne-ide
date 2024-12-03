@@ -2,18 +2,16 @@
 
 import path from "path";
 import RepositoryConfiguration from "./config/config";
-import Store from "./store/store";
 import Utilities from "./util/utilities";
+import { WalkSyncEntry } from "walk-sync";
 
 export default class Repository {
     public repositoryPath: string;
     public deployPath: string;
-    public store: Store;
 
     constructor(public config: RepositoryConfiguration = new RepositoryConfiguration()) {
         this.repositoryPath = path.resolve(config.repository);
         this.deployPath = path.resolve(config.deploy);
-        this.store = new Store(this.repositoryPath);
         console.log(`========== Starting Cafienne Repository version 0.1.7)`);
         console.log('- sources location: ' + this.repositoryPath);
         console.log('-  deploy location: ' + this.deployPath); // Intentional double space to align both configuration values
@@ -21,32 +19,43 @@ export default class Repository {
     }
 
     load(artifactName: string) {
-        return this.store.load(artifactName);
+        return Utilities.readFile(this.repositoryPath, artifactName);
     }
 
     save(artifactName: string, data: any) {
-        return this.store.save(artifactName, data);
+        Utilities.saveFile(this.repositoryPath, artifactName, data);
     }
 
-    rename(artifactName: string, newArtifactName: string) {
-        return this.store.rename(artifactName, newArtifactName);
+    rename(artifactName: string, newArtifactName: string, data: any) {
+        Utilities.renameFile(this.repositoryPath, artifactName, newArtifactName);
+        this.save(newArtifactName, data);
     }
 
     delete(artifactName: string) {
-        return this.store.delete(artifactName);
+        Utilities.deleteFile(this.repositoryPath, artifactName);
     }
 
     deploy(deployFileName: string, deployContents: string) {
-        const file = Utilities.createAbsolutePath(this.deployPath, deployFileName);
-        Utilities.saveFile(file, deployContents);
-        return file;
+        Utilities.saveFile(this.deployPath, deployFileName, deployContents);
     }
 
     contents() {
-        return this.store.contents();
+        return this.getElements();
     }
 
     list() {
-        return this.store.list();
+        return this.getElements(false);
+    }
+
+    private getElements(includeJson: boolean = true) {
+        const fileCreator = (file: WalkSyncEntry) => {
+            const fileName = file.relativePath;
+            const type = path.extname(fileName).substring(1);
+            const lastModified = file.mtime;
+            const content = includeJson ? Utilities.readFile(this.repositoryPath, fileName) : undefined;
+            return { fileName, type, lastModified, content };
+        }
+
+        return Utilities.getRepositoryFiles(this.repositoryPath).map(fileCreator);
     }
 }
