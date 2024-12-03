@@ -44,6 +44,13 @@ export default class Repository extends RepositoryBase {
         }
     }
 
+    async getConfig() {
+        return $read('config').then(config => {
+            console.log(`Using Case Engine server url ${config.server}`);
+            return config;
+        });
+    }
+
     /**
      * Returns the list of case models in the repository
      */
