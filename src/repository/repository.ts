@@ -9,6 +9,7 @@ import HumanTaskFile from "./serverfile/humantaskfile";
 import Metadata from "./serverfile/metadata";
 import ProcessFile from "./serverfile/processfile";
 import ServerFile from "./serverfile/serverfile";
+import TestcaseFile from "./serverfile/testcasefile";
 import TypeFile from "./serverfile/typefile";
 import FileStorage from "./storage/filestorage";
 
@@ -41,6 +42,7 @@ export default class Repository {
             case 'case': return this.createCaseFile(fileName, source);
             case 'dimensions': return this.createDimensionsFile(fileName, source);
             case 'process': return this.createProcessFile(fileName, source);
+            case 'testcase': return this.createTestcaseFile(fileName, source);
             case 'humantask': return this.createHumanTaskFile(fileName, source);
             case 'cfid': return this.createCFIDFile(fileName, source);
             case 'type': return this.createTypeFile(fileName, source);
@@ -92,6 +94,20 @@ export default class Repository {
      */
     createProcessFile(fileName: string, source: any): ProcessFile {
         return new ProcessFile(this, fileName, source);
+    }
+
+    /**
+     * Returns the list of testcases in the repository
+     */
+    getTestcases() {
+        return <TestcaseFile[]>this.list.filter(serverFile => serverFile instanceof TestcaseFile);
+    }
+
+    /**
+     * Create a new ProcessFile that can parse and write server side .process files
+     */
+    createTestcaseFile(fileName: string, source: any) {
+        return new TestcaseFile(this, fileName, source);
     }
 
     /**
