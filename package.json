@@ -15,7 +15,8 @@
     "jquery-ui": "~1.13.3",
     "lodash": "~4.17.4",
     "morgan": "^1.10.0",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "walk-sync": "^3.0.0"
   },
   "devDependencies": {
     "@types/": "xmldom/xmldom",
