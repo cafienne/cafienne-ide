@@ -9,7 +9,7 @@
 const backendUrl = process.env.BACKEND_API_URL ? process.env.BACKEND_API_URL : 'http://localhost:2027';
 const repositoryPath = process.env.MODELER_REPOSITORY_PATH ? process.env.MODELER_REPOSITORY_PATH : './repository';
 const deployPath = process.env.MODELER_DEPLOY_PATH ? process.env.MODELER_DEPLOY_PATH : './repository_deploy';
-const logTraffic = process.env.LOG_TRAFFIC ? process.env.LOG_TRAFFIC.trim().toLowerCase() !== 'false' : true;
+const logTraffic = process.env.LOG_TRAFFIC ? process.env.LOG_TRAFFIC.trim().toLowerCase() : "true";
 
 const config = {
     serverPort: 2081

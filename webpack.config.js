@@ -51,10 +51,10 @@ Object.keys(repositoryResolvers.alias).forEach(key => ideResolvers.alias[key] = 
 
 module.exports = [{
     entry: {
-        server: './src/server/index.ts'
+        server: './src/server/utilities.ts'
     },
     output: {
-        filename: 'server_bundle.js',
+        filename: 'utilities.js',
         path: path.resolve(__dirname, 'dist/server'),
     },
     plugins: [

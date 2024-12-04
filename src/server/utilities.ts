@@ -8,7 +8,11 @@ function isKnownExtension(extension: string): boolean {
     return ['.case', '.process', '.humantask', '.dimensions', '.cfid', '.type', '.xml'].indexOf(extension) >= 0;
 }
 
-export default class Utilities {
+export class Utilities {
+    static logging: boolean = false;
+    private static date = new Date();
+
+    static logMessage: (msg: string) => void = (msg:string) => {}; // By default ignore logging from 'ensureDirectory'
 
     static getFiles(directory: string) {
         const files: Array<WalkSyncEntry> = entries(directory, { directories: false, ignore: ['**/.*'] });
@@ -21,6 +25,7 @@ export default class Utilities {
 
     static ensureDirectory(fileName: string) {
         if (! this.hasFile(path.dirname(fileName))) {
+            this.logMessage("MKDIR  " + path.dirname(fileName));
             mkdirSync(path.dirname(fileName), { recursive: true });
         }
     }
@@ -35,8 +40,7 @@ export default class Utilities {
         return content;
     }
 
-    static saveFile(folder: string, fileName: string, content: any) {
-        console.log(`SAVE /${fileName}`);
+    static writeFile(folder: string, fileName: string, content: any) {
         const file = this.createAbsolutePath(folder, fileName);
         this.ensureDirectory(file);
         // Add a newline, since some XML serializations don't print it, and then it looks ugly in git
@@ -47,13 +51,11 @@ export default class Utilities {
     }
 
     static deleteFile(folder: string, fileName: string) {
-        console.log(`DELETE /${fileName}`);
         const file = this.createAbsolutePath(folder, fileName);
         unlinkSync(file);
     }
 
     static renameFile(folder: string, currentFileName: string, newFileName: string) {
-        console.log(`RENAME /${currentFileName} to /${newFileName}`);
         const currentFile = this.createAbsolutePath(folder, currentFileName);
         const newFile = this.createAbsolutePath(folder, newFileName);
         this.ensureDirectory(currentFile);
@@ -72,7 +74,7 @@ export default class Utilities {
         // Check for valid extension; cannot just load anything from the server
         const extension = path.extname(fullPathOfArtifact);
         if (!isKnownExtension(extension)) {
-            throw new Error('Invalid extension for file ' + artifactName);
+            throw new Error(`'Invalid extension '${extension}' for file '${artifactName}'`);
         }
         return fullPathOfArtifact;
     }

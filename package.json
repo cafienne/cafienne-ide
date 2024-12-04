@@ -41,6 +41,6 @@
     "watch": "npm run build & set DEV_MODE=true & webpack",
     "start": "webpack serve",
     "try": "webpack-dev-server",
-    "go": "set LOG_TRAFFIC=false & node ./dist/server/server.js"
+    "go": "set LOG_TRAFFIC=actions & node ./dist/server/server.js"
   }
 }
