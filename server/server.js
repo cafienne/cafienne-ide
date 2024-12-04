@@ -1,7 +1,7 @@
 const startMoment = new Date();
 console.log("Starting Cafienne IDE Server at " + startMoment);
 
-const RepositoryRouter = require("./repository/repository-router").RepositoryRouter;
+const RepositoryRouter = require("./server_bundle").RepositoryRouter;
 const config = require('../config/config');
 const express = require('express');
 const path = require('path');
