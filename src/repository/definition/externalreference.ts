@@ -4,32 +4,42 @@ import XMLSerializable from "./xmlserializable";
 
 export default class ExternalReference<M extends ModelDefinition> {
     private _file?: ServerFile<M>;
-    constructor(private element: XMLSerializable, private ref: string) {
+    constructor(protected element: XMLSerializable, private ref: string) {
     }
 
-    isEmpty() {
-        return this.fileName === '';
+    /**
+     * true if the fileName of this reference has a value, false otherwise.
+     */
+    get nonEmpty() {
+        return this.fileName && this.fileName.trim().length > 0;
     }
 
-    nonEmpty() {
-        return !this.isEmpty();
-    }
-
+    /**
+     * The name of the file that we're referencing
+     */
     get fileName() {
+        // this.fileName is "read-only", and can only be changed by calling update
         return this.ref;
     }
 
     get file() {
+        // this.file is "read-only"
         return this._file;
     }
 
-    resolve() {
+    /**
+     * Overridable method to load a file for the reference
+     */
+    protected loadFile() {
         this._file = this.element.loadFile(this.fileName);
-        if (this.nonEmpty() && this._file === undefined) {
+        if (this.nonEmpty && this._file === undefined) {
             console.warn(this.element + ": Did not receive a file for " + this.fileName);
             return;
         }
+    }
 
+    resolve() {
+        this.loadFile();
     }
 
     getDefinition(): M | undefined {
@@ -43,7 +53,7 @@ export default class ExternalReference<M extends ModelDefinition> {
         if (this.ref !== newFileName) {
             // console.log("Setting new reference inside " + this.element +" to value " + newFileName +" (old value was: " + this.ref +")");
             this.ref = newFileName;
-            this._file = this.element.loadFile(this.ref);
+            this.loadFile();
         }
     }
 
@@ -58,11 +68,11 @@ export class ReferenceSet {
     private references: ExternalReference<ModelDefinition>[] = [];
 
     resolve() {
-        const actualReferences = this.references.filter(ref => ref.nonEmpty());
+        const actualReferences = this.references.filter(ref => ref.nonEmpty);
         if (actualReferences.length > 0) {
             console.log("Element " + this.element.constructor.name + " wants to load " + actualReferences.map(e => e.fileName).join(', '));
             this.references.forEach(reference => reference.resolve());
-            this.element.resolveExternalReferences();    
+            this.element.resolveExternalReferences();
         }
     }
 
@@ -70,13 +80,13 @@ export class ReferenceSet {
         return [...this.references];
     }
 
-    add<M extends ModelDefinition>(fileName: string): ExternalReference<M> {
+    add<E extends ExternalReference<ModelDefinition>>(fileName: string, constructor?: new (element: XMLSerializable, fileName: string) => E): E {
         const reference = this.references.find(ref => ref.fileName === fileName);
         if (reference) {
-            return <ExternalReference<M>>reference;
+            return <E>reference;
         }
 
-        const newReference = new ExternalReference<M>(this.element, fileName);
+        const newReference = constructor ? new constructor(this.element, fileName) : <E> new ExternalReference(this.element, fileName);
         this.references.push(newReference);
         return newReference;
     }

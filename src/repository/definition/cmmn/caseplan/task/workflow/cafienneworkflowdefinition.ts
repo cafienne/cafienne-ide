@@ -32,7 +32,7 @@ export default class CafienneWorkflowDefinition extends CafienneImplementationDe
     }
 
     createExportNode(parentNode: Element) {
-        if (this.mappings.length > 0 || this.humanTaskRef.nonEmpty() || this.assignment || this.dueDate || this.validatorRef.nonEmpty()) {
+        if (this.mappings.length > 0 || this.humanTaskRef.nonEmpty || this.assignment || this.dueDate || this.validatorRef.nonEmpty) {
             super.createExtensionNode(parentNode, (CafienneImplementationDefinition as any).TAG, 'humanTaskRef', 'validatorRef', 'mappings', 'assignment', 'dueDate');
         }
     }
