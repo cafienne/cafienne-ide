@@ -1,7 +1,7 @@
 import CMMNElementDefinition from "@repository/definition/cmmnelementdefinition";
-import ExternalReference from "@repository/definition/externalreference";
 import SchemaPropertyDefinition from "@repository/definition/type/schemapropertydefinition";
 import TypeDefinition from "@repository/definition/type/typedefinition";
+import TypeReference from "@repository/definition/type/typereference";
 import XMLSerializable from "@repository/definition/xmlserializable";
 import CaseDefinition from "../casedefinition";
 import CaseFileItemDef, { CaseFileItemCollection } from "./casefileitemdef";
@@ -9,14 +9,13 @@ import CaseFileItemTypeDefinition from "./casefileitemtypedefinition";
 
 export default class CaseFileDefinition extends CaseFileItemCollection {
     isOldStyle: boolean;
-    private _typeRef: ExternalReference<TypeDefinition>;
+    private _typeRef: TypeReference;
 
-    type?: TypeDefinition;
     constructor(importNode: Element, caseDefinition: CaseDefinition, parent: CMMNElementDefinition) {
         super(importNode, caseDefinition, parent);
         this.parseElements('caseFileItem', CaseFileItemDef, this.children);
         this.isOldStyle = this.children.length > 0; // If we have found the <caseFileItem> tag, then it is an old style model.
-        this._typeRef = this.parseReference('typeRef');
+        this._typeRef = this.parseReference('typeRef', TypeReference);
     }
 
     get typeRef() {
@@ -27,14 +26,16 @@ export default class CaseFileDefinition extends CaseFileItemCollection {
         this._typeRef.update(ref);
     }
 
+    get type(): TypeDefinition | undefined {
+        return this._typeRef.getDefinition();
+    }
+
     referencesElement(element: XMLSerializable): boolean {
         return element.id === this.typeRef;
     }
 
     resolveExternalReferences() {
-        const definition = this._typeRef.getDefinition();
-        if (definition) {
-            this.type = definition;
+        if (this.type) {
             this.type.schema?.properties.forEach(property => this.addChild(property));
         }
     }

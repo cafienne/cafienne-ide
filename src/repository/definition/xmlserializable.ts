@@ -83,12 +83,12 @@ export default class XMLSerializable {
         return defaultValue;
     }
 
-    parseReference<M extends ModelDefinition>(name: string): ExternalReference<M> {
-        return this.addReference(this.parseAttribute(name));
+    parseReference<E extends ExternalReference<ModelDefinition>>(name: string, constructor?: new (element: XMLSerializable, fileName: string) => E): E {
+        return this.addReference(this.parseAttribute(name), constructor);
     }
 
-    addReference<M extends ModelDefinition>(fileName: string): ExternalReference<M> {
-        return this.externalReferences.add(fileName);
+    addReference<E extends ExternalReference<ModelDefinition>>(fileName: string, constructor?: new (element: XMLSerializable, fileName: string) => E): E {
+        return this.externalReferences.add(fileName, constructor);
     }
 
     /**

@@ -1,26 +1,28 @@
 import Util from "@util/util";
 import CaseFileItemTypeDefinition from "../cmmn/casefile/casefileitemtypedefinition";
-import ExternalReference from "../externalreference";
 import ReferableElementDefinition from "../referableelementdefinition";
 import SchemaDefinition from "./schemadefinition";
 import TypeDefinition from "./typedefinition";
+import TypeReference from "./typereference";
 
 export default class SchemaPropertyDefinition extends ReferableElementDefinition<TypeDefinition> {
-    _type: string;
-    private _typeRef: ExternalReference<TypeDefinition>;
+    private _type: TypeReference;
     format: string;
     multiplicity: string;
     isBusinessIdentifier: boolean;
     schema?: SchemaDefinition;
 
+    static get prefix(): string {
+        return 'sp';
+    }
+
     constructor(importNode: Element, modelDefinition: TypeDefinition, public parent: SchemaDefinition) {
         super(importNode, modelDefinition, parent);
-        this._type = this.parseAttribute('type', '');
-        this._typeRef = this.addReference(this.typeRef);
+        this._type = this.parseReference('type', TypeReference);
         this.format = this.parseAttribute('format', '');
         this.multiplicity = this.parseAttribute('multiplicity', 'ExactlyOne');
         this.isBusinessIdentifier = this.parseBooleanAttribute('isBusinessIdentifier', false);
-        if (this._type === 'object') {
+        if (this.type === 'object') {
             this.schema = this.parseElement(SchemaDefinition.TAG, SchemaDefinition);
         }
     }
@@ -34,37 +36,29 @@ export default class SchemaPropertyDefinition extends ReferableElementDefinition
         return <CaseFileItemTypeDefinition[]>Util.removeDuplicates(this.searchInboundReferences().filter(element => element instanceof CaseFileItemTypeDefinition));
     }
 
-    get subType(): TypeDefinition | undefined {
-        return this._typeRef.getDefinition();
-    }
-
-    static get prefix(): string {
-        return 'sp';
-    }
-
     get type(): string {
-        return this._type;
+        return this._type.type;
     }
 
     set type(newType: string) {
-        this._typeRef.update(newType);
-        if (this._type !== newType) {
-            this._type = newType;
+        if (this.type !== newType) {
+            this._type.update(newType);
             if (newType === 'object') {
                 // An embedded complex type will have a schema
                 this.schema = this.createDefinition(SchemaDefinition);
             } else {
                 // A primitive type and a typeRef will not have a schema
                 this.schema = undefined;
-                if (this.typeRef) {
-                    this.resolveExternalReferences();
-                }
             }
         }
     }
 
     get typeRef(): string {
-        return this.type.endsWith('.type') ? this.type : '';
+        return this._type.typeRef;
+    }
+
+    get subType(): TypeDefinition | undefined {
+        return this._type.getDefinition();
     }
 
     get isPrimitiveType(): boolean {
