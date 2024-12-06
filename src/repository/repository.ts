@@ -44,6 +44,18 @@ export default class Repository extends RepositoryBase {
         }
     }
 
+    async getConfig() {
+        return $read('config').then(config => {
+            if (config.server === "http://cafienne:2027") {
+                console.warn('NOTE: Found config setting for Case Engine server as "http://cafienne:2027". This is probably from an older Docker setup. Changing it to "http://localhost:2027" as the new IDE code calls the engine directly from the browser instead of through NodeJS.');
+                config.server = "http://localhost:2027";
+            } else {
+                console.log(`Using Case Engine server url ${config.server}`);
+            }
+            return config;
+        });
+    }
+
     /**
      * Returns the list of case models in the repository
      */

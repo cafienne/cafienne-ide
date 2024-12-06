@@ -41,14 +41,14 @@ export default class ModelDefinition extends XMLSerializable {
      */
     initialize() {
         this.elements.forEach(element => element.resolveInternalReferences());
-        const externalReferences = this.elements.map(element => element.externalReferences.all.filter(e => e.nonEmpty())).flat().map(e => e.fileName);
+        const externalReferences = this.elements.map(element => element.externalReferences.all.filter(e => e.nonEmpty)).flat().map(e => e.fileName);
         Util.removeDuplicates(externalReferences);
         if (externalReferences.length > 0) {
             console.groupCollapsed(`Initializing ${this.file.fileName} with ${externalReferences.length} dependencies`);
             // console.groupCollapsed(`Initializing ${this.file.fileName} with ${externalReferences.length} dependencies [${externalReferences.join(', ')}]`);
 
             // Find elements that have an external reference
-            const referencingElements = this.elements.filter(element => element.externalReferences.all.filter(e => e.nonEmpty()).length);
+            const referencingElements = this.elements.filter(element => element.externalReferences.all.filter(e => e.nonEmpty).length);
             console.log(`${this.file} has ${referencingElements.length} elements with external dependencies (out of ${this.elements.length} elements)`);
             this.elements.forEach(element => element.externalReferences.resolve());
             console.groupEnd();
@@ -182,14 +182,14 @@ export default class ModelDefinition extends XMLSerializable {
             const definitions = this.file.repository.list.map(file => file.definition);
             const elements = definitions.map(definition => definition ? definition.elements : []).flat();
             const references = elements.filter(element => element.referencesElement(this));
-            console.log(`${this.file}: Returning ${references.length} inbound referneces`)
+            console.log(`${this.file}: Returning ${references.length} inbound referneces`);
             return references;
         }
         return [];
     }
 
     exportModel(tagName: string, ...propertyNames: any[]) {
-        const xmlDocument = XML.loadXMLString(`<${tagName} />`); // TODO: add proper namespace and so.
+        const xmlDocument = XML.loadXMLString(`<${tagName} xmlns="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:cafienne="org.cafienne" />`);
         this.exportNode = xmlDocument.documentElement;
         this.exportProperties('id', 'name', 'documentation', propertyNames);
         return xmlDocument;

@@ -1,8 +1,8 @@
 'use strict';
 
-import CaseView from "@ide/modeleditor/case/elements/caseview";
-import { $read } from "@util/ajax";
 import CodeMirrorConfig from "@ide/editors/external/codemirrorconfig";
+import CaseView from "@ide/modeleditor/case/elements/caseview";
+import { $get } from "@util/ajax";
 import Util from "@util/util";
 import $ from "jquery";
 import StandardForm from "../editors/standardform";
@@ -22,6 +22,12 @@ export default class Debugger extends StandardForm {
         super(cs, 'Debugger', 'debug-form');
         this.eventTypeFilter = '';
         this.eventNameFilter = '';
+        this.init();
+    }
+    
+    async init() {
+        const config = await this.modelEditor.ide.repository.getConfig();
+        this.server = config.server;
     }
 
     renderData() {
@@ -591,7 +597,7 @@ export default class Debugger extends StandardForm {
             parameters.push(`to=${to}`)
         }
 
-        $read(`api/events/${caseInstanceId}?${parameters.join('&')}`).then(data => {
+        $get(`${this.server}/debug/${caseInstanceId}?${parameters.join('&')}`).then(data => {
             this.events = data;
             if (this.events.length > 0) {
                 // Only overwrite the previous identifier if we have actually found events.
