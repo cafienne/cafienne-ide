@@ -4,6 +4,7 @@ const devMode = process.env.DEV_MODE ? process.env.DEV_MODE.trim().toLowerCase()
 
 var ideBuild = 1;
 var serverBuild = 1;
+var testharnessBuild = 1;
 
 function buildPrinter(buildName, buildNumber) {
     setTimeout(() => console.log(`\n=== ${new Date().toTimeString().split(' ')[0]} completed ${buildName} build ${buildNumber} ===\n`), 0)
@@ -155,7 +156,7 @@ module.exports = [{
     plugins: [
         new function () {
             this.apply = (compiler) => {
-                compiler.hooks.done.tap("testharness", () => buildPrinter("testharness", clientBuild++));
+                compiler.hooks.done.tap("testharness", () => buildPrinter("testharness", testharnessBuild++));
             };
         },
         new CopyWebpackPlugin({

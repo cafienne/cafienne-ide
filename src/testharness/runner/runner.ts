@@ -1,7 +1,7 @@
-import Repository from "@repository/repository";
-
+//import Repository from "@repository/repository";
+ 
 export class Runner {
-    constructor(public repository: Repository = new Repository()) {
+/*    constructor(public repository: Repository = new Repository()) {
         console.log("Runner constructor");
     }
 
@@ -13,6 +13,6 @@ export class Runner {
         }).catch(error => {
             console.error("Runner run error", error);
         });
-    }
+    }*/
 }
 
