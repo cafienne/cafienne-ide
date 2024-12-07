@@ -134,6 +134,12 @@ export default class ModelListPanel {
                         this.ide.editorRegistry.currentEditor.refresh();
                     }
                 }
+                file.usage.forEach(usingFile => {
+                    const editor = this.ide.editorRegistry.editors.find(editor => editor.file === usingFile);
+                    if (editor) {
+                        editor.refresh();
+                    }
+                });
             }
         }
     }
