@@ -85,6 +85,7 @@ export { ReferenceSet } from "./repository/definition/references/referenceset";
 export { default as ReferencingAttribute } from "./repository/definition/references/referencingattribute";
 export { default as Tags } from "./repository/definition/tags";
 export { default as TestcaseModelDefinition } from "./repository/definition/testcase/testcasemodeldefinition";
+export { default as FixtureDefinition } from "./repository/definition/testcase/testfixturedefintion";
 export { default as SchemaDefinition } from "./repository/definition/type/schemadefinition";
 export { default as SchemaPropertyDefinition } from "./repository/definition/type/schemapropertydefinition";
 export { default as TypeDefinition } from "./repository/definition/type/typedefinition";
@@ -119,3 +120,4 @@ export { default as Images } from "./util/images/images";
 export { default as Shapes } from "./util/images/shapes";
 export { default as Util } from "./util/util";
 export { default as XML } from "./util/xml";
+
