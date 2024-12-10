@@ -27,6 +27,7 @@ import StageView from "./stageview";
 import TextAnnotationView from "./textannotationview";
 import $ from "jquery";
 import DragData from "@ide/dragdrop/dragdata";
+import TestRunner from "../editors/testrunner";
 
 export default class CaseView {
     /**
@@ -95,6 +96,7 @@ export default class CaseView {
         this.caseParametersEditor = new CaseParametersEditor(this);
         this.startCaseEditor = new StartCaseEditor(this);
         this.debugEditor = new Debugger(this);
+        this.testRunner = new TestRunner(this);
 
         if (this.caseDefinition.hasCasePlan()) {
             this.loading = true;
@@ -177,6 +179,9 @@ export default class CaseView {
         if (urlQuery.length > 1) {
             if (urlQuery[1].startsWith('deploy=true')) {
                 this.deployForm.show();
+            } 
+            else if (urlQuery[1].startsWith('test=true')) {
+                this.testRunner.show();
             }
         }
     }
