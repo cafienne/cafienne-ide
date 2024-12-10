@@ -10,6 +10,7 @@ import DebuggerHaloItem from "./item/caseplan/debuggerhaloitem";
 import DeployHaloItem from "./item/caseplan/deployhaloitem";
 import SeparatorHaloItem from "./item/caseplan/separatorhaloitem";
 import StartCaseSchemaHaloItem from "./item/caseplan/startcaseschemahaloitem";
+import TestHaloItem from "./item/caseplan/testhaloitem";
 import ViewSourceHaloItem from "./item/caseplan/viewsourcehaloitem";
 
 /**
@@ -24,7 +25,8 @@ export default class CasePlanHalo extends CaseHalo<CasePlanDefinition, CasePlanV
             SeparatorHaloItem,
             CaseInputParametersHaloItem, CaseOutputParametersHaloItem, StartCaseSchemaHaloItem, CaseRolesHaloItem,
             SeparatorHaloItem,
-            ViewSourceHaloItem, DeployHaloItem, DebuggerHaloItem
+            ViewSourceHaloItem, DeployHaloItem, DebuggerHaloItem,
+            TestHaloItem
         );
     }
 

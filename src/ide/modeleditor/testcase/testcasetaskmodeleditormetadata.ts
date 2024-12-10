@@ -2,7 +2,7 @@ import ModelDefinition from "../../../repository/definition/modeldefinition";
 import ServerFile from "../../../repository/serverfile/serverfile";
 import TestcaseFile from "../../../repository/serverfile/testcasefile";
 import IDE from "../../ide";
-import Icons from "../../util/images/icons";
+import Images from "../../util/images/images";
 import ModelEditorMetadata from "../modeleditormetadata";
 import TestcaseModelEditor from "./testcasemodeleditor";
 
@@ -25,7 +25,7 @@ export default class TestcaseModelEditorMetadata extends ModelEditorMetadata {
     }
 
     get icon() {
-        return Icons.ProcessTask;
+        return Images.Test;
     }
 
     get description() {

@@ -23,6 +23,7 @@ import CaseFileEditor from "../editors/file/casefileeditor";
 import CaseParametersEditor from "../editors/parameters/caseparameterseditor";
 import StartCaseEditor from "../editors/startcaseeditor";
 import CaseTeamEditor from "../editors/team/caseteameditor";
+import TestRunner from '../editors/testrunner';
 import CaseElementRegistry from '../shapebox/caseelementregistry';
 import CaseElementView from "./caseelementview";
 import CaseFileItemView from "./casefileitemview";
@@ -45,6 +46,8 @@ export default class CaseCanvas extends ModelCanvas<CaseDefinition, CMMNElementD
     readonly validateForm: ValidateForm;
     readonly typeDescription = 'Case';
     readonly splitter: RightSplitter;
+    readonly testRunner: TestRunner;
+
 
     constructor(public editor: CaseModelEditor, public htmlParent: JQuery<HTMLElement>, public caseDefinition: CaseDefinition, undoManager: UndoManager) {
         const now = new Date();
@@ -67,6 +70,8 @@ export default class CaseCanvas extends ModelCanvas<CaseDefinition, CMMNElementD
         this.startCaseEditor = new StartCaseEditor(this);
         this.debugEditor = new Debugger(this);
         this.validateForm = new ValidateForm(this);
+        this.testRunner = new TestRunner(this);
+
 
         if (this.caseDefinition.hasCasePlan()) {
             this.loading = true;
@@ -162,6 +167,8 @@ export default class CaseCanvas extends ModelCanvas<CaseDefinition, CMMNElementD
         if (urlQuery.length > 1) {
             if (urlQuery[1].startsWith('deploy=true')) {
                 this.deployForm.show();
+            } else if (urlQuery[1].startsWith('test=true')) {
+                this.testRunner.show();
             }
         }
     }
