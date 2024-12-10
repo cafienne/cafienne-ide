@@ -1,0 +1,8 @@
+<testcase xmlns="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:cafienne="org.cafienne" name="a_new_moon">
+    <documentation textFormat="text/plain">
+        <text>
+            <![CDATA[testje]]>
+        </text>
+    </documentation>
+    <fixture caseRef="a_new_moon.case"/>
+</testcase>

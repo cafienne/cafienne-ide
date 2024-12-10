@@ -47,6 +47,7 @@
       "@server/*": ["src/server/*"],
       "@definition/*": ["src/repository/definition/*"],
       "@ide/*": ["src/ide/*"],
+      "@testharness/*": ["src/testharness/*"],
       "@validate/*": ["src/validate/*"],
       "@styles/*": ["app/styles/*"],
       "_images_/*": ["app/images/*"],

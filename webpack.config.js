@@ -52,6 +52,7 @@ const ideResolvers = {
     extensions: ['.tsx', '.ts', '.js', '.html'],
     alias: {
         '@ide': path.resolve(__dirname, 'src/ide'),
+        '@testharness': path.resolve(__dirname, 'src/testharness'),
         '@validate': path.resolve(__dirname, 'src/validate'),
         '@styles': path.resolve(__dirname, 'app/styles'),
         '_images_': path.resolve(__dirname, 'app/images'),
