@@ -82,13 +82,22 @@ export default class XML {
      * @returns {Element} The newly created element
      */
     static createChildElement(parentNode, tagName, namespace = "http://www.omg.org/spec/CMMN/20151109/MODEL") {
-        if (tagName.indexOf('cafienne:') === 0) {
-            namespace = 'org.cafienne';
-        }
         if (parentNode instanceof Document) {
+            if (tagName.indexOf('cafienne:') === 0) {
+                namespace = 'org.cafienne';
+            }
             return parentNode.createElementNS(namespace, tagName);
         } else {
-            return parentNode.appendChild(parentNode.ownerDocument.createElementNS(namespace, tagName));
+            if (tagName.indexOf('cafienne:') === 0) {
+                namespace = 'org.cafienne';
+            } else {
+                // console.log("Creating node '" + tagName+"' - asked to do within namespace " +namespace);
+                namespace = parentNode.lookupNamespaceURI(null);
+                // console.log("Creating node '" + tagName+"' - changed namespace to " +namespace);
+            }
+            const child = parentNode.appendChild(parentNode.ownerDocument.createElementNS(namespace, tagName));
+            // console.log("Created child " + XML.prettyPrint(child) +"\t with ns: " + child.namespaceURI)
+            return child;
         }
     }
 
@@ -182,11 +191,12 @@ export default class XML {
      * that it can be attached to.
      * @param {Node} node 
      * @param {Boolean} deep Whether to include any children of the node if it is of type element, defaults to true
+     * @param {String | undefined} newNamespace Optional new namespace to clone the element to
      */
-    static cloneWithoutNamespace(node, deep = true) {
+    static cloneWithoutNamespace(node, deep = true, newNamespace = undefined) {
         if (node.nodeType === 1) {
             const element = /** @type {Element} */ (node);
-            const newNode = this.createChildElement(element.ownerDocument, element.localName);
+            const newNode = this.createChildElement(element.ownerDocument, element.localName, newNamespace);
             const attributes = element.attributes;
             if (attributes !== null) {
                 for (let i = 0; i < attributes.length; i++) {
@@ -197,7 +207,7 @@ export default class XML {
                 }
             }
             if (deep) {
-                XML.children(element).forEach(child => newNode.appendChild(this.cloneWithoutNamespace(child, deep)));
+                XML.children(element).forEach(child => newNode.appendChild(this.cloneWithoutNamespace(child, deep, newNamespace)));
             }
             return newNode;
         } else {
