@@ -19,6 +19,7 @@ import CaseFileEditor from "../editors/file/casefileeditor";
 import CaseParametersEditor from "../editors/parameters/caseparameterseditor";
 import RolesEditor from "../editors/roleseditor";
 import StartCaseEditor from "../editors/startcaseeditor";
+import TestRunner from "../editors/testrunner";
 import Grid from "../grid";
 import ShapeBox from "../shapebox/shapebox";
 import UndoRedoBox from "../undoredo/undoredobox";
@@ -96,6 +97,7 @@ export default class CaseView {
         this.caseParametersEditor = new CaseParametersEditor(this);
         this.startCaseEditor = new StartCaseEditor(this);
         this.debugEditor = new Debugger(this);
+        this.testRunner = new TestRunner(this);
 
         if (this.caseDefinition.hasCasePlan()) {
             this.loading = true;
@@ -186,6 +188,9 @@ export default class CaseView {
         if (urlQuery.length > 1) {
             if (urlQuery[1].startsWith('deploy=true')) {
                 this.deployForm.show();
+            } 
+            else if (urlQuery[1].startsWith('test=true')) {
+                this.testRunner.show();
             }
         }
     }
