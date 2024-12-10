@@ -21,7 +21,8 @@ export default class CasePlanHalo extends Halo {
             SeparatorHaloItem,
             CaseInputParametersHaloItem, CaseOutputParametersHaloItem,StartCaseSchemaHaloItem, CaseRolesHaloItem,
             SeparatorHaloItem,
-            ViewSourceHaloItem, DeployHaloItem, DebuggerHaloItem
+            ViewSourceHaloItem, DeployHaloItem, DebuggerHaloItem,
+            TestHaloItem
         );
     }
 
@@ -82,6 +83,11 @@ class ViewSourceHaloItem extends HaloClickItem {
 class DebuggerHaloItem extends HaloClickItem {
     constructor(halo) {
         super(halo, 'images/debug.png', 'Debug cases of this type', e => this.halo.element.case.debugEditor.show());
+    }
+}
+class TestHaloItem extends HaloClickItem {
+    constructor(halo) {
+        super(halo, 'images/test-icon-255.png', 'Test cases of this type', e => this.halo.element.case.testRunner.show());
     }
 }
 
