@@ -34,6 +34,7 @@ export default class CaseDeployment extends DefinitionDeployment {
         if (this.type) {
             this.type.fillCaseFile(this);
         }
+        this.fillCaseTeam();
         // Also append the diagram information.
         this.appendDiagramInformation();
     }
@@ -157,5 +158,24 @@ export default class CaseDeployment extends DefinitionDeployment {
         // Now swap the elements in the case tree
         extensionElement.removeChild(implementationNode);
         extensionElement.appendChild(clonedHumanTaskImplementation);
+    }
+
+    fillCaseTeam() {
+        XML.getElementsByTagName(this.caseElement, 'caseRoles').forEach((caseRoles: Element) => this.fillInCaseRoles(caseRoles));
+    }
+
+    fillInCaseRoles(caseRoles: Element) {
+        //get content from caseTeam model with name 'caseTeamRef'
+        const caseTeamRef = caseRoles.getAttribute("caseTeamRef");
+        if (caseTeamRef) {
+            const caseTeamDefinition = this.definitionsDocument.getDeploymentModel(caseTeamRef);
+            if (caseTeamDefinition === undefined) {
+                console.log('Cannot find the case team reference ' + caseTeamRef);
+                return;
+            }
+            caseRoles.setAttribute('cafienne:caseTeamRef', caseTeamRef);
+            caseRoles.removeAttribute('caseTeamRef');
+            XML.getElementsByTagName(caseTeamDefinition.definition.exportNode, 'role').forEach((role: Element) => caseRoles.appendChild(role.cloneNode(true)));
+        }        
     }
 }
