@@ -106,7 +106,7 @@ export { default as DefinitionDeployment } from "./repository/deploy/definitiond
 export { default as Definitions } from "./repository/deploy/definitions";
 export { default as DeploymentFactory } from "./repository/deploy/deploymentfactory";
 export { default as TypeDeployment } from "./repository/deploy/typedeployment";
-export { CaseImporter, CFIDImporter, DimensionsImporter, HumanTaskImporter, default as ImportElement, ProcessImporter, TypeImporter } from "./repository/import/importelement";
+export { CaseImporter, CaseTeamImporter, CFIDImporter, DimensionsImporter, HumanTaskImporter, default as ImportElement, ProcessImporter, TypeImporter } from "./repository/import/importelement";
 export { default as Importer } from "./repository/import/importer";
 export { default as Repository } from "./repository/repository";
 export { default as CaseFile } from "./repository/serverfile/casefile";

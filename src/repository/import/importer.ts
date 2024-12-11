@@ -1,11 +1,13 @@
 import XML, { Element } from "../../util/xml";
+import CaseTeamModelDefinition from "../definition/caseteam/caseteammodeldefinition";
+import CaseTeamRoleDefinition from "../definition/caseteam/caseteamroledefinition";
 import Tags from "../definition/tags";
 import Multiplicity from "../definition/type/multiplicity";
 import SchemaDefinition from "../definition/type/schemadefinition";
 import TypeDefinition from "../definition/type/typedefinition";
 import Repository from "../repository";
 import TypeFile from "../serverfile/typefile";
-import ImportElement, { CFIDImporter, CaseImporter, DimensionsImporter, HumanTaskImporter, ProcessImporter, TypeImporter } from "./importelement";
+import ImportElement, { CFIDImporter, CaseImporter, CaseTeamImporter, DimensionsImporter, HumanTaskImporter, ProcessImporter, TypeImporter } from "./importelement";
 
 export default class Importer {
     importFiles: ImportElement[] = [];
@@ -19,6 +21,8 @@ export default class Importer {
             console.log('Parsing and uploading definitions from copy/paste command ...');
             const typeDefinitions: any = new Object();
             const typeRefs: any = new Object();
+            const caseTeamModelDefinitions: any = new Object();
+            const caseTeamRefs: any = new Object();
             const allDimensionsXML = XML.getChildByTagName(xmlDoc.documentElement, Tags.CMMNDI);
             XML.getChildrenByTagName(xmlDoc.documentElement, 'case').forEach(xmlElement => {
                 // Create .case file
@@ -105,7 +109,7 @@ export default class Importer {
                     if (fileName.endsWith('.cfid')) {
                         this.importFiles.push(new CFIDImporter(this, fileName, xmlElement));
                     } else {
-                        var typeFile: TypeFile = <TypeFile> this.repository.get(fileName);
+                        var typeFile: TypeFile = <TypeFile>this.repository.get(fileName);
                         var source = `<type id="${fileName}" name="${xmlElement.getAttribute('name')}"><schema/></type>`;
                         if (!typeFile) {
                             typeFile = this.repository.createTypeFile(fileName, source);
@@ -163,6 +167,33 @@ export default class Importer {
                     caseFileModel.removeAttribute('cafienne:typeRef');
                     caseFileModel.removeAttribute('xmlns:cafienne');
                     caseFileModel.setAttribute('typeRef', typeRef);
+                }
+            });
+            XML.getElementsByTagName(xmlDoc.documentElement, 'caseRoles').forEach(caseRolesModel => {
+                const caseTeamRef = caseRolesModel.getAttribute('cafienne:caseTeamRef') || '';
+                if (caseTeamRef && caseTeamRef.endsWith('.caseteam')) {
+                    const fileName = caseTeamRef;
+                    if (!caseTeamRefs[caseTeamRef]) {
+                        caseTeamRefs[caseTeamRef] = caseTeamRef; // To avoid generating same caseTeamRef again as they can appear in multiple (sub)case's
+                        let caseTeamModelDefinition = /** @type {CaseTeamModelDefinition} */ caseTeamModelDefinitions[caseTeamRef];
+                        if (!caseTeamModelDefinition) {
+                            const caseTeamFile = this.repository.createCaseTeamFile(caseTeamRef, CaseTeamModelDefinition.createDefinitionSource(caseTeamRef.replace(/\.caseteam$/, '')));
+                            // parsing is not a-sync code; so we are sure typeDefinition will be set with a new or already existing type from cache
+                            caseTeamModelDefinition = caseTeamModelDefinitions[caseTeamRef] = caseTeamFile.definition;
+                        }
+                        XML.elements(caseRolesModel).forEach(caseRoleItem => this.loadCaseRoleItem(caseTeamModelDefinition, caseRoleItem));
+                        if (isNew(fileName)) {
+                            this.importFiles.push(new CaseTeamImporter(this, fileName, caseRolesModel, caseTeamModelDefinition));
+                        }
+                    }
+                    // Clear content as caseRoles is defined by a caseTeamRef
+                    while (caseRolesModel.firstChild) {
+                        caseRolesModel.removeChild(caseRolesModel.firstChild);
+                    }
+                    // without namespace prefix: caseTeamRef="xxxx.caseteam" in stead of cafienne:caseTeamRef="xxxx.caseteam"
+                    caseRolesModel.removeAttribute('cafienne:caseTeamRef');
+                    caseRolesModel.removeAttribute('xmlns:cafienne');
+                    caseRolesModel.setAttribute('caseTeamRef', caseTeamRef);
                 }
             });
         }
@@ -223,8 +254,14 @@ export default class Importer {
         }
     }
 
+    loadCaseRoleItem(caseTeamModelDefinition: CaseTeamModelDefinition, caseRoleItem: Element) {
+        if (caseRoleItem.nodeName === 'role') {
+            caseTeamModelDefinition.roles.push(new CaseTeamRoleDefinition(caseRoleItem, caseTeamModelDefinition));
+        }
+    }
+
     async uploadFiles() {
-        console.group("Uploading " + this.importFiles.length +" new files");
+        console.group("Uploading " + this.importFiles.length + " new files");
         for (let i = 0; i < this.importFiles.length; i++) {
             const importElement = this.importFiles[i];
             await importElement.save();
@@ -232,7 +269,7 @@ export default class Importer {
         console.log("Uploaded all")
         console.groupEnd();
         // Now parse root file again, so that all dependencies are resolved properly
-        this.repository.get(this.importFiles[0].fileName)?.parse();            
+        this.repository.get(this.importFiles[0].fileName)?.parse();
     }
 
     get files() {
