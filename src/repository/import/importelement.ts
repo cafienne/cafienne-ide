@@ -6,6 +6,7 @@ import ModelDefinition from "@repository/definition/modeldefinition";
 import CaseDefinition from "@repository/definition/cmmn/casedefinition";
 import CaseFile from "@repository/serverfile/casefile";
 import TypeDefinition from "@repository/definition/type/typedefinition";
+import CaseTeamModelDefinition from "@repository/definition/caseteam/caseteammodeldefinition";
 
 export default class ImportElement {
     repository: Repository;
@@ -84,5 +85,19 @@ export class TypeImporter extends ImportElement {
 
     createFile() {
         return this.repository.createTypeFile(this.fileName, "");
+    }
+}
+
+export class CaseTeamImporter extends ImportElement {
+    constructor(importer: Importer, fileName: string, xmlElement: Element, public caseTeamModelDefinition: CaseTeamModelDefinition) {
+        super(importer, fileName, xmlElement);
+    }
+
+    get content() {
+        return XML.prettyPrint(this.caseTeamModelDefinition.toXML().documentElement);
+    }
+
+    createFile() {
+        return this.repository.createCaseTeamFile(this.fileName, "");
     }
 }

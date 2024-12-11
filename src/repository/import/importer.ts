@@ -3,8 +3,10 @@ import TypeDefinition from "@repository/definition/type/typedefinition";
 import XML from "@util/xml";
 import Tags from "../definition/dimensions/tags";
 import Repository from "../repository";
-import ImportElement, { CFIDImporter, CaseImporter, DimensionsImporter, HumanTaskImporter, ProcessImporter, TypeImporter } from "./importelement";
 import TypeFile from "@repository/serverfile/typefile";
+import ImportElement, { CFIDImporter, CaseImporter, CaseTeamImporter, DimensionsImporter, HumanTaskImporter, ProcessImporter, TypeImporter } from "./importelement";
+import CaseTeamModelDefinition from "@repository/definition/caseteam/caseteammodeldefinition";
+import CaseTeamRoleDefinition from "@repository/definition/caseteam/caseteamroledefinition";
 
 export default class Importer {
     importFiles: ImportElement[] = [];
@@ -18,6 +20,8 @@ export default class Importer {
             console.log('Parsing and uploading definitions from copy/paste command ...');
             const typeDefinitions: any = new Object();
             const typeRefs: any = new Object();
+            const caseTeamModelDefinitions: any = new Object();
+            const caseTeamRefs: any = new Object();
             const allDimensionsXML = XML.getChildByTagName(xmlDoc.documentElement, Tags.CMMNDI);
             XML.getChildrenByTagName(xmlDoc.documentElement, 'case').forEach(xmlElement => {
                 // Create .case file
@@ -163,6 +167,33 @@ export default class Importer {
                     caseFileModel.setAttribute('typeRef', typeRef);
                 }
             });
+            XML.getElementsByTagName(xmlDoc.documentElement, 'caseRoles').forEach(caseRolesModel => {
+                const caseTeamRef = caseRolesModel.getAttribute('cafienne:caseTeamRef') || '';
+                if (caseTeamRef && caseTeamRef.endsWith('.caseteam')) {
+                    const fileName = caseTeamRef;
+                    if (!caseTeamRefs[caseTeamRef]) {
+                        caseTeamRefs[caseTeamRef] = caseTeamRef; // To avoid generating same caseTeamRef again as they can appear in multiple (sub)case's
+                        let caseTeamModelDefinition = /** @type {CaseTeamModelDefinition} */ caseTeamModelDefinitions[caseTeamRef];
+                        if (!caseTeamModelDefinition) {
+                            const caseTeamFile = this.repository.createCaseTeamFile(caseTeamRef, CaseTeamModelDefinition.createDefinitionSource(caseTeamRef.replace(/\.caseteam$/, '')));
+                            // parsing is not a-sync code; so we are sure typeDefinition will be set with a new or already existing type from cache
+                            caseTeamModelDefinition = caseTeamModelDefinitions[caseTeamRef] = caseTeamFile.definition;
+                        }
+                        for (const caseRoleItem of caseRolesModel.children) {
+                            this.loadCaseRoleItem(caseTeamModelDefinition, caseRoleItem);
+                        }
+                        if (isNew(fileName)) {
+                            this.importFiles.push(new CaseTeamImporter(this, fileName, caseRolesModel, caseTeamModelDefinition));
+                        }
+                    }
+                    // Clear content as caseRolesModel is definded by a caseTeamRef
+                    caseRolesModel.innerHTML = '';
+                    // without namespace prefix: caseTeamRef="xxxx.caseteam" in stead of cafienne:caseTeamRef="xxxx.caseteam"
+                    caseRolesModel.removeAttribute('cafienne:caseTeamRef');
+                    caseRolesModel.removeAttribute('xmlns:cafienne');
+                    caseRolesModel.setAttribute('caseTeamRef', caseTeamRef);
+                }
+            });
         }
     }
 
@@ -225,7 +256,7 @@ export default class Importer {
 
     loadCaseRoleItem(caseTeamModelDefinition: CaseTeamModelDefinition, caseRoleItem: Element) {
         if (caseRoleItem.nodeName === 'role') {
-            const caseRole: CaseRoleDefinition = caseTeamModelDefinition.createCaseRole(caseRoleItem.getAttribute('name') || '');
+            const caseRole: CaseTeamRoleDefinition = caseTeamModelDefinition.createCaseRole(caseRoleItem.getAttribute('name') || '');
             caseRole.id = caseRoleItem.getAttribute('id') || ''; // Import id's as well as we can have references to this role using that id (performerRef and authorizedRoleRefs)
             if (caseRoleItem.firstElementChild) {
                 const textElement = XML.getChildByTagName(caseRoleItem.firstElementChild, 'text');
