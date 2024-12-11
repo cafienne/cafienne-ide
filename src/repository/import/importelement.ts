@@ -1,4 +1,5 @@
 import XML, { Element } from "../../util/xml";
+import CaseTeamModelDefinition from "../definition/caseteam/caseteammodeldefinition";
 import CaseDefinition from "../definition/cmmn/casedefinition";
 import ModelDefinition from "../definition/modeldefinition";
 import TypeDefinition from "../definition/type/typedefinition";
@@ -81,5 +82,19 @@ export class TypeImporter extends ImportElement {
 
     createFile() {
         return this.repository.createTypeFile(this.fileName, "");
+    }
+}
+
+export class CaseTeamImporter extends ImportElement {
+    constructor(importer: Importer, fileName: string, xmlElement: Element, public caseTeamModelDefinition: CaseTeamModelDefinition) {
+        super(importer, fileName, xmlElement);
+    }
+
+    get content() {
+        return XML.prettyPrint(this.caseTeamModelDefinition.toXML().documentElement);
+    }
+
+    createFile() {
+        return this.repository.createCaseTeamFile(this.fileName, "");
     }
 }
