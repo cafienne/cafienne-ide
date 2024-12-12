@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 function isKnownExtension(extension: string): boolean {
-    return ['.case', '.process', '.humantask', '.dimensions', '.cfid', '.type', '.xml'].indexOf(extension) >= 0;
+    return ['.case', '.process', '.testcase', '.humantask', '.dimensions', '.cfid', '.type', '.xml'].indexOf(extension) >= 0;
 }
 
 export default class FileSystemDefinitionStorage implements DefinitionStorage {
@@ -18,7 +18,7 @@ export default class FileSystemDefinitionStorage implements DefinitionStorage {
         }
     }
 
-    async renameFile(fileName: any, newFileName: string, updatedContent: any): Promise<Metadata[]> {
+    async renameFile(fileName: string, newFileName: string, updatedContent: any): Promise<Metadata[]> {
         const oldPath = path.join(this.definitionFolder, fileName);
         const newPath = path.join(this.definitionFolder, newFileName);
 
@@ -28,28 +28,32 @@ export default class FileSystemDefinitionStorage implements DefinitionStorage {
         return await this.fetchMetadata();
     }
 
-    async saveFile(fileName: any, source: any): Promise<Metadata[]> {
+    async saveFile(fileName: string, source: any): Promise<Metadata[]> {
         const filePath = path.join(this.definitionFolder, fileName);
         await fs.promises.writeFile(fileName, source, { encoding: 'utf8' });
         return await this.fetchMetadata();
     }
 
-    async deleteFile(fileName: any): Promise<Metadata[]> {
+    async deleteFile(fileName: string): Promise<Metadata[]> {
         const filePath = path.join(this.definitionFolder, fileName);
         await fs.promises.rm(filePath);
         return await this.fetchMetadata();
     }
 
-    async loadFile(fileName: any): Promise<any> {
+    async loadFile(fileName: string): Promise<string> {
         const filePath = path.join(this.definitionFolder, fileName);
-        const data = await fs.promises.readFile(fileName, { encoding: 'utf8' });
+        const data = await fs.promises.readFile(filePath, { encoding: 'utf8' });
         return data;
+    }
+
+    private async _loadContentsOfFile(metaData: Metadata): Promise<Metadata> {
+        metaData.content = await this.loadFile(metaData.fileName);
+        return metaData;
     }
 
     async loadAllFiles(): Promise<Metadata[]> {
         const metadata = await this.fetchMetadata();
-        await Promise.all(metadata.map(async (m) => (m.serverContent = await this.loadFile(m.fileName))));
-        return metadata;
+        return await Promise.all(metadata.map(m => this._loadContentsOfFile(m)));
     }
 
     private async fetchMetadata(): Promise<Metadata[]> {

@@ -162,13 +162,18 @@ export default class Repository extends RepositoryBase {
      * Optional callback that will be invoked after model list has been retrieved
      */
     async listModels() {
-        await this.definitionStorage.loadAllFiles()
-            .then(files => this.updateFileList(files.map(Metadata.from)))
-            .catch((error: AjaxError) => { 
-                console.error(error); // Actually also other errors may occur, therefore also logging the stacktrace
-                throw 'Could not fetch the list of models: ' + error.message
-             });
-;
+        try {
+            const files = await this.definitionStorage.loadAllFiles();
+            await this.updateFileList(files.map(Metadata.from));
+        } catch (error) {
+            if (error instanceof AjaxError) {
+                console.error(`Error loading models: ${error.message}`);
+            } else {
+                console.error(`Error loading models: ${error}`);
+            }
+            throw 'Could not fetch the list of models: ' + error
+
+        }
     }
 
     /**
