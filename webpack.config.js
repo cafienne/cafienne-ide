@@ -63,7 +63,8 @@ const ideResolvers = {
 // Merge repository resolvers into the ideResolvers
 Object.keys(repositoryResolvers.alias).forEach(key => ideResolvers.alias[key] = repositoryResolvers.alias[key]);
 
-module.exports = [{
+module.exports = [
+{ // server
     entry: {
         server: './server/utilities.ts'
     },
@@ -97,7 +98,7 @@ module.exports = [{
     },
     watch: devMode,
 },
-{
+{ // repository
     entry: {
         repository: './src/repository/index.ts',
     },
@@ -114,7 +115,7 @@ module.exports = [{
     },
     watch: devMode,
 },
-{
+{ // ide
     entry: {
         ide: './src/ide/index.ts',
     },
@@ -143,7 +144,7 @@ module.exports = [{
     },
     watch: devMode,
 },
-{
+{ // testharness
     entry: {
         testharness: './src/testharness/index.ts',
     },
@@ -153,7 +154,9 @@ module.exports = [{
         library: {
             type: 'commonjs2',
         },
+        globalObject: 'this',
     },
+    target: 'node',
     plugins: [
         new function () {
             this.apply = (compiler) => {

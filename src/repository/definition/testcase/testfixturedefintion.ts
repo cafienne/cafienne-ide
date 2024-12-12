@@ -1,7 +1,7 @@
 import CaseDefinition from "../cmmn/casedefinition";
 import ElementDefinition from "../elementdefinition";
-import ExternalReference, { ReferenceSet } from "../externalreference";
 import ReferableElementDefinition from "../referableelementdefinition";
+import ExternalReference from "../references/externalreference";
 import TestcaseModelDefinition from "./testcasemodeldefinition";
 
 export default class FixtureDefinition extends ReferableElementDefinition<TestcaseModelDefinition> {
