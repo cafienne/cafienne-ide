@@ -18,7 +18,7 @@ const moduleRules = {
             exclude: /[/\\]node_modules[/\\]/,
             include: [
                 /[/\\]src[/\\]/,
-                /[/\\]server[/\\]/
+                /[/\\]server[/\\]/,
             ],
         },
         {
@@ -63,7 +63,8 @@ const ideResolvers = {
 // Merge repository resolvers into the ideResolvers
 Object.keys(repositoryResolvers.alias).forEach(key => ideResolvers.alias[key] = repositoryResolvers.alias[key]);
 
-module.exports = [{
+module.exports = [
+{ // server
     entry: {
         server: './server/utilities.ts'
     },
@@ -97,7 +98,7 @@ module.exports = [{
     },
     watch: devMode,
 },
-{
+{ // repository
     entry: {
         repository: './src/repository/index.ts',
     },
@@ -114,7 +115,7 @@ module.exports = [{
     },
     watch: devMode,
 },
-{
+{ // ide
     entry: {
         ide: './src/ide/index.ts',
     },
@@ -143,7 +144,7 @@ module.exports = [{
     },
     watch: devMode,
 },
-{
+{ // testharness
     entry: {
         testharness: './src/testharness/index.ts',
     },
@@ -151,9 +152,11 @@ module.exports = [{
         filename: 'testharness.mjs',
         path: path.resolve(__dirname, 'dist/testharness'),
         library: {
-            type: 'commonjs2',
+            type: 'module',
         },
+        globalObject: 'this',
     },
+    target: 'node',
     plugins: [
         new function () {
             this.apply = (compiler) => {
@@ -163,9 +166,8 @@ module.exports = [{
         new CopyWebpackPlugin({
             patterns: [
                 { from: 'config', to: '../config' },
-                { from: 'src/testharness/runner.js', to: '../testharness' },
             ]
-        })
+        })    
     ],
     module: moduleRules,
     resolve: testharnessResolvers,
@@ -175,4 +177,10 @@ module.exports = [{
         errorDetails: true
     },
     watch: devMode,
+    experiments: {
+        outputModule: true,
+    },
+    externals: { // see https://github.com/matthew-andrews/isomorphic-fetch/issues/194
+        'node-fetch': 'node-commonjs node-fetch',
+    }, 
 }];

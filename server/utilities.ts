@@ -2,7 +2,7 @@
 
 import { existsSync, mkdirSync, readFileSync, renameSync, unlinkSync, writeFileSync } from "fs";
 import path from "path";
-import { WalkSyncEntry, entries } from "walk-sync";
+import { Entry, entries } from "walk-sync";
 
 function isKnownExtension(extension: string): boolean {
     return ['.case', '.process', '.testcase', '.humantask', '.dimensions', '.cfid', '.type', '.xml'].indexOf(extension) >= 0;
@@ -15,7 +15,7 @@ export class Utilities {
     static logMessage: (msg: string) => void = (msg:string) => {}; // By default ignore logging from 'ensureDirectory'
 
     static getFiles(directory: string) {
-        const files: Array<WalkSyncEntry> = entries(directory, { directories: false, ignore: ['**/.*'] });
+        const files: Array<Entry> = entries(directory, { directories: false, ignore: ['**/.*'] });
         return files;
     }
 

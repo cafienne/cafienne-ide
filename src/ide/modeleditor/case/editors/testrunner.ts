@@ -1,7 +1,6 @@
 ﻿import StandardForm from "@ide/editors/standardform";
-import Definitions from "@repository/deploy/definitions";
 import CaseView from "../elements/caseview";
-import { Runner } from "@testharness/runner/runner";
+import Runner from "@testharness/runner/runner";
 import Repository from "@repository/repository";
 
 export default class TestRunner extends StandardForm {
@@ -59,8 +58,12 @@ export default class TestRunner extends StandardForm {
     async run(): Promise<void> {
         this._settestedTimestamp('Running testcases ...');
 
-        this.runner.runTestForCase(this.case.caseDefinition)
-            .then((result:string) => {this._settestedTimestamp('Testcases ran successfully')})
-            .catch((error:Error) => {this._settestedTimestamp('Error running testcases')});
+        try {
+            await this.runner.runTestsForCase(this.case.caseDefinition);
+            this._settestedTimestamp('Testcases ran successfully');
+        } catch (error) {
+            debugger;
+            this._settestedTimestamp('Error running testcases');
+        }
     }
 }
