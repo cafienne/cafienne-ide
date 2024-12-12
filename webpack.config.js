@@ -92,6 +92,7 @@ module.exports = [
 { // repository cli
     entry: {
         compile: { import: './src/repository/compile.ts', dependOn: ['shared'] },
+        testrunner: { import: './src/testharness/runnermain.ts', dependOn: ['shared'] },
         shared: './src/index.js',
         index: { import: './src/index.js', dependOn: ['shared'] },
     },
@@ -122,11 +123,13 @@ module.exports = [
     experiments: {
         outputModule: true,
     },
+    externalsType: "module-import",
     externals: [
-        nodeExternals({ importType: (request) => `import ${request}` }),
         {
-            'fs': 'import fs',
-        }
+            'node-fetch': 'node-commonjs node-fetch', // https://github.com/matthew-andrews/isomorphic-fetch/issues/194#issuecomment-1513787724
+            '@casefabric/typescript-client': 'import @casefabric/typescript-client',
+        },
+        nodeExternals({ importType: (request) => `import ${request}` }),
     ],
 },
 { // ide
