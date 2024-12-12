@@ -1,5 +1,5 @@
-﻿import Repository from "../../../../repository/repository";
-import { Runner } from "../../../../testharness/runner/runner";
+import Repository from "../../../../repository/repository";
+import Runner from "../../../../testharness/runner/runner";
 import StandardForm from "../../../editors/standardform";
 import CaseCanvas from "../elements/casecanvas";
 
@@ -58,8 +58,12 @@ export default class TestRunner extends StandardForm {
     async run(): Promise<void> {
         this._settestedTimestamp('Running testcases ...');
 
-        await this.runner.runTestForCase(this.caseCanvas.caseDefinition)
-            .then((result: string) => { this._settestedTimestamp('Testcases ran successfully') })
-            .catch((error: Error) => { this._settestedTimestamp('Error running testcases') });
+        try {
+            await this.runner.runTestsForCase(this.caseCanvas.caseDefinition);
+            this._settestedTimestamp('Testcases ran successfully');
+        } catch (error) {
+            debugger;
+            this._settestedTimestamp('Error running testcases');
+        }
     }
 }

@@ -1,9 +1,7 @@
 {
   "private": true,
-  "bin": {
-    "deploy": "./dist/deploy/compile.ts"
-  },
   "dependencies": {
+    "@casefabric/typescript-client": "..\\cmmn-test-framework\\dist\\src\\casefabric-typescript-client-0.0.1.tgz",
     "@xmldom/xmldom": "^0.9.7",
     "alpaca": "~1.5.27",
     "body-parser": "^1.20.2",
@@ -16,7 +14,6 @@
     "jquery-ui": "~1.13.3",
     "morgan": "^1.10.0",
     "path": "^0.12.7",
-    "walk-sync": "^3.0.0",
     "xml-formatter": "^3.6.4"
   },
   "devDependencies": {
@@ -57,6 +54,7 @@
     "copy-repository-files": "shx cp ./src/repository/@casefabric-repository-package.json ./dist/repository/package.json && shx cp ./src/repository/README.md ./dist/repository/",
     "package": "npm run copy-repository-files && npm run remove-unnecessary-types && npm pack --pack-destination=./dist ./dist/repository",
     "publishRemote": "npm run build && npm run package && cd ./dist/repository && npm publish --access public",
+    "testrunner": "set NODE_NO_WARNINGS=1 & node ./dist/repository/testrunner.js .*",
     "test": "wdio",
     "test-debug": "cross-env DEBUG=true wdio --spec ./test/integration/specs/caseteam.e2e.ts",
     "compare-compilation-result": "dircompare -c -w --reason -d ./repository_deploy ./dist/deploy_for_compare",
