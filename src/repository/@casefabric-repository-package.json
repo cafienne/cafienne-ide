@@ -2,7 +2,8 @@
     "name": "@casefabric/repository",
     "version": "0.2.1",
     "bin": {
-        "compile": "./compile.js"
+        "compile": "./compile.js",
+        "testrunner": "./testrunner.js"
     },
     "description": "Create and compile CaseFabric design time models",
     "type": "module",
@@ -16,6 +17,7 @@
     ],
     "dependencies": {
         "@xmldom/xmldom": "^0.9.6",
+        "@casefabric/typescript-client": "C:\\git\\cmmn-test-framework\\dist\\src\\casefabric-typescript-client-0.0.1.tgz",
         "path": "^0.12.7",
         "xml-formatter": "^3.6.4"
     }
