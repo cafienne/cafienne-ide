@@ -1,4 +1,3 @@
-import { $read, AjaxError } from "@util/ajax";
 import Util from "@util/util";
 import ModelDefinition from "./definition/modeldefinition";
 import RepositoryBase from "./repositorybase";
@@ -10,6 +9,8 @@ import Metadata from "./serverfile/metadata";
 import ProcessFile from "./serverfile/processfile";
 import ServerFile from "./serverfile/serverfile";
 import TypeFile from "./serverfile/typefile";
+import DefinitionStorage from "./storage/definitionstorage";
+import { AjaxError } from "@util/ajax";
 
 export default class Repository extends RepositoryBase {
     listeners: (() => void)[] = [];
@@ -19,8 +20,8 @@ export default class Repository extends RepositoryBase {
      * save operation, since the save operation returns a list of all files in the server, along with
      * their last modified status.
      */
-    constructor() {
-        super();
+    constructor(storage: DefinitionStorage) {
+        super(storage);
     }
 
     /**
@@ -145,12 +146,13 @@ export default class Repository extends RepositoryBase {
      * Optional callback that will be invoked after model list has been retrieved
      */
     async listModels() {
-        await $read('list')
-            .then(models => this.updateFileList(models.map(Metadata.from)))
+        await this.definitionStorage.loadAllFiles()
+            .then(files => this.updateFileList(files.map(Metadata.from)))
             .catch((error: AjaxError) => { 
                 console.error(error); // Actually also other errors may occur, therefore also logging the stacktrace
                 throw 'Could not fetch the list of models: ' + error.message
              });
+;
     }
 
     /**
