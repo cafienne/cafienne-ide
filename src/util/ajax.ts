@@ -40,17 +40,6 @@ export class AjaxError {
     }
 }
 
-/**
- * Mechanism to perform an HTTP GET on a backend repository API
- * @param url 
- * @param fileName 
- * @returns 
- */
-export async function $read(url: string, fileName?: string): Promise<any> {
-    url = fileName ? url + '/' + fileName : url;
-    return $get('/repository/' + url);
-}
-
 export async function $get(url: string): Promise<any> {
     return $ajax({ method: 'get', url }).then(response => response.data);
 }
