@@ -10,6 +10,7 @@ import ModelEditorMetadata from "./modeleditor/modeleditormetadata";
 import ModelEditorRegistry from "./modeleditor/modeleditorregistry";
 import RepositoryBrowser from "./repositorybrowser";
 import SettingsEditor from "./settings/settingseditor";
+import RemoteDefinitionStorage from "@repository/storage/remotedefinitionstorage";
 
 export default class IDE {
     editorRegistry: ModelEditorRegistry;
@@ -24,7 +25,7 @@ export default class IDE {
 
     constructor() {
         this.editorRegistry = new ModelEditorRegistry(this);
-        this.repository = new Repository();
+        this.repository = new Repository(new RemoteDefinitionStorage(window.location.origin));
         this.html = $('body');
         this.header = new IDEHeader(this);
         this.main = new IDEMain(this);
