@@ -171,8 +171,7 @@ export default class Properties extends MovableEditor {
      * @param {*} value 
      */
     change(element, field, value) {
-        console.log("Changing field '" + field + "' in element " + element.constructor.name + " into " + value)
-        element[field] = value;
+        element.change(field, value);
         this.done();
     }
 

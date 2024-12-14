@@ -16,6 +16,12 @@ export default class CMMNElementDefinition extends DocumentableElementDefinition
         super(importNode, caseDefinition, parent);
     }
 
+    change(field: string, value: string) {
+        console.log("Changing field '" + field + "' in element " + this.constructor.name + " into " + value);
+        const element: any = this;
+        element[field] = value;
+    }
+
     toString() {
         const name = this.name ? ` '${this.name}'` : '';
         return `${this.constructor.name}${name}`;
