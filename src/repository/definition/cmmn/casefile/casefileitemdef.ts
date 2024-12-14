@@ -1,6 +1,6 @@
 import CaseFileDefinitionDefinition from "@repository/definition/cfid/casefileitemdefinitiondefinition";
 import CMMNElementDefinition from "@repository/definition/cmmnelementdefinition";
-import ExternalReference from "@repository/definition/externalreference";
+import ExternalReference from "@repository/definition/references/externalreference";
 import Util from "@util/util";
 import XML from "@util/xml";
 import CaseDefinition from "../casedefinition";

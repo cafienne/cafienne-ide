@@ -1,8 +1,11 @@
 import ServerFile from "@repository/serverfile/serverfile";
 import ModelDefinition from "./modeldefinition";
 import XMLSerializable from "./xmlserializable";
+import InternalReference from "./references/internalreference";
+import ReferenceList, { InternalReferenceList } from "./references/referencelist";
 
 export default class ElementDefinition<M extends ModelDefinition> extends XMLSerializable {
+    readonly internalReferences = new  InternalReferenceList(this);
     childDefinitions: ElementDefinition<M>[] = [];
 
     /**
@@ -15,6 +18,19 @@ export default class ElementDefinition<M extends ModelDefinition> extends XMLSer
             this.parent = parent;
             this.parent.childDefinitions.push(this);
         }
+    }
+
+    parseInternalReference<I extends InternalReference<ElementDefinition<M>>>(name: string, constructor?: new (element: XMLSerializable, fileName: string) => I): I {
+        return this.addInternalReference(this.parseAttribute(name), constructor);
+    }
+
+    addInternalReference<I extends InternalReference<ElementDefinition<M>>>(fileName: string, constructor?: new (element: XMLSerializable, fileName: string) => I): I {
+        return this.internalReferences.add(fileName, constructor);
+    }
+
+    resolveReferences() {
+        super.resolveReferences();
+        this.internalReferences.resolve();
     }
 
     /**

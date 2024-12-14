@@ -1,4 +1,4 @@
-import ExternalReference from "../externalreference";
+import ExternalReference from "../references/externalreference";
 import TypeDefinition from "./typedefinition";
 
 export default class TypeReference extends ExternalReference<TypeDefinition> {
