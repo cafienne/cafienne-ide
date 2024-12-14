@@ -1,4 +1,4 @@
-import ExternalReference from "@repository/definition/externalreference";
+import ExternalReference from "@repository/definition/references/externalreference";
 import ProcessModelDefinition from "@repository/definition/process/processmodeldefinition";
 import ProcessFile from "@repository/serverfile/processfile";
 import CaseDefinition from "../../casedefinition";

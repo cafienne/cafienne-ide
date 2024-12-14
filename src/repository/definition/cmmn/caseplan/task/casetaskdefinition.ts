@@ -1,4 +1,4 @@
-import ExternalReference from "@repository/definition/externalreference";
+import ExternalReference from "@repository/definition/references/externalreference";
 import CaseFile from "@repository/serverfile/casefile";
 import CaseDefinition from "../../casedefinition";
 import StageDefinition from "../stagedefinition";

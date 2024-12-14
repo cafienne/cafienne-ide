@@ -1,6 +1,6 @@
 import CaseDefinition from "@repository/definition/cmmn/casedefinition";
 import ParameterMappingDefinition from "@repository/definition/cmmn/contract/parametermappingdefinition";
-import ExternalReference from "@repository/definition/externalreference";
+import ExternalReference from "@repository/definition/references/externalreference";
 import HumanTaskModelDefinition from "@repository/definition/humantask/humantaskmodeldefinition";
 import ProcessModelDefinition from "@repository/definition/process/processmodeldefinition";
 import CafienneImplementationDefinition from "../../../../extensions/cafienneimplementationdefinition";

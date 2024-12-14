@@ -2,8 +2,10 @@ import ServerFile from "@repository/serverfile/serverfile";
 import Util from "@util/util";
 import XML from "@util/xml";
 import ElementDefinition from "./elementdefinition";
-import ExternalReference, { ReferenceSet } from "./externalreference";
+import ExternalReference from "./references/externalreference";
 import ModelDefinition from "./modeldefinition";
+import Reference from "./references/reference";
+import { ExternalReferenceList } from "./references/referencelist";
 
 // Some constants
 export const EXTENSIONELEMENTS = 'extensionElements';
@@ -14,7 +16,7 @@ export const IMPLEMENTATION_TAG = 'cafienne:implementation';
 export default class XMLSerializable {
     private _name: string = '';
     private _id: string = '';
-    readonly externalReferences = new ReferenceSet(this);
+    readonly externalReferences = new ExternalReferenceList(this);
     extensionElement: Element;
     exportNode: any;
 
@@ -257,11 +259,8 @@ export default class XMLSerializable {
         } else if (propertyValue instanceof ElementDefinition) {
             // Write XML properties as-is, without converting them to string
             propertyValue.createExportNode(this.exportNode, propertyName);
-        } else if (propertyValue instanceof ExternalReference) {
-            // Write references only if they have a value
-            if (propertyValue.fileName !== '') {
-                this.exportNode?.setAttribute(propertyName, propertyValue.fileName);
-            }
+        } else if (propertyValue instanceof Reference) {
+            propertyValue.setExportAttribute(propertyName);
         } else {
             if (typeof (propertyValue) == 'object') {
                 console.warn('Writing property ' + propertyName + ' has a value of type object', propertyValue);
@@ -312,6 +311,10 @@ export default class XMLSerializable {
      */
     createImplementationNode() {
         return this.createExtensionNode(this.exportNode, IMPLEMENTATION_TAG);
+    }
+
+    resolveReferences() {
+        this.externalReferences.resolve();
     }
 
     /**
