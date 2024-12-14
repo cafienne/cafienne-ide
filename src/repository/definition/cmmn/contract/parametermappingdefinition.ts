@@ -75,7 +75,7 @@ export default class ParameterMappingDefinition extends UnnamedCMMNElementDefini
             }
         }
         // On the (potentially new) task parameter we can now set the new bindingRef
-        this.taskParameter.bindingRef = newBinding ? newBinding.id : '';
+        this.taskParameter.bindingRef.update(newBinding);
     }
 
     get taskParameter(): TaskParameterDefinition | undefined {
@@ -150,7 +150,7 @@ export default class ParameterMappingDefinition extends UnnamedCMMNElementDefini
     isEmpty() {
         if (this.targetRef) { // Perhaps an empty input mapping
             // Check whether it is a generated mapping, by determining whether a binding is set
-            if (this.sourceRef && this.source && this.source == this.taskParameter && !this.taskParameter.bindingRef) {
+            if (this.sourceRef && this.source && this.source == this.taskParameter && this.taskParameter.bindingRef.isEmpty) {
                 if (!this.body) {
                     return true;
                 }

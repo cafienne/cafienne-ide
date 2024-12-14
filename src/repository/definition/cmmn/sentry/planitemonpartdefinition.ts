@@ -1,8 +1,9 @@
 import CaseDefinition from "../casedefinition";
+import PlanItem from "../caseplan/planitem";
 import CriterionDefinition from "./criteriondefinition";
 import OnPartDefinition from "./onpartdefinition";
 
-export default class PlanItemOnPartDefinition extends OnPartDefinition {
+export default class PlanItemOnPartDefinition extends OnPartDefinition<PlanItem> {
     exitCriterionRef: string;
 
     constructor(importNode: Element, caseDefinition: CaseDefinition, parent: CriterionDefinition) {

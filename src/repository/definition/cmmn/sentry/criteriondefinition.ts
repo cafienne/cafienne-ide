@@ -8,7 +8,7 @@ import PlanItemOnPartDefinition from "./planitemonpartdefinition";
 export default class CriterionDefinition extends UnnamedCMMNElementDefinition {
     ifPart?: IfPartDefinition;
     caseFileItemOnParts: CaseFileItemOnPartDefinition[];
-    planItemOnParts: CaseFileItemOnPartDefinition[];
+    planItemOnParts: PlanItemOnPartDefinition[];
 
     constructor(importNode: Element, caseDefinition: CaseDefinition, parent: PlanItem) {
         super(importNode, caseDefinition, parent);

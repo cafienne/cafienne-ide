@@ -324,9 +324,9 @@ export default class CaseFileItemsEditor {
         /** @type {Array<*>} */
         const references = this.case.items.filter(item => item.referencesDefinitionElement(definitionElement.id));
         // Also check whether the case parameters may be using the case file item
-        if (this.case.caseDefinition.input.find(p => p.bindingRef == definitionElement.id)) {
+        if (this.case.caseDefinition.input.find(p => p.bindingRef.references(definitionElement))) {
             references.push(this.case.caseParametersEditor);
-        } else if (this.case.caseDefinition.output.find(p => p.bindingRef == definitionElement.id)) {
+        } else if (this.case.caseDefinition.output.find(p => p.bindingRef.references(definitionElement))) {
             // else statement, since no need to add the same editor twice
             references.push(this.case.caseParametersEditor);
         }
