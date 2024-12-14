@@ -38,8 +38,7 @@ export default class SentryProperties extends Properties {
         const sentry = this.cmmnElement.definition;
         const rule = sentry.ifPart;
         const ruleAvailable = rule ? true : false;
-        const contextRef = rule ? rule.contextRef : '';
-        const contextName = contextRef ? this.cmmnElement.definition.caseDefinition.getElement(contextRef).name : '';
+        const contextName = rule ? rule.contextRef.name : '';
         const ruleBody = rule ? rule.body : '';
         const ruleLanguage = rule && rule.hasCustomLanguage ? rule.language : '';
         const nonDefaultLanguage = rule && rule.hasCustomLanguage ? ' custom-language' : '';

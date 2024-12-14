@@ -138,7 +138,7 @@ export default class PlanningTableView extends CMMNElementView {
 
     referencesDefinitionElement(definitionId) {
         // check in applicabilty rules; note: we're checking sourceRef, but it ought to be contextRef...
-        if (this.definition.ruleDefinitions.find(rule => rule.sourceRef == definitionId)) {
+        if (this.definition.ruleDefinitions.find(rule => rule.sourceRef.references(definitionId))) {
             return true;
         }
         return super.referencesDefinitionElement(definitionId);

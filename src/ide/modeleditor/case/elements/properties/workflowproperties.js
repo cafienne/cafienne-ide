@@ -49,8 +49,7 @@ export default class WorkflowProperties extends TaskProperties {
     addAssignmentField() {
         const assignmentExpression = this.humanTaskDefinition.assignment;
         const ruleAvailable = assignmentExpression ? true : false;
-        const contextRef = assignmentExpression ? assignmentExpression.contextRef : '';
-        const contextName = contextRef ? this.cmmnElement.definition.caseDefinition.getElement(contextRef).name : '';
+        const contextName = assignmentExpression ? assignmentExpression.contextRef.name : '';
         const expressionBody = assignmentExpression ? assignmentExpression.body : '';
         const assignmentPresenceIdentifier = Util.createID();
         // const checked = ;
@@ -112,8 +111,7 @@ export default class WorkflowProperties extends TaskProperties {
     addDueDateField() {
         const dueDateExpression = this.humanTaskDefinition.dueDate;
         const ruleAvailable = dueDateExpression ? true : false;
-        const contextRef = dueDateExpression ? dueDateExpression.contextRef : '';
-        const contextName = contextRef ? this.cmmnElement.definition.caseDefinition.getElement(contextRef).name : '';
+        const contextName = dueDateExpression ? dueDateExpression.contextRef.name : '';
         const expressionBody = dueDateExpression ? dueDateExpression.body : '';
         const assignmentPresenceIdentifier = Util.createID();
         // const checked = ;

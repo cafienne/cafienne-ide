@@ -4,6 +4,7 @@ import CaseDefinition from "../casedefinition";
 import ConstraintDefinition from "./constraintdefinition";
 import PlanItem, { TaskStageDefinition } from "./planitem";
 import StageDefinition from "./stagedefinition";
+import CaseFileItemReference from "../casefile/casefileitemreference";
 
 export default class PlanningTableDefinition extends UnnamedCMMNElementDefinition {
     tableItems: any;
@@ -69,12 +70,12 @@ export class ApplicabilityRuleDefinition extends ConstraintDefinition {
         return true;
     }
 
-    set sourceRef(ref) {
-        this.contextRef = ref;
+    set sourceRef(ref: string) {
+        this.contextRef.update(ref);
     }
 
-    get sourceRef() {
-        return this.contextRef ? this.contextRef : '';
+    get sourceRef(): CaseFileItemReference {
+        return this.contextRef;
     }
 
     createExportNode(parentNode: Element) {

@@ -19,6 +19,5 @@ export default class ConstraintDefinition extends ExpressionContainer {
         const context = this.contextName ? 'Case file context is set to ' + this.contextName : 'Note: case file context is NOT set for the expression';
         const headline = `${prefix}:\n\n\t`;
         return `${headline}${this.body}\n\n\n${context}`;
-
     }
 }

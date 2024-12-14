@@ -4,6 +4,7 @@ import InternalReference from "./references/internalreference";
 import { InternalReferenceList } from "./references/referencelist";
 import { ReferenceSet } from "./references/referenceset";
 import XMLSerializable from "./xmlserializable";
+import Reference from "./references/reference";
 
 export default class ElementDefinition<M extends ModelDefinition> extends XMLSerializable {
     readonly internalReferences = new InternalReferenceList(this);
@@ -60,9 +61,13 @@ export default class ElementDefinition<M extends ModelDefinition> extends XMLSer
     }
 
     change(field: string, value: string) {
-        console.log("Changing field '" + field + "' in element " + this.constructor.name + " into " + value);
+        console.log("Changing field '" + field + "' in " + this + " into " + value);
         const element: any = this;
-        element[field] = value;
+        if (element[field] instanceof Reference) {
+            (element[field] as any).update(value);
+        } else {
+            element[field] = value;
+        }
     }
 
     private removeChildDefinitions() {
