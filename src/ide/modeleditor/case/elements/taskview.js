@@ -242,10 +242,10 @@ export default class TaskView extends TaskStageView {
     }
 
     referencesDefinitionElement(definitionId) {
-        if (this.definition.inputs.find(parameter => parameter.bindingRef == definitionId)) {
+        if (this.definition.inputs.find(parameter => parameter.bindingRef.references(definitionId))) {
             return true;
         }
-        if (this.definition.outputs.find(parameter => parameter.bindingRef == definitionId)) {
+        if (this.definition.outputs.find(parameter => parameter.bindingRef.references(definitionId))) {
             return true;
         }
         return super.referencesDefinitionElement(definitionId);

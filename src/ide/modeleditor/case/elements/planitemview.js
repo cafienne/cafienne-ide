@@ -100,7 +100,7 @@ export default class PlanItemView extends CMMNElementView {
     }
 
     ruleUsesDefinitionId(ruleName, definitionId) {
-        return this.definition.planItemControl && this.definition.planItemControl[ruleName] && this.definition.planItemControl[ruleName].contextRef == definitionId;
+        return this.definition.planItemControl && this.definition.planItemControl[ruleName] && this.definition.planItemControl[ruleName].contextRef.references(definitionId);
     }
 
     referencesDefinitionElement(definitionId) {
@@ -142,7 +142,7 @@ export default class PlanItemView extends CMMNElementView {
             this.raiseValidationIssue(24, [this.name, this.case.name, ruleType, 'rule expression']);
         }
 
-        if (rule && !rule.contextRef && rule.body !== 'true' && rule.body !== 'false') {
+        if (rule && rule.contextRef.isEmpty && rule.body !== 'true' && rule.body !== 'false') {
             this.raiseValidationIssue(39, [this.name, this.case.name, ruleType, 'context (case file item)']);
         }
     }

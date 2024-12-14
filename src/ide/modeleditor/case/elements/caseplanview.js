@@ -35,10 +35,10 @@ export default class CasePlanView extends StageView {
 
     referencesDefinitionElement(definitionId) {
         // Check whether the case parameters may be using the case file item
-        if (this.case.caseDefinition.input.find(p => p.bindingRef == definitionId)) {
+        if (this.case.caseDefinition.input.find(p => p.bindingRef.references(definitionId))) {
             return true;
         }
-        if (this.case.caseDefinition.output.find(p => p.bindingRef == definitionId)) {
+        if (this.case.caseDefinition.output.find(p => p.bindingRef.references(definitionId))) {
             return true;
         }
         return super.referencesDefinitionElement(definitionId);

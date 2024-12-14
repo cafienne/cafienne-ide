@@ -30,8 +30,7 @@ export default class PlanItemProperties extends Properties {
         /** @type {ConstraintDefinition} */
         const rule = element.planItemControl ? element.planItemControl[ruleName] : undefined;
         const ruleAvailable = rule ? true : false;
-        const contextRef = rule ? rule.contextRef : '';
-        const contextName = contextRef ? this.cmmnElement.definition.caseDefinition.getElement(contextRef).name : '';
+        const contextName = rule ? rule.contextRef.name : '';
         const ruleBody = rule ? rule.body : defaultValue;
         const ruleLanguage = rule && rule.hasCustomLanguage ? rule.language : '';
         const nonDefaultLanguage = rule && rule.hasCustomLanguage ? ' custom-language' : '';
