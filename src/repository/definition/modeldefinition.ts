@@ -50,7 +50,7 @@ export default class ModelDefinition extends XMLSerializable {
             // Find elements that have an external reference
             const referencingElements = this.elements.filter(element => element.externalReferences.all.filter(e => e.nonEmpty).length);
             console.log(`${this.file} has ${referencingElements.length} elements with external dependencies (out of ${this.elements.length} elements)`);
-            this.elements.forEach(element => element.externalReferences.resolve());
+            this.elements.forEach(element => element.resolveReferences());
             console.groupEnd();
         }
         return this;

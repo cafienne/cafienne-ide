@@ -1,10 +1,12 @@
 import ServerFile from "@repository/serverfile/serverfile";
-import ModelDefinition from "./modeldefinition";
-import XMLSerializable from "./xmlserializable";
+import ModelDefinition from "../modeldefinition";
+import XMLSerializable from "../xmlserializable";
+import Reference from "./reference";
 
-export default class ExternalReference<M extends ModelDefinition> {
+export default class ExternalReference<M extends ModelDefinition> extends Reference {
     private _file?: ServerFile<M>;
     constructor(protected element: XMLSerializable, protected ref: string) {
+        super(element, ref);
     }
 
     /**
@@ -63,30 +65,5 @@ export default class ExternalReference<M extends ModelDefinition> {
 
     toString() {
         return this.fileName;
-    }
-}
-
-export class ReferenceSet {
-    constructor(public element: XMLSerializable) { }
-
-    private references: ExternalReference<ModelDefinition>[] = [];
-
-    resolve() {
-        const actualReferences = this.references.filter(ref => ref.nonEmpty);
-        if (actualReferences.length > 0) {
-            console.log("Element " + this.element.constructor.name + " wants to load " + actualReferences.map(e => e.fileName).join(', '));
-            this.references.forEach(reference => reference.resolve());
-            this.element.resolveExternalReferences();
-        }
-    }
-
-    get all() {
-        return [...this.references];
-    }
-
-    add<E extends ExternalReference<ModelDefinition>>(fileName: string, constructor?: new (element: XMLSerializable, fileName: string) => E): E {
-        const newReference = constructor ? new constructor(this.element, fileName) : <E> new ExternalReference(this.element, fileName);
-        this.references.push(newReference);
-        return newReference;
     }
 }
