@@ -1,26 +1,18 @@
 import ElementDefinition from "../elementdefinition";
 import ModelDefinition from "../modeldefinition";
+import XMLSerializable from "../xmlserializable";
 import Reference from "./reference";
 
 export default class InternalReference<I extends ElementDefinition<ModelDefinition>> extends Reference {
     private target?: I;
     constructor(protected element: ElementDefinition<ModelDefinition>, ref: string) {
         super(element, ref);
-    }
-
-    /**
-     * true if the fileName of this reference has a value, false otherwise.
-     */
-    get nonEmpty() {
-        return this.ref.length > 0;
-    }
-
-    get isEmpty() {
-        return !this.nonEmpty;
+        element.internalReferences.register(this);
     }
 
     resolve() {
-        this.loadDefinition()
+        this.loadDefinition();
+        return this;
     }
 
     getDefinition(): I | undefined {
@@ -28,7 +20,7 @@ export default class InternalReference<I extends ElementDefinition<ModelDefiniti
     }
 
     get id() {
-        return this.target ? this.target.id : ''
+        return this.target ? this.target.id : this.value;
     }
 
     get name(): string {
@@ -47,6 +39,16 @@ export default class InternalReference<I extends ElementDefinition<ModelDefiniti
             this.target = undefined;
             this.ref = newReference ? newReference instanceof ElementDefinition ? newReference.id : newReference : '';
             this.loadDefinition();
+        }
+    }
+
+    remove() {
+        this.update('');
+    }
+
+    removeDefinitionReference(element: XMLSerializable) {
+        if (this.references(element)) {
+            this.update('');
         }
     }
 

@@ -59,7 +59,7 @@ export default class TaskDefinition extends TaskStageDefinition {
         throw new Error('Method must be implemented in ' + this.constructor.name);
     }
 
-    resolveExternalReferences() {
+    resolvedExternalReferences() {
         this.loadImplementation();
     }
 

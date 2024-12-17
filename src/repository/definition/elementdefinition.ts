@@ -1,11 +1,12 @@
 import ServerFile from "@repository/serverfile/serverfile";
 import ModelDefinition from "./modeldefinition";
-import XMLSerializable from "./xmlserializable";
 import InternalReference from "./references/internalreference";
-import ReferenceList, { InternalReferenceList } from "./references/referencelist";
+import { InternalReferenceList } from "./references/referencelist";
+import { ReferenceSet } from "./references/referenceset";
+import XMLSerializable from "./xmlserializable";
 
 export default class ElementDefinition<M extends ModelDefinition> extends XMLSerializable {
-    readonly internalReferences = new  InternalReferenceList(this);
+    readonly internalReferences = new InternalReferenceList(this);
     childDefinitions: ElementDefinition<M>[] = [];
 
     /**
@@ -20,12 +21,12 @@ export default class ElementDefinition<M extends ModelDefinition> extends XMLSer
         }
     }
 
-    parseInternalReference<I extends InternalReference<ElementDefinition<M>>>(name: string, constructor?: new (element: XMLSerializable, fileName: string) => I): I {
-        return this.addInternalReference(this.parseAttribute(name), constructor);
+    parseInternalReference<I extends InternalReference<ElementDefinition<M>>>(name: string, constructor?: new (element: XMLSerializable, ref: string) => I): I {
+        return this.internalReferences.add(this.parseAttribute(name), constructor);
     }
 
-    addInternalReference<I extends InternalReference<ElementDefinition<M>>>(fileName: string, constructor?: new (element: XMLSerializable, fileName: string) => I): I {
-        return this.internalReferences.add(fileName, constructor);
+    parseReferenceSet<I extends InternalReference<ElementDefinition<M>>>(name: string, constructor?: new (element: XMLSerializable, ref: string) => I): ReferenceSet<I> {
+        return new ReferenceSet<I>(this, this.parseAttribute(name), constructor);
     }
 
     resolveReferences() {

@@ -5,15 +5,9 @@ import Reference from "./reference";
 
 export default class ExternalReference<M extends ModelDefinition> extends Reference {
     private _file?: ServerFile<M>;
-    constructor(protected element: XMLSerializable, protected ref: string) {
+    constructor(element: XMLSerializable, ref: string) {
         super(element, ref);
-    }
-
-    /**
-     * true if the fileName of this reference has a value, false otherwise.
-     */
-    get nonEmpty() {
-        return this.fileName && this.fileName.trim().length > 0;
+        element.externalReferences.register(this);
     }
 
     /**
@@ -30,6 +24,10 @@ export default class ExternalReference<M extends ModelDefinition> extends Refere
         return this._file;
     }
 
+    get value() {
+        return this.fileName;
+    }
+
     /**
      * Overridable method to load a file for the reference
      */
@@ -39,6 +37,9 @@ export default class ExternalReference<M extends ModelDefinition> extends Refere
             console.warn(this.element + ": Did not receive a file for " + this.fileName);
             return;
         }
+        if (this._file && !this._file.definition) {
+            this._file.parse();
+        }
     }
 
     resolve() {
@@ -46,9 +47,6 @@ export default class ExternalReference<M extends ModelDefinition> extends Refere
     }
 
     getDefinition(): M | undefined {
-        if (this._file && !this._file.definition) {
-            this._file.parse();
-        }
         return this._file?.definition;
     }
 
@@ -60,6 +58,12 @@ export default class ExternalReference<M extends ModelDefinition> extends Refere
             this._file = undefined;
             this.ref = newFileName;
             this.loadFile();
+        }
+    }
+
+    removeDefinitionReference(element: XMLSerializable) {
+        if (this.references(element)) {
+            this.update('');
         }
     }
 

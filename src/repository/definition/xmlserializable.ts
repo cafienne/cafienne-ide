@@ -2,10 +2,11 @@ import ServerFile from "@repository/serverfile/serverfile";
 import Util from "@util/util";
 import XML from "@util/xml";
 import ElementDefinition from "./elementdefinition";
-import ExternalReference from "./references/externalreference";
 import ModelDefinition from "./modeldefinition";
-import Reference from "./references/reference";
+import ExternalReference from "./references/externalreference";
 import { ExternalReferenceList } from "./references/referencelist";
+import ReferencingAttribute from "./references/referencingattribute";
+
 
 // Some constants
 export const EXTENSIONELEMENTS = 'extensionElements';
@@ -207,6 +208,8 @@ export default class XMLSerializable {
                 // if (removed > -1) {
                 //     console.log("Removed " + removedElement.constructor.name + " from " + this.constructor.name + "[" + this.name + "]" + "." + key + "[]");
                 // }
+            } else if (value instanceof ReferencingAttribute) {
+                value.removeDefinitionReference(removedElement);
             } else if (typeof (value) === 'string') {
                 // If it is a string, and it has a non-empty value, and they are equal (and 'this !== removedElement', as that is the first check)
                 if (value && removedElement.id && value === removedElement.id) {
@@ -259,7 +262,7 @@ export default class XMLSerializable {
         } else if (propertyValue instanceof ElementDefinition) {
             // Write XML properties as-is, without converting them to string
             propertyValue.createExportNode(this.exportNode, propertyName);
-        } else if (propertyValue instanceof Reference) {
+        } else if (propertyValue instanceof ReferencingAttribute) {
             propertyValue.setExportAttribute(propertyName);
         } else {
             if (typeof (propertyValue) == 'object') {
@@ -318,12 +321,6 @@ export default class XMLSerializable {
     }
 
     /**
-     * Basic method invoked on an element after the entire XML tree has been parsed.
-     * Can be used to resolve string based references to other elements.
-     */
-    resolveInternalReferences() { }
-
-    /**
      * Mechanism to load the file that is referenced from an ExternalReference
      * @param fileName 
      */
@@ -332,10 +329,10 @@ export default class XMLSerializable {
     }
 
     /**
-     * Method invoked when this element has ExternalReference objects that have a file that has a definition.
-     * This can be used to set a pointer to the definition that is referenced.
+     * Method invoked when all references in the element have been resolved.
+     * This can be used to do followup actions
      */
-    resolveExternalReferences() {
+    resolvedReferences() {
     }
 
     /**
