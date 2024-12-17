@@ -147,7 +147,10 @@ export default class Repository extends RepositoryBase {
     async listModels() {
         await $read('list')
             .then(models => this.updateFileList(models.map(Metadata.from)))
-            .catch((error: AjaxError) => { throw 'Could not fetch the list of models: ' + error.message });
+            .catch((error: AjaxError) => { 
+                console.error(error); // Actually also other errors may occur, therefore also logging the stacktrace
+                throw 'Could not fetch the list of models: ' + error.message
+             });
     }
 
     /**

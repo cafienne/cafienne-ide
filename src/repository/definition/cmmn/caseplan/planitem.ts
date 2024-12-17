@@ -145,9 +145,7 @@ export default class PlanItem extends CMMNElementDefinition {
         return this;
     }
 
-    resolveInternalReferences() {
-        super.resolveInternalReferences();
-
+    resolvedReferences() {
         const entryCriteriaRefs = this.parseAttribute('entryCriteriaRefs');
         if (entryCriteriaRefs) {
             const sentries = this.caseDefinition.findElements(entryCriteriaRefs, []);

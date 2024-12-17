@@ -27,7 +27,7 @@ export default class CafienneWorkflowDefinition extends CafienneImplementationDe
         return this.task.inputs;
     }
 
-    resolveExternalReferences() {
+    resolvedExternalReferences() {
         this.task.setImplementation(this.humanTaskRef.fileName, this.humanTaskRef.getDefinition());
     }
 

@@ -1,31 +1,18 @@
 import XMLSerializable from "../xmlserializable";
+import ReferencingAttribute from "./referencingattribute";
 
-export default class Reference {
-    constructor(protected element: XMLSerializable, protected ref: string) {
+export default class Reference extends ReferencingAttribute {
+    constructor(element: XMLSerializable, ref: string) {
+        super(element, ref);
     }
 
-    references(something: string | XMLSerializable) {
+    references(something: string | XMLSerializable | Reference) {
         if (something instanceof XMLSerializable) {
             return this.ref === something.id;
+        } else if (something instanceof Reference) {
+            return this === something;
         } else {
             return this.ref === something;
-        }
-    }
-
-    get value() {
-        return this.ref;
-    }
-
-    /**
-     * true if the fileName of this reference has a value, false otherwise.
-     */
-    get nonEmpty() {
-        return this.ref.length > 0;
-    }
-
-    setExportAttribute(name: string) {
-        if (this.nonEmpty) {
-            this.element.exportNode?.setAttribute(name, this.ref);
         }
     }
 
