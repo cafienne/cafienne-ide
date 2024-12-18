@@ -2,9 +2,16 @@ import Util from "@util/util";
 import ModelDefinition from "./definition/modeldefinition";
 import Metadata from "./serverfile/metadata";
 import ServerFile from "./serverfile/serverfile";
+import DefinitionStorage from "./storage/definitionstorage";
 
 export default class RepositoryBase {
+    saveFile(fileName: any, source: any) {
+        throw new Error("Method not implemented.");
+    }
     public readonly list: Array<ServerFile<ModelDefinition>> = [];
+
+    constructor(public readonly definitionStorage: DefinitionStorage) {
+    }
 
     async listModels() {
         throw new Error('This method must be implemented in ' + this.constructor.name);
