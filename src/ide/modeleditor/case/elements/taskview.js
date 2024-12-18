@@ -131,7 +131,7 @@ export default class TaskView extends TaskStageView {
         }
 
         // Set the implementation.
-        this.definition.setImplementation(file.fileName, file.definition);
+        this.definition.changeTaskImplementation(file);
 
         // Make sure to save changes if any.
         this.case.editor.completeUserAction();

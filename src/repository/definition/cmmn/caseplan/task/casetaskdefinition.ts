@@ -15,8 +15,8 @@ export default class CaseTaskDefinition extends TaskDefinition {
         this.caseRef = this.parseReference('caseRef');
     }
 
-    loadImplementation(): void {
-        this.setImplementation(this.implementationRef, this.caseRef.getDefinition());
+    protected get implementationReference() {
+        return this.caseRef;
     }
 
     createExportNode(parentNode: Element) {

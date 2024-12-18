@@ -19,6 +19,10 @@ export default class HumanTaskDefinition extends TaskDefinition {
         this.workflow = this.parseImplementation(CafienneWorkflowDefinition);
     }
 
+    protected get implementationReference() {
+        return this.workflow.humanTaskRef;
+    }
+
     createExportNode(parentNode: Element) {
         super.createExportNode(parentNode, 'humanTask', 'planningTable', 'performerRef', 'workflow');
     }
