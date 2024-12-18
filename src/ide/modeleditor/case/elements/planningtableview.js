@@ -1,4 +1,4 @@
-﻿import PlanningTableDefinition from "@definition/cmmn/caseplan/planningtabledefinition";
+﻿import PlanningTableDefinition from "@definition/cmmn/caseplan/planning/planningtabledefinition";
 import ShapeDefinition from "@definition/dimensions/shape";
 import Images from "@util/images/images";
 import { g } from "jointjs";

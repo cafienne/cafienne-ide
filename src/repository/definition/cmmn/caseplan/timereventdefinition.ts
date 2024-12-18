@@ -4,7 +4,7 @@ import ExpressionDefinition from "../expression/expressiondefinition";
 import OnPartDefinition from "../sentry/onpartdefinition";
 import EventListenerDefinition from "./eventlistenerdefinition";
 import PlanItem, { TaskStageDefinition } from "./planitem";
-import PlanningTableDefinition from "./planningtabledefinition";
+import PlanningTableDefinition from "./planning/planningtabledefinition";
 
 export default class TimerEventDefinition extends EventListenerDefinition {
     timerExpression?: ExpressionDefinition;

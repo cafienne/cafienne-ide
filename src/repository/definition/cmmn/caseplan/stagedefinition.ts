@@ -2,7 +2,7 @@ import XML from "@util/xml";
 import CaseDefinition from "../casedefinition";
 import MilestoneDefinition from "./milestonedefinition";
 import PlanItem, { TaskStageDefinition } from "./planitem";
-import PlanningTableDefinition from "./planningtabledefinition";
+import PlanningTableDefinition from "./planning/planningtabledefinition";
 import CaseTaskDefinition from "./task/casetaskdefinition";
 import HumanTaskDefinition from "./task/humantaskdefinition";
 import ProcessTaskDefinition from "./task/processtaskdefinition";
