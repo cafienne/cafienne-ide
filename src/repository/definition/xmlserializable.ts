@@ -2,8 +2,11 @@ import ServerFile from "@repository/serverfile/serverfile";
 import Util from "@util/util";
 import XML from "@util/xml";
 import ElementDefinition from "./elementdefinition";
-import ExternalReference, { ReferenceSet } from "./externalreference";
 import ModelDefinition from "./modeldefinition";
+import ExternalReference from "./references/externalreference";
+import { ExternalReferenceList } from "./references/referencelist";
+import ReferencingAttribute from "./references/referencingattribute";
+
 
 // Some constants
 export const EXTENSIONELEMENTS = 'extensionElements';
@@ -14,7 +17,7 @@ export const IMPLEMENTATION_TAG = 'cafienne:implementation';
 export default class XMLSerializable {
     private _name: string = '';
     private _id: string = '';
-    readonly externalReferences = new ReferenceSet(this);
+    readonly externalReferences = new ExternalReferenceList(this);
     extensionElement: Element;
     exportNode: any;
 
@@ -83,12 +86,12 @@ export default class XMLSerializable {
         return defaultValue;
     }
 
-    parseReference<M extends ModelDefinition>(name: string): ExternalReference<M> {
-        return this.addReference(this.parseAttribute(name));
+    parseReference<E extends ExternalReference<ModelDefinition>>(name: string, constructor?: new (element: XMLSerializable, fileName: string) => E): E {
+        return this.addReference(this.parseAttribute(name), constructor);
     }
 
-    addReference<M extends ModelDefinition>(fileName: string): ExternalReference<M> {
-        return this.externalReferences.add(fileName);
+    addReference<E extends ExternalReference<ModelDefinition>>(fileName: string, constructor?: new (element: XMLSerializable, fileName: string) => E): E {
+        return this.externalReferences.add(fileName, constructor);
     }
 
     /**
@@ -205,6 +208,8 @@ export default class XMLSerializable {
                 // if (removed > -1) {
                 //     console.log("Removed " + removedElement.constructor.name + " from " + this.constructor.name + "[" + this.name + "]" + "." + key + "[]");
                 // }
+            } else if (value instanceof ReferencingAttribute) {
+                value.removeDefinitionReference(removedElement);
             } else if (typeof (value) === 'string') {
                 // If it is a string, and it has a non-empty value, and they are equal (and 'this !== removedElement', as that is the first check)
                 if (value && removedElement.id && value === removedElement.id) {
@@ -257,11 +262,8 @@ export default class XMLSerializable {
         } else if (propertyValue instanceof ElementDefinition) {
             // Write XML properties as-is, without converting them to string
             propertyValue.createExportNode(this.exportNode, propertyName);
-        } else if (propertyValue instanceof ExternalReference) {
-            // Write references only if they have a value
-            if (propertyValue.fileName !== '') {
-                this.exportNode?.setAttribute(propertyName, propertyValue.fileName);
-            }
+        } else if (propertyValue instanceof ReferencingAttribute) {
+            propertyValue.setExportAttribute(propertyName);
         } else {
             if (typeof (propertyValue) == 'object') {
                 console.warn('Writing property ' + propertyName + ' has a value of type object', propertyValue);
@@ -314,11 +316,9 @@ export default class XMLSerializable {
         return this.createExtensionNode(this.exportNode, IMPLEMENTATION_TAG);
     }
 
-    /**
-     * Basic method invoked on an element after the entire XML tree has been parsed.
-     * Can be used to resolve string based references to other elements.
-     */
-    resolveInternalReferences() { }
+    resolveReferences() {
+        this.externalReferences.resolve();
+    }
 
     /**
      * Mechanism to load the file that is referenced from an ExternalReference
@@ -329,10 +329,10 @@ export default class XMLSerializable {
     }
 
     /**
-     * Method invoked when this element has ExternalReference objects that have a file that has a definition.
-     * This can be used to set a pointer to the definition that is referenced.
+     * Method invoked when all references in the element have been resolved.
+     * This can be used to do followup actions
      */
-    resolveExternalReferences() {
+    resolvedReferences() {
     }
 
     /**

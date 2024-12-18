@@ -1,5 +1,6 @@
 import CaseDefinition from "./cmmn/casedefinition";
 import DocumentableElementDefinition from "./documentableelementdefinition";
+import Reference from "./references/reference";
 
 export default class CMMNElementDefinition extends DocumentableElementDefinition<CaseDefinition> {
     /**
@@ -14,6 +15,16 @@ export default class CMMNElementDefinition extends DocumentableElementDefinition
      */
     constructor(importNode: Element, public caseDefinition: CaseDefinition, parent?: CMMNElementDefinition) {
         super(importNode, caseDefinition, parent);
+    }
+
+    change(field: string, value: string) {
+        console.log("Changing field '" + field + "' in " + this + " into " + value);
+        const element: any = this;
+        if (element[field] instanceof Reference) {
+            (element[field] as any).update(value);
+        } else {
+            element[field] = value;
+        }
     }
 
     toString() {

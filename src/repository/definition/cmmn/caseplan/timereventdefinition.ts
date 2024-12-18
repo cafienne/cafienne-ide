@@ -1,9 +1,10 @@
 import CaseDefinition from "../casedefinition";
+import CaseFileItemDef from "../casefile/casefileitemdef";
 import ExpressionDefinition from "../expression/expressiondefinition";
 import OnPartDefinition from "../sentry/onpartdefinition";
 import EventListenerDefinition from "./eventlistenerdefinition";
-import { TaskStageDefinition } from "./planitem";
-import PlanningTableDefinition from "./planningtabledefinition";
+import PlanItem, { TaskStageDefinition } from "./planitem";
+import PlanningTableDefinition from "./planning/planningtabledefinition";
 
 export default class TimerEventDefinition extends EventListenerDefinition {
     timerExpression?: ExpressionDefinition;
@@ -58,13 +59,13 @@ export default class TimerEventDefinition extends EventListenerDefinition {
     }
 }
 
-export class PlanItemStartTrigger extends OnPartDefinition {
+export class PlanItemStartTrigger extends OnPartDefinition<PlanItem> {
     createExportNode(parentNode: Element) {
         super.createExportNode(parentNode, 'planItemStartTrigger');
     }
 }
 
-export class CaseFileItemStartTrigger extends OnPartDefinition {
+export class CaseFileItemStartTrigger extends OnPartDefinition<CaseFileItemDef> {
     createExportNode(parentNode: Element) {
         super.createExportNode(parentNode, 'caseFileItemStartTrigger');
     }

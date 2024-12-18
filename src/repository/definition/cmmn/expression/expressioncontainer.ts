@@ -5,33 +5,33 @@ import CMMNElementDefinition from "@repository/definition/cmmnelementdefinition"
 import XMLSerializable from "@repository/definition/xmlserializable";
 import ModelDefinition from "@repository/definition/modeldefinition";
 import ElementDefinition from "@repository/definition/elementdefinition";
+import CaseFileItemReference from "../casefile/casefileitemreference";
 
 /**
  * Simple class that does basic expression parsing 
  */
 export default class ExpressionContainer extends UnnamedCMMNElementDefinition {
     private _expression?: ExpressionDefinition;
-    contextRef: string;
+    contextRef: CaseFileItemReference;
 
     constructor(importNode: Element, caseDefinition: CaseDefinition, public parent: CMMNElementDefinition) {
         super(importNode, caseDefinition, parent);
         this._expression = this.parseElement(this.expressionTagName, ExpressionDefinition);
-        this.contextRef = this.parseAttribute('contextRef');
+        this.contextRef = this.parseInternalReference('contextRef');
     }
 
     referencesElement(element: XMLSerializable) {
-        return element.id === this.contextRef;
+        return this.contextRef.references(element);
     }
 
     updateReferences<X extends ModelDefinition>(element: ElementDefinition<X>, oldId: string, newId: string, oldName: string, newName: string) {
-        if (this.contextRef === oldId) {
-            this.contextRef = newId;
+        if (this.contextRef.references(oldId)) {
+            this.contextRef.update(newId);
         }
     }
 
     get contextName() {
-        const context = this.caseDefinition.getElement(this.contextRef);
-        return context ? context.name : '';
+        return this.contextRef.name;
     }
 
     get expressionTagName(): string {

@@ -5,24 +5,25 @@ import ParameterDefinition from "../../contract/parameterdefinition";
 import CaseDefinition from "../casedefinition";
 import ModelDefinition from "@repository/definition/modeldefinition";
 import ElementDefinition from "@repository/definition/elementdefinition";
+import CaseFileItemReference from "../casefile/casefileitemreference";
 
 export default class CaseParameterDefinition extends ParameterDefinition<CaseDefinition> {
-    bindingRef: string;
+    bindingRef: CaseFileItemReference;
     bindingRefinement?: ExpressionDefinition;
 
     constructor(importNode: Element, public caseDefinition: CaseDefinition, parent: CMMNElementDefinition) {
         super(importNode, caseDefinition, parent);
-        this.bindingRef = this.parseAttribute('bindingRef');
+        this.bindingRef = this.parseInternalReference<CaseFileItemReference>('bindingRef');
         this.bindingRefinement = this.parseElement('bindingRefinement', ExpressionDefinition);
     }
 
     referencesElement<X extends ModelDefinition>(element: ElementDefinition<X>) {
-        return element.id === this.bindingRef;
+        return element.id === this.bindingRef.getDefinition()?.id;
     }
 
     updateReferences<X extends ModelDefinition>(element: ElementDefinition<X>, oldId: string, newId: string, oldName: string, newName: string) {
-        if (this.bindingRef === oldId) {
-            this.bindingRef = newId;
+        if (this.bindingRef.references(oldId)) {
+            this.bindingRef.update(newId);
             // Check if we also need to update the parameter name (assuming that a same name)
             if (this.name === oldName) {
                 this.name = newName;
@@ -30,12 +31,12 @@ export default class CaseParameterDefinition extends ParameterDefinition<CaseDef
         }
     }
 
-    get binding(): CaseFileItemDef {
-        return this.caseDefinition.getElement(this.bindingRef, CaseFileItemDef);
+    get binding(): CaseFileItemDef | undefined{
+        return this.bindingRef.getDefinition();
     }
 
     get bindingName() {
-        return this.bindingRef ? this.binding && this.binding.name : '';
+        return this.bindingRef.name;
     }
 
     get defaultOperation() {

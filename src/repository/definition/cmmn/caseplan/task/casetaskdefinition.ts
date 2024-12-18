@@ -1,4 +1,4 @@
-import ExternalReference from "@repository/definition/externalreference";
+import ExternalReference from "@repository/definition/references/externalreference";
 import CaseFile from "@repository/serverfile/casefile";
 import CaseDefinition from "../../casedefinition";
 import StageDefinition from "../stagedefinition";
@@ -15,8 +15,8 @@ export default class CaseTaskDefinition extends TaskDefinition {
         this.caseRef = this.parseReference('caseRef');
     }
 
-    loadImplementation(): void {
-        this.setImplementation(this.implementationRef, this.caseRef.getDefinition());
+    protected get implementationReference() {
+        return this.caseRef;
     }
 
     createExportNode(parentNode: Element) {

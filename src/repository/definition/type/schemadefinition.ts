@@ -15,7 +15,7 @@ export default class SchemaDefinition extends ElementDefinition<TypeDefinition> 
     createChildProperty(name: string = '', type = '', multiplicity = 'ExactlyOne', isBusinessIdentifier = false): SchemaPropertyDefinition {
         const property: SchemaPropertyDefinition = this.createDefinition(SchemaPropertyDefinition);
         property.name = name;
-        property._type = type; // Only assign the _type, not the type, as that will invoke loading the dependencies
+        property.type = type;
         property.multiplicity = multiplicity;
         property.isBusinessIdentifier = isBusinessIdentifier;
         this.properties.push(property);

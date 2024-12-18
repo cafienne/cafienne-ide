@@ -80,7 +80,7 @@ class ParametersControl extends TableRenderer {
     validate() {
         const description = this.constructor.name.split('ParametersControl')[0] + ' Case Parameter';
         // Throw a problem for each parameter that does not have a name
-        this.parameters.filter(p => !p.name).forEach(p => this.case.raiseEditorIssue(p, 1, [description, this.case.name, p.bindingRef]));
+        this.parameters.filter(p => !p.name).forEach(p => this.case.raiseEditorIssue(p, 1, [description, this.case.name, p.bindingRef.value]));
     }
 
     /**
@@ -166,7 +166,7 @@ export class ParameterRow extends RowRenderer {
      */
     changeBindingRef(cfi) {
         if (! this.parameterName) {
-            this.parameter.bindingRef = cfi.id;
+            this.parameter.bindingRef.update(cfi.id);
             this.parameterName = this.parameter.name = this.parameter.bindingName;
         }
         this.change('bindingRef', cfi.id);
@@ -179,11 +179,11 @@ export class ParameterRow extends RowRenderer {
      * @param {String} newName 
      */
     changeName(newName) {
-        if (!this.parameter.bindingRef) {
+        if (this.parameter.bindingRef.isEmpty) {
             // try to find a matching case file item
             const caseFileItem = this.parameter.caseDefinition.caseFile.getDescendants().find(child => child.name === newName);
             if (caseFileItem) {
-                this.parameter.bindingRef = caseFileItem.id;
+                this.parameter.bindingRef.update(caseFileItem.id);
                 this.html.find('.cfiName').html(this.parameter.bindingName);
             }
         }
@@ -196,7 +196,7 @@ export class ParameterRow extends RowRenderer {
      */
     refreshReferencingFields(cfi) {
         super.refreshReferencingFields(cfi);
-        if (! this.isEmpty() && this.parameter.bindingRef == cfi.id) {
+        if (! this.isEmpty() && this.parameter.bindingRef.references(cfi)) {
             this.html.find('.cfiName').html(cfi.name);
         }
     }

@@ -100,7 +100,7 @@ class BindingRefinementRenderer extends RowEditor {
      * @param {CMMNElementDefinition} cfi 
      */
     refreshReferencingFields(cfi) {
-        if (!this.isEmpty() && this.parameter.bindingRef == cfi.id) {
+        if (!this.isEmpty() && this.parameter.bindingRef.references(cfi)) {
             this.html.find('.valuelabel').html(cfi.name);
         }
     }

@@ -27,7 +27,6 @@ export default class HumanTaskView extends TaskView {
     /**
      * Creates a new HumanTaskView element.
      * @param {StageView} parent 
-     * @param {PlanItem} definition
      * @param {HumanTaskDefinition} definition 
      * @param {ShapeDefinition} shape 
      */

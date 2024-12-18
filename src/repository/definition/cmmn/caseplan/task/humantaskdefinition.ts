@@ -1,12 +1,13 @@
 import HumanTaskFile from "@repository/serverfile/humantaskfile";
 import CaseDefinition from "../../casedefinition";
 import CaseRoleDefinition from "../../caseteam/caseroledefinition";
+import CaseRoleReference from "../../caseteam/caserolereference";
 import StageDefinition from "../stagedefinition";
 import TaskDefinition from "./taskdefinition";
 import CafienneWorkflowDefinition from "./workflow/cafienneworkflowdefinition";
 
 export default class HumanTaskDefinition extends TaskDefinition {
-    performerRef: string;
+    performerRef: CaseRoleReference;
     workflow: CafienneWorkflowDefinition;
     static get infix() {
         return 'ht';
@@ -14,9 +15,13 @@ export default class HumanTaskDefinition extends TaskDefinition {
 
     constructor(importNode: Element, caseDefinition: CaseDefinition, public parent: StageDefinition) {
         super(importNode, caseDefinition, parent);
-        this.performerRef = this.parseAttribute('performerRef');
+        this.performerRef = this.parseInternalReference('performerRef');
         /** @type {CafienneWorkflowDefinition} */
         this.workflow = this.parseImplementation(CafienneWorkflowDefinition);
+    }
+
+    protected get implementationReference() {
+        return this.workflow.humanTaskRef;
     }
 
     createExportNode(parentNode: Element) {
@@ -24,15 +29,14 @@ export default class HumanTaskDefinition extends TaskDefinition {
     }
 
     get performer(): CaseRoleDefinition | undefined {
-        return <CaseRoleDefinition> this.caseDefinition.getElement(this.performerRef);
+        return this.performerRef.getDefinition();
     }
 
     /**
      * @returns {String} The name of the role that is assigned as the performer of the task
      */
     get performerName() {
-        const performer = this.caseDefinition.getElement(this.performerRef);
-        return performer ? performer.name : '';
+        return this.performerRef.name;
     }
 
     get implementationClass() {

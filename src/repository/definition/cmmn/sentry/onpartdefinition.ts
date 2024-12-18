@@ -1,27 +1,28 @@
+import InternalReference from "@repository/definition/references/internalreference";
+import XMLSerializable from "@repository/definition/xmlserializable";
 import XML from "@util/xml";
 import UnnamedCMMNElementDefinition from "../../unnamedcmmnelementdefinition";
 import CaseDefinition from "../casedefinition";
 import CaseFileItemDef from "../casefile/casefileitemdef";
 import PlanItem from "../caseplan/planitem";
 import CriterionDefinition from "./criteriondefinition";
-import XMLSerializable from "@repository/definition/xmlserializable";
 
-export default class OnPartDefinition extends UnnamedCMMNElementDefinition {
+export default class OnPartDefinition<T extends CaseFileItemDef | PlanItem> extends UnnamedCMMNElementDefinition {
     standardEvent: string;
-    sourceRef: string;
+    sourceRef: InternalReference<T>;
 
     constructor(importNode: Element, caseDefinition: CaseDefinition, parent: CriterionDefinition) {
         super(importNode, caseDefinition, parent);
         this.standardEvent = this.parseElementText('standardEvent', '');
-        this.sourceRef = this.parseAttribute('sourceRef', '');
+        this.sourceRef = this.parseInternalReference('sourceRef');
     }
 
-    get source(): PlanItem | CaseFileItemDef {
-        return this.caseDefinition.getElement(this.sourceRef);
+    get source(): T | undefined {
+        return this.sourceRef.getDefinition();
     }
 
     referencesElement(element: XMLSerializable) {
-        return element.id === this.sourceRef;
+        return this.sourceRef.references(element);
     }
 
     removeProperty(propertyName: string) {

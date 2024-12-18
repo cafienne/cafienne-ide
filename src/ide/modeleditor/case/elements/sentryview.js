@@ -96,11 +96,10 @@ export default class SentryView extends CMMNElementView {
      * @param {ExitCriterionView} exitCriterion 
      */
     setPlanItemOnPart(source, defaultEvent, exitCriterion = undefined) {
-        const sourceRef = source.definition.id;
         // If we cannot find the onpart in our definition, then we'll create a new one
-        if (!this.definition.planItemOnParts.find(onPart => onPart.sourceRef == sourceRef)) {
+        if (!this.definition.planItemOnParts.find(onPart => onPart.sourceRef.references(source.definition))) {
             const newOnPart = this.definition.createPlanItemOnPart();
-            newOnPart.sourceRef = sourceRef;
+            newOnPart.sourceRef.update(source.definition);
             newOnPart.standardEvent = defaultEvent;
             if (exitCriterion) {
                 newOnPart.exitCriterionRef = exitCriterion.definition.id;
@@ -118,11 +117,10 @@ export default class SentryView extends CMMNElementView {
             // Do not create an onpart if the definition is not set.
             return;
         }
-        const sourceRef = source.definition.id; // CaseFileItemView stores it's value in the contextRef property
         // If we cannot find the onpart in our definition, then we'll create a new one
-        if (!this.definition.caseFileItemOnParts.find(onPart => onPart.sourceRef == sourceRef)) {
+        if (!this.definition.caseFileItemOnParts.find(onPart => onPart.sourceRef.references(source.definition))) {
             const newOnPart = this.definition.createCaseFileItemOnPart();
-            newOnPart.sourceRef = sourceRef;
+            newOnPart.sourceRef.update(source.definition);
             newOnPart.standardEvent = defaultEvent;
         }
     }
@@ -173,7 +171,7 @@ export default class SentryView extends CMMNElementView {
      */
     onPartCaseFileItem() {
         this.definition.caseFileItemOnParts.forEach(onPart => {
-            if (!onPart.sourceRef) {
+            if (onPart.sourceRef.isEmpty) {
                 //onPart cfi not defined
                 this.raiseValidationIssue(15, [this.typeDescription, this.parent.name, this.case.name]);
             }
@@ -201,7 +199,7 @@ export default class SentryView extends CMMNElementView {
     */
     onPartPlanItem() {
         this.definition.planItemOnParts.forEach(onPart => {
-            if (!onPart.sourceRef) {
+            if (onPart.sourceRef.isEmpty) {
                 //onPart cfi not defined
                 this.raiseValidationIssue(34, [this.typeDescription, this.parent.name, this.case.name]);
             } else {
@@ -243,18 +241,17 @@ export default class SentryView extends CMMNElementView {
 
         //get the planItems from the onPart
         this.definition.planItemOnParts.forEach(onPart => {
-            const sourceRef = onPart.sourceRef;
-            if (sourceRef == null || sourceRef == '') {
+            if (onPart.sourceRef.isEmpty) {
                 //onPart planitem is not defined -> skip
                 return;
             }
 
             //get the planItem element the onPart planItem id refers to
-            const planItem = this.case.getItem(sourceRef);
+            const planItem = onPart.sourceRef.getDefinition();
             //get the children of the parent stage and check if the planItem is one of these
             const stageChildren = parentStage.__getDescendants();
             //test whether the planItem is a descendant of the parentStage
-            const found = stageChildren.find(child => child.id == sourceRef);
+            const found = stageChildren.find(child => onPart.sourceRef.references(child));
             //no descendant -> error
             if (!found) {
                 this.raiseValidationIssue(23, [this.typeDescription, cmmnParentElement.name, this.case.name, planItem.name, parentStage.name]);
@@ -374,10 +371,10 @@ export default class SentryView extends CMMNElementView {
      * @returns {OnPartDefinition}
      */
     __getOnPart(connector) {
-        const planItemOnPart = this.definition.planItemOnParts.find(onPart => connector.hasElementWithId(onPart.sourceRef));
+        const planItemOnPart = this.definition.planItemOnParts.find(onPart => connector.hasElementWithId(onPart.sourceRef.value));
         if (planItemOnPart) return planItemOnPart;
         return this.definition.caseFileItemOnParts.find(onPart => {
-            const casefileElement = this.case.getCaseFileItemElement(onPart.sourceRef);
+            const casefileElement = this.case.getCaseFileItemElement(onPart.sourceRef.value);
             if (casefileElement) return connector.hasElementWithId(casefileElement.id);
         });
     }
@@ -387,10 +384,10 @@ export default class SentryView extends CMMNElementView {
     }
 
     referencesDefinitionElement(definitionId) {
-        if (this.definition.ifPart && this.definition.ifPart.contextRef == definitionId) {
+        if (this.definition.ifPart && this.definition.ifPart.contextRef.references(definitionId)) {
             return true;
         }
-        if (this.definition.caseFileItemOnParts.find(onPart => onPart.sourceRef == definitionId)) {
+        if (this.definition.caseFileItemOnParts.find(onPart => onPart.sourceRef.references(definitionId))) {
             return true;
         }
         return super.referencesDefinitionElement(definitionId);
