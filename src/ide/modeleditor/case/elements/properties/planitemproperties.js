@@ -1,10 +1,11 @@
 import ConstraintDefinition from "@definition/cmmn/caseplan/constraintdefinition";
 import CaseRoleReference from "@definition/cmmn/caseteam/caserolereference";
-import PlanItemView from "../planitemview";
-import Properties from "./properties";
+import { ReferenceSet } from "@repository/definition/references/referenceset";
+import Images from "@util/images/images";
 import Util from "@util/util";
 import $ from "jquery";
-import Images from "@util/images/images";
+import PlanItemView from "../planitemview";
+import Properties from "./properties";
 
 export default class PlanItemProperties extends Properties {
     /**
@@ -41,11 +42,11 @@ export default class PlanItemProperties extends Properties {
         // const checked = ;
         const html = $(`<div class="propertyRule" title="${title}">
                             <div class="propertyRow">
-                                <input id="${rulePresenceIdentifier}" class="rulePresence" type="checkbox" ${ruleAvailable?'checked':''}/>
+                                <input id="${rulePresenceIdentifier}" class="rulePresence" type="checkbox" ${ruleAvailable ? 'checked' : ''}/>
                                 <img src="${imageURL}" />
                                 <label for="${rulePresenceIdentifier}">${label1}</label>
                             </div>
-                            <div style="display:${ruleAvailable?'block':'none'}" class="ruleProperty">
+                            <div style="display:${ruleAvailable ? 'block' : 'none'}" class="ruleProperty">
                                 <div class="propertyBlock">
                                     <label>${label2} Rule</label>
                                     <span class="property-expression-language ${nonDefaultLanguage}" title="${tip}">
@@ -139,7 +140,7 @@ export default class PlanItemProperties extends Properties {
      * @param {String} buttonClass
      */
     getRolesAsHTMLSelect(currentRoleId, buttonClass) {
-        const existingRolesAsOptions = this.case.caseDefinition.caseTeam.roles.map(role => `<option value="${role.id}" ${role.id == currentRoleId?' selected':''}>${role.name}</option>`).join('');
+        const existingRolesAsOptions = this.case.caseDefinition.caseTeam.roles.map(role => `<option value="${role.id}" ${role.id == currentRoleId ? ' selected' : ''}>${role.name}</option>`).join('');
         return `<div class="role-selector">
                     <span>
                         <select>
@@ -151,24 +152,31 @@ export default class PlanItemProperties extends Properties {
                 </div>`;
     }
 
+    addAuthorizatedRoles(parentHTML) {
+        // Add a row for each role, and also an empty ro(w)le at the end to allow additional selections
+        this.cmmnElement.definition.authorizedRoles.forEach(role => this.addAuthorizedRoleField(parentHTML, role));
+        this.addAuthorizedRoleField(parentHTML);
+    }
+
     /**
      * Adds a role. Can be undefined, in which case an empty row is added.
      * Also adds the required event handlers to the html.
-     * @param {Array<CaseRoleReference>} authorizedRoles 
+     * @param {ReferenceSet<CaseRoleReference>} authorizedRoles 
      * @param {JQuery<HTMLElement>} parentHTML 
      * @param {CaseRoleReference} role 
      */
-    addAuthorizedRoleField(authorizedRoles, parentHTML, role = undefined) {
+    addAuthorizedRoleField(parentHTML, role = undefined) {
         if (role && !role.name) {
-            // We need not render empty roles
+            // We need not render empty roles, but it is actually pretty weird if it happens, so putting a warning log
+            console.warn("Unexpected empty role name while rendering properties of " + this.cmmnElement.definition);
             return;
         }
+        const authorizedRoles = this.cmmnElement.definition.authorizedRoleRefs;
         const roleId = role ? role.id : '';
         const html = $(this.getRolesAsHTMLSelect(role ? role.id : '', 'deleteRoleButton'));
         html.attr('id', roleId);
         html.find('select').on('change', e => {
             const newRoleId = $(e.target).val().toString();
-            const newRole = this.cmmnElement.definition.caseDefinition.getElement(newRoleId);
             // console.log("Selected role with id "+newRoleId)
             // const roleAlreadyPresent = authorizedRoles.find(role => role.id == newRoleId)
             // if (roleAlreadyPresent) {
@@ -177,24 +185,22 @@ export default class PlanItemProperties extends Properties {
             // }
 
             const currentRoleID = html.attr('id');
-            const currentRoleReference = currentRoleID ? authorizedRoles.find(role => role.id == currentRoleID) : undefined;
+            const currentRoleReference = currentRoleID ? authorizedRoles.find(currentRoleID) : undefined;
             if (!currentRoleReference) {
-                authorizedRoles.push(new CaseRoleReference(newRole, this.cmmnElement.definition));
-                this.addAuthorizedRoleField(authorizedRoles, parentHTML); // Add a new role field    
+                authorizedRoles.add(newRoleId);
+                this.addAuthorizedRoleField(parentHTML); // Add a new role field
+                console.groupEnd();
             } else {
                 // this.change(currentRoleReference, 'role', newRole);
-                currentRoleReference.role = newRole;
+                currentRoleReference.update(newRoleId);
             }
-            html.attr('id', newRole.id);
+            html.attr('id', newRoleId);
             this.done();
         });
         html.find('.deleteRoleButton').on('click', e => {
             const currentRoleID = html.attr('id');
             if (currentRoleID) {
-                const currentRoleReference = authorizedRoles.find(role => role.id == currentRoleID);
-                if (currentRoleReference) {
-                    currentRoleReference.remove();
-                }
+                authorizedRoles.remove(currentRoleID);
                 Util.removeHTML(html);
                 this.done();
             }
