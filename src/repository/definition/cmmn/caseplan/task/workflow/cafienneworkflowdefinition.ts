@@ -27,10 +27,6 @@ export default class CafienneWorkflowDefinition extends CafienneImplementationDe
         return this.task.inputs;
     }
 
-    resolvedExternalReferences() {
-        this.task.setImplementation(this.humanTaskRef.fileName, this.humanTaskRef.getDefinition());
-    }
-
     createExportNode(parentNode: Element) {
         if (this.mappings.length > 0 || this.humanTaskRef.nonEmpty || this.assignment || this.dueDate || this.validatorRef.nonEmpty) {
             super.createExtensionNode(parentNode, (CafienneImplementationDefinition as any).TAG, 'humanTaskRef', 'validatorRef', 'mappings', 'assignment', 'dueDate');

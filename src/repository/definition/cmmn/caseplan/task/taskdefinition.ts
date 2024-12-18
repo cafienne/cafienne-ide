@@ -8,6 +8,8 @@ import ParameterMappingDefinition from "../../contract/parametermappingdefinitio
 import { TaskStageDefinition } from "../planitem";
 import StageDefinition from "../stagedefinition";
 import TaskParameterDefinition from "./taskparameterdefinition";
+import ExternalReference from "@repository/definition/references/externalreference";
+import ServerFile from "@repository/serverfile/serverfile";
 
 export default class TaskDefinition extends TaskStageDefinition {
     isBlocking: boolean = true;
@@ -26,6 +28,14 @@ export default class TaskDefinition extends TaskStageDefinition {
 
     get mappings(): ParameterMappingDefinition[] {
         return this._mappings;
+    }
+
+    resolvedReferences() {
+        this.bindImplementation();
+    }
+
+    protected get implementationReference(): ExternalReference<ModelDefinition> {
+        throw new Error('Method must be implemented in ' + this.constructor.name);
     }
 
     /**
@@ -53,14 +63,6 @@ export default class TaskDefinition extends TaskStageDefinition {
 
     set implementationModel(taskImplementation) {
         this._implementationModel = taskImplementation;
-    }
-
-    loadImplementation() {
-        throw new Error('Method must be implemented in ' + this.constructor.name);
-    }
-
-    resolvedExternalReferences() {
-        this.loadImplementation();
     }
 
     get validatorRef(): string {
@@ -181,8 +183,13 @@ export default class TaskDefinition extends TaskStageDefinition {
      * Generates new mappings and task input/output parameters based on the
      * given xml node that represents the contract of the task implementation.
      */
-    changeTaskImplementation(implementationRef: string, implementationModel: ModelDefinition | undefined) {
-        console.log(this + " changes implementation (current is " + this.implementationRef + ", new is " + implementationRef + ")");
+    changeTaskImplementation(file: ServerFile<ModelDefinition>) {
+        const implementationRef = file.fileName;
+        const implementationModel = file.definition;
+
+        if (this.implementationRef !== implementationRef) {
+            console.log(this + " changes implementation (current is " + this.implementationRef + ", new is " + implementationRef + ")");
+        }
         // First remove existing mappings and parameters.
         Util.clearArray(this.mappings);
         this.inputs = [];
@@ -200,43 +207,43 @@ export default class TaskDefinition extends TaskStageDefinition {
     /**
      * Sets the task implementation, and optionally updates the implementationRef.
      */
-    setImplementation(implementationRef: string, implementationModel: ModelDefinition | undefined) {
-        if (this.implementationRef !== implementationRef || !implementationModel) {
-            this.changeTaskImplementation(implementationRef, implementationModel);
-        } else {
-            this.implementationModel = implementationModel;
-            this.inputMappings.forEach(mapping => {
-                if (mapping.targetRef) {
-                    // Note: if the input parameter cannot be found in the implementation model, the targetRef will be cleared from the mapping
-                    mapping.implementationParameter = implementationModel.findInputParameter(mapping.targetRef);
-                }
-            });
-
-            // Now iterate all implementation's input parameters and check for unused ones. For those we will generate new, default mappings.
-            this.implementationModel.inputParameters.forEach((parameter: ParameterDefinition<ModelDefinition>) => {
-                const existingMapping = this.inputMappings.find(mapping => parameter.hasIdentifier(mapping.targetRef));
-                if (!existingMapping) {
-                    // console.log('Generating default input mapping for implementation parameter ' + parameter.name + ' in task "' + this.name + '"');
-                    this.createInputMapping(parameter);
-                }
-            });
-
-            this.outputMappings.forEach(mapping => {
-                if (mapping.sourceRef) {
-                    mapping.implementationParameter = implementationModel.findOutputParameter(mapping.sourceRef);
-                }
-            });
-
-            // Now iterate all task output parameters and check for unused ones. For those we will generate a mapping, in order to have them directly visible in the UI.
-            // It also has no sense to have unused output parameters.
-            this.implementationModel.outputParameters.forEach((parameter: ParameterDefinition<ModelDefinition>) => {
-                const existingMapping = this.outputMappings.find(mapping => parameter && parameter.hasIdentifier(mapping.sourceRef));
-                if (!existingMapping) {
-                    // console.log('Generating default output mapping for implementation parameter ' + parameter.name + ' in task "' + this.name + '"');
-                    this.createOutputMapping(parameter);
-                }
-            });
+    bindImplementation() {
+        const implementationModel = this.implementationReference.getDefinition();
+        if (!implementationModel) {
+            return;
         }
+        this.implementationModel = implementationModel;
+        this.inputMappings.forEach(mapping => {
+            if (mapping.targetRef) {
+                // Note: if the input parameter cannot be found in the implementation model, the targetRef will be cleared from the mapping
+                mapping.implementationParameter = implementationModel.findInputParameter(mapping.targetRef);
+            }
+        });
+
+        // Now iterate all implementation's input parameters and check for unused ones. For those we will generate new, default mappings.
+        this.implementationModel.inputParameters.forEach((parameter: ParameterDefinition<ModelDefinition>) => {
+            const existingMapping = this.inputMappings.find(mapping => parameter.hasIdentifier(mapping.targetRef));
+            if (!existingMapping) {
+                // console.log('Generating default input mapping for implementation parameter ' + parameter.name + ' in task "' + this.name + '"');
+                this.createInputMapping(parameter);
+            }
+        });
+
+        this.outputMappings.forEach(mapping => {
+            if (mapping.sourceRef) {
+                mapping.implementationParameter = implementationModel.findOutputParameter(mapping.sourceRef);
+            }
+        });
+
+        // Now iterate all task output parameters and check for unused ones. For those we will generate a mapping, in order to have them directly visible in the UI.
+        // It also has no sense to have unused output parameters.
+        this.implementationModel.outputParameters.forEach((parameter: ParameterDefinition<ModelDefinition>) => {
+            const existingMapping = this.outputMappings.find(mapping => parameter && parameter.hasIdentifier(mapping.sourceRef));
+            if (!existingMapping) {
+                // console.log('Generating default output mapping for implementation parameter ' + parameter.name + ' in task "' + this.name + '"');
+                this.createOutputMapping(parameter);
+            }
+        });
     }
 
     createExportNode(parentNode: Element, tagName: string, ...propertyNames: any[]) {
