@@ -88,8 +88,8 @@ export default class ServerFile<M extends ModelDefinition> {
             if (isReloading) console.log("Clearing contents of " + this.fileName + ", since server indicates there is new content")
             this.clear();
         }
-        if (serverMetadata.serverContent) {
-            this.source = serverMetadata.serverContent;
+        if (serverMetadata.content) {
+            this.source = serverMetadata.content;
         }
         this.lastModified = serverMetadata.lastModified;
     }

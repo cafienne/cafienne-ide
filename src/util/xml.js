@@ -1,3 +1,5 @@
+import { DOMParser, XMLSerializer } from 'xmldom';
+
 export default class XML {
     /**
      * Parses the given xml string into a Document object
@@ -6,9 +8,13 @@ export default class XML {
      * @returns {Document|undefined}
      */
     static parseXML(xml) {
-        if (xml instanceof Document) {
+        if (xml === undefined) {
+            return undefined;
+        }
+
+        if (xml.constructor.name == 'Document') {
             return xml;
-        } else if (xml instanceof Node) {
+        } else if (xml.constructor.name == 'Node') {
             return xml.ownerDocument;
         }
         const xmlDocument = XML.loadXMLString(xml);
@@ -82,7 +88,7 @@ export default class XML {
      * @returns {Element} The newly created element
      */
     static createChildElement(parentNode, tagName, namespace = "http://www.omg.org/spec/CMMN/20151109/MODEL") {
-        if (parentNode instanceof Document) {
+        if (parentNode.constructor.name === 'Document') {
             if (tagName.indexOf('cafienne:') === 0) {
                 namespace = 'org.cafienne';
             }
@@ -157,7 +163,7 @@ export default class XML {
     * @returns {Array<Element>}
     */
     static elements(xmlNode) {
-        return this.children(xmlNode).filter(node => node.nodeType === Node.ELEMENT_NODE);
+        return this.children(xmlNode).filter(node => node.nodeType === 1 /*Node.ELEMENT_NODE*/);
     }
 
     /**
@@ -172,7 +178,7 @@ export default class XML {
         }
 
         // First check if we have content other than text nodes.
-        if (children.filter(node => node.nodeType !== Node.TEXT_NODE).length > 0) {
+        if (children.filter(node => node.nodeType !== 3 /*Node.TEXT_NODE*/).length > 0) {
             // Other content present, nothing to clean
             return;
         }
@@ -221,8 +227,8 @@ export default class XML {
      * @param {Array<Element>} array Optionally provide an array to which the elements will be added, or one will be created
      */
     static allElements(xmlNode, array = []) {
-        xmlNode && xmlNode.childNodes.forEach(child => {
-            if (child instanceof Element) {
+        xmlNode && Array.from(xmlNode.childNodes).forEach(child => {
+            if (child.constructor.name === 'Element') {
                 array.push(child);
                 this.allElements(child, array);
             }
@@ -283,13 +289,13 @@ export default class XML {
      * @param {any} tree 
      */
     static removeUnnecessaryNamespaceAttributes(tree) {
-        if (!tree instanceof Element && !tree instanceof Document) {
+        if (tree.constructor.name !== 'Element' && tree.constructor.name !== 'Document') {
             return;
         }
         XML.allElements(tree).forEach(element => {
-            const parent = element.parentElement;
-            if (parent !== null) {
-                const xmlnsAttributes = element.getAttributeNames().filter(name => name.startsWith("xmlns"));
+            const parent = element.parentNode;
+            if (parent !== undefined && parent !== null && parent.constructor.name !== 'Document') {
+                const xmlnsAttributes = Array.from(element.attributes).map(attribute => attribute.nodeName).filter(name => name.startsWith("xmlns"));
                 xmlnsAttributes.forEach(name => {
                     if (parent.getAttribute(name) === element.getAttribute(name)) {
                         element.removeAttribute(name);
