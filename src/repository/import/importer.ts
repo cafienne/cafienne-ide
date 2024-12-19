@@ -4,6 +4,7 @@ import XML from "@util/xml";
 import Tags from "../definition/dimensions/tags";
 import Repository from "../repository";
 import ImportElement, { CFIDImporter, CaseImporter, DimensionsImporter, HumanTaskImporter, ProcessImporter, TypeImporter } from "./importelement";
+import TypeFile from "@repository/serverfile/typefile";
 
 export default class Importer {
     importFiles: ImportElement[] = [];
@@ -101,7 +102,19 @@ export default class Importer {
                     if (fileName.endsWith('.cfid')) {
                         this.importFiles.push(new CFIDImporter(this, fileName, xmlElement));
                     } else {
-                        const typeFile = this.repository.createTypeFile(fileName, `<type id="${fileName}" name="${xmlElement.getAttribute('name')}"><schema/></type>`);
+                        var typeFile: TypeFile = <TypeFile> this.repository.get(fileName);
+                        var source = `<type id="${fileName}" name="${xmlElement.getAttribute('name')}"><schema/></type>`;
+                        if (!typeFile) {
+                            typeFile = this.repository.createTypeFile(fileName, source);
+                            if (fileName.endsWith('.object')) {
+                                // Just use it as temporary TypeFile object to import schema
+                                this.repository.removeFile(typeFile);
+                            }
+                        } else {
+                            // Overwrite existing file
+                            typeFile.source = source;
+                            typeFile.parse();
+                        }
                         if (!typeFile.definition) return;
                         const typeDefinition: TypeDefinition = typeFile.definition;
                         const typeSchema = typeDefinition.schema;
@@ -137,7 +150,7 @@ export default class Importer {
                             typeDefinition = typeDefinitions[typeRef] = typeFile.definition;
                         }
                         for (const caseFileItem of caseFileModel.children) {
-                            this.loadCaseFileItem(typeDefinition, typeDefinition.schema, caseFileItem, typeDefinitions);
+                            this.loadCaseFileItem(typeDefinition.schema, caseFileItem, typeDefinitions);
                         }
                     }
                     // Clear content as caseFileModel is definded by a typeRef
@@ -177,10 +190,7 @@ export default class Importer {
         updateReferences('CMMNShape', 'cmmnElementRef');
     }
 
-    /**
-     * 
-     */
-    loadCaseFileItem(typeDefinition: TypeDefinition, schemaDefinition: SchemaDefinition, caseFileItem: Element, typeDefinitions: any) {
+    loadCaseFileItem(schemaDefinition: SchemaDefinition, caseFileItem: Element, typeDefinitions: any) {
         if (caseFileItem.nodeName === 'caseFileItem') {
             const property = schemaDefinition.createChildProperty(caseFileItem.getAttribute('name') || '', '', caseFileItem.getAttribute('multiplicity') || '');
             // Check whether it is an inline type or a standalone child type
@@ -190,16 +200,23 @@ export default class Importer {
                 property.type = 'object';
                 const embeddedTypeDefinition = typeDefinitions[definitionRef] as TypeDefinition;
                 embeddedTypeDefinition.schema?.properties.forEach((embeddedProperty) => { property.schema?.properties.push(embeddedProperty) }); // Push all properties of the embedded caseFileItemDefinition to the typeDefinition;
-                const children = caseFileItem.getElementsByTagName('children');
-                if (children.length === 1 && property.schema) {
-                    for (const embeddedCaseFileItem of children[0].children) {
-                        this.loadCaseFileItem(typeDefinition, property.schema, embeddedCaseFileItem, typeDefinitions);
+                const children = XML.getChildByTagName(caseFileItem, 'children');
+                if (children && property.schema) {
+                    for (const embeddedCaseFileItem of children.children) {
+                        this.loadCaseFileItem(property.schema, embeddedCaseFileItem, typeDefinitions);
                     }
                 }
             }
             if (definitionRef.endsWith('.type')) {
                 // It is an external referred type
                 property.type = definitionRef;
+                const externalTypeDefinition = typeDefinitions[definitionRef] as TypeDefinition;
+                const children = XML.getChildByTagName(caseFileItem, 'children');
+                if (children && externalTypeDefinition.schema) {
+                    for (const embeddedCaseFileItem of children.children) {
+                        this.loadCaseFileItem(externalTypeDefinition.schema, embeddedCaseFileItem, typeDefinitions);
+                    }
+                }
             }
         }
     }
