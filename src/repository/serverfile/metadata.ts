@@ -11,7 +11,7 @@ export default class Metadata {
     lastModified: any;
     error: any;
     type: any;
-    serverContent: any;
+    content: any;
 
     static from(json: any) {
         return new Metadata(json);
@@ -22,6 +22,6 @@ export default class Metadata {
         this.lastModified = json.lastModified;
         this.error = json.error;
         this.type = json.type;
-        this.serverContent = json.content;
+        this.content = json.content;
     }
 }

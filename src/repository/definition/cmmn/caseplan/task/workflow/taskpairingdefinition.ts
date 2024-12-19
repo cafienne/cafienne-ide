@@ -10,7 +10,7 @@ export default class TaskPairingDefinition extends CMMNExtensionDefinition<CaseD
 
     constructor(importNode: Element, caseDefinition: CaseDefinition, public parent: PlanItem) {
         super(importNode, caseDefinition, parent);
-        this.present = importNode instanceof Element;
+        this.present = importNode !== undefined;
         this.references = this.parseElements('task', PlanItemReference);
     }
 
