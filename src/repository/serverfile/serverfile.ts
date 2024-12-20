@@ -18,6 +18,7 @@ export default class ServerFile<M extends ModelDefinition> {
     lastModified: string = '';
     hasBeenSavedJustNow: boolean = false;
     clearing: boolean = false;
+    parsing: boolean = false;
 
     /**
      * Creates a new local reference of the server file, based on the json structure given
@@ -193,12 +194,18 @@ export default class ServerFile<M extends ModelDefinition> {
             if (this.metadata) this.metadata.error = 'This file does not contain a valid XML document to parse';
             return this;
         }
+        if (this.parsing) {
+            // Avoid recursive parsing.
+            return this;
+        }
+        this.parsing = true;
         this._definition = this.createModelDefinition().initialize();
         // Note: here we should somehow go through the list of ExternalReferences of other models that are using a former definition of us and tell them to update
         // this.usage.forEach(file => {
         //     console.log(this.fileName + ": should be updating the file " + file.fileName +" because we have a new definition")
         // })
         this.validateDefinition();
+        this.parsing = false;
         return this;
     }
 
