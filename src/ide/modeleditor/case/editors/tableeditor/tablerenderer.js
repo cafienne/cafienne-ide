@@ -1,9 +1,9 @@
 import CMMNElementDefinition from "@definition/cmmnelementdefinition";
-import ColumnRenderer from "./columnrenderer";
-import RowRenderer from "./rowrenderer";
-import CaseView from "../../elements/caseview";
 import Util from "@util/util";
 import $ from "jquery";
+import CaseView from "../../elements/caseview";
+import ColumnRenderer from "./columnrenderer";
+import RowRenderer from "./rowrenderer";
 
 export default class TableRenderer {
     /**
@@ -143,8 +143,7 @@ export default class TableRenderer {
      * @param {*} value 
      */
     change(element, field, value) {
-        console.log("Changing field '" + field + "' in element " + element.constructor.name + " into " + value)
-        element[field] = value;
+        element.change(field, value);
         this.case.editor.completeUserAction();
     }
 

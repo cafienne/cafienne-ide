@@ -79,7 +79,22 @@ export default class CaseFileItemTypeDefinition extends CaseFileItemDef {
         });
     }
 
+    private parentHasSameSchema(schema: SchemaPropertyDefinition): boolean {
+        if (this.parent instanceof CaseFileItemTypeDefinition) {
+            if (this.parent.property === schema) {
+                return true;
+            } else {
+                return this.parent.parentHasSameSchema(schema);
+            }
+        }
+        return false;
+    }
+
     addChild(child: SchemaPropertyDefinition) {
+        if (this.parentHasSameSchema(child)) {
+            // Avoid recursive case file item generation
+            return;
+        }
         this.children.push(new CaseFileItemTypeDefinition(this.caseDefinition, this, child));
     }
 

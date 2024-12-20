@@ -8,7 +8,7 @@
                     <![CDATA[cfi-expression]]>
                 </body>
             </timerExpression>
-            <caseFileItemStartTrigger sourceRef="cfi_testTimerEvent.case_0">
+            <caseFileItemStartTrigger sourceRef="CFI">
                 <standardEvent>create</standardEvent>
             </caseFileItemStartTrigger>
         </timerEvent>

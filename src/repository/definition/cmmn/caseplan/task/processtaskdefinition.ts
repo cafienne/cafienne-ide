@@ -1,4 +1,4 @@
-import ExternalReference from "@repository/definition/externalreference";
+import ExternalReference from "@repository/definition/references/externalreference";
 import ProcessModelDefinition from "@repository/definition/process/processmodeldefinition";
 import ProcessFile from "@repository/serverfile/processfile";
 import CaseDefinition from "../../casedefinition";
@@ -16,8 +16,9 @@ export default class ProcessTaskDefinition extends TaskDefinition {
         this.processRef = this.parseReference('processRef');
     }
 
-    loadImplementation(): void {
-        this.setImplementation(this.implementationRef, this.processRef.getDefinition());
+
+    protected get implementationReference() {
+        return this.processRef;
     }
 
     createExportNode(parentNode: Element) {

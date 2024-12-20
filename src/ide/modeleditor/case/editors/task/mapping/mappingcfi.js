@@ -22,8 +22,8 @@ export default class MappingCFI {
         const currentExpression = parameter && parameter.hasUnusualBindingRefinement ? parameter.bindingRefinementExpression : '';
         const tooltipExpression = currentExpression ? ': ' + currentExpression : ' is not set.';
 
-        const breTooltip = parameter && parameter.bindingRef ? 'Open binding refinement editor\nCurrent expression' + tooltipExpression : 'Binding refinement can only be edited if a case file item is set on the task parameter';
-        const bindingRefPresent = parameter && parameter.bindingRef;
+        const breTooltip = parameter && parameter.bindingRef.nonEmpty ? 'Open binding refinement editor\nCurrent expression' + tooltipExpression : 'Binding refinement can only be edited if a case file item is set on the task parameter';
+        const bindingRefPresent = parameter && parameter.bindingRef.nonEmpty;
         const extraStyle = currentExpression ? 'binding-refinement-filled' : '';
 
         const zoomRow = column.html(

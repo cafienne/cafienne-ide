@@ -1,28 +1,27 @@
+import { ReferenceSet } from "@repository/definition/references/referenceset";
 import Util from "@util/util";
 import CMMNElementDefinition from "../../cmmnelementdefinition";
 import CaseDefinition from "../casedefinition";
-import CaseRoleDefinition from "../caseteam/caseroledefinition";
 import CaseRoleReference from "../caseteam/caserolereference";
 import CriterionDefinition from "../sentry/criteriondefinition";
 import EntryCriterionDefinition from "../sentry/entrycriteriondefinition";
 import ExitCriterionDefinition from "../sentry/exitcriteriondefinition";
 import ReactivateCriterionDefinition from "../sentry/reactivatecriteriondefinition";
 import ItemControlDefinition from "./itemcontroldefinition";
-import PlanningTableDefinition, { ApplicabilityRuleDefinition } from "./planningtabledefinition";
+import ApplicabilityRuleReference from "./planning/applicabilityrulereference";
+import PlanningTableDefinition from "./planning/planningtabledefinition";
 import StageDefinition from "./stagedefinition";
 import FourEyesDefinition from "./task/workflow/foureyesdefinition";
 import RendezVousDefinition from "./task/workflow/rendezvousdefinition";
 
 export default class PlanItem extends CMMNElementDefinition {
-    private applicabilityRuleRefs: string;
-    private authorizedRoleRefs: string;
+    private applicabilityRuleRefs: ReferenceSet<ApplicabilityRuleReference>;
+    public authorizedRoleRefs: ReferenceSet<CaseRoleReference>;
 
     planItemControl?: ItemControlDefinition;
     entryCriteria: EntryCriterionDefinition[];
     reactivateCriteria: ReactivateCriterionDefinition[];
     exitCriteria: ExitCriterionDefinition[];
-    applicabilityRules: ApplicabilityRuleDefinition[] = [];
-    authorizedRoles: CaseRoleReference[] = [];
     fourEyes?: FourEyesDefinition;
     rendezVous?: RendezVousDefinition;
 
@@ -45,8 +44,8 @@ export default class PlanItem extends CMMNElementDefinition {
         this.exitCriteria = this.parseElements('exitCriterion', ExitCriterionDefinition, []);
 
         // Properties below are special for discretionary items
-        this.applicabilityRuleRefs = this.parseAttribute('applicabilityRuleRefs');
-        this.authorizedRoleRefs = this.parseAttribute('authorizedRoleRefs');
+        this.applicabilityRuleRefs = this.parseReferenceSet('applicabilityRuleRefs');
+        this.authorizedRoleRefs = this.parseReferenceSet('authorizedRoleRefs');
         this.fourEyes = this.parseExtension(FourEyesDefinition);
         this.rendezVous = this.parseExtension(RendezVousDefinition);
     }
@@ -64,6 +63,14 @@ export default class PlanItem extends CMMNElementDefinition {
             this.planItemControl = super.createDefinition(ItemControlDefinition);
         }
         return this.planItemControl;
+    }
+
+    get applicabilityRules() {
+        return this.applicabilityRuleRefs;
+    }
+
+    get authorizedRoles() {
+        return this.authorizedRoleRefs.list;
     }
 
     private createSentry(criterionConstructor: Function, criterionCollection: CriterionDefinition[]) {
@@ -145,9 +152,7 @@ export default class PlanItem extends CMMNElementDefinition {
         return this;
     }
 
-    resolveInternalReferences() {
-        super.resolveInternalReferences();
-
+    resolvedReferences() {
         const entryCriteriaRefs = this.parseAttribute('entryCriteriaRefs');
         if (entryCriteriaRefs) {
             const sentries = this.caseDefinition.findElements(entryCriteriaRefs, []);
@@ -168,22 +173,17 @@ export default class PlanItem extends CMMNElementDefinition {
         }
 
         // Resolve discretionary properties        
-        this.authorizedRoles = this.caseDefinition.findElements(this.authorizedRoleRefs, [], CaseRoleDefinition).map(role => new CaseRoleReference(role, this));
-        this.applicabilityRules = this.caseDefinition.findElements(this.applicabilityRuleRefs, [], ApplicabilityRuleDefinition);
+        // this.authorizedRoles = this.caseDefinition.findElements(this.authorizedRoleRefs, [], CaseRoleDefinition).map(role => new CaseRoleReference(role, this));
     }
 
     createExportNode(parentNode: Element, tagName: string, ...propertyNames: any[]) {
-        this.authorizedRoleRefs = super.flattenListToString(this.authorizedRoles); // AuthorizedRoles can also have been defined on the UserEvent; therefore always flatten them.
-        // Flatten applicabilityRuleRefs only if the item is discretionary; this ensures that if a element has switched from discretionary to planitem, it will NOT accidentally keep the role and rule refs.
-        this.applicabilityRuleRefs = super.flattenListToString(this.isDiscretionary ? this.filterExistingRules() : []);
-        super.createExportNode(parentNode, tagName, 'entryCriteria', 'reactivateCriteria', 'exitCriteria', 'planItemControl', 'applicabilityRuleRefs', 'authorizedRoleRefs', 'fourEyes', 'rendezVous', propertyNames);
-    }
-
-    /**
-     * Filters the list of applicability rules to contain only those that exist in the case definition (the list on this planitem may hold stale references)
-     */
-    filterExistingRules() {
-        return this.applicabilityRules.filter(rule => this.caseDefinition.getElement(rule.id));
+        // this.authorizedRoleRefs = super.flattenListToString(this.authorizedRoles); // AuthorizedRoles can also have been defined on the UserEvent; therefore always flatten them.
+        // Export applicabilityRuleRefs only if the item is discretionary; this ensures that if a element has switched from discretionary to planitem, it will NOT accidentally keep the role and rule refs.
+        if (this.isDiscretionary) {
+            super.createExportNode(parentNode, tagName, 'entryCriteria', 'reactivateCriteria', 'exitCriteria', 'planItemControl', 'applicabilityRuleRefs', 'authorizedRoleRefs', 'fourEyes', 'rendezVous', propertyNames);
+        } else {
+            super.createExportNode(parentNode, tagName, 'entryCriteria', 'reactivateCriteria', 'exitCriteria', 'planItemControl', 'authorizedRoleRefs', 'fourEyes', 'rendezVous', propertyNames);
+        }
     }
 
     /**

@@ -46,9 +46,7 @@ export default class TaskStageProperties extends PlanItemProperties {
 
         // Add a row for each role, and also an empty ro(w)le at the end
         const authorizedRolesHTML = html.find('.authorizedRolesBlock');
-        const authorizedRoles = this.cmmnElement.definition.authorizedRoles;
-        authorizedRoles.forEach(role => this.addAuthorizedRoleField(authorizedRoles, authorizedRolesHTML, role));
-        this.addAuthorizedRoleField(authorizedRoles, authorizedRolesHTML);
+        this.addAuthorizatedRoles(authorizedRolesHTML);
 
         // Render the applicability rules
         this.applicabilityRulesBlock = html.find('.applicabilityRulesBlock');
@@ -70,7 +68,7 @@ export default class TaskStageProperties extends PlanItemProperties {
      * @param {ApplicabilityRuleDefinition} rule 
      */
     addApplicabilityRuleField(rule) {
-        const isSelected = this.cmmnElement.definition.applicabilityRules.find(r => r == rule) ? true : false;
+        const isSelected = this.cmmnElement.definition.applicabilityRules.list.find(r => r.references(rule)) ? true : false;
 
         const label = rule.name;
 
@@ -84,9 +82,9 @@ export default class TaskStageProperties extends PlanItemProperties {
                         </div>`);
         html.on('change', e => {
             if (e.target.checked) {
-                this.cmmnElement.definition.applicabilityRules.push(rule);
+                this.cmmnElement.definition.applicabilityRules.add(rule);
             } else {
-                Util.removeFromArray(this.cmmnElement.definition.applicabilityRules, rule);
+                this.cmmnElement.definition.applicabilityRules.remove(rule);
             }
             this.done();
         });

@@ -1,9 +1,9 @@
 import ElementDefinition from "@repository/definition/elementdefinition";
-import UnnamedCMMNElementDefinition from "../../unnamedcmmnelementdefinition";
-import CaseDefinition from "../casedefinition";
-import ConstraintDefinition from "./constraintdefinition";
-import PlanItem, { TaskStageDefinition } from "./planitem";
-import StageDefinition from "./stagedefinition";
+import UnnamedCMMNElementDefinition from "@repository/definition/unnamedcmmnelementdefinition";
+import CaseDefinition from "../../casedefinition";
+import PlanItem, { TaskStageDefinition } from "../planitem";
+import StageDefinition from "../stagedefinition";
+import { ApplicabilityRuleDefinition } from "./applicabilityruledefinition";
 
 export default class PlanningTableDefinition extends UnnamedCMMNElementDefinition {
     tableItems: any;
@@ -56,28 +56,5 @@ export default class PlanningTableDefinition extends UnnamedCMMNElementDefinitio
         const newRule: ApplicabilityRuleDefinition = super.createDefinition(ApplicabilityRuleDefinition);
         this.ruleDefinitions.push(newRule);
         return newRule;
-    }
-}
-
-export class ApplicabilityRuleDefinition extends ConstraintDefinition {
-    constructor(importNode: Element, caseDefinition: CaseDefinition, parent: PlanningTableDefinition) {
-        super(importNode, caseDefinition, parent);
-    }
-
-    // Override isNamedElement; by default Constraints are unnamed, but applicability rules form the exception
-    isNamedElement() {
-        return true;
-    }
-
-    set sourceRef(ref) {
-        this.contextRef = ref;
-    }
-
-    get sourceRef() {
-        return this.contextRef ? this.contextRef : '';
-    }
-
-    createExportNode(parentNode: Element) {
-        super.createExportNode(parentNode, 'applicabilityRule');
     }
 }

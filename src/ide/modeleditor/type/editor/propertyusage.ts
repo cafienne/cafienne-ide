@@ -11,10 +11,17 @@ import { PropertyRenderer } from "./typerenderer";
 
 export default class PropertyUsage {
     static checkPropertyDeletionAllowed(renderer: PropertyRenderer) {
-        const getCaseReferences = (property: SchemaPropertyDefinition) => property.getCaseFileItemReferences().map(cftd => cftd.searchInboundReferences()).flat();
+        const getCaseReferences = (property: SchemaPropertyDefinition) => Util.removeDuplicates(property.getCaseFileItemReferences().map(cftd => cftd.searchInboundReferences()).flat());
 
-        // Recursive lookup for all parent TypesFile's using the TypeFile of this property to be removed 
-        const getParentTypes = (typeFile: TypeFile): TypeFile[] => [typeFile, ...(<TypeFile[]>typeFile.usage.filter(fileUsingType => fileUsingType instanceof TypeFile)).map(file => [...getParentTypes(file)]).flat()];
+        const getParentTypes = (typeFile: TypeFile, list: TypeFile[] = [typeFile]): TypeFile[] => {
+            typeFile.usage.filter(fileUsingType => fileUsingType instanceof TypeFile).map(file => <TypeFile> file).forEach(file => {
+                if (list.indexOf(file) < 0) {
+                    list.push(file);
+                    getParentTypes(file, list);
+                }
+            });
+            return list;
+        }
 
         const referringTypeFiles = getParentTypes(renderer.property.modelDefinition.file);
 

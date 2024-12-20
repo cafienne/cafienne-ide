@@ -1,8 +1,8 @@
 import CMMNElementDefinition from "@definition/cmmnelementdefinition";
 import MovableEditor from "@ide/editors/movableeditor";
 import Util from "@util/util";
-import CaseView from "../../elements/caseview";
 import $ from "jquery";
+import CaseView from "../../elements/caseview";
 
 export default class TableEditor extends MovableEditor {
     /**
@@ -35,12 +35,12 @@ export default class TableEditor extends MovableEditor {
      * Clears the current content of the editor and renders it again
      */
     renderForm() {
-        if (! this._html) {
-            this.renderHead();            
+        if (!this._html) {
+            this.renderHead();
         }
         this.renderData();
     }
- 
+
     renderHead() {
         //create the html element of the editor form
         this.html = $(`<div id='${this.id}' class='tableeditorform basicbox basicform'>
@@ -136,8 +136,7 @@ export default class TableEditor extends MovableEditor {
      * @param {*} value 
      */
     change(element, field, value) {
-        console.log("Changing field '" + field + "' in element " + element.constructor.name + " into " + value);
-        element[field] = value;
+        element.change(field, value);
         this.case.editor.completeUserAction();
     }
 
@@ -293,5 +292,5 @@ export class RowEditor {
      * Refreshes the visualizers relating to the definition element
      * @param {CMMNElementDefinition} definitionElement 
      */
-    refreshReferencingFields(definitionElement) {}
+    refreshReferencingFields(definitionElement) { }
 }
