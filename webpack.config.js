@@ -4,6 +4,7 @@ const devMode = process.env.DEV_MODE ? process.env.DEV_MODE.trim().toLowerCase()
 
 var ideBuild = 1;
 var serverBuild = 1;
+var deployBuild = 1;
 
 function buildPrinter(buildName, buildNumber) {
     setTimeout(() => console.log(`\n=== ${new Date().toTimeString().split(' ')[0]} completed ${buildName} build ${buildNumber} ===\n`), 0)
@@ -33,6 +34,14 @@ const repositoryResolvers = {
         '@util': path.resolve(__dirname, 'src/util'),
         '@repository': path.resolve(__dirname, 'src/repository'),
         '@definition': path.resolve(__dirname, 'src/repository/definition'),
+    },
+}
+
+const deployResolvers = {
+    extensions: ['.ts', '.js'],
+    alias: {
+        '@util': path.resolve(__dirname, 'src/util'),
+        '@repository': path.resolve(__dirname, 'src/repository'),
     },
 }
 
@@ -101,6 +110,38 @@ module.exports = [{
     },
     watch: devMode,
 },
+    { // deploy cli
+        entry: {
+            repository: './src/deploy/index.ts',
+        },
+        output: {
+            filename: 'deploy.mjs',
+            path: path.resolve(__dirname, 'dist/deploy'),
+            library: {
+                type: 'module',
+            },
+            globalObject: 'this',
+        },
+        target: 'node',
+        plugins: [
+            new function () {
+                this.apply = (compiler) => {
+                    compiler.hooks.done.tap("deploy", () => buildPrinter("deploy", deployBuild++));
+                };
+            },
+        ],
+        module: moduleRules,
+        resolve: deployResolvers,
+        devtool: 'source-map',
+        mode: 'development',
+        stats: {
+            errorDetails: true
+        },
+        watch: devMode,
+        experiments: {
+            outputModule: true,
+        },
+    },
 {
     entry: {
         ide: './src/ide/index.ts',
