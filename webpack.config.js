@@ -1,5 +1,7 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const { BannerPlugin } = require('webpack');
+const nodeExternals = require('webpack-node-externals');
 const devMode = process.env.DEV_MODE ? process.env.DEV_MODE.trim().toLowerCase() === 'true' : false;
 
 var ideBuild = 1;
@@ -112,23 +114,33 @@ module.exports = [{
 },
     { // deploy cli
         entry: {
-            repository: './src/deploy/index.ts',
+            deploy: { import: './src/deploy/deploy.ts', dependOn: ['index'] },
+            index: './src/index.js'
         },
         output: {
-            filename: 'deploy.mjs',
+            filename: '[name].mjs',
             path: path.resolve(__dirname, 'dist/deploy'),
             library: {
                 type: 'module',
             },
             globalObject: 'this',
         },
-        target: 'node',
+        target: 'async-node',
         plugins: [
             new function () {
                 this.apply = (compiler) => {
                     compiler.hooks.done.tap("deploy", () => buildPrinter("deploy", deployBuild++));
                 };
             },
+            new CopyWebpackPlugin({
+                patterns: [
+                    { from: 'config', to: './config' },
+                ]
+            }),
+            new BannerPlugin({
+                banner: '#!/usr/bin/env node',
+                raw: true,
+            }),
         ],
         module: moduleRules,
         resolve: deployResolvers,
@@ -141,6 +153,9 @@ module.exports = [{
         experiments: {
             outputModule: true,
         },
+        externals: [
+            nodeExternals({ importType: (request) => `import ${request}` }),
+        ],
     },
 {
     entry: {

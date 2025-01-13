@@ -1,5 +1,8 @@
 {
   "private": true,
+  "bin": {
+    "deploy": "./dist/deploy/deploy.mjs"
+  },
   "dependencies": {
     "@xmldom/xmldom": "^0.9.6",
     "alpaca": "~1.5.27",
@@ -28,8 +31,9 @@
     "style-loader": "^4.0.0",
     "ts-loader": "^9.5.1",
     "typescript": "^5.4.5",
-    "webpack": "^5.94.0",
-    "webpack-cli": "^5.1.4"
+    "webpack": "^5.74.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-node-externals": "^3.0.0"
   },
   "scripts": {
     "clean": "shx rm -rf ./dist",
@@ -39,6 +43,7 @@
     "watch": "npm run clean & set DEV_MODE=true & webpack",
     "start": "webpack serve",
     "try": "webpack-dev-server",
-    "go": "set LOG_TRAFFIC=actions & node ./dist/server/server.js"
+    "go": "set LOG_TRAFFIC=actions & node ./dist/server/server.js",
+    "pack-repository": "shx cp ./src/deploy/deploy-package.json ./dist/deploy/package.json & npm pack --pack-destination=./dist ./dist/deploy"
   }
 }
