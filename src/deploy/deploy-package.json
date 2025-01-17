@@ -4,6 +4,7 @@
     "bin": {
         "transpile": "./transpile.js"
     },
+    "types": "./@types/src/index.d.ts",
     "description": "simple development script for cafienne models",
     "keywords": [
         "cli",

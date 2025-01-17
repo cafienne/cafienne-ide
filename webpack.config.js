@@ -61,40 +61,7 @@ const ideResolvers = {
 // Merge repository resolvers into the ideResolvers
 Object.keys(repositoryResolvers.alias).forEach(key => ideResolvers.alias[key] = repositoryResolvers.alias[key]);
 
-module.exports = [{
-    entry: {
-        server: './server/utilities.ts'
-    },
-    output: {
-        filename: 'utilities.js',
-        path: path.resolve(__dirname, 'dist/server'),
-    },
-    plugins: [
-        new function () {
-            this.apply = (compiler) => {
-                compiler.hooks.done.tap("server", () => buildPrinter("server", serverBuild++));
-            };
-        },
-        new CopyWebpackPlugin({
-            patterns: [
-                { from: 'config', to: '../config' },
-                { from: 'server/server.js', to: '../server' },
-            ]
-        })
-    ],
-    target: 'node',
-    module: moduleRules,
-    externals: {
-        fs: 'require("fs")'
-    },
-    resolve: repositoryResolvers,
-    devtool: 'source-map',
-    mode: 'development',
-    stats: {
-        errorDetails: true
-    },
-    watch: devMode,
-},
+module.exports = [
 {
     entry: {
         repository: './src/repository/index.ts',
@@ -116,6 +83,7 @@ module.exports = [{
         entry: {
             transpile: { import: './src/deploy/transpile.ts', dependOn: ['shared'] },
             shared: './src/index.js',
+            index: { import: './src/index.js', dependOn: ['shared'] },
         },
         output: {
             filename: '[name].js',
@@ -155,6 +123,9 @@ module.exports = [{
         },
         externals: [
             nodeExternals({ importType: (request) => `import ${request}` }),
+            {
+                'fs': `import fs`,
+            }
         ],
     },
 {
