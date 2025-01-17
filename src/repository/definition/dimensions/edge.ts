@@ -1,5 +1,5 @@
-import Util from "@util/util";
-import XML from "@util/xml";
+import Util from "../../../util/util";
+import XML from "../../../util/xml";
 import CMMNElementDefinition from "../cmmnelementdefinition";
 import ElementDefinition from "../elementdefinition";
 import ModelDefinition from "../modeldefinition";

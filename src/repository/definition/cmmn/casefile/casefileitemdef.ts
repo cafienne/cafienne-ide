@@ -1,8 +1,8 @@
-import CaseFileDefinitionDefinition from "@repository/definition/cfid/casefileitemdefinitiondefinition";
-import CMMNElementDefinition from "@repository/definition/cmmnelementdefinition";
-import ExternalReference from "@repository/definition/references/externalreference";
-import Util from "@util/util";
-import XML from "@util/xml";
+import CaseFileDefinitionDefinition from "../../cfid/casefileitemdefinitiondefinition";
+import CMMNElementDefinition from "../../cmmnelementdefinition";
+import ExternalReference from "../../references/externalreference";
+import Util from "../../../../util/util";
+import XML from "../../../../util/xml";
 import CaseDefinition from "../casedefinition";
 
 export class CaseFileItemCollection extends CMMNElementDefinition {

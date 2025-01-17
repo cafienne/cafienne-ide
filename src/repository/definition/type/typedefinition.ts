@@ -1,4 +1,4 @@
-import TypeFile from "@repository/serverfile/typefile";
+import TypeFile from "../../serverfile/typefile";
 import SchemaDefinition from "./schemadefinition";
 import ModelDefinition from "../modeldefinition";
 

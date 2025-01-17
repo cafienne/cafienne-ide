@@ -1,5 +1,5 @@
-import CaseDefinition from "@repository/definition/cmmn/casedefinition";
-import XML from "@util/xml";
+import CaseDefinition from "../definition/cmmn/casedefinition";
+import XML from "../../util/xml";
 import CMMNCompliance from "./cmmncompliance";
 import DefinitionDeployment from "./definitiondeployment";
 import Definitions from "./definitions";

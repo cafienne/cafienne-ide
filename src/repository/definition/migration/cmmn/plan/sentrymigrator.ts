@@ -1,4 +1,4 @@
-import XML from "@util/xml";
+import XML from "../../../../../util/xml";
 import Migrator from "../migrator";
 
 export default class SentryMigrator {

@@ -1,4 +1,4 @@
-import Metadata from '@repository/serverfile/metadata';
+import Metadata from '../serverfile/metadata';
 import DefinitionStorage from './definitionstorage';
 import * as fs from 'fs';
 import * as path from 'path';

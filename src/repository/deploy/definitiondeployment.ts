@@ -1,5 +1,4 @@
-import ModelDefinition from "@repository/definition/modeldefinition";
-import XML from "@util/xml";
+import ModelDefinition from "../definition/modeldefinition";
 import Definitions from "./definitions";
 
 export default class DefinitionDeployment {

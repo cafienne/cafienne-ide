@@ -1,4 +1,4 @@
-import CaseDefinition from "@repository/definition/cmmn/casedefinition";
+import CaseDefinition from "../../../../cmmn/casedefinition";
 import PlanItem from "../../planitem";
 import TaskPairingDefinition from "./taskpairingdefinition";
 

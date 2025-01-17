@@ -1,11 +1,11 @@
-import UnnamedCMMNElementDefinition from "@repository/definition/unnamedcmmnelementdefinition";
+import UnnamedCMMNElementDefinition from "../../unnamedcmmnelementdefinition";
 import CaseDefinition from "../casedefinition";
 import TaskDefinition from "../caseplan/task/taskdefinition";
 import ParameterDefinition from "../../contract/parameterdefinition";
 import CaseFileItemDef from "../casefile/casefileitemdef";
 import ExpressionDefinition from "../expression/expressiondefinition";
 import TaskParameterDefinition from "../caseplan/task/taskparameterdefinition";
-import CMMNElementDefinition from "@repository/definition/cmmnelementdefinition";
+import CMMNElementDefinition from "../../cmmnelementdefinition";
 
 export default class ParameterMappingDefinition extends UnnamedCMMNElementDefinition {
     sourceRef: string;

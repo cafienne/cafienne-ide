@@ -1,4 +1,4 @@
-import Metadata from "@repository/serverfile/metadata";
+import Metadata from "../serverfile/metadata";
 
 export default interface DefinitionStorage {
     renameFile(fileName: any, newFileName: string, updatedContent: any): Promise<Metadata[]>;

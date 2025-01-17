@@ -1,5 +1,5 @@
-import CafienneImplementationDefinition from "@repository/definition/extensions/cafienneimplementationdefinition";
-import ReferableElementDefinition from "@repository/definition/referableelementdefinition";
+import CafienneImplementationDefinition from "../extensions/cafienneimplementationdefinition";
+import ReferableElementDefinition from "../referableelementdefinition";
 import ModelDefinition from "../modeldefinition";
 import ElementDefinition from "../elementdefinition";
 

@@ -1,5 +1,5 @@
-import Util from "@util/util";
-import XML from "@util/xml";
+import Util from "../../util/util";
+import XML from "../../util/xml";
 import ModelDefinition from "../definition/modeldefinition";
 import RepositoryBase from "../repositorybase";
 import Metadata from "./metadata";

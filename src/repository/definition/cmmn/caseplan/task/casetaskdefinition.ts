@@ -1,5 +1,5 @@
-import ExternalReference from "@repository/definition/references/externalreference";
-import CaseFile from "@repository/serverfile/casefile";
+import ExternalReference from "../../../references/externalreference";
+import CaseFile from "../../../../serverfile/casefile";
 import CaseDefinition from "../../casedefinition";
 import StageDefinition from "../stagedefinition";
 import TaskDefinition from "./taskdefinition";

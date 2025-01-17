@@ -1,4 +1,4 @@
-import Util from "@util/util";
+import Util from "../util/util";
 import ModelDefinition from "./definition/modeldefinition";
 import RepositoryBase from "./repositorybase";
 import CaseFile from "./serverfile/casefile";
@@ -10,7 +10,7 @@ import ProcessFile from "./serverfile/processfile";
 import ServerFile from "./serverfile/serverfile";
 import TypeFile from "./serverfile/typefile";
 import DefinitionStorage from "./storage/definitionstorage";
-import { AjaxError } from "@util/ajax";
+import { AjaxError } from "../util/ajax";
 
 export default class Repository extends RepositoryBase {
     listeners: (() => void)[] = [];

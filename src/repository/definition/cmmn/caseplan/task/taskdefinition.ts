@@ -1,5 +1,5 @@
-import ModelDefinition from "@repository/definition/modeldefinition";
-import Util from "@util/util";
+import ModelDefinition from "../../../modeldefinition";
+import Util from "../../../../../util/util";
 import ParameterDefinition from "../../../contract/parameterdefinition";
 import CaseDefinition from "../../casedefinition";
 import InputMappingDefinition from "../../contract/inputmappingdefinition";
@@ -8,8 +8,8 @@ import ParameterMappingDefinition from "../../contract/parametermappingdefinitio
 import { TaskStageDefinition } from "../planitem";
 import StageDefinition from "../stagedefinition";
 import TaskParameterDefinition from "./taskparameterdefinition";
-import ExternalReference from "@repository/definition/references/externalreference";
-import ServerFile from "@repository/serverfile/serverfile";
+import ExternalReference from "../../../references/externalreference";
+import ServerFile from "../../../../serverfile/serverfile";
 
 export default class TaskDefinition extends TaskStageDefinition {
     isBlocking: boolean = true;

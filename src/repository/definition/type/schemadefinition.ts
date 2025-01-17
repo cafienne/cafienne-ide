@@ -1,4 +1,4 @@
-import Util from "@util/util";
+import Util from "../../../util/util";
 import ElementDefinition from "../elementdefinition";
 import SchemaPropertyDefinition from "./schemapropertydefinition";
 import TypeDefinition from "./typedefinition";

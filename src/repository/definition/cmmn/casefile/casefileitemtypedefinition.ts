@@ -1,6 +1,5 @@
-import SchemaPropertyDefinition from "@repository/definition/type/schemapropertydefinition";
-import TypeDefinition from "@repository/definition/type/typedefinition";
-import XMLSerializable from "@repository/definition/xmlserializable";
+import SchemaPropertyDefinition from "../../type/schemapropertydefinition";
+import XMLSerializable from "../../xmlserializable";
 import CaseDefinition from "../casedefinition";
 import CaseFileItemDef from "./casefileitemdef";
 

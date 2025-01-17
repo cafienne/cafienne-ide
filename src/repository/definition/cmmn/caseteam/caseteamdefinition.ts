@@ -1,4 +1,4 @@
-import CMMNElementDefinition from "@repository/definition/cmmnelementdefinition";
+import CMMNElementDefinition from "../../cmmnelementdefinition";
 import UnnamedCMMNElementDefinition from "../../unnamedcmmnelementdefinition";
 import CaseDefinition from "../casedefinition";
 import CaseRoleDefinition from "./caseroledefinition";

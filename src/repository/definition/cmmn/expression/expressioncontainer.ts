@@ -1,10 +1,10 @@
-import UnnamedCMMNElementDefinition from "@repository/definition/unnamedcmmnelementdefinition";
+import UnnamedCMMNElementDefinition from "../../unnamedcmmnelementdefinition";
 import ExpressionDefinition from "./expressiondefinition";
 import CaseDefinition from "../casedefinition";
-import CMMNElementDefinition from "@repository/definition/cmmnelementdefinition";
-import XMLSerializable from "@repository/definition/xmlserializable";
-import ModelDefinition from "@repository/definition/modeldefinition";
-import ElementDefinition from "@repository/definition/elementdefinition";
+import CMMNElementDefinition from "../../cmmnelementdefinition";
+import XMLSerializable from "../../xmlserializable";
+import ModelDefinition from "../../modeldefinition";
+import ElementDefinition from "../../elementdefinition";
 import CaseFileItemReference from "../casefile/casefileitemreference";
 
 /**

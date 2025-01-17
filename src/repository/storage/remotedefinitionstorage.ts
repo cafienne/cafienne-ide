@@ -1,7 +1,7 @@
-import $ajax, { $get, AjaxError } from '@util/ajax';
+import $ajax, { $get, AjaxError } from '../../util/ajax';
 import DefinitionStorage from './definitionstorage';
-import Metadata from '@repository/serverfile/metadata';
-import XML from '@util/xml';
+import Metadata from '../serverfile/metadata';
+import XML from '../../util/xml';
 
 export default class RemoteDefinitionStorage implements DefinitionStorage {
     repositoryUrl: string;

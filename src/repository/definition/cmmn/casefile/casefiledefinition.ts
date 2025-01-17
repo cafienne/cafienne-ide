@@ -1,8 +1,8 @@
-import CMMNElementDefinition from "@repository/definition/cmmnelementdefinition";
-import SchemaPropertyDefinition from "@repository/definition/type/schemapropertydefinition";
-import TypeDefinition from "@repository/definition/type/typedefinition";
-import TypeReference from "@repository/definition/type/typereference";
-import XMLSerializable from "@repository/definition/xmlserializable";
+import CMMNElementDefinition from "../../cmmnelementdefinition";
+import SchemaPropertyDefinition from "../../type/schemapropertydefinition";
+import TypeDefinition from "../../type/typedefinition";
+import TypeReference from "../../type/typereference";
+import XMLSerializable from "../../xmlserializable";
 import CaseDefinition from "../casedefinition";
 import CaseFileItemDef, { CaseFileItemCollection } from "./casefileitemdef";
 import CaseFileItemTypeDefinition from "./casefileitemtypedefinition";

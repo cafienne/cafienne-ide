@@ -1,5 +1,5 @@
-import Util from "@util/util";
-import XML from "@util/xml";
+import Util from "../../util/util";
+import XML from "../../util/xml";
 import ServerFile from "../serverfile/serverfile";
 import CMMNDocumentationDefinition from "./cmmndocumentationdefinition";
 import ParameterDefinition from "./contract/parameterdefinition";

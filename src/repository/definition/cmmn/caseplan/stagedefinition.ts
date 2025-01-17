@@ -1,4 +1,4 @@
-import XML from "@util/xml";
+import XML from "../../../../util/xml";
 import CaseDefinition from "../casedefinition";
 import MilestoneDefinition from "./milestonedefinition";
 import PlanItem, { TaskStageDefinition } from "./planitem";

@@ -1,4 +1,4 @@
-import XML from "@util/xml";
+import XML from "../../util/xml";
 
 export default class CMMNCompliance {
     static convert(element: Element): void {

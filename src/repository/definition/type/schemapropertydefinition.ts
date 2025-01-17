@@ -1,4 +1,4 @@
-import Util from "@util/util";
+import Util from "../../../util/util";
 import CaseFileItemTypeDefinition from "../cmmn/casefile/casefileitemtypedefinition";
 import ReferableElementDefinition from "../referableelementdefinition";
 import SchemaDefinition from "./schemadefinition";

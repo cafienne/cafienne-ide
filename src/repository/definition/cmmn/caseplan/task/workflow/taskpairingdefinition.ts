@@ -1,5 +1,5 @@
-import CaseDefinition from "@repository/definition/cmmn/casedefinition";
-import Util from "@util/util";
+import CaseDefinition from "../../../casedefinition";
+import Util from "../../../../../../util/util";
 import CMMNExtensionDefinition from "../../../../extensions/cmmnextensiondefinition";
 import PlanItem from "../../planitem";
 import PlanItemReference from "../planitemreference";

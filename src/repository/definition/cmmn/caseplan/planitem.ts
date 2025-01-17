@@ -1,5 +1,5 @@
-import { ReferenceSet } from "@repository/definition/references/referenceset";
-import Util from "@util/util";
+import { ReferenceSet } from "../../references/referenceset";
+import Util from "../../../../util/util";
 import CMMNElementDefinition from "../../cmmnelementdefinition";
 import CaseDefinition from "../casedefinition";
 import CaseRoleReference from "../caseteam/caserolereference";

@@ -1,4 +1,4 @@
-import Util from "@util/util";
+import Util from "../util/util";
 import ModelDefinition from "./definition/modeldefinition";
 import Metadata from "./serverfile/metadata";
 import ServerFile from "./serverfile/serverfile";

@@ -1,5 +1,5 @@
-import ElementDefinition from "@repository/definition/elementdefinition";
-import ModelDefinition from "@repository/definition/modeldefinition";
+import ElementDefinition from "../../elementdefinition";
+import ModelDefinition from "../../modeldefinition";
 import CaseDefinition from "../casedefinition";
 import CaseFileItemDef from "../casefile/casefileitemdef";
 import CriterionDefinition from "./criteriondefinition";

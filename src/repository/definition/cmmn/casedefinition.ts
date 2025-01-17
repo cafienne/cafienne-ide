@@ -1,4 +1,4 @@
-import CaseFile from "@repository/serverfile/casefile";
+import CaseFile from "../../serverfile/casefile";
 import TextAnnotationDefinition from "../artifact/textannotation";
 import CMMNElementDefinition from "../cmmnelementdefinition";
 import Dimensions from "../dimensions/dimensions";

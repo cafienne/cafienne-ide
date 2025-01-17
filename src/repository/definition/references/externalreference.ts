@@ -1,4 +1,4 @@
-import ServerFile from "@repository/serverfile/serverfile";
+import ServerFile from "../../serverfile/serverfile";
 import ModelDefinition from "../modeldefinition";
 import XMLSerializable from "../xmlserializable";
 import Reference from "./reference";

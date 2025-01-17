@@ -1,5 +1,5 @@
-import ProcessFile from "@repository/serverfile/processfile";
-import XML from "@util/xml";
+import ProcessFile from "../../serverfile/processfile";
+import XML from "../../../util/xml";
 import ParameterDefinition from "../contract/parameterdefinition";
 import ModelDefinition from "../modeldefinition";
 import { CAFIENNE_NAMESPACE, IMPLEMENTATION_TAG } from "../xmlserializable";

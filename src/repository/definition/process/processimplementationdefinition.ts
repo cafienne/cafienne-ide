@@ -1,4 +1,4 @@
-import XML from "@util/xml";
+import XML from "../../../util/xml";
 import ElementDefinition from "../elementdefinition";
 import CafienneImplementationDefinition from "../extensions/cafienneimplementationdefinition";
 import ProcessModelDefinition from "./processmodeldefinition";

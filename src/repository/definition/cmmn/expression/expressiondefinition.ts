@@ -1,7 +1,7 @@
-import XML from "@util/xml";
+import XML from "../../../../util/xml";
 import UnnamedCMMNElementDefinition from "../../unnamedcmmnelementdefinition";
 import CaseDefinition from "../casedefinition";
-import CMMNElementDefinition from "@repository/definition/cmmnelementdefinition";
+import CMMNElementDefinition from "../../cmmnelementdefinition";
 
 export default class ExpressionDefinition extends UnnamedCMMNElementDefinition {
     body: string;

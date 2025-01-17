@@ -1,4 +1,4 @@
-import UnnamedCMMNElementDefinition from "@repository/definition/unnamedcmmnelementdefinition";
+import UnnamedCMMNElementDefinition from "../../unnamedcmmnelementdefinition";
 import CaseDefinition from "../casedefinition";
 import PlanItem from "../caseplan/planitem";
 import IfPartDefinition from "./ifpartdefinition";

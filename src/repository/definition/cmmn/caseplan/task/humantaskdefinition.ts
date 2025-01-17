@@ -1,4 +1,4 @@
-import HumanTaskFile from "@repository/serverfile/humantaskfile";
+import HumanTaskFile from "../../../../serverfile/humantaskfile";
 import CaseDefinition from "../../casedefinition";
 import CaseRoleDefinition from "../../caseteam/caseroledefinition";
 import CaseRoleReference from "../../caseteam/caserolereference";

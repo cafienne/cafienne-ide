@@ -1,4 +1,3 @@
-import XML from "@util/xml";
 import CaseDefinition from "../../cmmn/casedefinition";
 import CaseTeamMigrator from "./team/caseteammigrator";
 import SentryMigrator from "./plan/sentrymigrator";

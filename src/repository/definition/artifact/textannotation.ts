@@ -1,4 +1,4 @@
-import XML from "@util/xml";
+import XML from "../../../util/xml";
 import ArtifactDefinition from "./artifactdefinition";
 import CaseDefinition from "../cmmn/casedefinition";
 import CMMNElementDefinition from "../cmmnelementdefinition";

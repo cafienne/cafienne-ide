@@ -1,10 +1,10 @@
-import SchemaDefinition from "@repository/definition/type/schemadefinition";
-import TypeDefinition from "@repository/definition/type/typedefinition";
-import XML from "@util/xml";
+import SchemaDefinition from "../definition/type/schemadefinition";
+import TypeDefinition from "../definition/type/typedefinition";
+import XML from "../../util/xml";
 import Tags from "../definition/dimensions/tags";
 import Repository from "../repository";
 import ImportElement, { CFIDImporter, CaseImporter, DimensionsImporter, HumanTaskImporter, ProcessImporter, TypeImporter } from "./importelement";
-import TypeFile from "@repository/serverfile/typefile";
+import TypeFile from "../serverfile/typefile";
 
 export default class Importer {
     importFiles: ImportElement[] = [];

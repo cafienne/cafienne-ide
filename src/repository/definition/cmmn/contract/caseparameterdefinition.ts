@@ -1,10 +1,10 @@
-import CMMNElementDefinition from "@repository/definition/cmmnelementdefinition";
+import CMMNElementDefinition from "../../cmmnelementdefinition";
 import CaseFileItemDef from "../casefile/casefileitemdef";
 import ExpressionDefinition from "../expression/expressiondefinition";
 import ParameterDefinition from "../../contract/parameterdefinition";
 import CaseDefinition from "../casedefinition";
-import ModelDefinition from "@repository/definition/modeldefinition";
-import ElementDefinition from "@repository/definition/elementdefinition";
+import ModelDefinition from "../../modeldefinition";
+import ElementDefinition from "../../elementdefinition";
 import CaseFileItemReference from "../casefile/casefileitemreference";
 
 export default class CaseParameterDefinition extends ParameterDefinition<CaseDefinition> {

@@ -1,5 +1,5 @@
-import CMMNElementDefinition from "@repository/definition/cmmnelementdefinition";
-import XMLSerializable from "@repository/definition/xmlserializable";
+import CMMNElementDefinition from "../../../cmmnelementdefinition";
+import XMLSerializable from "../../../xmlserializable";
 import CaseDefinition from "../../casedefinition";
 import PlanItem from "../planitem";
 
