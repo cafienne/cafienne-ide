@@ -1,7 +1,7 @@
 {
   "private": true,
   "bin": {
-    "deploy": "./dist/deploy/deploy.mjs"
+    "deploy": "./dist/deploy/transpile.ts"
   },
   "dependencies": {
     "@xmldom/xmldom": "^0.9.6",

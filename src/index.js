@@ -1,4 +1,3 @@
-export * from "./deploy/deploy";
 export * from "./repository/definition/artifact/artifactdefinition";
 export * from "./repository/definition/artifact/textannotation";
 export * from "./repository/definition/cfid/casefileitemdefinitiondefinition";

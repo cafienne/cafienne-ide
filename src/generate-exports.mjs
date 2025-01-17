@@ -6,6 +6,7 @@ const directoryPath = join(process.cwd(), '.');
 const exclusionPatterns = [
     /^\.\/ide\//,
     /^\.\/validate\//,
+    /^\.\/deploy\//,
 ];
 
 function generateExports(dirPath, relativeFolder = '.') {

@@ -9,7 +9,6 @@ import Definitions from "../repository/deploy/definitions";
 import Repository from "../repository/repository";
 import FileSystemDefinitionStorage from "../repository/storage/filesytemdefinitionstorage";
 import config from "../../config/config";
-// import { writeFileSync } from "fs";
 import * as fs from 'fs';
 import * as path from 'path';
 import CaseFile from "../repository/serverfile/casefile";

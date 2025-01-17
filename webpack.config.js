@@ -114,11 +114,11 @@ module.exports = [{
 },
     { // deploy cli
         entry: {
-            deploy: { import: './src/deploy/deploy.ts', dependOn: ['index'] },
-            index: './src/index.js'
+            transpile: { import: './src/deploy/transpile.ts', dependOn: ['shared'] },
+            shared: './src/index.js',
         },
         output: {
-            filename: '[name].mjs',
+            filename: '[name].js',
             path: path.resolve(__dirname, 'dist/deploy'),
             library: {
                 type: 'module',

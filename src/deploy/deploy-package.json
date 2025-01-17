@@ -2,7 +2,7 @@
     "name": "@cafiene/repository",
     "version": "0.2.1",
     "bin": {
-        "casemodel_transpile": "./deploy.mjs"
+        "transpile": "./transpile.js"
     },
     "description": "simple development script for cafienne models",
     "keywords": [
