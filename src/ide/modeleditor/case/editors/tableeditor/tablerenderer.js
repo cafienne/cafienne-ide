@@ -1,5 +1,6 @@
 import CMMNElementDefinition from "@definition/cmmnelementdefinition";
 import Util from "@util/util";
+import HtmlUtil from "@ide/util/htmlutil";
 import $ from "jquery";
 import CaseView from "../../elements/caseview";
 import ColumnRenderer from "./columnrenderer";
@@ -42,7 +43,7 @@ export default class TableRenderer {
      */
     clear() {
         this.rows = [];
-        Util.clearHTML(this.htmlContainer);
+        HtmlUtil.clearHTML(this.htmlContainer);
     }
 
     /**
@@ -133,7 +134,7 @@ export default class TableRenderer {
 
     delete() {
         // Delete the generic events of the editor (e.g. click add button, ...)
-        Util.removeHTML(this.html);
+        HtmlUtil.removeHTML(this.html);
     }
 
     /**

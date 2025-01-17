@@ -10,7 +10,7 @@ import ModelEditorMetadata from "./modeleditor/modeleditormetadata";
 import ModelEditorRegistry from "./modeleditor/modeleditorregistry";
 import RepositoryBrowser from "./repositorybrowser";
 import SettingsEditor from "./settings/settingseditor";
-import RemoteDefinitionStorage from "@repository/storage/remotedefinitionstorage";
+import RemoteDefinitionStorage from "@ide/remotedefinitionstorage";
 
 export default class IDE {
     editorRegistry: ModelEditorRegistry;

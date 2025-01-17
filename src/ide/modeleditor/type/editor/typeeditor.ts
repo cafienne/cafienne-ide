@@ -11,6 +11,7 @@ import $ from "jquery";
 import TypeModelEditor from "../typemodeleditor";
 import MainTypeDefinition from "./maintypedefinition";
 import TypeRenderer, { PropertyRenderer, SchemaRenderer } from "./typerenderer";
+import HtmlUtil from "@ide/util/htmlutil";
 
 export default class TypeEditor {
     viewSourceEditor: ModelSourceEditor;
@@ -288,7 +289,7 @@ export default class TypeEditor {
         if (this.renderer) {
             this.renderer.delete();
             this.deselectPropertyRenderers();
-            Util.clearHTML(this.htmlTypeSchemaContainer);
+            HtmlUtil.clearHTML(this.htmlTypeSchemaContainer);
             this.inputName.val('');
         }
 
@@ -307,7 +308,7 @@ export default class TypeEditor {
         if (this.renderer) {
             this.renderer.delete();
         }
-        Util.removeHTML(this.htmlParent);
+        HtmlUtil.removeHTML(this.htmlParent);
     }
 
     refresh() {

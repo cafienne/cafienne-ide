@@ -1,6 +1,7 @@
 import IDE from "@ide/ide";
 import CodeMirrorConfig from "@ide/editors/external/codemirrorconfig";
 import Util from "@util/util";
+import HtmlUtil from "@ide/util/htmlutil";
 import $ from "jquery";
 import SettingsStorage from "./settingsstorage";
 
@@ -135,7 +136,7 @@ export default class SettingsEditor {
 
     delete() {
         this._visible = false; // Set visible to false to avoid refresh invocations from refreshMovableViews() inside case.js
-        Util.removeHTML(this.html);
+        HtmlUtil.removeHTML(this.html);
     }
 
     /**

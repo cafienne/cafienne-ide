@@ -3,6 +3,7 @@ import CaseRoleReference from "@definition/cmmn/caseteam/caserolereference";
 import { ReferenceSet } from "@repository/definition/references/referenceset";
 import Images from "@util/images/images";
 import Util from "@util/util";
+import HtmlUtil from "@ide/util/htmlutil";
 import $ from "jquery";
 import PlanItemView from "../planitemview";
 import Properties from "./properties";
@@ -83,19 +84,19 @@ export default class PlanItemProperties extends Properties {
             const newLanguage = e.target.value || this.cmmnElement.definition.caseDefinition.defaultExpressionLanguage;
             this.change(rule, 'language', newLanguage);
             if (rule.hasCustomLanguage) {
-                Util.addClassOverride(htmlExpressionLanguage, 'custom-language');
+                HtmlUtil.addClassOverride(htmlExpressionLanguage, 'custom-language');
             } else {
-                Util.removeClassOverride(htmlExpressionLanguage, 'custom-language');
+                HtmlUtil.removeClassOverride(htmlExpressionLanguage, 'custom-language');
             }
             this.done();
         });
         showHTMLExpressionLanguage.on('click', () => {
             if (editHTMLExpressionLanguage.css('display') === 'none') {
                 editHTMLExpressionLanguage.css('display', 'block');
-                Util.addClassOverride(htmlExpressionLanguage, 'show-language-input');
+                HtmlUtil.addClassOverride(htmlExpressionLanguage, 'show-language-input');
             } else {
                 editHTMLExpressionLanguage.css('display', 'none');
-                Util.removeClassOverride(htmlExpressionLanguage, 'show-language-input');
+                HtmlUtil.removeClassOverride(htmlExpressionLanguage, 'show-language-input');
             }
         });
         html.find('textarea').on('change', e => this.change(this.cmmnElement.definition.itemControl.getRule(ruleName), 'body', e.target.value));
@@ -201,7 +202,7 @@ export default class PlanItemProperties extends Properties {
             const currentRoleID = html.attr('id');
             if (currentRoleID) {
                 authorizedRoles.remove(currentRoleID);
-                Util.removeHTML(html);
+                HtmlUtil.removeHTML(html);
                 this.done();
             }
         });

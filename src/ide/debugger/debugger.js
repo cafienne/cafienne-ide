@@ -2,12 +2,13 @@
 
 import CodeMirrorConfig from "@ide/editors/external/codemirrorconfig";
 import CaseView from "@ide/modeleditor/case/elements/caseview";
-import { $get } from "@util/ajax";
+import { $get } from "@ide/util/ajax";
 import Util from "@util/util";
 import $ from "jquery";
 import StandardForm from "../editors/standardform";
 import RightSplitter from "../splitter/rightsplitter";
 import Settings from "@ide/settings/settings";
+import HtmlUtil from "@ide/util/htmlutil";
 
 /**
  * This class implements the logic to call the repository REST service to debug a case instance.
@@ -424,7 +425,7 @@ export default class Debugger extends StandardForm {
         const renderedBefore = this.eventTable.find('tr').length > 1;
         const startMsg = this.events.length > 0 ? '' : 'If there are no events, check case instance id and context variables';
         this.setEventContent('', startMsg);
-        Util.clearHTML(this.eventTable);
+        HtmlUtil.clearHTML(this.eventTable);
 
         const getBackgroundColor = event => {
             if (event.type !== 'PlanItemTransitioned') return '';

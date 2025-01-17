@@ -112,8 +112,6 @@ export * from "./repository/serverfile/serverfile";
 export * from "./repository/serverfile/typefile";
 export * from "./repository/storage/definitionstorage";
 export * from "./repository/storage/filesytemdefinitionstorage";
-export * from "./repository/storage/remotedefinitionstorage";
-export * from "./util/ajax";
 export * from "./util/images/icons";
 export * from "./util/images/images";
 export * from "./util/images/shapes";

@@ -1,4 +1,5 @@
 ﻿import Util from "@util/util";
+import HtmlUtil from "@ide/util/htmlutil";
 import CMMNElementView from "./elements/cmmnelementview";
 import Grid from "./grid";
 import $ from "jquery";
@@ -33,7 +34,7 @@ export default class Resizer {
     }
 
     delete() {
-        Util.removeHTML(this.html);
+        HtmlUtil.removeHTML(this.html);
     }
 
     get visible() {

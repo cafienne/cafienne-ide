@@ -1,7 +1,7 @@
-﻿import Util from "@util/util";
-import IDE from "./ide";
+﻿import IDE from "./ide";
 import $ from "jquery";
 import "jquery-ui";
+import HtmlUtil from "./util/htmlutil";
 
 export default class MessageBox {
     html: JQuery<HTMLElement>;
@@ -26,7 +26,7 @@ export default class MessageBox {
         //add handle click close icon header
         this.html.find('.panel-heading button').on('click', () => {
             // Remove all message content, and hide the message box
-            Util.clearHTML(this.messageBoxBody);
+            HtmlUtil.clearHTML(this.messageBoxBody);
             this.hide();
         });
 
@@ -93,7 +93,7 @@ export default class MessageBox {
         if (delay > 0) {
             window.setTimeout(() => {
                 // Remove the message after it's timeout
-                Util.removeHTML(latestMessageNode);
+                HtmlUtil.removeHTML(latestMessageNode);
                 // If no more messages, then hide the container too.
                 if (this.messageBoxBody.children().length == 0) {
                     this.hide();

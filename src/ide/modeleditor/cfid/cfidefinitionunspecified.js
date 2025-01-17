@@ -1,6 +1,7 @@
 ﻿import CaseFileDefinitionDefinition from "@definition/cfid/casefileitemdefinitiondefinition";
 import PropertyDefinition from "@definition/cfid/propertydefinition";
 import Util from "@util/util";
+import HtmlUtil from "@ide/util/htmlutil";
 import CaseFileItemDefinitionEditor from "./casefileitemdefinitioneditor";
 import $ from "jquery";
 
@@ -28,7 +29,7 @@ export default class CFIDefinitionUnspecified {
      * @param {CaseFileDefinitionDefinition} data 
      */
     show(data) {
-        Util.clearHTML(this.tableDiv);
+        HtmlUtil.clearHTML(this.tableDiv);
         this.tableDiv.html(`<table>
                                 <colgroup>
                                     <col class="propertyDeletebtcol" width="20px" ></col>
@@ -104,7 +105,7 @@ export default class CFIDefinitionUnspecified {
                 return;
             }
             Util.removeFromArray(this.data.properties, property);
-            Util.removeHTML(html);
+            HtmlUtil.removeHTML(html);
             this.editor.saveModel();
         });
         html.find('.inputPropertyName').on('change', e => this.changeProperty(html, property, e.currentTarget.value, property.type, property.isBusinessIdentifier));

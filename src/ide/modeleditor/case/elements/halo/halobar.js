@@ -1,4 +1,5 @@
 import Util from "@util/util";
+import HtmlUtil from "@ide/util/htmlutil";
 import Halo from "./halo";
 import HaloItem from "./item/haloitem";
 
@@ -13,7 +14,7 @@ export default class HaloBar {
     }
 
     clear() {
-        Util.clearHTML(this.html);
+        HtmlUtil.clearHTML(this.html);
     }
 
     /**

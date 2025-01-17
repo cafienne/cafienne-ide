@@ -4,6 +4,7 @@ import CaseFileItemDef from "@definition/cmmn/casefile/casefileitemdef";
 import CMMNElementDefinition from "@definition/cmmnelementdefinition";
 import ShapeDefinition from "@definition/dimensions/shape";
 import Util from "@util/util";
+import HtmlUtil from "@ide/util/htmlutil";
 import { dia } from "jointjs";
 import ValidateForm from "@validate/validateform";
 import Validator from "@validate/validator";
@@ -460,7 +461,7 @@ export default class CaseView {
         this.deployForm.delete();
         this.splitter.delete();
         this.items.forEach(canvasItem => canvasItem.deletePropertiesView());
-        Util.removeHTML(this.html);
+        HtmlUtil.removeHTML(this.html);
     };
 
     /**

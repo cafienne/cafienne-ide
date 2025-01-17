@@ -1,7 +1,7 @@
 ﻿﻿import StandardForm from "@ide/editors/standardform";
 import CaseView from "@ide/modeleditor/case/elements/caseview";
 import Settings from "@ide/settings/settings";
-import Util from "../util/util";
+import HtmlUtil from "@ide/util/htmlutil";
 import $ from "jquery";
 import ProblemType from "./problemtype";
 import ValidationSettings from "./validationsettings";
@@ -146,7 +146,7 @@ export default class ValidateForm extends StandardForm {
      */
     showProblemsInForm() {
         // Clear the old problems in the form
-        Util.clearHTML(this.containers);
+        HtmlUtil.clearHTML(this.containers);
 
         // Sort the problems; first render the errors, then only the warnings
         this.validator.errors.forEach(p => this.addProblemRow(p));

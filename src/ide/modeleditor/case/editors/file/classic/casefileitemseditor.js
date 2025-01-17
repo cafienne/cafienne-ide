@@ -1,7 +1,7 @@
 ﻿import CaseFileItemDef from "@definition/cmmn/casefile/casefileitemdef";
 import CaseFileItemDefinitionEditor from "@ide/modeleditor/cfid/casefileitemdefinitioneditor";
 import BottomSplitter from "@ide/splitter/bottomsplitter";
-import Util from "@util/util";
+import HtmlUtil from "@ide/util/htmlutil";
 import $ from "jquery";
 import CaseFileEditor from "../casefileeditor";
 import CFIDConverter from "./conversion/cfidconverter";
@@ -100,7 +100,7 @@ export default class CaseFileItemsEditor {
 
     renderCaseFileModel() {
         this.cfiNodes.forEach(node => node.delete());
-        Util.clearHTML(this.html.find('.cfi-details-container'));
+        HtmlUtil.clearHTML(this.html.find('.cfi-details-container'));
         this.case.caseDefinition.caseFile.children.forEach(cfi => this.createNode(cfi));
     }
 
@@ -141,7 +141,7 @@ export default class CaseFileItemsEditor {
      */
     delete() {
         // Delete the generic events of the treeEditor (e.g. click add button, ...)
-        Util.removeHTML(this.html);
+        HtmlUtil.removeHTML(this.html);
         this.splitter.delete();
     }
 

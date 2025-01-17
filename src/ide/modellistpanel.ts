@@ -6,6 +6,7 @@ import "jquery-ui";
 import IDE from "./ide";
 import ModelEditorMetadata from "./modeleditor/modeleditormetadata";
 import RepositoryBrowser from "./repositorybrowser";
+import HtmlUtil from "./util/htmlutil";
 
 export default class ModelListPanel {
     ide: IDE;
@@ -42,7 +43,7 @@ export default class ModelListPanel {
         const urlPrefix = window.location.origin + window.location.pathname + '#';
 
         // Clean current file list
-        Util.clearHTML(this.container);
+        HtmlUtil.clearHTML(this.container);
 
         files.forEach(file => {
             const error = file.metadata.error;

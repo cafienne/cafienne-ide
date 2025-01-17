@@ -10,7 +10,6 @@ import ProcessFile from "./serverfile/processfile";
 import ServerFile from "./serverfile/serverfile";
 import TypeFile from "./serverfile/typefile";
 import DefinitionStorage from "./storage/definitionstorage";
-import { AjaxError } from "../util/ajax";
 
 export default class Repository extends RepositoryBase {
     listeners: (() => void)[] = [];
@@ -148,9 +147,9 @@ export default class Repository extends RepositoryBase {
     async listModels() {
         await this.definitionStorage.loadAllFiles()
             .then(files => this.updateFileList(files.map(Metadata.from)))
-            .catch((error: AjaxError) => { 
+            .catch((error: any) => { 
                 console.error(error); // Actually also other errors may occur, therefore also logging the stacktrace
-                throw 'Could not fetch the list of models: ' + error.message
+                throw 'Could not fetch the list of models: ' + error.toString();
              });
 ;
     }

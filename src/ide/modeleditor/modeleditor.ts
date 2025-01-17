@@ -4,6 +4,7 @@ import $ from "jquery";
 import MovableEditor from "../editors/movableeditor";
 import IDE from "../ide";
 import ModelDefinition from "@repository/definition/modeldefinition";
+import HtmlUtil from "@ide/util/htmlutil";
 
 export default class ModelEditor {
     movableEditors: MovableEditor[] = [];
@@ -214,7 +215,7 @@ export default class ModelEditor {
             this.visible = false;
             window.location.hash = '';
         }
-        Util.removeHTML(this.html);
+        HtmlUtil.removeHTML(this.html);
         Util.removeFromArray(this.ide.editorRegistry.editors, this);
     }
 

@@ -2,6 +2,7 @@ import Util from "@util/util";
 import SplitterSettings from "./splittersettings";
 import Settings from "@ide/settings/settings";
 import $ from "jquery";
+import HtmlUtil from "@ide/util/htmlutil";
 
 export default class Splitter {
     private static _settings?: SplitterSettings;
@@ -152,7 +153,7 @@ export default class Splitter {
     }
 
     delete() {
-        Util.removeHTML(this.bar);
+        HtmlUtil.removeHTML(this.bar);
         this.container.off('pointermove');
         this.parent = undefined; // Deleting the parent will also clean up info in parent.
         Util.removeFromArray(Splitter.splitters, this);

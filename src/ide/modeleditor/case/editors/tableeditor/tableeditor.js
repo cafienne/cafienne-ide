@@ -1,6 +1,7 @@
 import CMMNElementDefinition from "@definition/cmmnelementdefinition";
 import MovableEditor from "@ide/editors/movableeditor";
 import Util from "@util/util";
+import HtmlUtil from "@ide/util/htmlutil";
 import $ from "jquery";
 import CaseView from "../../elements/caseview";
 
@@ -28,7 +29,7 @@ export default class TableEditor extends MovableEditor {
      */
     clear() {
         this.rows = [];
-        Util.clearHTML(this.htmlContainer);
+        HtmlUtil.clearHTML(this.htmlContainer);
     }
 
     /**
@@ -126,7 +127,7 @@ export default class TableEditor extends MovableEditor {
 
     delete() {
         // Delete the generic events of the editor (e.g. click add button, ...)
-        Util.removeHTML(this.html);
+        HtmlUtil.removeHTML(this.html);
     }
 
     /**
@@ -251,7 +252,7 @@ export class RowEditor {
             this.case.editor.ide.danger('The element is in use, it cannot be deleted');
         } else {
             // delete the role
-            Util.removeHTML(this.html);
+            HtmlUtil.removeHTML(this.html);
             this.element.removeDefinition();
             this.case.editor.completeUserAction();
         }

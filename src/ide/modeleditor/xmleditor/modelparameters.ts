@@ -5,6 +5,7 @@ import ModelEditor from "../modeleditor";
 import Util from "@util/util";
 import $ from "jquery";
 import ModelDefinition from "@repository/definition/modeldefinition";
+import HtmlUtil from "@ide/util/htmlutil";
 
 export default class ModelParameters {
     html: JQuery<HTMLElement>;
@@ -41,7 +42,7 @@ export default class ModelParameters {
 
     renderParameters(parameters: ParameterDefinition<ModelDefinition>[]) {
         // First clean the old content
-        Util.clearHTML(this.html.find('tbody'));
+        HtmlUtil.clearHTML(this.html.find('tbody'));
 
         // Overwrite current parameter set with the new array
         this.parameters = parameters;
@@ -88,7 +89,7 @@ export default class ModelParameters {
                 return;
             }
             Util.removeFromArray(this.parameters, parameter);
-            Util.removeHTML(html);
+            HtmlUtil.removeHTML(html);
             this.editor.completeUserAction();
         });
         html.find('.inputParameterName').on('change', e => this.changeParameter(html, parameter, (e.currentTarget as any).value, parameter.id));

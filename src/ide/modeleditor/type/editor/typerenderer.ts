@@ -13,6 +13,7 @@ import LocalTypeDefinition from "./localtypedefinition";
 import PropertyUsage from "./propertyusage";
 import TypeEditor from "./typeeditor";
 import TypeSelector from "./typeselector";
+import HtmlUtil from "@ide/util/htmlutil";
 
 export default class TypeRenderer {
 
@@ -199,7 +200,7 @@ export class SchemaRenderer extends TypeRenderer {
 
     refresh() {
         this.children.forEach(child => child.delete());
-        Util.clearHTML(this.htmlContainer);
+        HtmlUtil.clearHTML(this.htmlContainer);
         this.render();
     }
 
@@ -261,7 +262,7 @@ export class PropertyRenderer extends TypeRenderer {
     }
 
     refresh() {
-        Util.clearHTML(this.htmlContainer);
+        HtmlUtil.clearHTML(this.htmlContainer);
         if (this.typeSelector) {
             this.typeSelector.delete();
         }
@@ -363,7 +364,7 @@ export class PropertyRenderer extends TypeRenderer {
         if (!this.htmlContainer) return;
         // Clear previous content of the schema container (if present)
         const schemaContainer = this.htmlContainer.find('>.schema-container');
-        Util.clearHTML(schemaContainer);
+        HtmlUtil.clearHTML(schemaContainer);
         schemaContainer.css('display', 'none');
         // Clear previous cycle detected message (if present)
         this.htmlContainer.find('.selectType').css('border', '');
@@ -411,7 +412,7 @@ export class PropertyRenderer extends TypeRenderer {
         this.property.getCaseFileItemReferences().forEach(reference => reference.removeDefinition());
 
         // remove from the html
-        Util.removeHTML(this.htmlContainer);
+        HtmlUtil.removeHTML(this.htmlContainer);
         this.localType.save(this);
     }
 

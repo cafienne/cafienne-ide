@@ -1,5 +1,6 @@
 import CaseFileItemDef, { CaseFileItemCollection } from "@repository/definition/cmmn/casefile/casefileitemdef";
 import Util from "@util/util";
+import HtmlUtil from "@ide/util/htmlutil";
 import $ from "jquery";
 import CaseFileItemsEditor, { NEWDEF } from "./casefileitemseditor";
 
@@ -39,7 +40,7 @@ export default class CFINode {
     }
 
     renderDetails() {
-        Util.clearHTML(this.divCFIDetails);
+        HtmlUtil.clearHTML(this.divCFIDetails);
         this.divCFIDetails.html(
             `<div class="input-name-container">
                 <img class="cfi-icon" src="images/svg/casefileitem.svg" title="Drag item on case model ..."/>
@@ -162,7 +163,7 @@ export default class CFINode {
     };
 
     renderChildren() {
-        Util.clearHTML(this.childrenContainer);
+        HtmlUtil.clearHTML(this.childrenContainer);
         this.definition.children.forEach(cfi => this.renderChild(cfi));
     }
 
@@ -236,7 +237,7 @@ export default class CFINode {
         // Now delete all childnodes of this node
         offspring.forEach(node => Util.removeFromArray(this.editor.cfiNodes, node))
         this.definition.removeDefinition();
-        Util.removeHTML(this.html);
+        HtmlUtil.removeHTML(this.html);
 
         // Select the next node
         this.editor.selectCFINode(nextNode);

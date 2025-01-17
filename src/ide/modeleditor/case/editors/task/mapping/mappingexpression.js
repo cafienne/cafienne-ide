@@ -1,4 +1,5 @@
 import Util from "@util/util";
+import HtmlUtil from "@ide/util/htmlutil";
 import MappingRow from "./mappingrow";
 
 export default class MappingExpression {
@@ -41,9 +42,9 @@ export default class MappingExpression {
             const newLanguage = e.target.value || mapping.caseDefinition.defaultExpressionLanguage;
             mapping.language = newLanguage;
             if (mapping.hasCustomLanguage) {
-                Util.addClassOverride(buttonLabel, 'custom-language');
+                HtmlUtil.addClassOverride(buttonLabel, 'custom-language');
             } else {
-                Util.removeClassOverride(buttonLabel, 'custom-language');
+                HtmlUtil.removeClassOverride(buttonLabel, 'custom-language');
             }
             row.case.editor.completeUserAction();
             row.editor.refresh();
@@ -51,12 +52,12 @@ export default class MappingExpression {
         showHTMLExpressionLanguage.on('click', () => {
             if (editHTMLExpressionLanguage.css('display') === 'none') {
                 editHTMLExpressionLanguage.css('display', 'block');
-                Util.addClassOverride(htmlExpressionLanguage, 'show-language-input');
-                Util.addClassOverride(textareaTransformation, 'visible-mapping-language');
+                HtmlUtil.addClassOverride(htmlExpressionLanguage, 'show-language-input');
+                HtmlUtil.addClassOverride(textareaTransformation, 'visible-mapping-language');
             } else {
                 editHTMLExpressionLanguage.css('display', 'none');
-                Util.removeClassOverride(htmlExpressionLanguage, 'show-language-input');
-                Util.removeClassOverride(textareaTransformation, 'visible-mapping-language');
+                HtmlUtil.removeClassOverride(htmlExpressionLanguage, 'show-language-input');
+                HtmlUtil.removeClassOverride(textareaTransformation, 'visible-mapping-language');
             }
         });
 

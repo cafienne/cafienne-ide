@@ -1,7 +1,7 @@
 ﻿import CodeMirrorConfig from "@ide/editors/external/codemirrorconfig";
 import StandardForm from "@ide/editors/standardform";
 import Definitions from "@repository/deploy/definitions";
-import $ajax from "@util/ajax";
+import $ajax from "@ide/util/ajax";
 import CaseView from "../elements/caseview";
 import Settings from "@ide/settings/settings";
 

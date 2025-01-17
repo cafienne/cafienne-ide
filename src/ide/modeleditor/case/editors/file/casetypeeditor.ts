@@ -7,6 +7,7 @@ import Util from "@util/util";
 import $ from "jquery";
 import CaseView from "../../elements/caseview";
 import CaseFileEditor from "./casefileeditor";
+import HtmlUtil from "@ide/util/htmlutil";
 
 export default class CaseTypeEditor {
     case: CaseView;
@@ -66,7 +67,7 @@ export default class CaseTypeEditor {
         if (this.typeSelector) {
             this.typeSelector.delete();
         }
-        if (this.htmlContainer) Util.clearHTML(this.htmlContainer);
+        if (this.htmlContainer) HtmlUtil.clearHTML(this.htmlContainer);
     }
 
     get typeRef() {

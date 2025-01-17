@@ -1,4 +1,5 @@
 import Util from "@util/util";
+import HtmlUtil from "@ide/util/htmlutil";
 import CMMNElementView from "../cmmnelementview";
 import HaloBar from "./halobar";
 import { DeleteHaloItem, PropertiesHaloItem } from "./item/haloclickitems";
@@ -64,7 +65,7 @@ export default class Halo {
      */
     delete() {
         this.element.case.paperContainer.off('scroll', this.scrollListener);
-        Util.removeHTML(this.html);
+        HtmlUtil.removeHTML(this.html);
     }
 
     refresh() {

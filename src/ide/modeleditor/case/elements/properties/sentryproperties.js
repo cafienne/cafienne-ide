@@ -4,6 +4,7 @@ import OnPartDefinition from "@definition/cmmn/sentry/onpartdefinition";
 import PlanItemOnPartDefinition from "@definition/cmmn/sentry/planitemonpartdefinition";
 import PlanItem from "@repository/definition/cmmn/caseplan/planitem";
 import Util from "@util/util";
+import HtmlUtil from "@ide/util/htmlutil";
 import Connector from "../connector";
 import SentryView from "../sentryview";
 import Properties from "./properties";
@@ -89,19 +90,19 @@ export default class SentryProperties extends Properties {
             const newLanguage = e.target.value || this.cmmnElement.definition.caseDefinition.defaultExpressionLanguage;
             this.change(rule, 'language', newLanguage);
             if (rule.hasCustomLanguage) {
-                Util.addClassOverride(htmlExpressionLanguage, 'custom-language');
+                HtmlUtil.addClassOverride(htmlExpressionLanguage, 'custom-language');
             } else {
-                Util.removeClassOverride(htmlExpressionLanguage, 'custom-language');
+                HtmlUtil.removeClassOverride(htmlExpressionLanguage, 'custom-language');
             }
             this.done();
         });
         showHTMLExpressionLanguage.on('click', () => {
             if (editHTMLExpressionLanguage.css('display') === 'none') {
                 editHTMLExpressionLanguage.css('display', 'block');
-                Util.addClassOverride(htmlExpressionLanguage, 'show-language-input');
+                HtmlUtil.addClassOverride(htmlExpressionLanguage, 'show-language-input');
             } else {
                 editHTMLExpressionLanguage.css('display', 'none');
-                Util.removeClassOverride(htmlExpressionLanguage, 'show-language-input');
+                HtmlUtil.removeClassOverride(htmlExpressionLanguage, 'show-language-input');
             }
         });
 

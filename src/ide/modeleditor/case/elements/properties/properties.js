@@ -1,4 +1,5 @@
 import Util from "@util/util";
+import HtmlUtil from "@ide/util/htmlutil";
 import MovableEditor from "@ide/editors/movableeditor";
 import CMMNElementView from "../cmmnelementview";
 import CMMNElementDefinition from "@repository/definition/cmmnelementdefinition";
@@ -93,7 +94,7 @@ export default class Properties extends MovableEditor {
 
     clear() {
         if (this.htmlContainer) {
-            Util.clearHTML(this.htmlContainer);
+            HtmlUtil.clearHTML(this.htmlContainer);
         }
     }
 
