@@ -3,7 +3,6 @@ import HtmlBundlerPlugin from 'html-bundler-webpack-plugin';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import pkg from 'webpack';
-import nodeExternals from 'webpack-node-externals';
 
 const { BannerPlugin } = pkg;
 const devMode = process.env.DEV_MODE ? process.env.DEV_MODE.trim().toLowerCase() === 'true' : false;
@@ -135,7 +134,7 @@ export default [
             'node-fetch': 'node-commonjs node-fetch', // https://github.com/matthew-andrews/isomorphic-fetch/issues/194#issuecomment-1513787724
             '@casefabric/typescript-client': 'import @casefabric/typescript-client',
         },
-        nodeExternals({ importType: (request) => `import ${request}` }),
+        // nodeExternals({ importType: (request) => `import ${request}` }),
     ],
 },
 { // ide
