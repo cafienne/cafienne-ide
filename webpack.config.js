@@ -1,8 +1,13 @@
-const path = require('path');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const { BannerPlugin } = require('webpack');
-const nodeExternals = require('webpack-node-externals');
+import CopyWebpackPlugin from 'copy-webpack-plugin';
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import pkg from 'webpack';
+import nodeExternals from 'webpack-node-externals';
+const { BannerPlugin } = pkg;
 const devMode = process.env.DEV_MODE ? process.env.DEV_MODE.trim().toLowerCase() === 'true' : false;
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 class BuildPrinter {
     constructor(name) {
@@ -54,7 +59,7 @@ const ideResolvers = {
     },
 };
 
-module.exports = [
+export default [
 { // server
     entry: {
         server: './src/server/server.ts'
