@@ -120,9 +120,8 @@ export default [
     externals: [
         {
             'node-fetch': 'node-commonjs node-fetch', // https://github.com/matthew-andrews/isomorphic-fetch/issues/194#issuecomment-1513787724
-            '@cafienne/typescript-client': 'import @cafienne/typescript-client',
         },
-        nodeExternals({ importType: (request) => `import ${request}` }),
+        // nodeExternals({ importType: (request) => `import ${request}` }),
     ],
 },
 { // ide
