@@ -1,4 +1,4 @@
-import { assertCasePlan, Case, CaseService, CaseTeam, CaseTeamUser, PlatformService, State, Tenant, TenantUser, User } from "@cafienne/typescript-client";
+import { assertCasePlan, Case, CaseService, CaseTeam, CaseTeamUser, PlatformService, State, Tenant, TenantUser, User } from "@casefabric/typescript-client";
 
 import CaseDefinition from "../../repository/definition/cmmn/casedefinition";
 import ExternalReference from "../../repository/definition/references/externalreference";

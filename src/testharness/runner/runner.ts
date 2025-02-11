@@ -1,4 +1,4 @@
-import { Config as CafienneClientConfig, User } from "@cafienne/typescript-client";
+import { Config as CafienneClientConfig, User } from "@casefabric/typescript-client";
 import CaseDefinition from "../../repository/definition/cmmn/casedefinition";
 import TestcaseModelDefinition from "../../repository/definition/testcase/testcasemodeldefinition";
 import Repository from "../../repository/repository";

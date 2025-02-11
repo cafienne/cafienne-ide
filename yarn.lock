@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@cafienne/typescript-client@..\\cmmn-test-framework\\dist\\src\\cafienne-typescript-client-0.9.0.tgz":
-  version "0.9.0"
-  resolved "..\\cmmn-test-framework\\dist\\src\\cafienne-typescript-client-0.9.0.tgz#6b91eaca96b337f14228dd2bd11d3a29493f2b74"
+"@casefabric/typescript-client@C:\\git\\cmmn-test-framework\\dist\\src\\casefabric-typescript-client-0.0.1.tgz":
+  version "0.0.1"
+  resolved "C:\\git\\cmmn-test-framework\\dist\\src\\casefabric-typescript-client-0.0.1.tgz#7cda021a10e0863b62c836dd12a1025d993b81ed"
   dependencies:
     "@xmldom/xmldom" "^0.9.7"
     express "^4.17.1"
