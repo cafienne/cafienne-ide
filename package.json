@@ -39,7 +39,7 @@
   },
   "scripts": {
     "clean": "shx rm -rf ./dist",
-    "rebuild-index": "node ./generate-index.mjs",
+    "rebuild-index": "node ./indexgenerator/generate-index.mjs",
     "clean-build": "npm run build",
     "build-server": "shx mkdir ./dist/config & shx cp ./config/config.js ./dist/config/ & shx cp server.js ./dist & shx mkdir ./dist/server & shx mkdir ./dist/server/repository & shx cp ./server/repository/repository-router.js ./dist/server/repository/",
     "build": "npm run clean & webpack",
