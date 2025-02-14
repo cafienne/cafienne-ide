@@ -5,7 +5,7 @@ import Settings from "../../../settings/settings";
 import $ajax from "../../../util/ajax";
 import CaseView from "../elements/caseview";
 
-export default class Deploy extends StandardForm {
+export default class DeployForm extends StandardForm {
     /**
      * 
      * This class implements the logic to call the repository REST service to deploy a CMMN model.
