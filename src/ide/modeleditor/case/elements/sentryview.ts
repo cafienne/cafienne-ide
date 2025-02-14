@@ -74,7 +74,10 @@ export default abstract class SentryView<CD extends CriterionDefinition = Criter
                     connector.label = onPart.standardEvent.toString();
                 }
             }
-        });
+        })
+        if (this.propertiesView.visible) {
+            this.propertiesView.refresh();
+        }
     }
 
     /**
