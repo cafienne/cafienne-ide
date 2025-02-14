@@ -7,11 +7,11 @@ wrapConsoleLogging();
 
 import * as path from 'path';
 import RepositoryConfiguration from '../config/config';
-import Definitions from "../repository/deploy/definitions";
-import Repository from "../repository/repository";
-import CaseFile from "../repository/serverfile/casefile";
-import LocalFileStorage from "../repository/storage/localfilestorage";
+import Definitions from "./deploy/definitions";
+import Repository from "./repository";
+import CaseFile from "./serverfile/casefile";
 import FileStorage from './storage/filestorage';
+import LocalFileStorage from "./storage/localfilestorage";
 
 const config = new RepositoryConfiguration();
 const repositoryFolder = config.repository;

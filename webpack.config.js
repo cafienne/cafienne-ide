@@ -79,7 +79,7 @@ module.exports = [
 },
 { // repository cli
     entry: {
-        transpile: { import: './src/repository/transpile.ts', dependOn: ['shared'] },
+        compile: { import: './src/repository/compile.ts', dependOn: ['shared'] },
         shared: './src/index.js',
         index: { import: './src/index.js', dependOn: ['shared'] },
     },
