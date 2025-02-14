@@ -22,14 +22,6 @@ MODELER_REPOSITORY_PATH = your_source_folder_for_models
 MODELER_DEPLOY_PATH = your_target_folder_for_compiled_models
 ```
 
-## Using NPX
-
-With the settings above filled, it is possible to run the tool from `npx`:
-
-```bash
-npx @casefabric/repository
-```
-
 ## More complex setup
 
 An alternative, more complex project setup with a `package.json` file should contain (at least) the below content
@@ -37,7 +29,7 @@ An alternative, more complex project setup with a `package.json` file should con
 ```json
 {
   "dependencies": {
-    "@casefabric/repository": "1.1.0"
+    "@casefabric/repository": "^1.1.0"
   }
 }
 ```
@@ -47,7 +39,7 @@ For example
 {
 ...
   "scripts": {
-    "compileModel": "cross-env MODELER_REPOSITORY_PATH=./src/casemodels MODELER_DEPLOY_PATH=./dist/cmmn transpile",
+    "compileModel": "cross-env MODELER_REPOSITORY_PATH=./src/casemodels MODELER_DEPLOY_PATH=./dist/cmmn compile",
   },
   "devDependencies": {
     "@casefabric/repository": "^0.0.1",
@@ -86,7 +78,7 @@ Then install the package with you favorite package manager, e.g. `npm` or `yarn`
 Take the following steps to compile the source models in the directory
 
 ```bash
-npm run transpile
+npm run compile
 ```
 
 Or with the example setup above:
@@ -98,14 +90,11 @@ npm run compileModel
 ### Compiling a specific set of models
 
 ```bash
-npm run transpile helloworld.case hellomoon etc ...
-
-// Alternatively with npx
-npx @casefabric/repository helloworld.case hellomoon etc ...
+npm run compile helloworld.case hellomoon etc ...
 
 ```
 
-The transpile command will check if the arguments can be resolved to a file in the source folder.
+The compile command will check if the arguments can be resolved to a file in the source folder.
 If a file cannot be found, it will print an error message for that specific file, and continue with the remaining arguments.
 
 Note that the filename resolution is case sensitive

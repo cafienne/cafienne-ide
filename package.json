@@ -1,7 +1,7 @@
 {
   "private": true,
   "bin": {
-    "deploy": "./dist/deploy/transpile.ts"
+    "deploy": "./dist/deploy/compile.ts"
   },
   "dependencies": {
     "@xmldom/xmldom": "^0.9.7",
