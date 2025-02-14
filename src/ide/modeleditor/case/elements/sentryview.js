@@ -82,7 +82,9 @@ export default class SentryView extends CMMNElementView {
                 }
             }
         })
-
+        if (this.propertiesView.visible) {
+            this.propertiesView.refresh();
+        }
     }
 
     /**
