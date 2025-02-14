@@ -6,6 +6,7 @@ const IndexableFile = require('./indexablefile.js').IndexableFile;
 const exclusionPatterns = [
     /^\.\/ide\//,
     /^\.\/validate\//,
+    /^\.\/server\//,
     /^\.\/deploy\//,
 ];
 
