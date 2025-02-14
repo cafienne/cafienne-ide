@@ -14,7 +14,7 @@ import RightSplitter from "../../../splitter/rightsplitter";
 import HtmlUtil from "../../../util/htmlutil";
 import CaseModelEditor from "../casemodeleditor";
 import CaseSourceEditor from "../editors/casesourceeditor";
-import Deploy from "../editors/deploy";
+import DeployForm from "../editors/deployform";
 import CaseFileEditor from "../editors/file/casefileeditor";
 import CaseParametersEditor from "../editors/parameters/caseparameterseditor";
 import RolesEditor from "../editors/roleseditor";
@@ -78,7 +78,7 @@ export default class CaseView {
         this.canvas = this.divCaseModel.find('.divCaseCanvas');
         this.paperContainer = this.html.find('.paper-container');
 
-        this.deployForm = new Deploy(this);
+        this.deployForm = new DeployForm(this);
         this.sourceEditor = new CaseSourceEditor(editor, this.html);
         this.cfiEditor = new CaseFileEditor(this, this.divCFIEditor);
         this.undoBox = new UndoRedoBox(this, this.divUndoRedo);
