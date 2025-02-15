@@ -40,13 +40,12 @@
   "scripts": {
     "clean": "shx rm -rf ./dist",
     "rebuild-index": "node ./indexgenerator/generate-index.mjs",
-    "clean-build": "npm run build",
-    "build-server": "shx mkdir ./dist/config & shx cp ./config/config.js ./dist/config/ & shx cp server.js ./dist & shx mkdir ./dist/server & shx mkdir ./dist/server/repository & shx cp ./server/repository/repository-router.js ./dist/server/repository/",
-    "build": "npm run clean & webpack",
+    "build": "npm run clean & npm run rebuild-index & webpack",
     "watch": "npm run clean & set DEV_MODE=true & webpack",
-    "start": "webpack serve",
-    "try": "webpack-dev-server",
     "go": "set LOG_TRAFFIC=actions & node ./dist/server/server.js",
-    "pack-repository": "shx cp ./src/repository/@casefabric-repository-package.json ./dist/repository/package.json & shx cp ./src/repository/README.md ./dist/repository/ & shx rm -rf ./dist/repository/@types/deploy ./dist/repository/@types/ide ./dist/repository/@types/server ./dist/repository/@types/validate & npm pack --pack-destination=./dist ./dist/repository"
+    "remove-unnecessary-types" : "shx rm -rf ./dist/repository/@types/ide ./dist/repository/@types/server ./dist/repository/@types/validate",
+    "copy-repository-files": "shx cp ./src/repository/@casefabric-repository-package.json ./dist/repository/package.json & shx cp ./src/repository/README.md ./dist/repository/",
+    "package": "npm run copy-repository-files & npm run remove-unnecessary-types & npm pack --pack-destination=./dist ./dist/repository",
+    "publishRemote": "npm run build & npm run package & cd ./dist/repository & npm publish --access public"
   }
 }
