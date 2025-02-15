@@ -220,6 +220,10 @@ export default class ModelDefinition extends XMLSerializable {
         return XML.prettyPrint(this.toXML());
     }
 
+    toString() {
+        return `${this.constructor.name} ${this.file.fileName}`;
+    }
+
     hasMigrated(): boolean {
         return this.__migrated === true;
     }
@@ -228,5 +232,22 @@ export default class ModelDefinition extends XMLSerializable {
         console.log(msg);
         // console.warn(`Setting migrated to ${migrated} for ${this.modelDocument.fileName}`);
         this.__migrated = true;
+    }
+
+    /**
+     * Returns a list of all other models that this definition relies on, including their dependents.
+     * @returns 
+     */
+    dependencies(): ModelDefinition[] {
+        const dependents: ModelDefinition[] = [];
+        const addReferencedModels = (model: ModelDefinition) => model.elements.map(e => e.externalReferences.all).flat().filter(e => e.nonEmpty).map(e => e.getDefinition()).filter(definition => definition !== undefined).forEach(definition => addDependency(definition));
+        const addDependency = (model: ModelDefinition) => {
+            if (dependents.indexOf(model) < 0) {
+                dependents.push(model);
+                addReferencedModels(model);
+            }
+        }
+        addReferencedModels(this);
+        return dependents;
     }
 }

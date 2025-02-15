@@ -33,6 +33,7 @@ export default class Definitions {
     constructor(public caseDefinition: CaseDefinition) {
         console.groupCollapsed(`Creating deployment '${this.fileName}'`);
         this.addDefinition(caseDefinition);
+        caseDefinition.dependencies().forEach(subDefinition => this.addDefinition(subDefinition));
         console.groupEnd();
     }
 
