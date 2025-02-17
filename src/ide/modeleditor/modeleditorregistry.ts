@@ -5,8 +5,8 @@ import HumantaskModelEditor from "./humantask/humantaskmodeleditor";
 import ModelEditor from "./modeleditor";
 import ModelEditorMetadata from "./modeleditormetadata";
 import ProcessModelEditor from "./process/processmodeleditor";
-import TypeModelEditor from "./type/typemodeleditor";
 import TestCaseEditor from "./testcase/testcasemodeleditor";
+import TypeModelEditor from "./type/typemodeleditor";
 
 export default class ModelEditorRegistry {
     editors: Array<ModelEditor> = [];
@@ -88,6 +88,7 @@ export default class ModelEditorRegistry {
 
         // If we already have an editor for the fileName, no need to go further in the loading logic
         if (existingEditor) {
+            this.ide.modelTabs.addTab(existingEditor);
             return;
         }
 
