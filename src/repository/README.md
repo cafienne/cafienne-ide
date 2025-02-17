@@ -1,6 +1,8 @@
 # CaseFabric Repository
 A TypeScript package that can create and compile independent files CaseFabric design time source files into CMMN compliant definitions file.
 
+> This package is the successor of the [@cafienne/repository](https://www.npmjs.com/package/@cafienne/repository) package.
+
 # Compilation Usage 
 
 This package can be used to do compilation of CaseFabric source models.
