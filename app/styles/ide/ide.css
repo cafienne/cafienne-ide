@@ -101,7 +101,7 @@
 
 .divCoverPanel {
     position: absolute;
-    top: 0px;
+    top: 20px;
     bottom: 0px;
     left: 0px;
     right: 0px;
@@ -110,7 +110,6 @@
 .divCoverPanel>div:first-child {
     opacity: 0.5;
     width: 100%;
-    height: 100%;
     background-color: rgb(221, 221, 221);
 }
 
@@ -187,6 +186,49 @@
     color: grey;
     position: relative;
     top: -1px;
+}
+
+.model-tabs {
+    position: absolute;
+    float: left;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 20px;
+    display: block;
+
+}
+
+/* Style the tab */
+.model-tab {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    padding-left: 4px;
+    padding-right: 4px;
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #EEEEEE;
+    color: black;
+    display: inline-block;
+    margin-right: 4px; /* Space between tabs */
+    border-top-left-radius: 4px; /* Rounded corners */
+    border-top-right-radius: 4px; /* Rounded corners */
+    text-align: center;
+}
+
+/* Create an active/current tablink class */
+.model-tab.active {
+    background-color: #D0D0D0;
+    border: 1px solid #AAAAAA;
+    border-bottom: none;
+    font-weight: normal;
+}
+
+/* Style the label that are used to open the tab content */
+.model-tab label {
+    transition: 0.3s;
+    font-weight: normal;
+    cursor: pointer;
 }
 
 /* Extra bootstrap css */
