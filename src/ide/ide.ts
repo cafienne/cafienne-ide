@@ -9,6 +9,7 @@ import IDEMain from "./idemain";
 import MessageBox from "./messagebox";
 import ModelEditorMetadata from "./modeleditor/modeleditormetadata";
 import ModelEditorRegistry from "./modeleditor/modeleditorregistry";
+import ModelTabs from "./modeltabs";
 import RemoteFileStorage from "./remotefilestorage";
 import SettingsEditor from "./settings/settingseditor";
 
@@ -22,6 +23,7 @@ export default class IDE {
     messageBox: MessageBox;
     coverPanel: CoverPanel;
     settingsEditor: SettingsEditor;
+    modelTabs: ModelTabs;
 
     constructor() {
         this.editorRegistry = new ModelEditorRegistry(this);
@@ -29,6 +31,7 @@ export default class IDE {
         this.html = $('body');
         this.header = new IDEHeader(this);
         this.main = new IDEMain(this);
+        this.modelTabs = new ModelTabs(this);
         this.footer = new IDEFooter(this);
         this.messageBox = new MessageBox(this);
         this.coverPanel = new CoverPanel(this); // Helper to show/hide status messages while loading models from the repository
