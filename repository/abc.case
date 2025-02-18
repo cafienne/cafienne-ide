@@ -1,0 +1,26 @@
+<case xmlns="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:cafienne="org.cafienne" id="abc.case" name="abc" expressionLanguage="spel" guid="_o9HDx">
+    <caseFileModel typeRef="abc.type"/>
+    <casePlanModel id="cm__o9HDx_0" name="abc" autoComplete="true">
+        <caseTask id="pi_ct__o9HDx_0" name="HelloWorld" isBlocking="true" caseRef="helloworld.case"/>
+        <caseTask id="pi_ct__o9HDx_1" name="def" isBlocking="true" caseRef="def.case">
+            <entryCriterion id="crit__o9HDx_0"/>
+            <itemControl id="_o9HDx_2">
+                <repetitionRule id="_o9HDx_3">
+                    <condition id="_o9HDx_4">
+                        <body><![CDATA[true]]></body>
+                    </condition>
+                </repetitionRule>
+            </itemControl>
+        </caseTask>
+        <milestone id="pi_ms__o9HDx_0" name="Milestone_0">
+            <itemControl id="_o9HDx_8">
+                <repetitionRule id="_o9HDx_9">
+                    <condition id="_o9HDx_10">
+                        <body><![CDATA[true]]></body>
+                    </condition>
+                </repetitionRule>
+            </itemControl>
+        </milestone>
+    </casePlanModel>
+    <caseRoles/>
+</case>

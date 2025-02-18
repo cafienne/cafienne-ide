@@ -1,4 +1,5 @@
 ﻿import Definitions from "../../../../repository/deploy/definitions";
+import Validator from "../../../../repository/validate/validator";
 import CodeMirrorConfig from "../../../editors/external/codemirrorconfig";
 import StandardForm from "../../../editors/standardform";
 import Settings from "../../../settings/settings";
@@ -112,7 +113,9 @@ export default class DeployForm extends StandardForm {
     }
 
     async runServerValidation() {
-        console.groupCollapsed('Running server validation')
+        new Validator(this.case.caseDefinition).run();
+        return;
+        console.groupCollapsed('Running server validation');
         const deployment = new Definitions(this.case.caseDefinition);
         const data = deployment.contents();
         const url = `${Settings.serverURL}/repository/validate`;

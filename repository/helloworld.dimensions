@@ -12,6 +12,15 @@
         <CMMNShape cmmnElementRef="_nTPPc_0">
             <Bounds x="334" y="120" width="12" height="20"/>
         </CMMNShape>
+        <CMMNShape cmmnElementRef="pi_pt__nTPPc_0">
+            <Bounds x="110" y="230" width="140" height="80"/>
+        </CMMNShape>
+        <CMMNShape cmmnElementRef="crit__nTPPc_0">
+            <Bounds x="134" y="220" width="12" height="20"/>
+        </CMMNShape>
+        <CMMNShape cmmnElementRef="pi_ct__nTPPc_0">
+            <Bounds x="50" y="180" width="140" height="80"/>
+        </CMMNShape>
         <CMMNEdge sourceCMMNElementRef="cm_csVQy_167" targetCMMNElementRef="_nTPPc_0"/>
     </CMMNDiagram>
 </CMMNDI>

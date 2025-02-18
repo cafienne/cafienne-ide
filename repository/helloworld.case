@@ -53,6 +53,10 @@
                 </cafienne:implementation>
             </extensionElements>
         </humanTask>
+        <processTask id="pi_pt__nTPPc_0" name="ProcessTask_0" isBlocking="true">
+            <entryCriterion id="crit__nTPPc_0"/>
+        </processTask>
+        <caseTask id="pi_ct__nTPPc_0" name="testCaseFile" isBlocking="true" caseRef="testCaseFile.case"/>
     </casePlanModel>
     <caseRoles>
         <role id="role_csT3f_0" name="ADMIN">
