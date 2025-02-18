@@ -19,6 +19,7 @@ export default class CMMNElementDefinition extends DocumentableElementDefinition
 
     toString() {
         const name = this.name ? ` '${this.name}'` : '';
-        return `${this.constructor.name}${name}`;
+        const type = this.constructor.name.replace('Definition', '');
+        return `${type}${name}`;
     }
 }
