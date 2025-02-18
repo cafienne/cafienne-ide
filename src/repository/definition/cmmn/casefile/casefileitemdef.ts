@@ -1,5 +1,6 @@
 import Util from "../../../../util/util";
 import XML, { Element } from "../../../../util/xml";
+import Validator from "../../../validate/validator";
 import CaseFileDefinitionDefinition from "../../cfid/casefileitemdefinitiondefinition";
 import CMMNElementDefinition from "../../cmmnelementdefinition";
 import ExternalReference from "../../references/externalreference";
@@ -74,6 +75,11 @@ export default class CaseFileItemDef extends CaseFileItemCollection {
 
     set definitionRef(newReference: string) {
         this._definitionRef.update(newReference);
+    }
+
+    validate(validator: Validator) {
+        super.validate(validator);
+        validator.mustHaveName(this);
     }
 
     get isArray() {

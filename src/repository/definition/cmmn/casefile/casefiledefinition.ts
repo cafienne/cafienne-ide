@@ -23,10 +23,10 @@ export default class CaseFileDefinition extends CaseFileItemCollection {
     validate(validator: Validator) {
         super.validate(validator);
         if (this.isOldStyle) {
-            validator.raiseWarning(this, 'The case file is in old style and will not be validated', []);
+            validator.raiseWarning(this, 'The case file is in old style. We recommend converting it to the new type structure');
         } else {
             if (this._typeRef.isEmpty) {
-                validator.raiseError(this, `The case file has no type`, []);
+                validator.raiseError(this, 'The case file has no type');
             } else {
                 if (this.type === undefined) {
                     validator.raiseError(this, `The type "${this.typeRef}" of the case file has no definition`);
