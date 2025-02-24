@@ -9,9 +9,11 @@ import ModelEditor from "../modeleditor";
 import ModelEditorMetadata from "../modeleditormetadata";
 import ModelSourceEditor from "../xmleditor/modelsourceeditor";
 import TestcaseModelEditorMetadata from "./testcasetaskmodeleditormetadata";
+import TestCaseView from "./testcaseview";
 
 export default class TestcaseModelEditor extends ModelEditor {
     viewSourceEditor?: ModelSourceEditor;
+    testcaseView: TestCaseView;
     private _changed: any;
     private _currentAutoSaveTimer?: number;
     private _model?: TestcaseModelDefinition;
@@ -24,23 +26,17 @@ export default class TestcaseModelEditor extends ModelEditor {
      */
     constructor(ide: IDE, public file: TestcaseFile) {
         super(ide, file);
-        this.generateHTML();
-    }
+        this._model = this.file.definition;
 
-    get label() {
-        return 'Edit Process - ' + this.fileName;
-    }
-
-    /**
-     * adds the html of the entire page
-     */
-    generateHTML() {
         const html = $(`
             <div class="basicbox model-source-tabs">
                 <ul>
                     <li><a href="#sourceEditor">Source</a></li>
+                    <li><a href="#testcaseEditor">Model</a></li>
                 </ul>
+
                 <div class="model-source-editor" id="sourceEditor"></div>
+                <div class="testcase-editor" id="testcaseEditor"></div>
             </div>
         `);
 
@@ -51,13 +47,22 @@ export default class TestcaseModelEditor extends ModelEditor {
             activate: (e: any, ui: any) => {
                 if (ui.newPanel.hasClass('model-source-editor')) {
                     this.viewSourceEditor?.render(this.model?.toXMLString() || '');
+                } else if (ui.newPanel.hasClass('testcase-editor')) {
+                    this.testcaseView?.render(this.model!);
                 }
             }
         });
 
         //add the source part
         this.viewSourceEditor = new ModelSourceEditor(this.html.find('.model-source-tabs .model-source-editor'), this);
-        this.viewSourceEditor?.render(this.model?.toXMLString() || '');
+        this.viewSourceEditor.render(this.model?.toXMLString() || '');
+
+        this.testcaseView = new TestCaseView(this.html.find('.model-source-tabs .testcase-editor'), this, this.model!);
+        this.testcaseView.render(this.model!);
+    }
+
+    get label() {
+        return 'Edit Testcase - ' + this.fileName;
     }
 
     onEscapeKey(e: JQuery.KeyDownEvent) {
@@ -88,9 +93,6 @@ export default class TestcaseModelEditor extends ModelEditor {
         if (this.viewSourceEditor) {
             this.viewSourceEditor.render(this.model.toXMLString());
         }
-        // Set the implementation content in the code mirror editor and
-//        this.freeContentEditor.setValue(this.model.implementation.xml);
-//        this.freeContentEditor.refresh();
     }
 
     completeUserAction() {
