@@ -1,7 +1,7 @@
 {
   "private": true,
   "dependencies": {
-    "@casefabric/typescript-client": "..\\cmmn-test-framework\\dist\\src\\casefabric-typescript-client-0.0.1.tgz",
+    "@casefabric/typescript-client": "file:../cmmn-test-framework/dist/src/casefabric-typescript-client-0.0.1.tgz",
     "@xmldom/xmldom": "^0.9.7",
     "alpaca": "~1.5.27",
     "body-parser": "^1.20.2",

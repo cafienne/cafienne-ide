@@ -56,6 +56,7 @@ import "@styles/ide/modeleditors/case/elements/halo/halo.css";
 import "@styles/validate/validate.css";
 import "@styles/ide/modeleditors/cfid/casefileitemdefinition.css";
 import "@styles/ide/settings/settingseditor.css";
+import "@styles/ide/modeleditors/testcase/testcasemodeleditor.css";
 
 export default class IDEMain {
     html: JQuery<HTMLElement>;

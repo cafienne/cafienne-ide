@@ -16,9 +16,9 @@
   resolved "https://registry.yarnpkg.com/@babel/helper-validator-identifier/-/helper-validator-identifier-7.25.9.tgz#24b64e2c3ec7cd3b3c547729b8d16871f22cbdc7"
   integrity sha512-Ed61U6XJc3CVRfkERJWDz4dJwKe7iLmmJsbOGu9wSloNSFttHV0I8g6UAgb7qnK5ly5bGLPd4oXZlxCdANBOWQ==
 
-"@casefabric/typescript-client@..\\cmmn-test-framework\\dist\\src\\casefabric-typescript-client-0.0.1.tgz":
+"@casefabric/typescript-client@file:../cmmn-test-framework/dist/src/casefabric-typescript-client-0.0.1.tgz":
   version "0.0.1"
-  resolved "..\\cmmn-test-framework\\dist\\src\\casefabric-typescript-client-0.0.1.tgz#a2528bb6a14224393636ad60b6f54811a9089273"
+  resolved "file:../cmmn-test-framework/dist/src/casefabric-typescript-client-0.0.1.tgz#a2528bb6a14224393636ad60b6f54811a9089273"
   dependencies:
     "@xmldom/xmldom" "^0.9.7"
     express "^4.17.1"
