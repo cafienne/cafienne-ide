@@ -53,6 +53,16 @@
     width: 100px;
 }
 
+.modelparametertable tbody input.modelparameternamecol {
+    width: 86px;
+}
+
+.modelparametertable table .modelparametertypecol {
+    width: 100px;
+    height: 19px;
+    margin-left: -8px;
+}
+
 .modelparametertable table .modelparameteridcol {
     width: 80px;
 }
@@ -77,8 +87,9 @@
     padding-left: 1px;
 }
 
-.modelparametertable tbody input.modelparameternamecol {
-    width: 86px;
+.modelparametertable tbody select.modelparametertypecol {
+    width: 55px;
+    border: 1px solid rgb(169, 169, 169);
 }
 
 .modelparametertable tbody input.modelparameteridcol {
