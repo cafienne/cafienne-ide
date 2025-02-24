@@ -87,7 +87,7 @@ export default class ModelParameters {
         const html = $(`<tr>
             <td><button class="removeParameter"></button></td>
             <td><input class="inputParameterName modelparameternamecol" value="${parameter.name}" /></td>
-            <td><select class="parameterTypeRef"><option></option>${typeSelector()}</select></td>
+            <td><select class="inputParameterType modelparametertypecol"><option></option>${typeSelector()}</select></td>
             <td><input class="inputParameterId modelparameteridcol" readonly value="${parameter.id}" /></td>
         </tr>`);
         html.find('.removeParameter').on('click', e => {
@@ -100,7 +100,7 @@ export default class ModelParameters {
         });
 
         html.find('.inputParameterName').on('change', e => this.changeParameter(html, parameter, (e.currentTarget as any).value, parameter.id));
-        html.find('.parameterTypeRef').on('change', e => this.changeParameter(html, parameter, parameter.name, parameter.id, (e.currentTarget as any).value));
+        html.find('.inputParameterType').on('change', e => this.changeParameter(html, parameter, parameter.name, parameter.id, (e.currentTarget as any).value));
         // // Remove "readonly" upon dblclick; id's are typically generated because they must be unique across multiple models
         html.find('.inputParameterId').on('dblclick', e => $(e.currentTarget).attr('readonly', <any>false));
         html.find('.inputParameterId').on('change', e => this.changeParameter(html, parameter, parameter.name, (e.currentTarget as any).value));
