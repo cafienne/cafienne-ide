@@ -108,7 +108,6 @@ export default class Debugger extends StandardForm {
     </div>
 </div>`);
 
-        this.html.find('.caseInstanceId').val(localStorage.getItem('debug-case-id'))
         this.html.find('.serverURL').on('change', e => Settings.serverURL = e.currentTarget.value);
         this.html.find('.from').val(localStorage.getItem('from'))
         this.html.find('.to').val(localStorage.getItem('to'))
@@ -144,6 +143,20 @@ export default class Debugger extends StandardForm {
 
         // Scan for pasted text. It can upload and re-engineer a deployed model into a set of files
         this.html.find('.event-content').on('paste', e => this.handlePasteText(e));
+
+        // Now set the initial actor id (if available) from local storage
+        this.actorId = localStorage.getItem('debug-case-id');
+    }
+
+    /**
+     * @returns {String}
+     */
+    get actorId() {
+        return this.html.find('.caseInstanceId').val().toString();
+    }
+
+    set actorId(id) {
+        this.html.find('.caseInstanceId').val(id);
     }
 
     /**
@@ -285,9 +298,10 @@ export default class Debugger extends StandardForm {
 
     detectParentActor() {
         this.parentActorId = '';
-        const parents = this.events.filter(event => event.content.parentActorId)
+        const parents = this.events.filter(event => event.content && (event.content.parentActorId || (event.content.content && event.content.content.parentActorId)))
         if (parents.length) {
-            this.parentActorId = parents[parents.length - 1].content.parentActorId;
+            const parent = parents[parents.length - 1];
+            this.parentActorId = parent.content.parentActorId || parent.content.content.parentActorId;
         } else {
             // Check if there is a case with a business identifier named '__ttp__boardId__'
             //  and if that is not found, check if we're in a consent group created by a board (then the id ends with '-team')
@@ -295,9 +309,8 @@ export default class Debugger extends StandardForm {
             if (boards.length) {
                 this.parentActorId = boards[0].content.value;
             } else {
-                const currentActorId = this.html.find('.caseInstanceId').val().toString();
-                if (currentActorId.endsWith('-team')) {
-                    this.parentActorId = currentActorId.substring(0, currentActorId.length - 5);
+                if (this.actorId.endsWith('-team')) {
+                    this.parentActorId = this.actorId.substring(0, this.actorId.length - 5);
                 }
             }
         }
@@ -377,12 +390,24 @@ export default class Debugger extends StandardForm {
         return eventWithName;
     }
 
+    getOtherActorId(event) {
+        if (event.type === 'TaskInputFilled' && (event.content.type === 'ProcessTask' || event.content.type === 'CaseTask') || event.type === 'BoardTeamCreated' || event.type === 'FlowActivated') {
+            return event.content.planItemId || event.content.taskId || event.content.team || event.content.flowId;
+        }
+        if (event.content.targetActorId && event.content.targetActorId !== this.actorId) {
+            return event.content.targetActorId;
+        }
+        if (event.content.sourceActorId && event.content.sourceActorId !== this.actorId) {
+            return event.content.sourceActorId;
+        }
+    }
+
     isDefinitionEvent(event) {
         return (event.content && event.content.definition && event.content.definition.source && ('' + event.content.definition.source).startsWith('<?xml'));
     }
 
     getEventButton(event) {
-        if (event.type === 'TaskInputFilled' && (event.content.type === 'ProcessTask' || event.content.type === 'CaseTask') || event.type === 'BoardTeamCreated' || event.type === 'FlowActivated') {
+        if (this.getOtherActorId(event)) {
             return '<span style="padding-left:20px"><button class="buttonShowSubEvents">Show events</button></span>';
         } else if (this.isDefinitionEvent(event)) {
             return '<span style="padding-left:20px"><button class="buttonCopyEventDefinition">Copy definition</button></span>';
@@ -533,13 +558,13 @@ export default class Debugger extends StandardForm {
     showSubEvents(btn) {
         const event = this.findEvent(btn);
         // New task events carry planItemId, but older ones may still have taskId filled instead, so also trying that.
-        this.html.find('.caseInstanceId').val(event.content.planItemId || event.content.taskId || event.content.team || event.content.flowId);
+        this.actorId = this.getOtherActorId(event);
         this.showEvents();
     }
 
     showParentEvents() {
         if (this.parentActorId) {
-            this.html.find('.caseInstanceId').val(this.parentActorId);
+            this.actorId = this.parentActorId || '';
             this.showEvents();
         }
     }
@@ -585,7 +610,6 @@ export default class Debugger extends StandardForm {
     }
 
     async showEvents() {
-        const caseInstanceId = this.html.find('.caseInstanceId').val();
         const from = this.html.find('.from').val();
         const to = this.html.find('.to').val();
         const parameters = [];
@@ -596,11 +620,11 @@ export default class Debugger extends StandardForm {
             parameters.push(`to=${to}`)
         }
 
-        $get(`${Settings.serverURL}/debug/${caseInstanceId}?${parameters.join('&')}`).then(data => {
+        $get(`${Settings.serverURL}/debug/${this.actorId}?${parameters.join('&')}`).then(data => {
             this.events = data;
             if (this.events.length > 0) {
                 // Only overwrite the previous identifier if we have actually found events.
-                localStorage.setItem('debug-case-id', caseInstanceId.toString());
+                localStorage.setItem('debug-case-id', this.actorId);
                 localStorage.setItem('from', '' + from);
                 localStorage.setItem('to', '' + to);
             }
