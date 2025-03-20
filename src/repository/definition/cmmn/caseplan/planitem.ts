@@ -54,8 +54,9 @@ export default class PlanItem extends CMMNElementDefinition {
 
     validate(validator: Validator): void {
         super.validate(validator);
+        // Validate entry criteria availability when this is a repeating element.
         if (this.itemControl.repetitionRule && this.entryCriteria.length > 0) {
-            if (this.entryCriteria.filter(criterion => criterion.caseFileItemOnParts.length !== 0 && criterion.planItemOnParts.length !== 0).length == 0) {
+            if (this.entryCriteria.filter(criterion => criterion.caseFileItemOnParts.length > 0 || criterion.planItemOnParts.length > 0).length === 0) {
                 validator.raiseError(this, `${this} has a repetition rule defined, but no entry criteria with at least one on part. This is mandatory.`);
             }
         }

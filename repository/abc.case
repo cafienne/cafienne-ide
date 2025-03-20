@@ -21,6 +21,35 @@
                 </repetitionRule>
             </itemControl>
         </milestone>
+        <humanTask id="pi_ht__o9HDx_0" name="HumanTask_0" isBlocking="true">
+            <extensionElements mustUnderstand="false">
+                <four_eyes xmlns="org.cafienne">
+                    <task id="_o9HDx_20" name="PlanItemReference_3" taskRef="pi_ht__o9HDx_2" taskName="HumanTask_2"/>
+                </four_eyes>
+                <rendez_vous xmlns="org.cafienne">
+                    <task id="_o9HDx_32" name="PlanItemReference_10" taskRef="pi_ht__o9HDx_1" taskName="HumanTask_1"/>
+                </rendez_vous>
+            </extensionElements>
+        </humanTask>
+        <humanTask id="pi_ht__o9HDx_1" name="HumanTask_1" isBlocking="true">
+            <extensionElements mustUnderstand="false">
+                <four_eyes xmlns="org.cafienne">
+                    <task id="_o9HDx_34" name="PlanItemReference_12" taskRef="pi_ht__o9HDx_2" taskName="HumanTask_2"/>
+                </four_eyes>
+                <rendez_vous xmlns="org.cafienne">
+                    <task id="_o9HDx_33" name="PlanItemReference_11" taskRef="pi_ht__o9HDx_0" taskName="HumanTask_0"/>
+                </rendez_vous>
+            </extensionElements>
+        </humanTask>
+        <humanTask id="pi_ht__o9HDx_2" name="HumanTask_2" isBlocking="true">
+            <extensionElements mustUnderstand="false">
+                <four_eyes xmlns="org.cafienne">
+                    <task id="_o9HDx_19" name="PlanItemReference_2" taskRef="pi_ht__o9HDx_0" taskName="HumanTask_0"/>
+                    <task id="_o9HDx_35" name="PlanItemReference_13" taskRef="pi_ht__o9HDx_1" taskName="HumanTask_1"/>
+                </four_eyes>
+                <rendez_vous xmlns="org.cafienne"/>
+            </extensionElements>
+        </humanTask>
     </casePlanModel>
     <caseRoles/>
 </case>

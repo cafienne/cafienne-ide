@@ -406,6 +406,13 @@ TravelRequest.TravelDetails.Destination[0].Country == "US"]]></body>
                 </extensionElements>
             </humanTask>
         </stage>
+        <humanTask id="pi_ht__4wCNa_0" name="HumanTask_0" isBlocking="true">
+            <entryCriterion id="crit__4wCNa_0">
+                <caseFileItemOnPart id="_4wCNa_85" sourceRef="TravelRequest/TravelDetails/Destination">
+                    <standardEvent>create</standardEvent>
+                </caseFileItemOnPart>
+            </entryCriterion>
+        </humanTask>
         <planningTable id="pt_cm_undefined_3">
             <humanTask id="cm_csgxw_215" name="Select approver manually" authorizedRoleRefs="role_csKsD_1" isBlocking="true" performerRef="role_csKsD_2">
                 <inputs id="inTP_cm_csgxw_215_0" name="TravelRequest" bindingRef="TravelRequest"/>

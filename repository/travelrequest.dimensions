@@ -105,6 +105,15 @@
         <CMMNShape cmmnElementRef="pt_cm_undefined_3">
             <Bounds x="300" y="33" width="24" height="16"/>
         </CMMNShape>
+        <CMMNShape cmmnElementRef="TravelRequest/TravelDetails/Destination">
+            <Bounds x="320" y="410" width="25" height="40"/>
+        </CMMNShape>
+        <CMMNShape cmmnElementRef="pi_ht__4wCNa_0">
+            <Bounds x="400" y="410" width="140" height="80"/>
+        </CMMNShape>
+        <CMMNShape cmmnElementRef="crit__4wCNa_0">
+            <Bounds x="394" y="430" width="12" height="20"/>
+        </CMMNShape>
         <CMMNEdge sourceCMMNElementRef="_4wCNa_1" targetCMMNElementRef="cm_cs9Q0_207"/>
         <CMMNEdge sourceCMMNElementRef="_4wCNa_2" targetCMMNElementRef="cm_cs9Q0_207"/>
         <CMMNEdge sourceCMMNElementRef="cm_csgxw_220" targetCMMNElementRef="_4wCNa_6"/>
@@ -119,5 +128,6 @@
         <CMMNEdge sourceCMMNElementRef="cm_csjTZ_640" targetCMMNElementRef="_4wCNa_10"/>
         <CMMNEdge sourceCMMNElementRef="cm_csgxw_210" targetCMMNElementRef="_4wCNa_8"/>
         <CMMNEdge sourceCMMNElementRef="cm_csgxw_208" targetCMMNElementRef="_4wCNa_7"/>
+        <CMMNEdge sourceCMMNElementRef="TravelRequest/TravelDetails/Destination" targetCMMNElementRef="crit__4wCNa_0"/>
     </CMMNDiagram>
 </CMMNDI>
