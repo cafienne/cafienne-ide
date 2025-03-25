@@ -2,7 +2,7 @@ import Util from "../util/util";
 import Problem from "./problem";
 import ProblemType from "./problemtype";
 
-export default class Validator {
+export default class ClassicValidator {
     constructor(cs) {
         this.case = cs;
         /** @type{Array<Problem>} */

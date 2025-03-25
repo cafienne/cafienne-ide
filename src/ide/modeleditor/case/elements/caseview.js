@@ -6,8 +6,8 @@ import CaseFileItemDef from "../../../../repository/definition/cmmn/casefile/cas
 import CMMNElementDefinition from "../../../../repository/definition/cmmnelementdefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import Util from "../../../../util/util";
+import ClassicValidator from "../../../../validate/classicvalidator";
 import ValidateForm from "../../../../validate/validateform";
-import Validator from "../../../../validate/validator";
 import Debugger from "../../../debugger/debugger";
 import DragData from "../../../dragdrop/dragdata";
 import RightSplitter from "../../../splitter/rightsplitter";
@@ -120,7 +120,7 @@ export default class CaseView {
             this.casePlanModel.refreshView();
         }
         // create object for validation of CMMN schema
-        this.validator = new Validator(this);
+        this.validator = new ClassicValidator(this);
         this.validateForm = new ValidateForm(this);
         this.validator.addListener(validator => {
             // Shows the number of errors and warnings in the case footer
