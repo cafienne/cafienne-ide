@@ -1,4 +1,5 @@
 import { Element } from "../../../../util/xml";
+import Validator from "../../../validate/validator";
 import CMMNElementDefinition from "../../cmmnelementdefinition";
 import ElementDefinition from "../../elementdefinition";
 import ModelDefinition from "../../modeldefinition";
@@ -19,6 +20,16 @@ export default class ExpressionContainer extends UnnamedCMMNElementDefinition {
         super(importNode, caseDefinition, parent);
         this._expression = this.parseElement(this.expressionTagName, ExpressionDefinition);
         this.contextRef = this.parseInternalReference('contextRef');
+    }
+
+    validateExpression(validator: Validator, owner: CMMNElementDefinition, expressionDescription: string) {
+        if (!this.body || this.body.trim().length === 0) {
+            validator.raiseError(owner, `The ${expressionDescription} in ${owner} must not be empty`)
+        }
+
+        if (this.contextRef.isEmpty && this.body !== 'true' && this.body !== 'false') {
+            validator.raiseWarning(owner,  `The ${expressionDescription} in ${owner} has no case file item context`);                
+        }
     }
 
     referencesElement(element: XMLSerializable) {
@@ -43,7 +54,7 @@ export default class ExpressionContainer extends UnnamedCMMNElementDefinition {
      * @returns {ExpressionDefinition}
      */
     get expression() {
-        if (! this._expression) {
+        if (!this._expression) {
             this._expression = super.createDefinition(ExpressionDefinition);
         }
         return this._expression;
