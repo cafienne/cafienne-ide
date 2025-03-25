@@ -1,4 +1,5 @@
 import { Element } from "../../../../util/xml";
+import Validator from "../../../validate/validator";
 import CaseDefinition from "../casedefinition";
 import CaseFileItemDef from "../casefile/casefileitemdef";
 import ExpressionDefinition from "../expression/expressiondefinition";
@@ -24,6 +25,19 @@ export default class TimerEventDefinition extends EventListenerDefinition {
         if (!this.planItemStartTrigger && !this.caseFileItemStartTrigger){
             //planItemStartTrigger is default
             this.planItemStartTrigger = this.getPlanItemStartTrigger();
+        }
+    }
+
+    validate(validator: Validator) {
+        super.validate(validator);
+        if (! this.timerExpression) {
+            validator.raiseError(this, `${this} must have an expression`);
+        }
+        if (this.planItemStartTrigger) {
+            this.planItemStartTrigger.validateOnPart(validator, this, 'plan item start trigger')
+        }
+        if (this.caseFileItemStartTrigger) {
+            this.caseFileItemStartTrigger.validateOnPart(validator, this, 'case file item start trigger')
         }
     }
 
