@@ -31,7 +31,7 @@ An alternative, more complex project setup with a `package.json` file should con
 ```json
 {
   "dependencies": {
-    "@casefabric/repository": "^1.1.0"
+    "@casefabric/repository": "^0.2.1"
   }
 }
 ```
@@ -44,7 +44,7 @@ For example
     "compileModel": "cross-env MODELER_REPOSITORY_PATH=./src/casemodels MODELER_DEPLOY_PATH=./dist/cmmn compile",
   },
   "devDependencies": {
-    "@casefabric/repository": "^0.0.1",
+    "@casefabric/repository": "^0.2.1",
     "cross-env": "^7.0.3"
   }
 ...
@@ -63,7 +63,7 @@ src/
 
 ↓↓↓
 
-// Transpiled with @cafienne/repository
+// Transpiled with @casefabric/repository
 
 dist/
 └── cmmn

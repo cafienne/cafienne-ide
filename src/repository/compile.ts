@@ -85,7 +85,7 @@ async function compileAndWrite(caseFile: CaseFile, fileStorage: FileStorage) {
     }
     logging = true;
 
-    const file = `${deployFolder}/${caseFile.name}.xml`;
+    const file = `${caseFile.name}.xml`;
     console.log('- writing file ' + file)
     await fileStorage.deploy(file, content);
 }
