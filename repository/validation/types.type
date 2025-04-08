@@ -1,0 +1,15 @@
+<type xmlns="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:cafienne="org.cafienne" id="validation/types.type" name="validation/types">
+    <schema>
+        <property id="sp__AYvjT_0" name="Root" type="root.type" multiplicity="ExactlyOne"/>
+        <property id="sp__AYvjT_1" name="Undefined" multiplicity="ExactlyOne"/>
+        <property id="sp__AYvjT_2" name="Empty" type="object" multiplicity="ExactlyOne">
+            <schema id="_AYvjT_0" name="Schema_0"/>
+        </property>
+        <property id="sp__wKzWF_0" type="object" multiplicity="ExactlyOne">
+            <schema id="_wKzWF_0" name="Schema_1"/>
+        </property>
+        <property id="sp__UBC3A_0" name="UnavailableArrayType" type="unavailable_array.type" multiplicity="ZeroOrMore"/>
+        <property id="sp__9hgzn_0" name="InvalidMultiplicity" type="string" multiplicity="ExactlyOnce"/>
+        <property id="sp__UymYC_0" name="MissingMultiplicity" type="string" multiplicity="" />
+    </schema>
+</type>

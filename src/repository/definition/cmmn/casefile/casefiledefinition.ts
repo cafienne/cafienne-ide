@@ -1,4 +1,5 @@
 import { Element } from "../../../../util/xml";
+import Validator from "../../../validate/validator";
 import CMMNElementDefinition from "../../cmmnelementdefinition";
 import SchemaPropertyDefinition from "../../type/schemapropertydefinition";
 import TypeDefinition from "../../type/typedefinition";
@@ -17,6 +18,21 @@ export default class CaseFileDefinition extends CaseFileItemCollection {
         this.parseElements('caseFileItem', CaseFileItemDef, this.children);
         this.isOldStyle = this.children.length > 0; // If we have found the <caseFileItem> tag, then it is an old style model.
         this._typeRef = this.parseReference('typeRef', TypeReference);
+    }
+
+    validate(validator: Validator) {
+        super.validate(validator);
+        if (this.isOldStyle) {
+            validator.raiseWarning(this, 'The case file is in old style. We recommend converting it to the new type structure');
+        } else {
+            if (this._typeRef.isEmpty) {
+                validator.raiseError(this, 'The case file has no type');
+            } else {
+                if (this.type === undefined) {
+                    validator.raiseError(this, `The type "${this.typeRef}" of the case file has no definition`);
+                }
+            }
+        }
     }
 
     get typeRef() {
