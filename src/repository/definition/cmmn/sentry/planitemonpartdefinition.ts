@@ -1,5 +1,6 @@
 import Util from "../../../../util/util";
 import { Element } from "../../../../util/xml";
+import Validator from "../../../validate/validator";
 import CaseDefinition from "../casedefinition";
 import PlanItem from "../caseplan/planitem";
 import PlanItemTransition from "../caseplan/planitemtransition";
@@ -24,8 +25,18 @@ export default class PlanItemOnPartDefinition extends OnPartDefinition<PlanItem>
         return PlanItemTransition.parse(value);
     }
 
+    validate(validator: Validator) {
+        super.validate(validator);
+        if (!this.standardEvent.isInvalid && this.source && this.source.transitions.indexOf(this.standardEvent) < 0) {
+            validator.raiseError(this.owner, `The ${this.description} in ${this.owner} has an invalid standardEvent '${this.standardEvent.value}' on source '${this.source.name}'. It must be one of [${this.source.transitions.filter(t => !t.isEmpty).join(', ')}]`);
+        }
+        if (this.source?.isDiscretionary) {
+            validator.raiseError(this.owner, `The ${this.description} in ${this.owner} refers to a discretionary element '${this.source.name}'. OnParts cannot be connected to discretionary items`);
+        }
+    }
+
     get description() {
-        return `${Util.ordinal_suffix_of(this.parent.planItemOnParts.indexOf(this))} plan item on part`;
+        return `${Util.ordinal_suffix_of(this.parent.planItemOnParts.indexOf(this) + 1)} PlanItemOnPart`;
     }
 
     createExportNode(parentNode: Element) {
