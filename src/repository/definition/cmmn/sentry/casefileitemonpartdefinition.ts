@@ -1,3 +1,4 @@
+import Util from "../../../../util/util";
 import { Element } from "../../../../util/xml";
 import ElementDefinition from "../../elementdefinition";
 import ModelDefinition from "../../modeldefinition";
@@ -21,6 +22,10 @@ export default class CaseFileItemOnPartDefinition extends OnPartDefinition<CaseF
         if (this.sourceRef.references(oldId)) {
             this.sourceRef.update(newId);
         }
+    }
+
+    get description() {
+        return `${Util.ordinal_suffix_of(this.parent.caseFileItemOnParts.indexOf(this) + 1)} CaseFileItemOnPart`;
     }
 
     createExportNode(parentNode: Element) {
