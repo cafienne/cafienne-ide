@@ -1,0 +1,27 @@
+<case xmlns="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:cafienne="org.cafienne" id="validation/invalidcase.case" name="validation/invalidcase" expressionLanguage="spel" guid="_ekJWw">
+    <caseFileModel typeRef="validation/invalidcase.type"/>
+    <casePlanModel id="cm__ekJWw_0" name="validation/invalidcase" autoComplete="true">
+        <caseTask id="pi_ct__ekJWw_1" name="HelloWorld" isBlocking="true" caseRef="helloworld.case"/>
+        <caseTask id="pi_ct__ekJWw_0" name="emptysubcase" isBlocking="true" caseRef="validation/emptysubcase.case">
+            <entryCriterion id="crit__ekJWw_0"/>
+            <itemControl id="_ekJWw_0">
+                <repetitionRule id="_ekJWw_1">
+                    <condition id="_ekJWw_2">
+                        <body><![CDATA[true]]></body>
+                    </condition>
+                </repetitionRule>
+            </itemControl>
+        </caseTask>
+        <milestone id="pi_ms__ekJWw_0" name="Milestone_0">
+            <itemControl id="_ekJWw_6">
+                <repetitionRule id="_ekJWw_7">
+                    <condition id="_ekJWw_8">
+                        <body><![CDATA[true]]></body>
+                    </condition>
+                </repetitionRule>
+            </itemControl>
+        </milestone>
+        <processTask id="pi_pt__ekJWw_0" name="ProcessTask_0" isBlocking="true"/>
+    </casePlanModel>
+    <caseRoles/>
+</case>

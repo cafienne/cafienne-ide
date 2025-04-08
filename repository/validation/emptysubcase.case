@@ -1,0 +1,7 @@
+<case xmlns="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:cafienne="org.cafienne" id="validation/emptysubcase.case" name="validation/emptysubcase" expressionLanguage="spel" guid="_OOfWU">
+    <casePlanModel id="cm__OOfWU_0" name="validation/emptysubcase" autoComplete="true"/>
+    <caseRoles/>
+    <textAnnotation id="_OOfWU_0">
+        <text><![CDATA[This case is entirely empty - except for this textbox]]></text>
+    </textAnnotation>
+</case>
