@@ -1,0 +1,11 @@
+<CMMNDI>
+    <CMMNDiagram>
+        <CMMNShape cmmnElementRef="cm__xamEQ_0" name="validation/types">
+            <Bounds x="20" y="20" width="800" height="500"/>
+        </CMMNShape>
+    </CMMNDiagram>
+    <validation>
+        <hiddennotices/>
+        <hiddenproblems/>
+    </validation>
+</CMMNDI>

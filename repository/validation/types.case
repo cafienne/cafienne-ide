@@ -1,0 +1,4 @@
+<case id="validation/types.case" name="validation/types" guid="_xamEQ">
+    <caseFileModel typeRef="validation/types.type"/>
+    <casePlanModel id="cm__xamEQ_0" name="validation/types"/>
+</case>

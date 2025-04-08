@@ -1,3 +1,4 @@
+import Validator from "../../../validate/validator";
 import SchemaPropertyDefinition from "../../type/schemapropertydefinition";
 import XMLSerializable from "../../xmlserializable";
 import CaseDefinition from "../casedefinition";
@@ -20,6 +21,10 @@ export default class CaseFileItemTypeDefinition extends CaseFileItemDef {
         childProperties.forEach(child => this.addChild(child));
 
         this.isEmpty = false;
+    }
+
+    validate(validator: Validator) {
+        // Override validator, because TypeDefinition will do the validation, and CaseFileItemDef only validates classic CaseFiles.
     }
 
     set name(value: string) {
