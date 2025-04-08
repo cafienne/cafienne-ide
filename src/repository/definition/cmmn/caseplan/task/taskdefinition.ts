@@ -1,6 +1,7 @@
 import ServerFile from "../../../../../repository/serverfile/serverfile";
 import Util from "../../../../../util/util";
 import { Element } from "../../../../../util/xml";
+import Validator from "../../../../validate/validator";
 import ParameterDefinition from "../../../contract/parameterdefinition";
 import ModelDefinition from "../../../modeldefinition";
 import ExternalReference from "../../../references/externalreference";
@@ -24,6 +25,31 @@ export default class TaskDefinition extends TaskStageDefinition {
         this.inputs = this.parseElements('inputs', TaskParameterDefinition);
         this.outputs = this.parseElements('outputs', TaskParameterDefinition);
         this._mappings = this.parseElements('parameterMapping', ParameterMappingDefinition);
+    }
+
+    validate(validator: Validator): void {
+        super.validate(validator);
+        if (!this.isBlocking) {
+            if (this.exitCriteria.length > 0) {
+                validator.raiseError(this, `${this} is non blocking. It may not have exit criteria (found ${this.exitCriteria.length})`);
+            }
+
+            if (this.outputs.length > 0) {
+                validator.raiseError(this, `${this} is non blocking. It may not have output parameters (found ${this.outputs.length})`);
+            }
+
+            if (this.planningTable !== undefined) {
+                validator.raiseError(this, `${this} is non blocking. It may not have a planning table`);
+            }
+        }
+    }
+
+    validateImplementation(validator: Validator) {
+        if (this.implementationReference.isEmpty) {
+            validator.raiseError(this, `${this} misses a reference to an implementation`);
+        } else if (this.implementationReference.getDefinition() === undefined) {
+            validator.raiseError(this, `${this} refers to an implementation called '${this.implementationRef}' but that file does not exist`);
+        }
     }
 
     get mappings(): ParameterMappingDefinition[] {

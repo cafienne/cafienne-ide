@@ -1,4 +1,5 @@
 import { Element } from "../../../../../../util/xml";
+import Validator from "../../../../../validate/validator";
 import CaseDefinition from "../../../../cmmn/casedefinition";
 import ParameterMappingDefinition from "../../../../cmmn/contract/parametermappingdefinition";
 import CafienneImplementationDefinition from "../../../../extensions/cafienneimplementationdefinition";
@@ -22,6 +23,12 @@ export default class CafienneWorkflowDefinition extends CafienneImplementationDe
         this.mappings = this.parseElements('parameterMapping', ParameterMappingDefinition);
         this.assignment = this.parseElement((AssignmentDefinition as any).TAG, AssignmentDefinition);
         this.dueDate = this.parseElement((DueDateDefinition as any).TAG, DueDateDefinition);
+    }
+
+    validate(validator: Validator) {
+        super.validate(validator);
+        if (this.dueDate) this.dueDate.validateExpression(validator, this.task, 'due date');
+        if (this.assignment) this.assignment.validateExpression(validator, this.task, 'dynamic assignment');
     }
 
     resolvedExternalReferences() {
