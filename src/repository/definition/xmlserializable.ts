@@ -1,6 +1,7 @@
 import Util from "../../util/util";
 import XML, { Element } from "../../util/xml";
 import ServerFile from "../serverfile/serverfile";
+import Validator from "../validate/validator";
 import AttributeDefinition from "./attributedefinition";
 import ElementDefinition from "./elementdefinition";
 import ModelDefinition from "./modeldefinition";
@@ -30,6 +31,13 @@ export default class XMLSerializable {
         this.extensionElement = XML.getChildByTagName(this.importNode, EXTENSIONELEMENTS);
         this.name = this.parseAttribute('name');
         this.id = this.parseAttribute('id');
+    }
+
+    /**
+     * Hook invoked when this element is inspected by a validator.
+     * The element can use the validator to add errors and warnings.
+     */
+    validate(validator: Validator) {
     }
 
     get id() {
