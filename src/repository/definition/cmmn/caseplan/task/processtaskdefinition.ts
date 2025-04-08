@@ -1,5 +1,6 @@
 import { Element } from "../../../../../util/xml";
 import ProcessFile from "../../../../serverfile/processfile";
+import Validator from "../../../../validate/validator";
 import ProcessModelDefinition from "../../../process/processmodeldefinition";
 import ExternalReference from "../../../references/externalreference";
 import CaseDefinition from "../../casedefinition";
@@ -17,6 +18,10 @@ export default class ProcessTaskDefinition extends TaskDefinition {
         this.processRef = this.parseReference('processRef');
     }
 
+    validate(validator: Validator): void {
+        super.validate(validator);
+        super.validateImplementation(validator);
+    }
 
     protected get implementationReference() {
         return this.processRef;

@@ -1,4 +1,5 @@
 import XML, { Element } from "../../../../util/xml";
+import Validator from "../../../validate/validator";
 import CaseDefinition from "../casedefinition";
 import MilestoneDefinition from "./milestonedefinition";
 import PlanItem from "./planitem";
@@ -22,6 +23,22 @@ export default class StageDefinition extends TaskStageDefinition {
         super(importNode, caseDefinition, parent);
         this.autoComplete = this.parseBooleanAttribute('autoComplete', true);
         this.planItems = this.parseChildren(this);
+    }
+
+    validate(validator: Validator): void {
+        super.validate(validator);
+
+        // validate autocomplete
+        if (!this.autoComplete) {
+            if (!this.planningTable || this.planningTable.tableItems.length == 0) {
+                validator.raiseWarning(this, `${this} has the property autocomplete=FALSE. This is mostly needed in stages with discretionary elements - but they are not defined.`);
+            }
+        }
+        
+        // validate more then one child
+        if (this.planItems.length === 0) {
+            validator.raiseWarning(this, `${this} has no plan items and will complete immediately when it becomes active`);
+        }
     }
 
     /**

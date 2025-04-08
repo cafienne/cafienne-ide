@@ -1,5 +1,6 @@
 import { Element } from "../../../../../util/xml";
 import HumanTaskFile from "../../../../serverfile/humantaskfile";
+import Validator from "../../../../validate/validator";
 import CaseDefinition from "../../casedefinition";
 import CaseRoleDefinition from "../../caseteam/caseroledefinition";
 import CaseRoleReference from "../../caseteam/caserolereference";
@@ -19,6 +20,22 @@ export default class HumanTaskDefinition extends TaskDefinition {
         this.performerRef = this.parseInternalReference('performerRef');
         /** @type {CafienneWorkflowDefinition} */
         this.workflow = this.parseImplementation(CafienneWorkflowDefinition);
+    }
+
+    validate(validator: Validator): void {
+        super.validate(validator);
+
+        // validate TaskPairing
+        if (this.rendezVous && this.fourEyes) {
+            let counterparts = this.rendezVous.references;
+            let opposites = this.fourEyes.references;
+            // Verify that we cannot have "rendez-vous" with items that we also have "4-eyes" with.
+            opposites.forEach(item => {
+                if (counterparts.filter(counter => item.id === counter.id).length > 0) {
+                    validator.raiseError(this, `${this} has a 4-eyes defined with ${item}, but also rendez-vous (either directly or indirectly). This is not valid.'`);
+                }
+            });
+        }
     }
 
     protected get implementationReference() {
