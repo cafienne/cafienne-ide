@@ -5,6 +5,7 @@ import CaseDefinition from "../../../../repository/definition/cmmn/casedefinitio
 import CaseFileItemDef from "../../../../repository/definition/cmmn/casefile/casefileitemdef";
 import CMMNElementDefinition from "../../../../repository/definition/cmmnelementdefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+import Validator from "../../../../repository/validate/validator";
 import Util from "../../../../util/util";
 import ClassicValidator from "../../../../validate/classicvalidator";
 import ValidateForm from "../../../../validate/validateform";
@@ -96,6 +97,7 @@ export default class CaseView {
         this.caseParametersEditor = new CaseParametersEditor(this);
         this.startCaseEditor = new StartCaseEditor(this);
         this.debugEditor = new Debugger(this);
+        this.validateForm = new ValidateForm(this);
 
         if (this.caseDefinition.hasCasePlan()) {
             this.loading = true;
@@ -121,19 +123,6 @@ export default class CaseView {
         }
         // create object for validation of CMMN schema
         this.validator = new ClassicValidator(this);
-        this.validateForm = new ValidateForm(this);
-        this.validator.addListener(validator => {
-            // Shows the number of errors and warnings in the case footer
-            const iErrors = validator.errors.length;
-            const iWarnings = validator.warnings.length;
-
-            const validateLabel = $('.validateLabel');
-            validateLabel.html(`CMMN Validation found ${iErrors} problem${iErrors == 1 ? '' : 's'} and ${iWarnings} suggestion${iWarnings == 1 ? '' : 's'}`);
-            validateLabel.css('color', iErrors > 0 ? 'red' : iWarnings > 0 ? 'orange' : 'grey');
-            if (iErrors == 0 && iWarnings == 0) {
-                validateLabel.html('');
-            }
-        });
 
         const end = new Date();
         console.log(`Case '${this.caseDefinition.file.fileName}' loaded in ${((end - now) / 1000)} seconds`)
@@ -330,14 +319,19 @@ export default class CaseView {
         this.editor.hideMovableEditors();
 
         this.runValidation();
-        if (this.validator.problems.length > 0) {
-            this.validateForm.show();
-        }
         this.sourceEditor.open();
     }
 
     runValidation() {
-        this.validator.run();
+        const validator = new Validator(this.case.caseDefinition).run();
+        this.validateForm.loadRemarks(validator);
+    }
+
+    highlight(remark) {
+        const view = this.items.find(item => item.definition === remark.element)
+        if (view) {
+            view.highlight(remark);
+        }
     }
 
     /**
@@ -467,6 +461,7 @@ export default class CaseView {
         this.startCaseEditor.delete();
         this.sourceEditor.delete();
         this.deployForm.delete();
+        this.validateForm.delete();
         this.splitter.delete();
         this.items.forEach(canvasItem => canvasItem.deletePropertiesView());
         HtmlUtil.removeHTML(this.html);

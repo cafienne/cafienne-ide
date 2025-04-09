@@ -1,6 +1,6 @@
 ﻿#validateformid{
-    width:500px;
-    height:200px;
+    width:1000px;
+    height:400px;
     top:300px;
     left:640px;
     overflow:hidden;
@@ -65,6 +65,19 @@
 #validateformid .headerrowlabels .problemtype{
     width:20px;    
     border-right:1px solid #DDDDDD;
+}
+
+#validateformid .headerrowlabels .problemmodel {
+    width:200px;    
+    border-right:1px solid #DDDDDD;
+}
+
+#validateformid .problemrow .problemmodel {
+    border-right:1px solid #DDDDDD;
+    width:200px;    
+    /* position:relative; */
+    left:0px;
+    top:0px;
 }
 
 #validateformid .problemrow .problemtype img{

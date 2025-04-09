@@ -33,6 +33,9 @@ export default class CaseFileDefinition extends CaseFileItemCollection {
                 }
             }
         }
+        if (this.children.length === 0) {
+            validator.raiseError(this, 'The case file must have case file items');
+        }
     }
 
     get typeRef() {

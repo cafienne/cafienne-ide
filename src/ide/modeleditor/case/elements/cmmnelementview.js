@@ -2,9 +2,11 @@ import { shapes, util } from "jointjs";
 import CMMNElementDefinition from "../../../../repository/definition/cmmnelementdefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import { CMMNDocumentationDefinition } from "../../../../repository/definition/elementdefinition";
+import Remark from "../../../../repository/validate/remark";
 import Util from "../../../../util/util";
 import HtmlUtil from "../../../util/htmlutil";
 import Grid from "../grid";
+import Highlighter from "../highlighter";
 import Marker from "../marker";
 import Resizer from "../resizer";
 import CanvasElement from "./canvaselement";
@@ -275,6 +277,15 @@ export default class CMMNElementView extends CanvasElement {
     }
 
     /**
+     * 
+     * @param {Remark} remark 
+     */
+    highlight(remark) {
+        console.log("Highlighting remark for element " + this);
+        this.highlighter.refresh(remark);
+    }
+
+    /**
      * Returns the "nice" type description of this CMMN Element.
      * Sub classes must implement this, otherwise an error is thrown.
      * @returns {String}
@@ -341,6 +352,17 @@ export default class CMMNElementView extends CanvasElement {
             this._marker = new Marker(this);
         }
         return this._marker;
+    }
+
+    get highlighter() {
+        if (! this._highlighter) {
+            this._highlighter = new Highlighter(this);
+        }
+        return this._highlighter;
+    }
+
+    deleteHighlighter() {
+        if (this._highlighter) this.highlighter.delete();
     }
 
     deleteMarker() {
@@ -512,6 +534,7 @@ export default class CMMNElementView extends CanvasElement {
     deleteSubViews() {
         this.deleteResizer();
         this.deleteMarker();
+        this.deleteHighlighter();
         this.deleteHalo();
         this.deletePropertiesView();
     }
