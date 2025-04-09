@@ -53,6 +53,7 @@ import "@styles/ide/modeleditors/case/shapebox.css";
 import "@styles/ide/modeleditors/case/casesourceeditor.css";
 import "@styles/ide/modeleditors/case/resizer.css";
 import "@styles/ide/modeleditors/case/marker.css";
+import "@styles/ide/modeleditors/case/highlighter.css";
 import "@styles/ide/modeleditors/case/elements/halo/halo.css";
 import "@styles/validate/validate.css";
 import "@styles/ide/modeleditors/cfid/casefileitemdefinition.css";

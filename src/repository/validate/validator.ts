@@ -20,6 +20,7 @@ export default class Validator {
         });
         console.groupEnd();
         console.log(`Validation resulted in ${this.remarks.length} remarks\n${this.remarks.map((r, i) => `${i + 1} - ${r}`).join('\n')}`);
+        return this;
     }
 
     add(remark: Remark<XMLSerializable>) {
@@ -45,6 +46,18 @@ export default class Validator {
 
     raiseError(element: XMLSerializable, description: string, ...args: any[]) {
         this.add(new Error(element, description));
+    }
+
+    get problems() {
+        return [...this.remarks];
+    }
+
+    get errors() {
+        return [...this.remarks.filter(r => r.isError())];
+    }
+
+    get warnings() {
+        return [...this.remarks.filter(r => r.isWarning())];
     }
 }
 

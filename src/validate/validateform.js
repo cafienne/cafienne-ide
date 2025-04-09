@@ -4,6 +4,8 @@ import CaseView from "../ide/modeleditor/case/elements/caseview";
 import Settings from "../ide/settings/settings";
 import HtmlUtil from "../ide/util/htmlutil";
 import Images from "../ide/util/images/images";
+import Remark from "../repository/validate/remark";
+import Validator from "../repository/validate/validator";
 import ProblemType from "./problemtype";
 import ValidationSettings from "./validationsettings";
 
@@ -23,16 +25,11 @@ export default class ValidateForm extends StandardForm {
      */
     constructor(cs) {
         super(cs, '');
-        this.validator = cs.case.validator;
-        this.validator.addListener(validator => this.renderData());
         if (ValidateForm.Settings.visible) {
             this.show();
         } else {
             this.hide();
         }
-    }
-
-    renderHead() {
         this.html = $(
             `<div class="basicbox basicform" id="validateformid">
                 <div class="formheader">
@@ -50,14 +47,12 @@ export default class ValidateForm extends StandardForm {
                     </div>
                 </div>
                 <div class="headerrowmenu">
-                    <button id="hideProblemsBt">Hide</button>
-                    <button id="showAllProblemsBt">Show All</button>
-                    <label>HA = Hide All Problems of this type, HT = Hide This</label>
                 </div>
                 <div class="formbody">
                     <div class="headerrowlabels">
-                        <div class="hideproblem">HA</div>
-                        <div class="hideproblem">HT</div>
+                        <div class="problemmodel">
+                            <label>Model Definition</label>
+                        </div>
                         <div class="problemtype"></div>
                         <div class="problemdescription">
                             <label>Description</label>
@@ -66,20 +61,20 @@ export default class ValidateForm extends StandardForm {
                     <div class="problemcontainer"></div>
                 </div>
             </div>`);
-        this.htmlParent.append(this.html);            
+        this.htmlParent.append(this.html);
         this.containers = this.html.find('.problemcontainer');
 
         //set header handlers
         this.html.draggable({ handle: '.formheader' });
         this.html.resizable();
         this.html.find('.formclose').on('click', () => this.hide());
+    }
 
-        this.html.find('#hideProblemsBt').on('click', () => this.handleHideProblems());
-        this.html.find('#showAllProblemsBt').on('click', () => this.handleShowAllProblems());
+    renderHead() {
     }
 
     renderForm() {
-        if (! this._html) {
+        if (!this._html) {
             this.renderHead();
         }
     }
@@ -88,25 +83,6 @@ export default class ValidateForm extends StandardForm {
         if (!this.visible) {
             this.renderForm();
         }
-        
-        this.showProblemsInForm();
-        //check whether hidden problems still relevant (not when user has fixed the problem)
-        this.resetHiddenProblems();
-    }
-
-    /**
-     * Returns an array that stores the problems that are hidden by user.
-     * @returns {Array<String>}
-     */
-    get hiddenProblems() {
-        return ValidateForm.Settings.getHiddenProblems(this.case).list;
-    }
-
-    /**
-     * @param {Array<String>} problems
-     */
-    set hiddenProblems(problems) {
-        ValidateForm.Settings.setHiddenProblems(this.case, problems);
     }
 
     /**
@@ -116,7 +92,6 @@ export default class ValidateForm extends StandardForm {
         const wForm = this.html.width();
         const hForm = this.html.height();
 
-        
         const wBody = this.case.editor.html.width();
         const hBody = this.case.editor.html.height();
 
@@ -124,18 +99,9 @@ export default class ValidateForm extends StandardForm {
         this.html.css('top', hBody - hForm - 30);
     }
 
-    /**
-     * check the list of hidden problems against the problems, if hidden problem does not exist in problems remove
-     */
-    resetHiddenProblems() {
-        const currentlyHiddenProblems = this.hiddenProblems;
-        const relevantProblems = currentlyHiddenProblems.filter(id => this.validator.problems.find(p => p.id == id));
-        this.hiddenProblems = relevantProblems;
-    }
-
     onShow() {
         ValidateForm.Settings.visible = true;
-        this.showProblemsInForm();
+        // this.showProblemsInForm();
     }
 
     onHide() {
@@ -143,99 +109,72 @@ export default class ValidateForm extends StandardForm {
     }
 
     /**
-     * fills the html problem container with the created problems, first show errors then warnings
+     * 
+     * @param {Validator} validator 
      */
-    showProblemsInForm() {
+    loadRemarks(validator) {
+        if (ValidateForm.Settings.visible) {
+            this.show();
+        } else {
+            this.hide();
+        }
+        // Shows the number of errors and warnings in the case footer
+        const iErrors = validator.errors.length;
+        const iWarnings = validator.warnings.length;
+
+        // Update IDE Footer
+        const validateLabel = $('.validateLabel');
+        validateLabel.html(`CMMN Validation found ${iErrors} problem${iErrors == 1 ? '' : 's'} and ${iWarnings} suggestion${iWarnings == 1 ? '' : 's'}`);
+        validateLabel.css('color', iErrors > 0 ? 'red' : iWarnings > 0 ? 'orange' : 'grey');
+        if (iErrors == 0 && iWarnings == 0) {
+            validateLabel.html('');
+        }
+
+        this.showProblemsInForm(validator);
+    }
+
+    /**
+     * fills the html problem container with the created problems, first show errors then warnings
+     * @param {Validator} validator 
+     */
+    showProblemsInForm(validator) {
         // Clear the old problems in the form
         HtmlUtil.clearHTML(this.containers);
+        // validator.problems.forEach(p => this.addProblemRow(p));
 
         // Sort the problems; first render the errors, then only the warnings
-        this.validator.errors.forEach(p => this.addProblemRow(p));
-        this.validator.warnings.forEach(p => this.addProblemRow(p));
+        validator.errors.filter(e => e.modelDefinition === this.case.caseDefinition).forEach(p => this.addProblemRow(p));
+        validator.warnings.forEach(p => this.addProblemRow(p));
+        validator.errors.filter(e => e.modelDefinition !== this.case.caseDefinition).forEach(p => this.addProblemRow(p));
 
-        const iErrors = this.validator.errors.length;
-        const iWarnings = this.validator.warnings.length;
+        const iErrors = validator.errors.length;
+        const iWarnings = validator.warnings.length;
         const iHidden = iErrors + iWarnings - this.html.find('.problemrow').length;
 
         this.html.find('#validateheadernoerrorsid').html(iErrors);
         this.html.find('#validateheadernowarningsid').html(iWarnings);
         this.html.find('#validateheadernohiddenid').html(iHidden);
-
-        //set onchange event on the "hide all problem of this type" checkbox; if changed, then select/deselect all other problems of same type as well
-        this.html.find('.problemrow input[hidetype~="all"]').on('change', e => this.checkAllProblemsOfType(e.currentTarget));
-    }
-
-    /** 
-     * handle change "hide all problem of this type" checkbox
-     * When this is checked all rows with same problem type must be checked
-     */
-    checkAllProblemsOfType(htmlElement) {
-        const chkValue = htmlElement.checked;
-        const thisRow = htmlElement.parentElement.parentElement;
-        const problemType = thisRow.getAttribute('problemType');
-
-        const rows = this.html.find('.problemrow');
-        for (let i = 0; i < rows.length; i++) {
-            const row = rows[i];
-            if (row != thisRow) {
-                //skip the active row
-                if (row.getAttribute('problemType') == problemType) {
-                    //same problemType -> update checkbox
-                    const chkbox = $(row).find('input')[0];
-                    chkbox.checked = chkValue;
-                }
-            }
-        }
     }
 
     /**
      * create a html str for a problem and adds it to the problemContainer
      * problem     : object having the problem properties
-     * @param {Problem} problem
+     * @param {Remark} remark
      */
-    addProblemRow(problem) {
-        const html = $(problem.getHTMLString());
-        if (problem.problemType.isHidden || this.hiddenProblems.find(p => p == problem.id)) {
-            html.css('display', 'none');
-        }
+    addProblemRow(remark) {
+        const link = remark.modelDefinition === this.case.caseDefinition ? '' : '#' + remark.modelDefinition.file.fileName;
+        const html = $(`<div class="problemrow">
+            <div class="problemmodel">
+                <a href="${'#' + remark.modelDefinition.file.fileName}">${remark.element.modelDefinition.file.fileName}</a>
+            </div>
+            <div class="problemtype" title="${remark.number || 0}">
+                <img src="${remark.isError() ? Images.Error : Images.Warning}"></img>
+            </div>
+            <div class="problemdescription">
+                ${remark.description}
+            </div>
+        </div>`);
+        html.on('click', e => this.case.highlight(remark));
         this.containers.append(html);
-    }
-
-    handleHideProblems() {
-        const rows = this.html.find('.problemcontainer .problemrow');
-        rows.toArray().forEach(row => {
-
-            const problemId = row.getAttribute('problemId');
-            const inputs = $(row).find('input');
-
-            const hideAllChk = inputs[0];
-            const hideThisChk = inputs[1];
-
-            // Find the problem with this type and context;
-            const problem = this.validator.problems.find(p => p.id == problemId);
-
-            //hide all: set at type level
-            //only set when the type is not yet hidden
-            if (!problem.problemType.isHidden) {
-                problem.problemType.isHidden = hideAllChk.checked;
-            }
-
-            //hide this, add to hiddenProblems array (can not add to problem, because it is created new for every run)
-            if (hideThisChk.checked) {
-                this.hiddenProblems.push(problem.id);
-                ValidateForm.Settings.save();
-            }
-        });
-
-        this.showProblemsInForm();
-    }
-
-    /**
-     * Invokd when all problems must be showed again.
-     */
-    handleShowAllProblems() {
-        ProblemType.showAll();
-        this.hiddenProblems = [];
-        this.showProblemsInForm();
     }
 }
