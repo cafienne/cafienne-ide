@@ -281,8 +281,7 @@ export default class CMMNElementView extends CanvasElement {
      * @param {Remark} remark 
      */
     highlight(remark) {
-        console.log("Highlighting remark for element " + this);
-        this.highlighter.refresh(remark);
+        // this.highlighter.refresh(remark);
     }
 
     /**
