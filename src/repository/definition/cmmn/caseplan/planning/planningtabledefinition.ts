@@ -1,4 +1,5 @@
 import { Element } from "../../../../../util/xml";
+import Validator from "../../../../validate/validator";
 import ElementDefinition from "../../../elementdefinition";
 import UnnamedCMMNElementDefinition from "../../../unnamedcmmnelementdefinition";
 import CaseDefinition from "../../casedefinition";
@@ -37,6 +38,12 @@ export default class PlanningTableDefinition extends UnnamedCMMNElementDefinitio
         /** @type{Array<ApplicabilityRuleDefinition>} */
         this.ruleDefinitions = this.parseElements('applicabilityRule', ApplicabilityRuleDefinition);
         // TODO: PlanningTables can be nested in themselves, according to the spec. But we will not implement that here.
+    }
+
+    validate(validator: Validator): void {
+        if (this.tableItems.length === 0) {
+            validator.raiseError(this, 'Has no table items');
+        }
     }
 
     getAllPlanItems() {
