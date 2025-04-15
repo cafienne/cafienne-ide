@@ -64,6 +64,8 @@ export default class PlanItem extends CMMNElementDefinition {
             }
         }
 
+        // Check roles to exist and have an id and a name
+
         if (this.isDiscretionary) {
             // Check that authorized roles exist.
             // Check that applicability rules exist.

@@ -1,5 +1,4 @@
 import { g } from "jointjs";
-import ConstraintDefinition from "../../../../repository/definition/cmmn/caseplan/constraintdefinition";
 import PlanItem from "../../../../repository/definition/cmmn/caseplan/planitem";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import CaseView from "./caseview";
@@ -112,38 +111,6 @@ export default class PlanItemView extends CMMNElementView {
         }
         if (this.ruleUsesDefinitionId('manualActivationRule', definitionId)) {
             return true;
-        }
-    }
-
-    __validate() {
-        super.__validate();
-
-        // Plan items must have a name.
-        if (!this.name) {
-            this.raiseValidationIssue(0, [this.typeDescription, this.case.name]);
-        }
-
-        // Validate ItemControl rules
-        const itemControl = this.definition.planItemControl;
-        if (itemControl) {
-            this.validateRule(itemControl.repetitionRule, 'repeat');
-            this.validateRule(itemControl.requiredRule, 'required');
-            this.validateRule(itemControl.manualActivationRule, 'manualactivation');
-        }
-    }
-
-    /**
-     * @param {ConstraintDefinition} rule 
-     * @param {String} ruleType 
-     */
-    validateRule(rule, ruleType) {
-        //the rule exists for this element and is used
-        if (rule && !rule.body) {
-            this.raiseValidationIssue(24, [this.name, this.case.name, ruleType, 'rule expression']);
-        }
-
-        if (rule && rule.contextRef.isEmpty && rule.body !== 'true' && rule.body !== 'false') {
-            this.raiseValidationIssue(39, [this.name, this.case.name, ruleType, 'context (case file item)']);
         }
     }
 

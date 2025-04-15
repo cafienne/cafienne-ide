@@ -33,6 +33,8 @@ export default class PlanItemOnPartDefinition extends OnPartDefinition<PlanItem>
         if (this.source?.isDiscretionary) {
             validator.raiseError(this.owner, `The ${this.description} in ${this.owner} refers to a discretionary element '${this.source.name}'. OnParts cannot be connected to discretionary items`);
         }
+
+        // TODO: Check spec 5.4.9.2 DiscretionaryItem, last bullets, about references to parent stage items for criteria
     }
 
     get description() {

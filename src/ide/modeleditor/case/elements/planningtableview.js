@@ -65,51 +65,6 @@ export default class PlanningTableView extends CMMNElementView {
         this.stage.refreshView();
     }
 
-    //validate: all steps to check this element
-    __validate() {
-        //check if planningTable is used and refers to discretionary planItems
-        this.hasLinkedDiscretionaryItems();
-        this.planningTableRule();
-    }
-
-    /**
-     * Checks if the planningTable is used and refers to a discretionary item
-     */
-    hasLinkedDiscretionaryItems() {
-        //check if planningTable is used
-        const cmmnParentElement = this.parent;
-        if (!cmmnParentElement.planningTableView) {
-            return;
-        }
-
-        if (cmmnParentElement.isStage) {
-            const stage = cmmnParentElement;
-            if (stage.planningTableView.definition.tableItems.length == 0) {
-                if (!stage.__getConnectedElements().find(element => element.isPlanItem && element.definition.isDiscretionary)) {
-                    this.raiseValidationIssue(19, [stage.typeDescription, stage.name, this.case.name]);
-                }
-            }
-        } else if (cmmnParentElement.isTask) {
-            const task = cmmnParentElement;
-            if (!task.__getConnectedElements().find(element => element.isPlanItem && element.definition.isDiscretionary)) {
-                this.raiseValidationIssue(19, [task.typeDescription, task.name, this.case.name]);
-            }
-        }
-    }
-
-    /**
-     * The applicability rules must have a name and an expression
-     */
-    planningTableRule() {
-        // If there is one or more rules without a body, then we need to give only 1 warning
-        if (this.definition.ruleDefinitions.find(rule => !rule.body)) {
-            this.raiseValidationIssue(25, [this.parent.name, this.case.name]);
-        }
-        if (this.definition.ruleDefinitions.find(rule => !rule.name)) {
-            this.raiseValidationIssue(29, [this.parent.name, this.case.name]);
-        }
-    }
-
     moved(x, y, newParent) {
         this.__moveConstraint(x, y);
     }
