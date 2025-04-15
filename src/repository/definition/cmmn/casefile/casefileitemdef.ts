@@ -74,7 +74,9 @@ export default class CaseFileItemDef extends CaseFileItemCollection {
 
     validate(validator: Validator) {
         super.validate(validator);
-        validator.mustHaveName(this);
+        if (! this.isEmpty) {
+            validator.mustHaveName(this);
+        }
     }
 
     get isArray() {
