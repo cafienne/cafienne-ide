@@ -4,7 +4,7 @@ import Settings from "../settings/settings";
 import HtmlUtil from "../util/htmlutil";
 import SplitterSettings from "./splittersettings";
 
-export default class Splitter {
+export default abstract class Splitter {
     private static _settings?: SplitterSettings;
     private static splitters: Splitter[] = [];
     startSize: number = 0;
@@ -162,24 +162,18 @@ export default class Splitter {
     /**
      * Returns whether this is a 'horizontal' or 'vertical' splitter
      */
-    get orientation(): string {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract get orientation(): string;
 
     /**
      * Returns the direction of the splitter, i.e., which part is "stable" and which part is "dynamic" upon resizing of a parent element.
      * Should be either top, bottom, left or right.
      */
-    get direction(): string {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract get direction(): string;
 
     /**
      * Returns the name of the event's client attribute relevant for repositioning (either 'clientX' or 'clientY')
      */
-    get clientPosition(): string {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract get clientPosition(): string;
 
     /**
      * Returns the relative bar position (either 'left' or 'top') depending on the orientation.
@@ -199,19 +193,13 @@ export default class Splitter {
     }
 
     /** @returns {String} The name of the css attribute through which the position can be set (either 'top' or 'left') */
-    get positionAttribute(): string {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract get positionAttribute(): string;
 
     /** @returns {String} The name of the css attribute through which the position can be set (either 'top' or 'left') */
-    get oppositePositionAttribute(): string {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract get oppositePositionAttribute(): string;
 
     /** @returns {String} The name of the css attribute through which the element's size can be measured (either 'height' or 'width') */
-    get sizeAttribute(): string {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract get sizeAttribute(): string;
 
     /**
      * Moves the splitter by the number of pixels indicated relative to it's current position.

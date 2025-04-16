@@ -17,7 +17,7 @@ import FourEyesDefinition from "./task/workflow/foureyesdefinition";
 import RendezVousDefinition from "./task/workflow/rendezvousdefinition";
 import TaskStageDefinition from "./taskstagedefinition";
 
-export default class PlanItem extends CMMNElementDefinition {
+abstract class PlanItem extends CMMNElementDefinition {
     private applicabilityRuleRefs: ReferenceSet<ApplicabilityRuleReference>;
     public authorizedRoleRefs: ReferenceSet<CaseRoleReference>;
 
@@ -31,11 +31,9 @@ export default class PlanItem extends CMMNElementDefinition {
     /**
      * @returns {String}
      */
-    static get infix(): string {
-        throw new Error('This method must be implemented in ' + this.name);
-    }
+    abstract get infix(): string;
 
-    static get prefix(): string {
+    get prefix(): string {
         return 'pi_' + this.infix;
     }
 
@@ -186,21 +184,17 @@ export default class PlanItem extends CMMNElementDefinition {
     /**
      * Returns a list of transitions valid for this type of plan item definition.
      */
-    get transitions(): PlanItemTransition[] {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract get transitions(): PlanItemTransition[];
 
     /**
      * Returns the default transition for this type of PlanItem
      */
-    get defaultTransition(): PlanItemTransition {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract get defaultTransition(): PlanItemTransition;
 
     /**
      * Returns the entry transition for this type of plan item definition (Task/Stage => Start, Event/Milestone => Occur)
      */
-    get entryTransition(): PlanItemTransition {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract get entryTransition(): PlanItemTransition;
 }
+
+export default PlanItem;

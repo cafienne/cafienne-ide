@@ -5,7 +5,7 @@ import ExternalReference from "./externalreference";
 import InternalReference from "./internalreference";
 import Reference from "./reference";
 
-class ReferenceList<R extends Reference> {
+abstract class ReferenceList<R extends Reference> {
     constructor(public element: XMLSerializable) { }
 
     protected references: R[] = [];
@@ -24,13 +24,9 @@ class ReferenceList<R extends Reference> {
         this.references.push(reference);
     }
 
-    resolve() {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract resolve(): void;
 
-    protected create<E extends R>(ref: string): E {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    protected abstract create<E extends R>(ref: string): E;
 }
 
 export class InternalReferenceList extends ReferenceList<InternalReference<ElementDefinition<ModelDefinition>>> {

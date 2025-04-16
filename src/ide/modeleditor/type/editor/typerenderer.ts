@@ -21,7 +21,7 @@ import TypeSelector from "./typeselector";
 const expandSign = '&nbsp>&nbsp';
 const collapseSign = '&nbsp--&nbsp';
 
-export default class TypeRenderer {
+export default abstract class TypeRenderer {
 
     /**
      * All current in-memory renderers, used for refreshing
@@ -129,9 +129,7 @@ export default class TypeRenderer {
         }
     }
 
-    refresh() {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract refresh(): void;
 
     get propertyName(): string {
         if (this.definition instanceof SchemaPropertyDefinition) {

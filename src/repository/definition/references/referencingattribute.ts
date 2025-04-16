@@ -1,6 +1,6 @@
 import XMLSerializable from "../xmlserializable";
 
-export default class ReferencingAttribute {
+abstract class ReferencingAttribute {
     constructor(protected element: XMLSerializable, protected ref: string, public attributeName?: string) {
     }
 
@@ -15,9 +15,7 @@ export default class ReferencingAttribute {
         return !this.nonEmpty;
     }
 
-    removeDefinitionReference(element: XMLSerializable) {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract removeDefinitionReference(element: XMLSerializable): void;
 
     get value() {
         return this.ref;
@@ -29,3 +27,5 @@ export default class ReferencingAttribute {
         }
     }
 }
+
+export default ReferencingAttribute;

@@ -7,7 +7,7 @@ import IDE from "../ide";
 import HtmlUtil from "../util/htmlutil";
 import Images from "../util/images/images";
 
-export default class ModelEditor {
+export default abstract class ModelEditor {
     movableEditors: MovableEditor[] = [];
     htmlContainer: any;
     divMovableEditors: any;
@@ -150,26 +150,18 @@ export default class ModelEditor {
         }
     }
 
-    get label(): string {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract get label(): string;
 
     /**
      * Hook to indicate that a user action is completed, e.g. changing an input field
      * has been handled. Can be used by controls to tell the editor something changed.
      * Editor can then decide whether or not to immediately save the model (or await e.g. a timeout)
      */
-    completeUserAction() {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract completeUserAction(): void;
 
-    loadModel() {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract loadModel(): void;
 
-    loadSource(source: string) {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract loadSource(source: string): void;
 
     toString() {
         return this.constructor.name + ' - ' + this.fileName;

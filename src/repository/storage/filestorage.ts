@@ -1,27 +1,17 @@
 import Metadata from "../serverfile/metadata";
 
-export default class FileStorage {
-    async renameModel(fileName: string, newFileName: string, updatedContent: any): Promise<Metadata[]> {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+abstract class FileStorage {
+    abstract renameModel(fileName: string, newFileName: string, updatedContent: any): Promise<Metadata[]>;
 
-    async saveModel(fileName: string, source: any): Promise<Metadata[]> {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract saveModel(fileName: string, source: any): Promise<Metadata[]>;
 
-    async deleteModel(fileName: string): Promise<Metadata[]> {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract deleteModel(fileName: string): Promise<Metadata[]>;
 
-    async loadModel(fileName: string): Promise<any> {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract loadModel(fileName: string): Promise<any>;
 
-    async listModels(): Promise<Metadata[]> {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract listModels(): Promise<Metadata[]>;
 
-    async deploy(fileName: string, body: any): Promise<void> {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract deploy(fileName: string, body: any): Promise<void>;
 }
+
+export default FileStorage;

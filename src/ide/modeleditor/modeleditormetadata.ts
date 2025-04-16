@@ -5,7 +5,7 @@ import IDE from "../ide";
 import RepositoryBrowser from "../repositorybrowser";
 import ModelEditor from "./modeleditor";
 
-export default class ModelEditorMetadata {
+export default abstract class ModelEditorMetadata {
     public static types: Array<ModelEditorMetadata> = [];
 
     /**
@@ -30,39 +30,27 @@ export default class ModelEditorMetadata {
     /**
      * Whether the metadata is associated with this kind of file
      */
-    supportsFile(file: ServerFile<ModelDefinition>) {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract supportsFile(file: ServerFile<ModelDefinition>): boolean;
 
     /**
      * Create an editor for this file
      */
-    createEditor(ide: IDE, file: ServerFile<ModelDefinition>): ModelEditor {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract createEditor(ide: IDE, file: ServerFile<ModelDefinition>): ModelEditor;
 
     get supportsDeploy() {
         return false;
     }
 
-    get modelList(): Array<ServerFile<ModelDefinition>> {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract get modelList(): Array<ServerFile<ModelDefinition>>;
 
     /**
      * Returns the image that can be used when rendering a server file that this editor can load
      */
-    get icon(): string {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract get icon(): string;
 
-    get description(): string {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract get description(): string;
 
-    get fileType(): string {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract get fileType(): string;
 
     toString() {
         return this.description.substring(0, this.description.length - 1).toLowerCase();
@@ -71,9 +59,7 @@ export default class ModelEditorMetadata {
     /**
      * Create a new model with the specified model name.
      */
-    async createNewModel(ide: IDE, newModelName: string, newModelDescription: string): Promise<string> {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract createNewModel(ide: IDE, newModelName: string, newModelDescription: string): Promise<string>;
 
     async openCreateModelDialog() {
         const filetype = this.fileType;

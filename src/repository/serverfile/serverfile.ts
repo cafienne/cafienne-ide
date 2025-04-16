@@ -4,7 +4,7 @@ import ModelDefinition from "../definition/modeldefinition";
 import Repository from "../repository";
 import Metadata from "./metadata";
 
-export default class ServerFile<M extends ModelDefinition> {
+abstract class ServerFile<M extends ModelDefinition> {
     private _fileName: any;
     private _source: any;
     private _definition?: M;
@@ -44,9 +44,7 @@ export default class ServerFile<M extends ModelDefinition> {
     /**
      * Note: this method is private/protected
      */
-    createModelDefinition(): M {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract createModelDefinition(): M;
 
     get file_identifier(): string {
         return `${this.instance}_${this.fileName}_${this.constructor.name}`;
@@ -326,3 +324,5 @@ export default class ServerFile<M extends ModelDefinition> {
         return Util.removeDuplicates(this.repository.list.filter(file => file.references.find(reference => reference === this)));
     }
 }
+
+export default ServerFile;

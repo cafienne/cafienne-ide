@@ -1,6 +1,6 @@
 import Splitter from "./splitter";
 
-export default class HorizontalSplitter extends Splitter {
+export default abstract class HorizontalSplitter extends Splitter {
     minimizeImg?: JQuery<HTMLElement>;
     restoreImg?: JQuery<HTMLElement>;
     constructor(public container: JQuery<HTMLElement>, offset: string | number, minimumSize = 0) {
@@ -72,25 +72,17 @@ export default class HorizontalSplitter extends Splitter {
         });
     }
 
-    get minimizeImgURL(): string {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract get minimizeImgURL(): string;
 
-    get restoreImgURL(): string {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract get restoreImgURL(): string;
 
-    get restoreImgLocation(): number {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract get restoreImgLocation(): number;
 
     get orientation(): string {
         return 'horizontal';
     }
 
-    get farEnd(): number {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract get farEnd(): number;
 
     get clientPosition(): string {
         return 'clientX';

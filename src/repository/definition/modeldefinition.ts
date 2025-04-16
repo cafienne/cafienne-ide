@@ -10,7 +10,7 @@ import XMLSerializable from "./xmlserializable";
 /**
  * A ModelDefinition is the base class of a model, such as CaseDefinition, ProcessDefinition, HumanTaskDefinition, CaseFileDefinitionDefinition 
  */
-export default class ModelDefinition extends XMLSerializable {
+abstract class ModelDefinition extends XMLSerializable {
     modelDefinition: this;
     private __documentation?: CMMNDocumentationDefinition<this>;
     private __migrated: boolean = false;
@@ -119,16 +119,12 @@ export default class ModelDefinition extends XMLSerializable {
     /**
      * A ModelDefinition must have input parameters.
      */
-    get inputParameters(): ParameterDefinition<ModelDefinition>[] {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract get inputParameters(): ParameterDefinition<ModelDefinition>[];
 
     /**
      * A ModelDefinition must have output parameters.
      */
-    get outputParameters(): ParameterDefinition<ModelDefinition>[] {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract get outputParameters(): ParameterDefinition<ModelDefinition>[];
 
     findInputParameter(identifier: string) {
         return this.inputParameters.find(p => p.hasIdentifier(identifier));
@@ -212,9 +208,7 @@ export default class ModelDefinition extends XMLSerializable {
         return xmlDocument;
     }
 
-    toXML(): Document {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract toXML(): Document;
 
     toXMLString(): string {
         return XML.prettyPrint(this.toXML());
@@ -251,3 +245,5 @@ export default class ModelDefinition extends XMLSerializable {
         return dependents;
     }
 }
+
+export default ModelDefinition;

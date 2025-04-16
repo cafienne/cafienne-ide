@@ -16,7 +16,7 @@ export const CAFIENNE_NAMESPACE = 'org.cafienne';
 export const CAFIENNE_PREFIX = 'xmlns:cafienne';
 export const IMPLEMENTATION_TAG = 'cafienne:implementation';
 
-export default class XMLSerializable {
+abstract class XMLSerializable {
     private _name: string = '';
     private _id: string = '';
     readonly externalReferences = new ExternalReferenceList(this);
@@ -354,9 +354,7 @@ export default class XMLSerializable {
      * Mechanism to load the file that is referenced from an ExternalReference
      * @param fileName 
      */
-    loadFile<M extends ModelDefinition>(fileName: string): ServerFile<M> | undefined {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract loadFile<M extends ModelDefinition>(fileName: string): ServerFile<M> | undefined;
 
     /**
      * Method invoked when all external references in the element have been resolved.
@@ -376,9 +374,7 @@ export default class XMLSerializable {
     /**
      * Returns elements in models that reference this element
      */
-    searchInboundReferences(): ElementDefinition<ModelDefinition>[] {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract searchInboundReferences(): ElementDefinition<ModelDefinition>[];
 
     /**
      * Exports the IDs of all elements in the list (that have an id) into a space-separated string
@@ -401,3 +397,5 @@ export default class XMLSerializable {
         console.groupEnd();
     }
 }
+
+export default XMLSerializable;

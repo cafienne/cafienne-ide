@@ -5,7 +5,7 @@ import CaseDefinition from "../../../casedefinition";
 import PlanItem from "../../planitem";
 import PlanItemReference from "../planitemreference";
 
-export default class TaskPairingDefinition extends CMMNExtensionDefinition<CaseDefinition> {
+abstract class TaskPairingDefinition extends CMMNExtensionDefinition<CaseDefinition> {
     references: PlanItemReference[];
     private _present: boolean = false;
 
@@ -33,9 +33,7 @@ export default class TaskPairingDefinition extends CMMNExtensionDefinition<CaseD
         return this.references.map(ref => ref.task);
     }
 
-    counterPartOf(item: PlanItem): TaskPairingDefinition {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract counterPartOf(item: PlanItem): TaskPairingDefinition;
 
     drop() {
         // Remove references to us from our opposites.
@@ -79,3 +77,5 @@ export default class TaskPairingDefinition extends CMMNExtensionDefinition<CaseD
         Util.removeFromArray(this.references, this.references.find(ref => ref.is(item)));
     }
 }
+
+export default TaskPairingDefinition;

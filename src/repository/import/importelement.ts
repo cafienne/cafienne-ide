@@ -7,7 +7,7 @@ import CaseFile from "../serverfile/casefile";
 import ServerFile from "../serverfile/serverfile";
 import Importer from "./importer";
 
-export default class ImportElement {
+abstract class ImportElement {
     repository: Repository;
 
     constructor(public importer: Importer, public fileName: string, public xmlElement: Element) {
@@ -27,9 +27,7 @@ export default class ImportElement {
     /**
      * @returns {ServerFile}
      */
-    createFile(): ServerFile<ModelDefinition> {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract createFile(): ServerFile<ModelDefinition>;
 }
 
 export class CaseImporter extends ImportElement {
@@ -84,3 +82,5 @@ export class TypeImporter extends ImportElement {
         return this.repository.createTypeFile(this.fileName, "");
     }
 }
+
+export default ImportElement;

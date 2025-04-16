@@ -35,9 +35,7 @@ export default class ExpressionContainer extends UnnamedCMMNElementDefinition {
         return this.contextRef.name;
     }
 
-    get expressionTagName(): string {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract get expressionTagName(): string;
 
     /**
      * @returns {ExpressionDefinition}
