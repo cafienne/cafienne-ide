@@ -8,6 +8,7 @@
     "type": "module",
     "main": "index.js",
     "types": "./@types/index.d.ts",
+    "license": "AGPL-3.0-only",
     "keywords": [
         "cli",
         "cmmn",
