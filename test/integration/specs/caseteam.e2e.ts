@@ -1,19 +1,17 @@
-import Util from '../../src/util/util';
+import Util from '../../../src/util/util';
 import CaseModelerPage from '../pageobjects/casemodeler.page';
 import CaseTeamEditorPage from '../pageobjects/caseteameditor.page';
 import IDEPage from '../pageobjects/ide.page';
 import ModelListPanel from '../pageobjects/modellist.page';
 
-
 describe('Case team', async function () {
+    before(async function () {
+        await IDEPage.open();
+    });
+
     it('Create case with new team', async function () {
         const caseName_1 = Util.getRandomSet(8);
         const caseName_2 = Util.getRandomSet(8);
-
-        console.log(caseName_1);
-        console.log(caseName_2);
-
-        await IDEPage.open();
 
         // create first case
         await ModelListPanel.createCaseModel(caseName_1);
@@ -38,9 +36,12 @@ describe('Case team', async function () {
         await CaseModelerPage.openRoleEditor();
 
         // delete the team
-        // await RolesEditor.deleteButton.click();
-        // await browser.acceptAlert();
-        // await RolesEditor.expectTeamNotSelected();
+        await CaseTeamEditorPage.deleteButton.click();
+
+        expect(await browser.getAlertText()).toBe(`Are you sure you want to delete '${caseName_1}.caseteam'?`);
+        await browser.acceptAlert(); // Accept the alert
+
+        await CaseTeamEditorPage.expectTeamNotSelected();
     })
 });
 

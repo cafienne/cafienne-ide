@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "*": [ "./*" ],
+        },
+        "types": ["node", "@wdio/globals/types", "@wdio/mocha-framework"],
+        "target": "ES2015",
+       
+    },
+    "include": [
+        "./**/*.ts",
+    ]
+}

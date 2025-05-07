@@ -1,4 +1,3 @@
-import { expect } from '@wdio/globals';
 import IDEPage from './ide.page';
 
 export class CaseTeamEditor {

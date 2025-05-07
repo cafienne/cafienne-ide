@@ -1,4 +1,3 @@
-import { $, expect } from '@wdio/globals';
 import Page from "./page";
 
 export class IDEPage extends Page {

@@ -1,6 +1,6 @@
-import { $, browser } from '@wdio/globals';
 import CaseModelerPage from './casemodeler.page';
 import CreateNewCaseDialog from './createnewcasedialog.page';
+import CreateNewModelDialog from './createnewmodeldialog.page';
 
 export class ModelListPanel {
     private get modelTabBase() {
@@ -33,11 +33,41 @@ export class ModelListPanel {
         await CaseModelerPage.shapebox.waitForDisplayed();
     }
 
+    async createProcessModel(name: string) {
+        await this.selectModelTab('process');
+        await this.addProcessButton.click();
+        await CreateNewModelDialog.nameInput.addValue(name);
+        await browser.keys('\t'); // now other fields get filled.
+
+        await CreateNewModelDialog.confirm();
+
+        await this.modelTabBase.$(`div[filename='${name}.process']`).waitForDisplayed();
+    }
+
+    async createTypeModel(name: string) {
+        await this.selectModelTab('process');
+        await this.addTypeButton.click();
+        await CreateNewModelDialog.nameInput.addValue(name);
+        await browser.keys('\t'); // now other fields get filled.
+
+        await CreateNewModelDialog.confirm();
+
+        await this.modelTabBase.$(`div[filename='${name}.type']`).waitForDisplayed();
+    }
+
     public get repositoryPanel() {
         return $('.divModelList');
     }
     public get addCaseButton() {
         return this.repositoryPanel.$('[filetype="case"] .plus-icon');
+    }
+
+    public get addProcessButton() {
+        return this.repositoryPanel.$('[filetype="process"] .plus-icon');
+    }
+
+    public get addTypeButton() {
+        return this.repositoryPanel.$('[filetype="type"] .plus-icon');
     }
 }
 

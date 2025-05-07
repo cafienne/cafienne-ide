@@ -13,7 +13,7 @@ export const config: WebdriverIO.Config = {
     // ====================
     // WebdriverIO supports running e2e tests as well as unit and component tests.
     runner: 'local',
-    tsConfigPath: './test/tsconfig.json',
+    tsConfigPath: './test/integration/tsconfig.json',
 
     //
     // ==================
@@ -31,7 +31,7 @@ export const config: WebdriverIO.Config = {
     // of the config file unless it's absolute.
     //
     specs: [
-        './test/specs/**/*.ts'
+        './test/integration/specs/**/*.ts'
     ],
     // Patterns to exclude.
     exclude: [
@@ -208,8 +208,11 @@ export const config: WebdriverIO.Config = {
      * @param {Array.<String>} specs        List of spec file paths that are to be run
      * @param {object}         browser      instance of created browser/device session
      */
-    // before: function (capabilities, specs) {
-    // },
+    before: async function (capabilities, specs, browser) {
+        browser.on('dialog', async (dialog) => {
+            // do not automatically dismiss alerts, need to be handled in the test
+        });
+    },
     /**
      * Runs before a WebdriverIO command gets executed.
      * @param {string} commandName hook command name
