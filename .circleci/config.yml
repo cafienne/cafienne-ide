@@ -105,7 +105,7 @@ commands:
           command: |
             docker logs case_designer
       - store_test_results:
-          path: ./dist/test-results
+          path: ./dist/test-results/integration
       - store_artifacts:
           path: ./dist/test-results
       - store_artifacts:

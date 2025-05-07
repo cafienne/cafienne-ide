@@ -4,7 +4,7 @@ import path from 'path';
 import RepositoryConfiguration from './src/config/config';
 import { startServer } from './src/server/server';
 
-const testResultsFolder = './dist/test-results';
+const testResultsFolder = './dist/test-results/integration';
 const debug = process.env.DEBUG;
 let testLogCollection: any[] = [];
 
@@ -174,6 +174,11 @@ export const config: WebdriverIO.Config = {
      */
     onPrepare: async function (config, capabilities) {
         if (process.env.CIRCLECI !== "true") {
+            // clean up test-results folder
+            const stats = await fs.stat(testResultsFolder);
+            if (stats.isDirectory()) {
+                await fs.rmdir(testResultsFolder, { recursive: true });
+            }
             const repositoryFolder = path.join(__dirname, './dist/test-results/integration/repository');
             await fs.mkdir(repositoryFolder, { recursive: true })
             const deployFolder = path.join(__dirname, './dist/test-results/integration/repository_deploy');
@@ -278,7 +283,7 @@ export const config: WebdriverIO.Config = {
         { error, result, duration, passed, retries }
     ) {
         // take a screenshot anytime a test fails and throws an error
-        if (error) {
+        if (!passed) {
             const fileFolder = path.join(testResultsFolder, test.parent);
             const filePath = path.join(fileFolder, `${test.title}.png`);
             try {
@@ -289,11 +294,11 @@ export const config: WebdriverIO.Config = {
 
             await browser.saveScreenshot(filePath, { fullPage: true });
 
-            testLogCollection.forEach(async event => {
-                await fs.appendFile(
-                    path.join(fileFolder, 'test.log'), 
-                    `${test.title} - ${event.level}: ${event.text}\r\n`);
-            });
+            await fs.appendFile(
+                path.join(fileFolder, 'test.log'),
+                testLogCollection
+                    .map((event) => `${test.title} - ${event.level}: ${event.text}`)
+                    .join('\r\n'));
         }
     },
 
