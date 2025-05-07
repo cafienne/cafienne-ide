@@ -1,6 +1,7 @@
 import { browser } from '@wdio/globals';
 import * as fs from "fs/promises";
 import path from 'path';
+import RepositoryConfiguration from './src/config/config';
 import { startServer } from './src/server/server';
 
 const testResultsFolder = './dist/test-results';
@@ -171,9 +172,18 @@ export const config: WebdriverIO.Config = {
      * @param {object} config wdio configuration object
      * @param {Array.<Object>} capabilities list of capabilities details
      */
-    onPrepare: function (config, capabilities) {
+    onPrepare: async function (config, capabilities) {
         if (process.env.CIRCLECI !== "true") {
-            this.server = startServer(true, 3081);
+            const repositoryFolder = path.join(__dirname, './dist/test-results/integration/repository');
+            await fs.mkdir(repositoryFolder, { recursive: true })
+            const deployFolder = path.join(__dirname, './dist/test-results/integration/repository_deploy');
+            await fs.mkdir(deployFolder, { recursive: true })
+
+            const repositoryConfig = new RepositoryConfiguration();
+            repositoryConfig.repository = repositoryFolder;
+            repositoryConfig.deploy = deployFolder;
+
+            config.server = startServer(true, 3081, repositoryConfig);
         }
     },
     /**
@@ -327,8 +337,11 @@ export const config: WebdriverIO.Config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      * @param {<Object>} results object containing test results
      */
-    // onComplete: function (exitCode, config, capabilities, results) {
-    // },
+    onComplete: function (exitCode, config, capabilities, results) {
+        if (process.env.CIRCLECI !== "true") {
+            config.server.close();
+        }
+    },
     /**
     * Gets executed when a refresh happens.
     * @param {string} oldSessionId session ID of the old session

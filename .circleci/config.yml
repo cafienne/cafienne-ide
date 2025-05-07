@@ -87,9 +87,9 @@ commands:
       - run:
           name: Spin up docker image
           command: |
-            chmod 777 ./repository
-            chmod 777 ./repository_deploy
-            docker run --pull never --name case_designer -d -p 3081:2081 -v ./repository:/usr/src/app/repository -v ./repository_deploy:/usr/src/app/repository_deploy <<parameters.tag>>
+            mkdir -p -m 777 ./test-results/integration/repository
+            mkdir -p -m 777 ./test-results/integration/repository_deploy
+            docker run --pull never --name case_designer -d -p 3081:2081 -v ./test-results/integration/repository:/usr/src/app/repository -v ./test-results/integration/repository_deploy:/usr/src/app/repository_deploy <<parameters.tag>>
       - run:
           name: Docker logs
           when: on_fail

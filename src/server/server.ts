@@ -1,5 +1,6 @@
 import bodyParser from 'body-parser';
 import express, { Request, Response } from 'express';
+import { Server } from 'http';
 import morgan from 'morgan';
 import path from 'path';
 import RepositoryConfiguration from '../config/config';
@@ -110,12 +111,11 @@ function buildRouter(storage: LocalFileStorage): express.Router {
     return router;
 }
 
-export function startServer(inTest: boolean = false, port: number = 2081) {
+export function startServer(inTest: boolean = false, port: number = 2081, repositoryConfig: RepositoryConfiguration = new RepositoryConfiguration()): Server {
     const startMoment = new Date();
     console.log(`Starting Cafienne IDE Server at ${startMoment}`);
     console.log('==================================================   ');
 
-    const repositoryConfig = new RepositoryConfiguration();
     const repositoryPath = repositoryConfig.repository;
     const deployPath = repositoryConfig.deploy;
 
