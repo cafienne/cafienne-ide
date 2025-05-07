@@ -65,6 +65,7 @@ export const config: WebdriverIO.Config = {
         'goog:chromeOptions': {
             args: [
                 'headless',
+                'window-size=1920,1200'
             ],
             'excludeSwitches': ['enable-logging'],
         },
