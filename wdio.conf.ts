@@ -5,6 +5,7 @@ import { startServer } from './src/server/server';
 
 const testResultsFolder = './dist/test-results';
 const debug = process.env.DEBUG;
+let testLogCollection: any[] = [];
 
 export const config: WebdriverIO.Config = {
     //
@@ -62,8 +63,11 @@ export const config: WebdriverIO.Config = {
     capabilities: [{
         browserName: 'chrome',
         'goog:chromeOptions': {
-            args: ['headless', 'disable-gpu']
-        }
+            args: [
+                'headless',
+            ],
+            'excludeSwitches': ['enable-logging'],
+        },
     }],
 
     execArgv: debug ? ['--inspect'] : [],
@@ -212,6 +216,10 @@ export const config: WebdriverIO.Config = {
         browser.on('dialog', async (dialog) => {
             // do not automatically dismiss alerts, need to be handled in the test
         });
+
+        await browser.sessionSubscribe({ events: ['log.entryAdded'] });
+
+        browser.on('log.entryAdded', (entryAdded) => testLogCollection.push(entryAdded));
     },
     /**
      * Runs before a WebdriverIO command gets executed.
@@ -269,6 +277,12 @@ export const config: WebdriverIO.Config = {
             }
 
             await browser.saveScreenshot(filePath, { fullPage: true });
+
+            testLogCollection.forEach(async event => {
+                await fs.appendFile(
+                    path.join(fileFolder, 'test.log'), 
+                    `${test.title} - ${event.level}: ${event.text}\r\n`);
+            });
         }
     },
 
