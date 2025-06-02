@@ -1,8 +1,10 @@
 ﻿import $ from "jquery";
 import CaseFileItemDef from "../../../../../../repository/definition/cmmn/casefile/casefileitemdef";
-import CaseFileItemDefinitionEditor from "../../../../../modeleditor/cfid/casefileitemdefinitioneditor";
+import IDE from "../../../../../ide";
 import BottomSplitter from "../../../../../splitter/bottomsplitter";
 import HtmlUtil from "../../../../../util/htmlutil";
+import CaseFileItemDefinitionEditor from "../../../../cfid/casefileitemdefinitioneditor";
+import CaseView from "../../../elements/caseview";
 import CaseFileEditor from "../casefileeditor";
 import CFINode from "./cfinode";
 import CFIDConverter from "./conversion/cfidconverter";
@@ -10,20 +12,26 @@ import CFIDConverter from "./conversion/cfidconverter";
 export const NEWDEF = '__new__';
 
 export default class CaseFileItemsEditor {
+    case: CaseView;
+    ide: IDE;
+
+    // Keep track of nodes rendering individual case file items
+    cfiNodes: CFINode[] = [];
+    selectedNode?: CFINode;
+
+    // HTML elements
+    html!: JQuery<HTMLElement>;
+    divCFIDetailsContainer!: JQuery<HTMLElement>;
+    divCaseFileDefinitions!: JQuery<HTMLElement>;
+    splitter!: BottomSplitter;
+    caseFileItemDefinitionEditor!: CaseFileItemDefinitionEditor;
+
     /**
      * Renders the CaseFile definition through fancytree
-     * @param {CaseFileEditor} caseFileEditor 
-     * @param {JQuery<HTMLElement>} htmlParent 
      */
-    constructor(caseFileEditor, htmlParent) {
-        this.caseFileEditor = caseFileEditor;
+    constructor(public caseFileEditor: CaseFileEditor, public htmlParent: JQuery<HTMLElement>) {
         this.case = caseFileEditor.case;
         this.ide = this.case.editor.ide;
-        this.htmlParent = htmlParent;
-
-        // Keep track of nodes rendering individual case file items
-        this.cfiNodes = /** @type {Array<CFINode>} */ ([]);
-        this.selectedNode = /** @type {CFINode} */ (null);
 
         // Now render the HTML
         this.renderHTML();
@@ -32,7 +40,7 @@ export default class CaseFileItemsEditor {
     /**
      * create the html element of a treeEditor form
      */
-    renderHTML() {
+    renderHTML(): void {
         //create the main element add to document
         this.html = $(
             `<div class="schemadatabox" tabindex="0">
@@ -98,17 +106,13 @@ export default class CaseFileItemsEditor {
         this.renderCaseFileModel();
     }
 
-    renderCaseFileModel() {
+    renderCaseFileModel(): void {
         this.cfiNodes.forEach(node => node.delete());
         HtmlUtil.clearHTML(this.html.find('.cfi-details-container'));
         this.case.caseDefinition.caseFile.children.forEach(cfi => this.createNode(cfi));
     }
 
-    /**
-     * 
-     * @param {CFINode} node 
-     */
-    selectCFINode(node) {
+    selectCFINode(node: CFINode | undefined): void {
         if (node === this.selectedNode) {
             return;
         }
@@ -124,22 +128,18 @@ export default class CaseFileItemsEditor {
         }
     }
 
-    deselectElements() {
+    deselectElements(): void {
         this.selectCFINode(undefined);
     }
 
-    /**
-     * 
-     * @param {CaseFileItemDef} cfi 
-     */
-    createNode(cfi) {
+    createNode(cfi: CaseFileItemDef): CFINode {
         return new CFINode(this, undefined, this.divCFIDetailsContainer, cfi);
     }
 
     /**
      * Deletes this editor
      */
-    delete() {
+    delete(): void {
         // Delete the generic events of the treeEditor (e.g. click add button, ...)
         HtmlUtil.removeHTML(this.html);
         this.splitter.delete();
@@ -147,34 +147,26 @@ export default class CaseFileItemsEditor {
 
     /**
      * Add a child under the "from" node
-     * @param {JQuery.Event} e 
-     * @param {CFINode} from 
      */
-    addChild(e, from = this.selectedNode) {
-        this.addNode(e, false, from)
+    addChild(e: JQuery.Event, from: CFINode | undefined = this.selectedNode): void {
+        this.addNode(e, false, from);
     }
 
     /**
      * Add a sibling next to the "from" node
-     * @param {JQuery.Event} e 
-     * @param {CFINode} from 
      */
-    addSibling(e, from = this.selectedNode) {
-        this.addNode(e, true, from)
+    addSibling(e: JQuery.Event, from: CFINode | undefined = this.selectedNode): void {
+        this.addNode(e, true, from);
     }
 
     /**
      * Add a node, and insert it after or under the "from" node.
      * Defaults to "under", basically meaning adds a child to the from node.
-     * @param {JQuery.Event} e 
-     * @param {Boolean} insert 
-     * @param {CFINode} from 
-     * @returns 
      */
-    addNode(e, insert = false, from) {
+    addNode(e: JQuery.Event, insert: boolean = false, from?: CFINode): CFINode {
         e.preventDefault();
         e.stopPropagation();
-        let newNode = null;
+        let newNode: CFINode | undefined;
         if (from) {
             if (insert) {
                 if (from.parentNode) {
@@ -200,14 +192,12 @@ export default class CaseFileItemsEditor {
 
     /**
      * Remove a node and it's corresponding case file item definition.
-     * @param {JQuery.Event} e 
-     * @param {CFINode} node 
      */
-    removeNode(e, node = this.selectedNode) {
+    removeNode(e: JQuery.Event, node: CFINode | undefined = this.selectedNode): void {
         e.preventDefault();
         e.stopPropagation();
         e.stopImmediatePropagation();
-        // Get the user selected cfi. Can be null if none is seleted
+        // Get the user selected cfi. Can be undefined if none is selected
         if (node) {
             if (this.hasReferences(node.definition)) {
                 // Only remove the node if it is not in use
@@ -222,14 +212,14 @@ export default class CaseFileItemsEditor {
         }
     }
 
-    async convertToType(e) {
+    async convertToType(e: JQuery.Event): Promise<void> {
         try {
             console.groupCollapsed(`Converting CaseFile structure of '${this.case.editor.fileName}'`)
             await new CFIDConverter(this.case).convert();
             console.groupEnd();
             console.log("Completed conversion, refreshing editor");
             this.case.editor.refresh();
-        } catch (error) {
+        } catch (error: any) {
             console.error(error);
             console.groupEnd();
             this.ide.danger(`Failure during conversion:<p/>${error.message}`)
@@ -239,9 +229,8 @@ export default class CaseFileItemsEditor {
     /**
      * Creates a non-existing name for the new case file item definition node,
      * i.e., one that does not conflict with the existing list of case file item definitions.
-     * @returns {String}
      */
-    __getUniqueDefinitionName(cfidName) {
+    __getUniqueDefinitionName(cfidName: string): string {
         const currentDefinitions = this.ide.repository.getCaseFileItemDefinitions();
         for (let i = 0; i < currentDefinitions.length; i++) {
             const modelName = currentDefinitions[i].name;
@@ -255,15 +244,14 @@ export default class CaseFileItemsEditor {
     /**
      * Returns the next name for the specified string; it checks the last
      * characters. For a name like 'abc' it will return 'abc_1', for 'abc_1' it returns 'abc_2', etc.
-     * @returns {String}
      */
-    __nextName(proposedName) {
+    __nextName(proposedName: string): string {
         const underscoreLocation = proposedName.indexOf('_');
         if (underscoreLocation < 0) {
             return proposedName + '_1';
         } else {
             const front = proposedName.substring(0, underscoreLocation + 1);
-            const num = new Number(proposedName.substring(underscoreLocation + 1)).valueOf() + 1;
+            const num = Number(proposedName.substring(underscoreLocation + 1)) + 1;
             const newName = front + num;
             return newName;
         }
@@ -271,10 +259,8 @@ export default class CaseFileItemsEditor {
 
     /**
      * Changes the definitionRef of the case file item, and loads the new definition ref
-     * @param {CaseFileItemDef} caseFileItem 
-     * @param {HTMLElement} cfidefField 
      */
-    changeCaseFileItemDefinition(caseFileItem, cfidefField) {
+    changeCaseFileItemDefinition(caseFileItem: CaseFileItemDef, cfidefField: HTMLSelectElement): void {
         const newValue = cfidefField.value;
         const newModelName = newValue == NEWDEF ? this.__getUniqueDefinitionName(caseFileItem.name.toLowerCase()) : undefined;
         const definitionRef = newModelName ? newModelName + '.cfid' : newValue;
@@ -300,29 +286,25 @@ export default class CaseFileItemsEditor {
      * Fills the usedIn column, shows which type of elements use this cfi
      * Values can be: sTEMSPOCIO (sentry, Task, Event, Milestone, Stage, PlanningTable, input output CaseParameters, CFIElement
      */
-    showUsedIn() {
+    showUsedIn(): void {
         // called from mappingcfi.js
         // called from caseview.js
         // Just render again to refresh the UsedIn
         this.cfiNodes.forEach(node => node.renderUsedIn());
     }
 
-    /**
-     * @returns {Boolean}
-     */
-    hasReferences(definitionElement) {
+    hasReferences(definitionElement: CaseFileItemDef): boolean {
         // Check for references not just for this element, but also for the children
-        return definitionElement.getDescendants().find(child => this.getReferences(child).length > 0);
+        return definitionElement
+            .getDescendants()
+            .find(child => this.getReferences(child).length > 0) !== undefined;
     }
 
     /**
      * Gets all elements and editors that refer to the definition element
-     * @param {CaseFileItemDef} definitionElement 
-     * @returns {Array<*>}
      */
-    getReferences(definitionElement) {
-        /** @type {Array<*>} */
-        const references = this.case.items.filter(item => item.referencesDefinitionElement(definitionElement.id));
+    private getReferences(definitionElement: CaseFileItemDef): any[] {
+        const references: any[] = this.case.items.filter(item => item.referencesDefinitionElement(definitionElement.id));
         // Also check whether the case parameters may be using the case file item
         if (this.case.caseDefinition.input.find(p => p.bindingRef.references(definitionElement))) {
             references.push(this.case.caseParametersEditor);

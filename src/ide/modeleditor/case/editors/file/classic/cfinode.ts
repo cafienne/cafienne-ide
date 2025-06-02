@@ -5,28 +5,28 @@ import Util from "../../../../../../util/util";
 import HtmlUtil from "../../../../../util/htmlutil";
 import Images from "../../../../../util/images/images";
 import Shapes from "../../../../../util/images/shapes";
+import CaseView from "../../../elements/caseview";
 import CaseFileItemsEditor, { NEWDEF } from "./casefileitemseditor";
 
 export default class CFINode {
-    /**
-     * 
-     * @param {CaseFileItemsEditor} editor 
-     * @param {CFINode} parentNode 
-     * @param {JQuery<HTMLElement>} htmlParent 
-     * @param {CaseFileItemDef} definition 
-     */
-    constructor(editor, parentNode, htmlParent, definition) {
-        this.editor = editor;
-        this.childNodes = /** @type {Array<CFINode>} */ ([]);
-        this.parentNode = parentNode;
+    childNodes: CFINode[] = [];
+    case: CaseView;
+    html: JQuery<HTMLElement>;
+    divCFIDetails: JQuery<HTMLElement>;
+    childrenContainer: JQuery<HTMLElement>;
+
+    constructor(
+        public editor: CaseFileItemsEditor,
+        public parentNode: CFINode | undefined,
+        public htmlParent: JQuery<HTMLElement>,
+        public definition: CaseFileItemDef
+    ) {
         if (this.parentNode) {
             this.parentNode.childNodes.push(this);
         }
-        this.htmlParent = htmlParent;
-        this.definition = definition;
         this.case = editor.case;
-
         this.editor.cfiNodes.push(this);
+
         this.html = $(
             `<div>
                 <div class="cfi-details">
@@ -42,7 +42,7 @@ export default class CFINode {
         this.renderChildren();
     }
 
-    renderDetails() {
+    renderDetails(): void {
         HtmlUtil.clearHTML(this.divCFIDetails);
         this.divCFIDetails.html(
             `<div class="input-name-container">
@@ -68,7 +68,7 @@ export default class CFINode {
 
         const inputName = this.divCFIDetails.find('.inputName');
         const selectMultiplicity = this.divCFIDetails.find('.selectMultiplicity');
-        const selectDefinitionRef = this.divCFIDetails.find('.selectDefinitionRef');
+        const selectDefinitionRef = this.divCFIDetails.find('.selectDefinitionRef') as JQuery<HTMLSelectElement>;
 
         inputName.val(this.definition.name);
         selectMultiplicity.val(this.definition.multiplicity.toString());
@@ -99,12 +99,14 @@ export default class CFINode {
         inputName.on('blur', () => this.inputNameBlurHandler());
         inputName.on('dblclick', () => this.inputNameFocusHandler());
         inputName.on('click', () => this.inputNameFocusHandler());
-        inputName.on('change', (e) => {
+        inputName.on('change', e => {
             // Captures changes to name of case file item
-            this.definition.name = e.target.value;
+            this.definition.name = (e.target as HTMLInputElement).value;
             // If we do not yet have a definitionRef, then check to see if there is a definition that has the same name, and then set it
             if (!this.definition.definitionRef) {
-                const cfid = this.editor.ide.repository.getCaseFileItemDefinitions().find(definition => definition.name.toLowerCase() == this.definition.name.toLowerCase());
+                const cfid = this.editor.ide.repository.getCaseFileItemDefinitions().find(
+                    definition => definition.name.toLowerCase() == this.definition.name.toLowerCase()
+                );
                 if (cfid) {
                     this.definition.definitionRef = cfid.fileName;
                     selectDefinitionRef.val(this.definition.definitionRef);
@@ -115,13 +117,13 @@ export default class CFINode {
             this.case.editor.completeUserAction();
         });
         selectMultiplicity.on('change', () => {
-            this.definition.multiplicity = Multiplicity.parse(selectMultiplicity.val());
+            this.definition.multiplicity = Multiplicity.parse(selectMultiplicity.val()?.toString());
             this.case.editor.completeUserAction();
         });
         selectMultiplicity.on('focus', () => this.editor.selectCFINode(this));
         selectDefinitionRef.on('change', e => this.editor.changeCaseFileItemDefinition(this.definition, e.currentTarget));
         selectDefinitionRef.on('focus', () => this.editor.selectCFINode(this));
-        this.divCFIDetails.find('.cfi-icon').on('pointerdown', (e) => {
+        this.divCFIDetails.find('.cfi-icon').on('pointerdown', e => {
             e.preventDefault();
             e.stopPropagation();
             this.editor.caseFileEditor.startDragging(this.definition);
@@ -132,16 +134,16 @@ export default class CFINode {
         this.renderUsedIn();
     }
 
-    inputNameBlurHandler() {
+    inputNameBlurHandler(): void {
         const inputName = this.divCFIDetails.find('.inputName');
-        inputName.attr('readonly', true);
-        document.getSelection().empty();
+        inputName.attr('readonly', String(true));
+        document.getSelection()?.empty();
     }
 
-    inputNameFocusHandler() {
+    inputNameFocusHandler(): void {
         if (this.editor.selectedNode === this) {
             const inputName = this.divCFIDetails.find('.inputName');
-            inputName.attr('readonly', false);
+            inputName.attr('readonly', null);
             inputName.trigger('select');
         }
     }
@@ -149,34 +151,33 @@ export default class CFINode {
     /**
      * return a string that defines the content of the select defintion field in the case file items editor
      * Select has an empty field, a <new> for creating a new cfidef, and the already available cfidef's
-     * @returns {String}
      */
-    getSelectDefinitionRefHTML() {
+    getSelectDefinitionRefHTML(): string {
         // First create 2 options for "empty" and "_new_", then add all casefileitem definition files
         return (
             [`<select class="selectDefinitionRef"><option value=""></option> <option value="${NEWDEF}">&lt;new&gt;</option>`]
                 .concat(this.editor.ide.repository.getCaseFileItemDefinitions().map(definition => `<option value="${definition.fileName}">${definition.name}</option>`))
                 .concat('</select>')
-                .join(''));
-    };
+                .join('')
+        );
+    }
 
-    renderChildren() {
+    renderChildren(): void {
         HtmlUtil.clearHTML(this.childrenContainer);
         this.definition.children.forEach(cfi => this.renderChild(cfi));
     }
 
     /**
-     * 
-     * @param {CaseFileItemDef} cfi 
+     * @param cfi
      */
-    renderChild(cfi) {
+    renderChild(cfi: CaseFileItemDef): CFINode {
         return new CFINode(this.editor, this, this.childrenContainer, cfi);
     }
 
     /**
      * Fills the usage counter of this cfi
-    */
-    renderUsedIn() {
+     */
+    renderUsedIn(): void {
         if (this.case.items && this.definition.id) { // This means the case has been rendered
             const references = this.case.items.filter(item => item.referencesDefinitionElement(this.definition.id));
             if (references.length > 0) {
@@ -186,7 +187,7 @@ export default class CFINode {
         }
     }
 
-    select() {
+    select(): void {
         this.divCFIDetails.addClass('cfi-selected');
         // Show the right item in the definitions editor
         this.editor.caseFileItemDefinitionEditor.loadDefinition(this.definition.definitionRef);
@@ -194,26 +195,21 @@ export default class CFINode {
         this.renderUsedIn(); // Refresh the usedIn count too when markers are refreshed
     }
 
-    deselect() {
+    deselect(): void {
         this.divCFIDetails.removeClass('cfi-selected');
         this.case.updateSelectedCaseFileItemDefinition(undefined);
         this.renderUsedIn(); // Refresh the usedIn count too when markers are refreshed
     }
 
-    /**
-     * 
-     * @param {Array<CFINode>} offspring 
-     * @returns 
-     */
-    getOffspring(offspring = []) {
+    getOffspring(offspring: CFINode[] = []): CFINode[] {
         offspring.push(this);
         this.childNodes.forEach(child => child.getOffspring(offspring));
         return offspring;
     }
 
-    delete() {
-        const determineNextNodeToSelect = (from) => {
-            const parentDefinition = /** @type {CaseFileItemCollection} */ (from.definition.parent);
+    delete(): void {
+        const determineNextNodeToSelect = (from: CFINode): CFINode | undefined => {
+            const parentDefinition = from.definition.parent as CaseFileItemCollection;
             const myIndex = parentDefinition.children.indexOf(from.definition);
             if (parentDefinition.children.length - 1 > myIndex) {
                 const nextDefinition = parentDefinition.children[myIndex + 1];
@@ -226,14 +222,19 @@ export default class CFINode {
             } else {
                 return from.parentNode;
             }
-        }
+        };
         const offspring = this.getOffspring();
         // If this node is selected or the current selected node is a child of this node,
         // then we need to find a new node to be selected
-        const nextNode = offspring.indexOf(this.editor.selectedNode) >= 0 ? determineNextNodeToSelect(this) : this.editor.selectedNode;
+        const currentSelectedNode = this.editor.selectedNode;
+        let nextNode: CFINode | undefined;
+        if (currentSelectedNode && currentSelectedNode.getOffspring().indexOf(this) >= 0) {
+            // If the current selected node is a child of this node, then we need to find a new node to select
+            nextNode = determineNextNodeToSelect(currentSelectedNode);
+        }
 
         // Now delete all childnodes of this node
-        offspring.forEach(node => Util.removeFromArray(this.editor.cfiNodes, node))
+        offspring.forEach(node => Util.removeFromArray(this.editor.cfiNodes, node));
         this.definition.removeDefinition();
         HtmlUtil.removeHTML(this.html);
 
@@ -241,12 +242,7 @@ export default class CFINode {
         this.editor.selectCFINode(nextNode);
     }
 
-    /**
-     * 
-     * @param {CFINode} sibling
-     * @returns {CFINode}
-     */
-    createChild(sibling = undefined) {
+    createChild(sibling: CFINode | undefined = undefined): CFINode {
         const newCaseFileItemDefinition = this.definition.createChildDefinition();
         // newCaseFileItemDefinition.name = this.editor.case.caseDefinition.getNextNameOfType(CaseFileItemDef);
         const childNode = this.renderChild(newCaseFileItemDefinition);
