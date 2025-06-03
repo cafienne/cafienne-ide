@@ -12,17 +12,9 @@ import Connector from "../connector";
 import SentryView from "../sentryview";
 import Properties from "./properties";
 
-export default class SentryProperties extends Properties {
-    /**
-     * @param {SentryView} sentry 
-     */
-    constructor(sentry) {
-        super(sentry);
-        this.cmmnElement = sentry;
-    }
-
+export default class SentryProperties extends Properties<SentryView> {
     renderData() {
-        this.addDescription(this.cmmnElement.purpose);
+        this.addDescription(this.view.purpose);
         this.addSeparator();
         this.addIfPart();
         this.addSeparator();
@@ -38,32 +30,31 @@ export default class SentryProperties extends Properties {
     }
 
     addIfPart() {
-        const sentry = this.cmmnElement.definition;
+        const sentry = this.view.definition;
         const rule = sentry.ifPart;
-        const ruleAvailable = rule ? true : false;
+        const ruleAvailable = !!rule;
         const contextName = rule ? rule.contextRef.name : '';
         const ruleBody = rule ? rule.body : '';
         const ruleLanguage = rule && rule.hasCustomLanguage ? rule.language : '';
         const nonDefaultLanguage = rule && rule.hasCustomLanguage ? ' custom-language' : '';
-        const ruleLanguageTip = `Default language for expressions is '${this.cmmnElement.definition.caseDefinition.defaultExpressionLanguage}'. Click the button to change the language`;
-        const ruleDeviatesTip = `Language used in this expression is '${ruleLanguage}'. Default language in the rest of the case model is '${this.cmmnElement.definition.caseDefinition.defaultExpressionLanguage}'`;
+        const ruleLanguageTip = `Default language for expressions is '${this.view.definition.caseDefinition.defaultExpressionLanguage}'. Click the button to change the language`;
+        const ruleDeviatesTip = `Language used in this expression is '${ruleLanguage}'. Default language in the rest of the case model is '${this.view.definition.caseDefinition.defaultExpressionLanguage}'`;
         const tip = rule && rule.hasCustomLanguage ? ruleDeviatesTip : ruleLanguageTip;
         const inputIfPartPresence = Util.createID();
-        // const checked = ;
+
         const html = $(`<div class="propertyRule if-part">
                             <div class="propertyRow">
-                                <input id="${inputIfPartPresence}" class="rulePresence" type="checkbox" ${ruleAvailable?'checked':''}/>
+                                <input id="${inputIfPartPresence}" class="rulePresence" type="checkbox" ${ruleAvailable ? 'checked' : ''}/>
                                 <img src="${Images.IfPart}" />
                                 <label for="${inputIfPartPresence}">If Part</label>
                             </div>
-                            <div style="display:${ruleAvailable?'block':'none'}" class="ruleProperty">
+                            <div style="display:${ruleAvailable ? 'block' : 'none'}" class="ruleProperty">
                                 <div class="propertyBlock ifPartBody">
                                     <label>If Part Expression</label>
                                     <span class="property-expression-language ${nonDefaultLanguage}" title="${tip}">
                                         <button>L</button>
                                         <input class="input-expression-language" value="${ruleLanguage}" />
                                     </span>
-                                    
                                     <textarea class="multi">${ruleBody}</textarea>
                                 </div>
                                 <div class="zoomRow zoomDoubleRow">
@@ -75,21 +66,20 @@ export default class SentryProperties extends Properties {
                                 <span class="separator" />
                             </div>
                         </div>`);
-        html.find('.rulePresence').on('click', e => {
+        html.find('.rulePresence').on('click', (e: any) => {
             const newPresence = e.target.checked;
             html.find('.ruleProperty').css('display', newPresence ? 'block' : 'none');
-            if (!newPresence && this.cmmnElement.definition.ifPart) {
-                // Remove the rule from the definition...
-                this.cmmnElement.definition.ifPart.removeDefinition();
+            if (!newPresence && this.view.definition.ifPart) {
+                this.view.definition.ifPart.removeDefinition();
                 this.done();
             }
         });
         const htmlExpressionLanguage = html.find('.property-expression-language');
         const editHTMLExpressionLanguage = htmlExpressionLanguage.find('input');
         const showHTMLExpressionLanguage = htmlExpressionLanguage.find('button');
-        editHTMLExpressionLanguage.on('change', e => {
-            const rule = this.cmmnElement.definition.getIfPart();
-            const newLanguage = e.target.value || this.cmmnElement.definition.caseDefinition.defaultExpressionLanguage;
+        editHTMLExpressionLanguage.on('change', (e: any) => {
+            const rule = this.view.definition.getIfPart();
+            const newLanguage = e.target.value || this.view.definition.caseDefinition.defaultExpressionLanguage;
             this.change(rule, 'language', newLanguage);
             if (rule.hasCustomLanguage) {
                 HtmlUtil.addClassOverride(htmlExpressionLanguage, 'custom-language');
@@ -108,43 +98,35 @@ export default class SentryProperties extends Properties {
             }
         });
 
-        // html.find('.ifPartLanguage').on('change', e => this.change(this.cmmnElement.definition.getIfPart(), 'language', e.target.value));
-        html.find('.ifPartBody textarea').on('change', e => this.change(this.cmmnElement.definition.getIfPart(), 'body', e.target.value));
-        html.find('.zoombt').on('click', e => {
-            this.cmmnElement.case.cfiEditor.open(cfi => {
-                this.change(this.cmmnElement.definition.getIfPart(), 'contextRef', cfi.id);
+        html.find('.ifPartBody textarea').on('change', (e: any) => this.change(this.view.definition.getIfPart(), 'body', e.target.value));
+        html.find('.zoombt').on('click', () => {
+            this.view.case.cfiEditor.open((cfi: CaseFileItemDef) => {
+                this.change(this.view.definition.getIfPart(), 'contextRef', cfi.id);
             });
         });
-        html.find('.removeReferenceButton').on('click', e => {
-            this.change(this.cmmnElement.definition.getIfPart(), 'contextRef', undefined);
+        html.find('.removeReferenceButton').on('click', () => {
+            this.change(this.view.definition.getIfPart(), 'contextRef', undefined);
         });
-        html.find('.zoomRow').on('pointerover', e => {
+        html.find('.zoomRow').on('pointerover', (e: any) => {
             e.stopPropagation();
-            this.cmmnElement.case.cfiEditor.setDropHandler(dragData => {
+            this.view.case.cfiEditor.setDropHandler((dragData: { item: CaseFileItemDef }) => {
                 const newContextRef = dragData.item.id;
-                this.change(this.cmmnElement.definition.getIfPart(), 'contextRef', newContextRef);
+                this.change(this.view.definition.getIfPart(), 'contextRef', newContextRef);
             });
         });
-        html.find('.zoomRow').on('pointerout', e => {
-            this.cmmnElement.case.cfiEditor.removeDropHandler();
+        html.find('.zoomRow').on('pointerout', () => {
+            this.view.case.cfiEditor.removeDropHandler();
         });
         this.htmlContainer.append(html);
         return html;
     }
 
-    /**
-     * Changes the standard event within the onPart (if one is given)
-     * @param {JQuery.ChangeEvent} e 
-     * @param {OnPartDefinition} onPart 
-     * @param {Connector} connector 
-     */
-    changeStandardEvent(e, onPart, connector) {
+    changeStandardEvent(e: any, onPart: OnPartDefinition<any>, connector?: Connector) {
         if (onPart) {
             const selectedStandardEvent = e.currentTarget.selectedOptions[0];
             const newStandardEvent = onPart.parseStandardEvent(selectedStandardEvent.value);
             if (connector) {
-                // If there is a connector, check the label rendering style, and optionally change the label.
-                const style = connector.case.diagram.connectorStyle
+                const style = connector.case.diagram.connectorStyle;
                 if (style.isNone || (style.isDefault && onPart.source.defaultTransition == newStandardEvent)) {
                     connector.label = '';
                 } else {
@@ -154,13 +136,8 @@ export default class SentryProperties extends Properties {
             this.change(onPart, 'standardEvent', newStandardEvent);
         }
     }
-    
-    /**
-     * Removes the onPart
-     * @param {OnPartDefinition} onPart 
-     * @param {Connector} connector 
-     */
-    deleteOnPart(onPart, connector) {
+
+    deleteOnPart(onPart: OnPartDefinition<any>, connector?: Connector) {
         if (onPart) {
             onPart.removeDefinition();
             if (connector) {
@@ -195,48 +172,34 @@ export default class SentryProperties extends Properties {
                             </table>
                         </div>`);
         this.htmlContainer.append(html);
-        // Add a row for each role, and also an empty ro(w)le at the end
-        const tableBody = html.find('.onparts-table tbody')
-        this.cmmnElement.definition.planItemOnParts.forEach(onPart => this.addPlanItemOnPart(tableBody, onPart));
+        const tableBody = html.find('.onparts-table tbody');
+        this.view.definition.planItemOnParts.forEach((onPart: PlanItemOnPartDefinition) => this.addPlanItemOnPart(tableBody, onPart));
         this.addPlanItemOnPart(tableBody);
     }
 
-    /**
-     * 
-     * @param {PlanItemOnPartDefinition} onPart 
-     */
-    getPlanItemsSelect(onPart) {
-        const thisPlanItem = this.cmmnElement.parent.definition;
-        const allPlanItems = this.cmmnElement.definition.caseDefinition.elements.filter(e => e instanceof PlanItem && e != thisPlanItem);
-        const planItemOptions = allPlanItems.map(item => {
+    getPlanItemsSelect(onPart?: PlanItemOnPartDefinition) {
+        const thisPlanItem = this.view.parent.definition;
+        const allPlanItems = this.view.definition.caseDefinition.elements.filter((e: any) => e instanceof PlanItem && e != thisPlanItem);
+        const planItemOptions = allPlanItems.map((item: any) => {
             const selected = onPart && onPart.source == item ? ' selected="true"' : '';
-            return `<option value="${item.id}" ${selected}>${item.name}</option>`
+            return `<option value="${item.id}" ${selected}>${item.name}</option>`;
         }).join('');
         return '<option></option>' + planItemOptions;
-    };
+    }
 
-    /**
-     * 
-     * @param {PlanItemOnPartDefinition} onPart 
-     */
-    getPlanItemStandardEvents(onPart) {
+    getPlanItemStandardEvents(onPart?: PlanItemOnPartDefinition) {
         if (!onPart || !onPart.source) {
             return '<option></option><option>first select a plan item</option>';
         } else {
-            const isTransitionSelected = transition => transition == onPart.standardEvent ? 'selected="true"' : '';
-            return onPart.source.transitions.map(t => `<option value="${t}" ${isTransitionSelected(t)}>${t}</option>`).join('');
+            const isTransitionSelected = (transition: any) => transition == onPart.standardEvent ? 'selected="true"' : '';
+            return onPart.source.transitions.map((t: any) => `<option value="${t}" ${isTransitionSelected(t)}>${t}</option>`).join('');
         }
     }
 
-    /**
-     * 
-     * @param {JQuery<HTMLElement>} parentHTML 
-     * @param {PlanItemOnPartDefinition} onPart 
-     */
-    addPlanItemOnPart(parentHTML, onPart = undefined) {
+    addPlanItemOnPart(parentHTML: JQuery<HTMLElement>, onPart?: PlanItemOnPartDefinition) {
         const planItemSelection = this.getPlanItemsSelect(onPart);
         const standardEvents = this.getPlanItemStandardEvents(onPart);
-        const connector = onPart ? this.cmmnElement.__getConnector(onPart.sourceRef) : undefined;
+        const connector = onPart ? this.view.__getConnector(onPart.sourceRef.value) : undefined;
         const checked = connector ? 'checked="true"' : '';
         const checkedLabel = connector && connector.label ? 'checked="true"' : '';
         const html = $(`<tr class="onpart">
@@ -259,15 +222,13 @@ export default class SentryProperties extends Properties {
                             </td>
                         </tr>`);
         parentHTML.append(html);
-        // Event handler for removing the onpart
-        html.find('.btnDelete').on('click', e => this.deleteOnPart(onPart, connector));
-        // Event handler for changing the plan item
-        html.find('#planItemSelection').on('change', e => {
+        html.find('.btnDelete').on('click', () => this.deleteOnPart(onPart!, connector));
+        html.find('#planItemSelection').on('change', (e: any) => {
             const selectedOption = e.currentTarget.selectedOptions[0];
             const planItemID = selectedOption.value;
-            const planItem = this.cmmnElement.definition.caseDefinition.getElement(planItemID);
+            const planItem = this.view.definition.caseDefinition.getElement(planItemID);
             if (planItem && planItem instanceof PlanItem) {
-                const changedOnPart = onPart ? onPart : this.cmmnElement.definition.createPlanItemOnPart();
+                const changedOnPart = onPart ? onPart : this.view.definition.createPlanItemOnPart();
                 changedOnPart.sourceRef.update(planItem.id);
                 changedOnPart.standardEvent = planItem.defaultTransition;
             } else if (onPart) {
@@ -276,27 +237,23 @@ export default class SentryProperties extends Properties {
             if (connector) {
                 connector.remove();
             }
-            html.find('.standard-event').html(this.getPlanItemStandardEvents(onPart))
+            html.find('.standard-event').html(this.getPlanItemStandardEvents(onPart));
             this.done();
             this.show();
         });
-        // Event handler for changing the standardEvent
-        html.find('.standard-event').on('change', e => this.changeStandardEvent(e, onPart, connector));
-        // Event handler for hiding/showing the connector
-        html.find('#hideShowConnector').on('change', e => {
-            if (!onPart) { // Can only set a connector if there is an onPart
+        html.find('.standard-event').on('change', (e: any) => this.changeStandardEvent(e, onPart!, connector));
+        html.find('#hideShowConnector').on('change', (e: any) => {
+            if (!onPart) {
                 if (e.currentTarget.checked) e.currentTarget.checked = false;
                 return;
             }
-            const planItemView = this.cmmnElement.case.getItem(onPart.sourceRef);
+            const planItemView = this.view.case.getItem(onPart.sourceRef.value);
             if (planItemView) {
-                // Hide/show the connector to the plan item
                 const checked = e.currentTarget.checked;
                 if (checked) {
-                    const connector = this.cmmnElement.__connect(planItemView);
-                    // If there is a connector, check the label rendering style, and optionally change the label.
+                    const connector = this.view.__connect(planItemView);
                     const style = connector.case.diagram.connectorStyle;
-                    if (style.isNone || (style.isDefault && onPart.source.defaultTransition == onPart.standardEvent)) {
+                    if (style.isNone || (style.isDefault && onPart.source?.defaultTransition == onPart.standardEvent)) {
                         connector.label = '';
                     } else {
                         connector.label = onPart.standardEvent.toString();
@@ -308,7 +265,7 @@ export default class SentryProperties extends Properties {
             }
             this.done();
         });
-        html.find('#hideShowLabel').on('change', e => this.changeLabelVisibility(e, onPart, connector));
+        html.find('#hideShowLabel').on('change', (e: any) => this.changeLabelVisibility(e, onPart!, connector));
         return html;
     }
 
@@ -320,6 +277,7 @@ export default class SentryProperties extends Properties {
                                     <col width="15px"></col>
                                     <col width="150px"></col>
                                     <col width="100px"></col>
+                                    <col width="15px"></col>
                                     <col width="15px"></col>
                                 </colgroup>
                                 <thead>
@@ -335,35 +293,25 @@ export default class SentryProperties extends Properties {
                             </table>
                         </div>`);
         this.htmlContainer.append(html);
-        // Add a row for each role, and also an empty ro(w)le at the end
-        const tableBody = html.find('.onparts-table tbody')
-        this.cmmnElement.definition.caseFileItemOnParts.forEach(onPart => this.addCaseFileItemOnPart(tableBody, onPart));
+        const tableBody = html.find('.onparts-table tbody');
+        this.view.definition.caseFileItemOnParts.forEach((onPart: CaseFileItemOnPartDefinition) => this.addCaseFileItemOnPart(tableBody, onPart));
         this.addCaseFileItemOnPart(tableBody);
     }
 
-    /**
-     * Returns a HTML string with all possible options, and also the selected one.
-     * @param {CaseFileItemOnPartDefinition} onPart 
-     */
-    getCaseFileItemStandardEvents(onPart) {
+    getCaseFileItemStandardEvents(onPart?: CaseFileItemOnPartDefinition) {
         if (onPart && onPart.source) {
-            const isTransitionSelected = transition => transition == onPart.standardEvent ? 'selected="true"' : '';
+            const isTransitionSelected = (transition: CaseFileItemTransition) => transition == onPart.standardEvent ? 'selected="true"' : '';
             return CaseFileItemTransition.values.map(t => `<option value="${t}" ${isTransitionSelected(t)}>${t}</option>`).join('');
         } else {
             return '<option></option><option>first select a case file item item</option>';
         }
     }
 
-    /**
-     * 
-     * @param {JQuery<HTMLElement>} parentHTML 
-     * @param {CaseFileItemOnPartDefinition} onPart 
-     */
-    addCaseFileItemOnPart(parentHTML, onPart = undefined) {
+    addCaseFileItemOnPart(parentHTML: JQuery<HTMLElement>, onPart?: CaseFileItemOnPartDefinition) {
         const caseFileItemName = onPart && onPart.source ? onPart.source.name : '';
         const standardEvents = this.getCaseFileItemStandardEvents(onPart);
-        const cfiView = onPart ? this.cmmnElement.case.getCaseFileItemElement(onPart.sourceRef) : undefined;
-        const connector = cfiView ? this.cmmnElement.__getConnector(cfiView.id) : undefined;
+        const cfiView = onPart ? this.view.case.getCaseFileItemElement(onPart.sourceRef.value) : undefined;
+        const connector = cfiView ? this.view.__getConnector(cfiView.id) : undefined;
         const checked = connector ? 'checked="true"' : '';
         const checkedLabel = connector && connector.label ? 'checked="true"' : '';
         const html = $(`<tr class="onpart">
@@ -387,73 +335,61 @@ export default class SentryProperties extends Properties {
                             </td>
                         </tr>`);
         parentHTML.append(html);
-        // Event handler for removing the onpart
-        html.find('.btnDelete').on('click', e => this.deleteOnPart(onPart, connector));
-        html.find('.zoombt').on('click', e => {
-            this.cmmnElement.case.cfiEditor.open(cfi => this.changeCaseFileItemOnPart(onPart, connector, html, cfi));
+        html.find('.btnDelete').on('click', () => this.deleteOnPart(onPart!, connector));
+        html.find('.zoombt').on('click', () => {
+            this.view.case.cfiEditor.open((cfi: CaseFileItemDef) => this.changeCaseFileItemOnPart(onPart, connector, html, cfi));
         });
-        html.find('.zoomRow').on('pointerover', e => {
+        html.find('.zoomRow').on('pointerover', (e: any) => {
             e.stopPropagation();
-            this.cmmnElement.case.cfiEditor.setDropHandler(dragData => this.changeCaseFileItemOnPart(onPart, connector, html, dragData.item));
+            this.view.case.cfiEditor.setDropHandler((dragData: { item: CaseFileItemDef }) => this.changeCaseFileItemOnPart(onPart, connector, html, dragData.item));
         });
-        html.find('.zoomRow').on('pointerout', e => {
-            this.cmmnElement.case.cfiEditor.removeDropHandler();
+        html.find('.zoomRow').on('pointerout', () => {
+            this.view.case.cfiEditor.removeDropHandler();
         });
-        // Event handler for changing the standardEvent
-        html.find('.standard-event').on('change', e => this.changeStandardEvent(e, onPart, connector));
-
-
-        // Event handler for hiding/showing the connector
-        html.find('#hideShowConnector').on('change', e => {
-            const cfiView = this.cmmnElement.case.getCaseFileItemElement(onPart.sourceRef);
+        html.find('.standard-event').on('change', (e: any) => this.changeStandardEvent(e, onPart!, connector));
+        html.find('#hideShowConnector').on('change', (e: any) => {
+            const cfiView = onPart ? this.view.case.getCaseFileItemElement(onPart.sourceRef.value) : undefined;
             const checked = e.currentTarget.checked;
-            if (onPart && cfiView) { // Can only set a connector if there is an onPart and a visual of the CFI
-                // Hide/show the connector to the case file item
+            if (onPart && cfiView) {
                 if (checked) {
-                    this.cmmnElement.__connect(cfiView);
+                    this.view.__connect(cfiView);
                     this.show();
                 } else if (connector) {
                     connector.remove();
                 }
                 this.done();
-            } else if (checked) { // Avoid unnecessarily keeping the input checked.
+            } else if (checked) {
                 e.currentTarget.checked = false;
             }
         });
-
-        html.find('#hideShowLabel').on('change', e => this.changeLabelVisibility(e, onPart, connector));
+        html.find('#hideShowLabel').on('change', (e: any) => this.changeLabelVisibility(e, onPart!, connector));
         return html;
     }
 
-    changeLabelVisibility(e, onPart, connector) {
-        if (!onPart) { // Can only set a connector if there is an onPart
+    changeLabelVisibility(e: any, onPart: OnPartDefinition<any>, connector?: Connector) {
+        if (!onPart) {
             if (e.currentTarget.checked) e.currentTarget.checked = false;
             return;
         }
         if (connector) {
-            // Hide/show the label with the standard event
             const checked = e.currentTarget.checked;
             connector.label = checked ? onPart.standardEvent.toString() : '';
         }
         this.done();
-
     }
 
-    /**
-     * 
-     * @param {OnPartDefinition} onPart 
-     * @param {Connector} connector 
-     * @param {JQuery<HTMLElement>} html 
-     * @param {CaseFileItemDef} cfi 
-     */
-    changeCaseFileItemOnPart(onPart, connector, html, cfi) {
+    changeCaseFileItemOnPart(
+        onPart: CaseFileItemOnPartDefinition | undefined,
+        connector: Connector | undefined,
+        html: JQuery<HTMLElement>,
+        cfi: CaseFileItemDef
+    ) {
         const currentSourceRef = onPart ? onPart.sourceRef : '';
         if (cfi.id === currentSourceRef) {
-            // Nothing changes
             return;
         }
 
-        const newOnPart = onPart ? onPart : this.cmmnElement.definition.createCaseFileItemOnPart();
+        const newOnPart = onPart ? onPart : this.view.definition.createCaseFileItemOnPart();
         if (!onPart) {
             newOnPart.standardEvent = CaseFileItemTransition.Create;
         }
@@ -462,7 +398,6 @@ export default class SentryProperties extends Properties {
         }
         this.change(newOnPart, 'sourceRef', cfi.id);
 
-        // Render again.
         this.show();
     }
 }

@@ -4,15 +4,7 @@ import Images from "../../../../util/images/images";
 import StageView from "../stageview";
 import TaskStageProperties from "./taskstageproperties";
 
-export default class StageProperties extends TaskStageProperties {
-    /**
-     * @param {StageView} stage 
-     */
-    constructor(stage) {
-        super(stage);
-        this.cmmnElement = stage;
-    }
-
+export default class StageProperties<SV extends StageView = StageView> extends TaskStageProperties<SV> {
     renderData() {
         this.addNameField();
         this.addSeparator();
@@ -32,7 +24,13 @@ export default class StageProperties extends TaskStageProperties {
     }
 
     addAutoComplete() {
-        this.addCheckField('Auto Complete', 'Determines whether the stage should auto complete or not.', Images.AutoComplete, 'autoComplete', this.cmmnElement.definition);
+        this.addCheckField(
+            'Auto Complete',
+            'Determines whether the stage should auto complete or not.',
+            Images.AutoComplete,
+            'autoComplete',
+            this.view.definition
+        );
     }
 
     addPlanItemTable() {
@@ -50,27 +48,32 @@ export default class StageProperties extends TaskStageProperties {
             html.find('.planitems-table').css('display', visible ? 'none' : 'block');
             html.find('.togglePlanItemsButton').html(visible ? '&nbsp;&nbsp;+' : '');
         });
-        
-        this.cmmnElement.definition.planItems.forEach(item => {
+
+        this.view.definition.planItems.forEach((item: PlanItem) => {
             const itemHTML = $(`<div>
                                     <span title="Move plan item up (affects instantiation order)" class="upButton"><img src="${Images.DoubleUp}" /></span>
                                     <span title="Move plan item down (affects instantiation order)" class="downButton"><img src="${Images.DoubleDown}" /></span> ${item.name}
                                     <span class="separator" />
                                 </div>`);
-            itemHTML.find('.upButton').on('click', e => this.up(e, itemHTML, item, this.cmmnElement.definition.planItems));
-            itemHTML.find('.downButton').on('click', e => this.down(e, itemHTML, item, this.cmmnElement.definition.planItems));
+            itemHTML.find('.upButton').on('click', (e: JQuery.ClickEvent) =>
+                this.up(e, itemHTML, item, this.view.definition.planItems)
+            );
+            itemHTML.find('.downButton').on('click', (e: JQuery.ClickEvent) =>
+                this.down(e, itemHTML, item, this.view.definition.planItems)
+            );
             this.htmlContainer.find('.planitems-table').append(itemHTML);
         });
     }
 
     /**
-     * Moves the item and it's corresponding HTML up in the list (if it is not the first one)
-     * @param {JQuery.ClickEvent} e 
-     * @param {JQuery<HTMLElement>} html 
-     * @param {PlanItem} item 
-     * @param {Array<PlanItem>} collection
+     * Moves the item and its corresponding HTML up in the list (if it is not the first one)
      */
-    up(e, html, item, collection) {
+    up(
+        e: JQuery.ClickEvent,
+        html: JQuery<HTMLElement>,
+        item: PlanItem,
+        collection: PlanItem[]
+    ) {
         e.stopPropagation();
         const index = collection.indexOf(item);
         if (index > 0) {
@@ -82,13 +85,14 @@ export default class StageProperties extends TaskStageProperties {
     }
 
     /**
-     * Moves the item and it's corresponding HTML down in the list (if it is not the last one)
-     * @param {JQuery.ClickEvent} e 
-     * @param {JQuery<HTMLElement>} html 
-     * @param {PlanItem} item 
-     * @param {Array<PlanItem>} collection
+     * Moves the item and its corresponding HTML down in the list (if it is not the last one)
      */
-    down(e, html, item, collection) {
+    down(
+        e: JQuery.ClickEvent,
+        html: JQuery<HTMLElement>,
+        item: PlanItem,
+        collection: PlanItem[]
+    ) {
         e.stopPropagation();
         const index = collection.indexOf(item);
         if (index < collection.length - 1) {

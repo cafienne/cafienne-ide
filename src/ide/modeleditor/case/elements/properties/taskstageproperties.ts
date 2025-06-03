@@ -4,26 +4,20 @@ import Images from "../../../../util/images/images";
 import TaskStageView from "../taskstageview";
 import PlanItemProperties from "./planitemproperties";
 
-export default class TaskStageProperties extends PlanItemProperties {
-    /**
-     * @param {TaskStageView} taskStage 
-     */
-    constructor(taskStage) {
-        super(taskStage);
-        this.cmmnElement = taskStage;
-    }
+export default abstract class TaskStageProperties<TSV extends TaskStageView = TaskStageView> extends PlanItemProperties<TSV> {
+    applicabilityRulesBlock!: JQuery<HTMLElement>;
 
-    addDiscretionaryBlock(imageURL, label) {
-        const element = this.cmmnElement.definition;
+    addDiscretionaryBlock(imageURL: string, label: string) {
+        const element = this.view.definition;
         const isDiscretionary = element.isDiscretionary;
         const inputDiscretionary = Util.createID();
         const html = $(`<div class="propertyRule">
                             <div class="propertyRow">
-                                <input id="${inputDiscretionary}" type="checkbox" ${isDiscretionary?'checked':''}/>
+                                <input id="${inputDiscretionary}" type="checkbox" ${isDiscretionary ? 'checked' : ''}/>
                                 <img src="${imageURL}" />
                                 <label for="${inputDiscretionary}">${label}</label>
                             </div>
-                            <div style="display:${isDiscretionary?'block':'none'}" title="Select case roles allowed to plan the item (not to perform the item, but to plan the item).\nA team member must have one of the roles in order to plan.\nIf empty, all team members can plan the item." class="discretionaryBlock">
+                            <div style="display:${isDiscretionary ? 'block' : 'none'}" title="Select case roles allowed to plan the item (not to perform the item, but to plan the item).\nA team member must have one of the roles in order to plan.\nIf empty, all team members can plan the item." class="discretionaryBlock">
                                 <div class="authorizedRolesBlock">
                                     <label>Authorized Roles</label>
                                 </div>
@@ -33,18 +27,18 @@ export default class TaskStageProperties extends PlanItemProperties {
                                 </div>
                             </div>
                         </div>`);
-        html.find('input').on('click', e => {
-            const newDiscretionary = e.target.checked;
+        html.find('input').on('click', (e: any) => {
+            const newDiscretionary = (e.target as HTMLInputElement).checked;
             html.find('.discretionaryBlock').css('display', newDiscretionary ? 'block' : 'none');
-            this.cmmnElement.definition.switchType();
-            if (this.cmmnElement.definition.isDiscretionary) {
-                this.cmmnElement.parent.showPlanningTable();
+            this.view.definition.switchType();
+            if (this.view.definition.isDiscretionary) {
+                (this.view.parent as any).showPlanningTable();
                 this.renderApplicabilityRules();
             }
             this.done();
         });
 
-        // Add a row for each role, and also an empty ro(w)le at the end
+        // Add a row for each role, and also an empty role at the end
         const authorizedRolesHTML = html.find('.authorizedRolesBlock');
         this.addAuthorizatedRoles(authorizedRolesHTML);
 
@@ -57,21 +51,14 @@ export default class TaskStageProperties extends PlanItemProperties {
     }
 
     renderApplicabilityRules() {
-        if (this.cmmnElement.definition.isDiscretionary) {
-            this.cmmnElement.definition.parent.ruleDefinitions.forEach(rule => this.addApplicabilityRuleField(rule));
+        if (this.view.definition.isDiscretionary) {
+            (this.view.definition.parent as any).ruleDefinitions.forEach((rule: any) => this.addApplicabilityRuleField(rule));
         }
     }
 
-    /**
-     * Adds a role. Can be undefined, in which case an empty row is added.
-     * Also adds the required event handlers to the html.
-     * @param {ApplicabilityRuleDefinition} rule 
-     */
-    addApplicabilityRuleField(rule) {
-        const isSelected = this.cmmnElement.definition.applicabilityRules.list.find(r => r.references(rule)) ? true : false;
-
+    addApplicabilityRuleField(rule: any) {
+        const isSelected = this.view.definition.applicabilityRules.list.find((r: any) => r.references(rule)) ? true : false;
         const label = rule.name;
-
         const checked = isSelected ? ' checked' : '';
         const checkId = Util.createID();
         const html = $(`<div class="propertyRule">
@@ -80,11 +67,11 @@ export default class TaskStageProperties extends PlanItemProperties {
                                 <label for="${checkId}">${label}</label>
                             </div>
                         </div>`);
-        html.on('change', e => {
-            if (e.target.checked) {
-                this.cmmnElement.definition.applicabilityRules.add(rule);
+        html.on('change', (e: JQuery.ChangeEvent) => {
+            if ((e.target as HTMLInputElement).checked) {
+                this.view.definition.applicabilityRules.add(rule);
             } else {
-                this.cmmnElement.definition.applicabilityRules.remove(rule);
+                this.view.definition.applicabilityRules.remove(rule);
             }
             this.done();
         });
@@ -92,11 +79,8 @@ export default class TaskStageProperties extends PlanItemProperties {
         return html;
     }
 
-    /**
-     * Adds a checkbox whether or not this element has a planning table.
-     */
     addPlanningTableField() {
-        const checked = this.cmmnElement.definition.planningTable ? ' checked' : '';
+        const checked = this.view.definition.planningTable ? ' checked' : '';
         const checkId = Util.createID();
         const html = $(`<div class="propertyRule">
                             <div class="propertyRow">
@@ -105,14 +89,14 @@ export default class TaskStageProperties extends PlanItemProperties {
                                 <label for="${checkId}">Planning Table</label>
                             </div>
                         </div>`);
-        html.on('change', e => {
-            if (e.target.checked == true) {
+        html.on('change', (e: JQuery.ChangeEvent) => {
+            if ((e.target as HTMLInputElement).checked == true) {
                 // Create a new planning table on the definition by invoking the getter, and show it.
-                this.cmmnElement.definition.getPlanningTable();
-                this.cmmnElement.showPlanningTable();
+                this.view.definition.getPlanningTable();
+                this.view.showPlanningTable();
             } else {
                 // Invoking delete on our planning table will also remove the definition and render this element again (and thus hide the pt image)
-                this.cmmnElement.planningTableView.__delete();
+                this.view.planningTableView.__delete();
             }
             this.done();
         });

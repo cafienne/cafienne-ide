@@ -79,22 +79,6 @@ export default class HumanTaskDefinition extends TaskDefinition {
         return this.workflow.mappings;
     }
 
-    get dueDate() {
-        return this.workflow.dueDate;
-    }
-
-    set dueDate(duedate) {
-        this.workflow.dueDate = duedate;
-    }
-
-    get assignment() {
-        return this.workflow.assignment;
-    }
-
-    set assignment(assignment) {
-        this.workflow.assignment = assignment;
-    }
-
     get validatorRef() {
         return this.workflow.validatorRef.fileName;
     }

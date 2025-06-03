@@ -3,6 +3,7 @@ import $ from "jquery";
 import TextAnnotationDefinition from "../../../../repository/definition/artifact/textannotation";
 import CaseDefinition from "../../../../repository/definition/cmmn/casedefinition";
 import CaseFileItemDef from "../../../../repository/definition/cmmn/casefile/casefileitemdef";
+import CasePlanDefinition from "../../../../repository/definition/cmmn/caseplan/caseplandefinition";
 import CMMNElementDefinition from "../../../../repository/definition/cmmnelementdefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import Validator from "../../../../repository/validate/validator";
@@ -41,6 +42,7 @@ export default class CaseView {
         this.editor = editor;
         this.editor.case = this; // Quick hack to have inline editors have access to the case in their constructor
         this.caseDefinition = caseDefinition;
+        this.definition = /** @type {CasePlanDefinition} */ (caseDefinition.casePlan);
         this.id = this.caseDefinition.id;
         this.name = this.caseDefinition.name;
         this.case = this;

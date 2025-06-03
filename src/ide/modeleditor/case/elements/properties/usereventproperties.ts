@@ -2,16 +2,7 @@ import $ from "jquery";
 import UserEventView from "../usereventview";
 import PlanItemProperties from "./planitemproperties";
 
-export default class UserEventProperties extends PlanItemProperties {
-    /**
-     * 
-     * @param {UserEventView} userEvent 
-     */
-    constructor(userEvent) {
-        super(userEvent);
-        this.cmmnElement = userEvent;
-    }
-
+export default class UserEventProperties extends PlanItemProperties<UserEventView> {
     renderData() {
         this.addNameField();
         this.addSeparator();

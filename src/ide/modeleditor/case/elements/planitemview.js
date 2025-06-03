@@ -114,6 +114,7 @@ export default class PlanItemView extends CMMNElementView {
         if (this.ruleUsesDefinitionId('manualActivationRule', definitionId)) {
             return true;
         }
+        return super.referencesDefinitionElement(definitionId);
     }
 
     get isPlanItem() {

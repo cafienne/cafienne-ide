@@ -1,20 +1,17 @@
 import $ from "jquery";
-import { ApplicabilityRuleDefinition } from "../../../../../repository/definition/cmmn/caseplan/planning/planningtabledefinition";
+import { ApplicabilityRuleDefinition } from "../../../../../repository/definition/cmmn/caseplan/planning/applicabilityruledefinition";
 import Images from "../../../../util/images/images";
 import PlanningTableView from "../planningtableview";
 import Properties from "./properties";
 
-export default class PlanningTableProperties extends Properties {
-    /**
-     * @param {PlanningTableView} planningTable 
-     */
-    constructor(planningTable) {
+export default class PlanningTableProperties extends Properties<PlanningTableView> {
+    rulesTable!: JQuery<HTMLElement>;
+
+    constructor(planningTable: PlanningTableView) {
         super(planningTable);
-        this.cmmnElement = planningTable;
     }
 
     renderData() {
-        const element = this.cmmnElement.definition;
         $(this.html).css('width', '495px');
         const html = $(`<div class="planning-table">
                             <label>PlanningTable Applicability Rules</label>
@@ -51,15 +48,15 @@ The rules must be defined in the Planning Table.
 The rules can be marked for applicability within the properties of the discretionary items.
 When the discretionary items are retrieved from a case instance at runtime, the
 applicability rules are executed, and only those discretionary items for which the rules result in true are returned,
-since these are the items applicable for planning at that moment.`)
+since these are the items applicable for planning at that moment.`);
 
         this.rulesTable = html.find('.planning-table-rules');
         // Render the applicability rules
-        this.cmmnElement.definition.ruleDefinitions.forEach(rule => this.addApplicabilityRuleField(rule));
+        this.view.definition.ruleDefinitions.forEach((rule: ApplicabilityRuleDefinition) => this.addApplicabilityRuleField(rule));
         this.addApplicabilityRuleField(); // Create also an empty one to allow for adding new rules
 
-        this.cmmnElement.definition.tableItems.forEach((item, index) => {
-            const itemHTML = $(`<div>${index+1}. ${item.name}<span class="separator" /></div>`);
+        this.view.definition.tableItems.forEach((item: any, index: number) => {
+            const itemHTML = $(`<div>${index + 1}. ${item.name}<span class="separator" /></div>`);
             html.find('.planning-table-items').append(itemHTML);
         });
 
@@ -69,26 +66,25 @@ since these are the items applicable for planning at that moment.`)
     }
 
     /**
-     * Adds a role. Can be undefined, in which case an empty row is added.
+     * Adds a rule. Can be undefined, in which case an empty row is added.
      * Also adds the required event handlers to the html.
-     * @param {ApplicabilityRuleDefinition} rule 
      */
-    addApplicabilityRuleField(rule = undefined) {
+    addApplicabilityRuleField(rule?: ApplicabilityRuleDefinition) {
         const ruleViewer = new ApplicabilityRuleProperties(this, rule);
         this.rulesTable.find('tbody').append(ruleViewer.html);
     }
 }
 
 class ApplicabilityRuleProperties {
-    /**
-     * 
-     * @param {PlanningTableProperties} planningTablePropertiesView 
-     * @param {ApplicabilityRuleDefinition} rule 
-     */
-    constructor(planningTablePropertiesView, rule = undefined) {
-        this.tableView = planningTablePropertiesView;
+    tableView: PlanningTableProperties;
+    rule?: ApplicabilityRuleDefinition;
+    cmmnElement: PlanningTableView;
+    html: JQuery<HTMLElement>;
+
+    constructor(tableView: PlanningTableProperties, rule?: ApplicabilityRuleDefinition) {
+        this.tableView = tableView;
         this.rule = rule;
-        this.cmmnElement = this.tableView.cmmnElement;
+        this.cmmnElement = this.tableView.view;
 
         const name = rule ? rule.name : '';
         const body = rule ? rule.body : '';
@@ -107,7 +103,7 @@ class ApplicabilityRuleProperties {
                 <div class="zoomRow zoomSingleRow">
                     <label class="valuelabel context-label">${context}</label>
                     <button class="zoombt"></button>
-                    <button class="removeReferenceButton clearContextRef" title="remove the reference to the case file item">
+                    <button class="removeReferenceButton clearContextRef" title="remove the reference to the case file item"></button>
                 </div>
             </td>
         </tr>`);
@@ -119,20 +115,20 @@ class ApplicabilityRuleProperties {
             }
         });
         html.find('.rule-name').on('change', e => {
-            this.change(this.getRule(), 'name', e.currentTarget.value);
+            this.change(this.getRule(), 'name', (e.currentTarget as HTMLInputElement).value);
         });
         html.find('.rule-body').on('change', e => {
-            this.change(this.getRule(), 'body', e.currentTarget.value);
+            this.change(this.getRule(), 'body', (e.currentTarget as HTMLTextAreaElement).value);
         });
 
         html.find('.zoombt').on('click', e => {
-            this.cmmnElement.case.cfiEditor.open(cfi => {
+            this.cmmnElement.case.cfiEditor.open((cfi: any) => {
                 this.change(this.getRule(), 'contextRef', cfi.id);
             });
         });
         html.find('.zoomRow').on('pointerover', e => {
             e.stopPropagation();
-            this.cmmnElement.case.cfiEditor.setDropHandler(dragData => {
+            this.cmmnElement.case.cfiEditor.setDropHandler((dragData: any) => {
                 this.change(this.getRule(), 'contextRef', dragData.item.id);
             });
         });
@@ -149,7 +145,7 @@ class ApplicabilityRuleProperties {
         this.html = html;
     }
 
-    getRule() {
+    getRule(): ApplicabilityRuleDefinition {
         if (!this.rule) {
             this.rule = this.cmmnElement.definition.createNewRule();
             this.tableView.addApplicabilityRuleField();
@@ -157,7 +153,7 @@ class ApplicabilityRuleProperties {
         return this.rule;
     }
 
-    change(element, field, value) {
+    change(element: any, field: string, value: any) {
         this.tableView.change(element, field, value);
     }
 
@@ -168,5 +164,4 @@ class ApplicabilityRuleProperties {
     done() {
         this.tableView.done();
     }
-    
 }
