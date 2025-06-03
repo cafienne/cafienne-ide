@@ -60,7 +60,7 @@ export default class CaseFileItemView extends CMMNElementView {
 
     /**
      * 
-     * @param {CaseFileItemDef} definition 
+     * @param {CaseFileItemDef | undefined} definition 
      */
     setDefinition(definition) {
         this.definition = definition ? definition : CaseFileItemDef.createEmptyDefinition(this.case.caseDefinition);

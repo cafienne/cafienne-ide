@@ -1,14 +1,9 @@
 import TextAnnotationView from "../textannotationview";
 import Properties from "./properties";
 
-export default class TextAnnotationProperties extends Properties {
-    /**
-     * 
-     * @param {TextAnnotationView} textAnnotation 
-     */
-    constructor(textAnnotation) {
+export default class TextAnnotationProperties extends Properties<TextAnnotationView> {
+    constructor(textAnnotation: TextAnnotationView) {
         super(textAnnotation);
-        this.cmmnElement = textAnnotation;
     }
 
     renderData() {

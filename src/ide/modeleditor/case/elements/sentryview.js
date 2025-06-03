@@ -271,8 +271,11 @@ export default class SentryView extends CMMNElementView {
         return super.referencesDefinitionElement(definitionId);
     }
 
+    /**
+     * @returns {String} the purpose of the sentry
+     */
     get purpose() {
-        return "test123";
+        throw new Error('This method must be implemented in ' + this.constructor.name);
     }
 
     get isCriterion() {

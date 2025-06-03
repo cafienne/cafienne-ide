@@ -1,26 +1,24 @@
 import $ from "jquery";
 import CMMNElementDefinition from "../../../../../repository/definition/cmmnelementdefinition";
+import XMLSerializable from "../../../../../repository/definition/xmlserializable";
 import Util from "../../../../../util/util";
 import MovableEditor from "../../../../editors/movableeditor";
 import HtmlUtil from "../../../../util/htmlutil";
 import Images from "../../../../util/images/images";
 import CMMNElementView from "../cmmnelementview";
 
-export default class Properties extends MovableEditor {
+export default class Properties<V extends CMMNElementView = CMMNElementView> extends MovableEditor {
+    id: string;
+    pinned: boolean = false; //pinned determines whether a properties menu is pinned, pinned=true means that the menu stays on the same spot all the time
+    htmlContainer!: JQuery<HTMLElement>;
+
     /**
      * Renderer for the properties of the element
-     * @param {CMMNElementView} cmmnElement 
      */
-    constructor(cmmnElement) {
-        // console.log("Creating properties for " + cmmnElement)
-        super(cmmnElement.case);
-        this.cmmnElement = cmmnElement;
-
-        //set the properties to get the html elements from index.html
-        this.id = 'propertiesmenu-' + cmmnElement.id;
-
-        //pinned determines whether a properties menu is pinned, pinned=true means that the menu stays on the same spot all the time
-        this.pinned = false;
+    constructor(public view: V) {
+        // console.log("Creating properties for " + view)
+        super(view.case);
+        this.id = 'propertiesmenu-' + view.id;
     }
 
     renderForm() {
@@ -30,16 +28,13 @@ export default class Properties extends MovableEditor {
         this.renderData();
     }
 
-    /**
-     * @returns {String}
-     */
     get label() {
-        return `${this.cmmnElement.typeDescription} Properties`;
+        return `${this.view.typeDescription} Properties`;
     }
 
     renderHead() {
         this.html = $(
-`<div element="${this.cmmnElement.name}" id="${this.id}" class="basicbox basicform properties ${this.cmmnElement.constructor.name.toLowerCase()}-properties">
+`<div element="${this.view.name}" id="${this.id}" class="basicbox basicform properties ${this.view.constructor.name.toLowerCase()}-properties">
     <div class="formheader">
         <label>${this.label}</label>
         <div class="propertiespin">
@@ -52,17 +47,15 @@ export default class Properties extends MovableEditor {
     <div class="formcontainer properties-container"></div>
     <div class="properties-footer"></div>
 </div>`);
-
         this.htmlParent.append(this.html);
-
         this.htmlContainer = this.html.find('.properties-container');
 
-        //set the events that controle the drag/drop, close and pin of the properties menu
+        // set the events that control the drag/drop, close and pin of the properties menu
         this.html.resizable();
         this.html.draggable({
             handle: '.formheader',
             stop: () => {
-                //workaround for bug in jqueryui, jquery ui sets absolute height and width after dragging
+                // workaround for bug in jqueryui, jquery ui sets absolute height and width after dragging
                 // this.html.css('height', 'auto');
                 // this.html.css('width', 'auto');
             }
@@ -75,17 +68,16 @@ export default class Properties extends MovableEditor {
             this.pinned = !this.pinned;
         });
 
-        this.html.on('pointerdown', e => this.toFront());
+        this.html.on('pointerdown', () => this.toFront());
         // Avoid keying down in input fields to propagate (except for escape, which closes the editor)
-        this.html.on('keydown', e => {
+        this.html.on('keydown', (e: JQuery.KeyDownEvent) => {
             if (e.keyCode == 27) {
                 // let Esc pass
-                // console.log("Esc passes ...")
             } else {
                 // Avoid arrow control on an input to move the properties screen (next to moving the cursor in the text)
                 e.stopPropagation();
             }
-        })
+        });
     }
 
     /**
@@ -107,14 +99,13 @@ export default class Properties extends MovableEditor {
     /**
      * Shows the properties of the element.
      * Optionally sets the focus on the description property of the element (typically used for new elements)
-     * @param {Boolean} focusNameField 
      */
     show(focusNameField = false) {
         this.clear();
         // Make us visible.
         this.visible = true;
         // Hide other properties editors (if they are not pinned)
-        this.case.items.filter(item => item != this.cmmnElement).forEach(item => item.propertiesView.hide());
+        this.case.items.filter(item => item != this.view).forEach(item => item.propertiesView.hide());
 
         if (focusNameField) {
             this.htmlContainer.find('.cmmn-element-name').select();
@@ -124,24 +115,23 @@ export default class Properties extends MovableEditor {
     positionEditor() {
         // If not pinned, then determine our latest & greatest position
         if (!this.pinned) {
-            //the menu is not pinned and not visible, show near element
-            //get position of element, place property menu left of element
-            const eA = this.cmmnElement.attributes;
+            // the menu is not pinned and not visible, show near element
+            // get position of element, place property menu left of element
+            const eA = this.view.attributes;
             const eX = eA.position.x;
             const eY = eA.position.y;
             const eWidth = eA.size.width;
 
-            const menuWidth = this.html.width();
-            const menuHeight = this.html.height();
-            const bdyHeight = $(document).height();
-            const canvasOffset = this.cmmnElement.case.svg.offset();
+            const menuWidth: any = this.html.width();
+            const menuHeight: any = this.html.height();
+            const bdyHeight = $(document).height() || 0;
+            const canvasOffset = (this.view.case as any).svg.offset() || { left: 0, top: 0 };
 
-            //compensate for paper offset and scroll
-            // let leftPosition = eX - menuWidth + canvasOffset.left - 10;
+            // compensate for paper offset and scroll
             let leftPosition = eX - menuWidth + canvasOffset.left - 10;
             let topPosition = eY + canvasOffset.top;
 
-            //when menu outside body reposition
+            // when menu outside body reposition
             if (leftPosition < 0) {
                 leftPosition = 2;
             }
@@ -166,22 +156,15 @@ export default class Properties extends MovableEditor {
         }
     }
 
-    /**
-     * 
-     * @param {CMMNElementDefinition} element 
-     * @param {String} field 
-     * @param {*} value 
-     */
-    change(element, field, value) {
+    change(element: XMLSerializable, field: string, value: any) {
         element.change(field, value);
         this.done();
     }
 
     /**
      * Insert a description field
-     * @param {String} description 
      */
-    addDescription(description) {
+    addDescription(description: string) {
         const html = $(`<div class="descriptionBlock">${description}</div>`);
         this.htmlContainer.append(html);
         return html;
@@ -189,9 +172,8 @@ export default class Properties extends MovableEditor {
 
     /**
      * Add a label, e.g. for an explanation.
-     * @param {Array<String>} labels 
      */
-    addLabelField(...labels) {
+    addLabelField(...labels: string[]) {
         const html = $(`<div class="propertyBlock">
                             ${labels.map(label => `<label>${label}</label>`).join('\n')}
                         </div>`);
@@ -200,24 +182,20 @@ export default class Properties extends MovableEditor {
     }
 
     /**
-     * Adds a plain input field to show the property
-     * @param {String} label 
-     * @param {String} propertyType 
-     * @param {*} element 
-     * @returns {JQuery<HTMLElement>}
+     * Add a plain input field to show the property
      */
-    addInputField(label, propertyType, element = this.cmmnElement.definition) {
+    addInputField(label: string, propertyType: string, element: XMLSerializable = this.view.definition) {
         const html = $(`<div class="propertyBlock">
                             <label>${label}</label>
-                            <input class="single" value="${element[propertyType]}"></input>
+                            <input class="single" value="${(element as any)[propertyType]}"></input>
                         </div>`);
-        html.on('change', e => this.change(element, propertyType, e.target.value));
+        html.on('change', (e: JQuery.ChangeEvent) => this.change(element, propertyType, (e.target as HTMLInputElement).value));
         this.htmlContainer.append(html);
         return html;
     }
 
     addNameField() {
-        const label = this.cmmnElement.typeDescription + ' Name';
+        const label = this.view.typeDescription + ' Name';
         const html = this.addTextField(label, 'name');
         // Adding class such that we can easily select the description
         html.find('textarea').addClass('cmmn-element-name');
@@ -228,13 +206,13 @@ export default class Properties extends MovableEditor {
         this.addSeparator();
         const html = $(
 `<div class="propertyRule" title="Unique identifier of the element">
-    <div class="cmmn-element-id">${this.cmmnElement.definition.id}</div>
+    <div class="cmmn-element-id">${this.view.definition.id}</div>
 </div>`);
         this.htmlContainer.append(html);
     }
 
     addDocumentationField() {
-        const documentation = this.cmmnElement.documentation;
+        const documentation = this.view.documentation;
         const html = $(`<div class="propertyBlock">
                             <label>Documentation</label>
                             <textarea class="multi cmmn-element-documentation" readonly>${documentation && documentation.text || ''}</textarea>
@@ -244,15 +222,17 @@ export default class Properties extends MovableEditor {
         // On pointer down we enable editing the documentation, but only if it exists
         textarea.on('pointerdown', () => {
             if (documentation) {
-                textarea.attr('readonly', false);
-                textarea.addClass('edit-cmmn-documentation')
+                textarea.attr('readonly', '' + false);
+                textarea.addClass('edit-cmmn-documentation');
             }
         });
         // After change we make the textarea readonly again
-        textarea.on('change', e => {
-            textarea.removeClass('edit-cmmn-documentation')
+        textarea.on('change', (e: JQuery.ChangeEvent) => {
+            textarea.removeClass('edit-cmmn-documentation');
             textarea.attr('readonly', 'true');
-            documentation.text = e.target.value;
+            if (documentation) {
+                documentation.text = (e.target as HTMLTextAreaElement).value;
+            }
             this.done();
         });
         // And on blur as well
@@ -264,32 +244,23 @@ export default class Properties extends MovableEditor {
     }
 
     /**
-     * Adds a text area to show the property
-     * @param {String} label 
-     * @param {String} propertyType 
-     * @param {*} element 
-     * @returns {JQuery<HTMLElement>}
+     * Add a text area to show the property
      */
-    addTextField(label, propertyType, element = this.cmmnElement.definition) {
+    addTextField(label: string, propertyType: string, element: XMLSerializable = this.view.definition) {
         const html = $(`<div class="propertyBlock">
                             <label>${label}</label>
-                            <textarea class="multi">${element[propertyType]}</textarea>
+                            <textarea class="multi">${(element as any)[propertyType]}</textarea>
                         </div>`);
-        html.on('change', e => this.change(element, propertyType, e.target.value));
+        html.on('change', (e: JQuery.ChangeEvent) => this.change(element, propertyType, (e.target as HTMLTextAreaElement).value));
         this.htmlContainer.append(html);
         return html;
     }
 
     /**
-     * Adds a checkbox property
-     * @param {String} label 
-     * @param {String} imageURL 
-     * @param {String} propertyType 
-     * @param {*} element 
-     * @returns {JQuery<HTMLElement>}
+     * Add a checkbox property
      */
-    addCheckField(label, title, imageURL, propertyType, element = this.cmmnElement.definition) {
-        const checked = element[propertyType] == true ? ' checked' : '';
+    addCheckField(label: string, title: string, imageURL: string, propertyType: string, element: XMLSerializable = this.view.definition) {
+        const checked = (element as any)[propertyType] == true ? ' checked' : '';
         const checkId = Util.createID();
         const html = $(`<div class="propertyRule" title="${title}">
                             <div class="propertyRow">
@@ -298,7 +269,7 @@ export default class Properties extends MovableEditor {
                                 <label for="${checkId}">${label}</label>
                             </div>
                         </div>`);
-        html.on('change', e => this.change(element, propertyType, e.target.checked));
+        html.on('change', (e: JQuery.ChangeEvent) => this.change(element, propertyType, (e.target as HTMLInputElement).checked));
         this.htmlContainer.append(html);
         return html;
     }
@@ -311,9 +282,8 @@ export default class Properties extends MovableEditor {
 
     /**
      * Method invoked after a role or case file item has changed
-     * @param {CMMNElementDefinition} definitionElement 
      */
-    refreshReferencingFields(definitionElement) {
+    refreshReferencingFields(definitionElement: CMMNElementDefinition) {
         if (this.visible) {
             this.show();
         }
@@ -323,7 +293,7 @@ export default class Properties extends MovableEditor {
      * Complete a change. Refreshes the CMMNElementView and saves the case model.
      */
     done() {
-        this.cmmnElement.refreshView();
+        this.view.refreshView();
         this.case.editor.completeUserAction();
     }
 }

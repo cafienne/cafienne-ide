@@ -1,6 +1,7 @@
+import MilestoneView from "../milestoneview";
 import PlanItemProperties from "./planitemproperties";
 
-export default class MilestoneProperties extends PlanItemProperties {
+export default class MilestoneProperties extends PlanItemProperties<MilestoneView> {
     renderData() {
         this.addNameField();
         this.addSeparator();

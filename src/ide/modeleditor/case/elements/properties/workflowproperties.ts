@@ -7,16 +7,12 @@ import Util from "../../../../../util/util";
 import HumanTaskView from "../humantaskview";
 import TaskProperties from "./taskproperties";
 
-export default class WorkflowProperties extends TaskProperties {
-    /**
-     * 
-     * @param {HumanTaskView} task 
-     */
-    constructor(task) {
+export default class WorkflowProperties extends TaskProperties<HumanTaskView> {
+    private humanTaskDefinition: HumanTaskDefinition;
+
+    constructor(task: HumanTaskView) {
         super(task);
-        this.cmmnElement = task;
-        /** @type {HumanTaskDefinition} */
-        this.humanTaskDefinition = this.cmmnElement.definition;
+        this.humanTaskDefinition = this.view.definition;
     }
 
     get label() {
@@ -30,29 +26,25 @@ export default class WorkflowProperties extends TaskProperties {
     addPerformerField() {
         const html = $(`<div class="szoomDoubleRow performer-field" title="Select a Case Role that is required to perform the task.\nWhen empty all case team members can perform the task.">
                             <label class="zoomlabel">Performer (role needed to do task)</label>
-                            ${this.getRolesAsHTMLSelect(this.cmmnElement.definition.performerRef, 'removeRoleButton')}
+                            ${this.getRolesAsHTMLSelect(this.view.definition.performerRef, 'removeRoleButton')}
                         </div>`);
-        html.find('select').on('change', e => {
-            this.change(this.cmmnElement.definition, 'performerRef', e.target.value);
+        html.find('select').on('change', (e: JQuery.ChangeEvent) => {
+            this.change(this.view.definition, 'performerRef', (e.target as HTMLSelectElement).value);
         });
-        html.find('.removeRoleButton').on('click', e => {
-            this.change(this.cmmnElement.definition, 'performerRef', undefined);
-            html.find('select').val(undefined);
+        html.find('.removeRoleButton').on('click', () => {
+            this.change(this.view.definition, 'performerRef', '');
+            html.find('select').val('');
         });
         this.htmlContainer.append(html);
         return html;
     }
 
-    /**
-     * Adds a block to render the Assignee of the task
-     */
     addAssignmentField() {
-        const assignmentExpression = this.humanTaskDefinition.assignment;
-        const ruleAvailable = assignmentExpression ? true : false;
+        const assignmentExpression = this.humanTaskDefinition.workflow.assignment;
+        const ruleAvailable = !!assignmentExpression;
         const contextName = assignmentExpression ? assignmentExpression.contextRef.name : '';
         const expressionBody = assignmentExpression ? assignmentExpression.body : '';
         const assignmentPresenceIdentifier = Util.createID();
-        // const checked = ;
         const html = $(`<div class="propertyRule" title="Provide an expression that dynamically assigns the task to a user">
                             <div class="propertyRow">
                                 <input id="${assignmentPresenceIdentifier}" type="checkbox" ${ruleAvailable ? 'checked' : ''}/>
@@ -72,53 +64,41 @@ export default class WorkflowProperties extends TaskProperties {
                                 <span class="separator" />
                             </div>
                         </div>`);
-        html.find(`#${assignmentPresenceIdentifier}`).on('click', e => {
-            const newPresence = e.target.checked;
+        html.find(`#${assignmentPresenceIdentifier}`).on('click', (e: JQuery.ClickEvent) => {
+            const newPresence = (e.target as HTMLInputElement).checked;
             html.find('.ruleProperty').css('display', newPresence ? 'block' : 'none');
             if (!newPresence) {
-                this.humanTaskDefinition.assignment = undefined;
+                this.humanTaskDefinition.workflow.assignment = undefined;
             } else {
-                this.humanTaskDefinition.assignment = this.humanTaskDefinition.createDefinition(AssignmentDefinition);
+                this.humanTaskDefinition.workflow.assignment = <AssignmentDefinition> this.humanTaskDefinition.createDefinition(AssignmentDefinition);
             }
             this.done();
         });
-        html.find('textarea').on('change', e => this.change(this.humanTaskDefinition.assignment, 'body', e.target.value));
-        html.find('.zoombt').on('click', e => {
-            this.cmmnElement.case.cfiEditor.open(cfi => {
-                this.change(this.humanTaskDefinition.assignment, 'contextRef', cfi.id);
-            });
-        });
-        html.find('.removeReferenceButton').on('click', e => {
-            this.change(this.humanTaskDefinition.assignment, 'contextRef', undefined);
-        });
-        html.find('.zoomRow').on('pointerover', e => {
+        html.find('textarea').on('change', (e: JQuery.ChangeEvent) => this.change(this.humanTaskDefinition.workflow.assignment!, 'body', (e.target as HTMLTextAreaElement).value));
+        html.find('.zoombt').on('click', () => this.view.case.cfiEditor.open(cfi => this.change(this.humanTaskDefinition.workflow.assignment!, 'contextRef', cfi.id)));
+        html.find('.removeReferenceButton').on('click', () => this.change(this.humanTaskDefinition.workflow.assignment!, 'contextRef', undefined));
+        html.find('.zoomRow').on('pointerover', (e: JQuery.Event) => {
             e.stopPropagation();
-            this.cmmnElement.case.cfiEditor.setDropHandler(dragData => {
+            this.view.case.cfiEditor.setDropHandler((dragData: any) => {
                 const newContextRef = dragData.item.id;
-                this.change(this.humanTaskDefinition.assignment, 'contextRef', newContextRef);
+                this.change(this.humanTaskDefinition.workflow.assignment!, 'contextRef', newContextRef);
             });
         });
-        html.find('.zoomRow').on('pointerout', e => {
-            this.cmmnElement.case.cfiEditor.removeDropHandler();
-        });
+        html.find('.zoomRow').on('pointerout', () => this.view.case.cfiEditor.removeDropHandler());
         this.htmlContainer.append(html);
         return html;
     }
 
-    /**
-     * Adds a block to render the Assignee of the task
-     */
     addDueDateField() {
-        const dueDateExpression = this.humanTaskDefinition.dueDate;
-        const ruleAvailable = dueDateExpression ? true : false;
+        const dueDateExpression = this.humanTaskDefinition.workflow.dueDate;
+        const ruleAvailable = !!dueDateExpression;
         const contextName = dueDateExpression ? dueDateExpression.contextRef.name : '';
         const expressionBody = dueDateExpression ? dueDateExpression.body : '';
-        const assignmentPresenceIdentifier = Util.createID();
-        // const checked = ;
+        const dueDatePresenceIdentifier = Util.createID();
         const html = $(`<div class="propertyRule" title="Provide an expression returning a due date to set on the task">
                             <div class="propertyRow">
-                                <input id="${assignmentPresenceIdentifier}" type="checkbox" ${ruleAvailable ? 'checked' : ''}/>
-                                <label for="${assignmentPresenceIdentifier}">Due Date</label>
+                                <input id="${dueDatePresenceIdentifier}" type="checkbox" ${ruleAvailable ? 'checked' : ''}/>
+                                <label for="${dueDatePresenceIdentifier}">Due Date</label>
                             </div>
                             <div style="display:${ruleAvailable ? 'block' : 'none'}" class="ruleProperty">
                                 <div class="propertyBlock">
@@ -134,42 +114,34 @@ export default class WorkflowProperties extends TaskProperties {
                                 <span class="separator" />
                             </div>
                         </div>`);
-        html.find(`#${assignmentPresenceIdentifier}`).on('click', e => {
-            const newPresence = e.target.checked;
+        html.find(`#${dueDatePresenceIdentifier}`).on('click', (e: JQuery.ClickEvent) => {
+            const newPresence = (e.target as HTMLInputElement).checked;
             html.find('.ruleProperty').css('display', newPresence ? 'block' : 'none');
             if (!newPresence) {
-                this.humanTaskDefinition.dueDate = undefined;
+                this.humanTaskDefinition.workflow.dueDate = undefined;
             } else {
-                this.humanTaskDefinition.dueDate = this.humanTaskDefinition.createDefinition(DueDateDefinition);
+                this.humanTaskDefinition.workflow.dueDate = this.humanTaskDefinition.createDefinition(DueDateDefinition);
             }
             this.done();
         });
-        html.find('textarea').on('change', e => this.change(this.humanTaskDefinition.dueDate, 'body', e.target.value));
-        html.find('.zoombt').on('click', e => {
-            this.cmmnElement.case.cfiEditor.open(cfi => {
-                this.change(this.humanTaskDefinition.dueDate, 'contextRef', cfi.id);
-            });
-        });
-        html.find('.removeReferenceButton').on('click', e => {
-            this.change(this.humanTaskDefinition.dueDate, 'contextRef', undefined);
-        });
-        html.find('.zoomRow').on('pointerover', e => {
+        html.find('textarea').on('change', (e: JQuery.ChangeEvent) => this.change(this.humanTaskDefinition.workflow.dueDate!, 'body', (e.target as HTMLTextAreaElement).value));
+        html.find('.zoombt').on('click', () => this.view.case.cfiEditor.open(cfi => this.change(this.humanTaskDefinition.workflow.dueDate!, 'contextRef', cfi.id)));
+        html.find('.removeReferenceButton').on('click', () => this.change(this.humanTaskDefinition.workflow.dueDate!, 'contextRef', undefined));
+        html.find('.zoomRow').on('pointerover', (e: JQuery.Event) => {
             e.stopPropagation();
-            this.cmmnElement.case.cfiEditor.setDropHandler(dragData => {
+            this.view.case.cfiEditor.setDropHandler((dragData: any) => {
                 const newContextRef = dragData.item.id;
-                this.change(this.humanTaskDefinition.dueDate, 'contextRef', newContextRef);
+                this.change(this.humanTaskDefinition.workflow.dueDate!, 'contextRef', newContextRef);
             });
         });
-        html.find('.zoomRow').on('pointerout', e => {
-            this.cmmnElement.case.cfiEditor.removeDropHandler();
-        });
+        html.find('.zoomRow').on('pointerout', () => this.view.case.cfiEditor.removeDropHandler());
         this.htmlContainer.append(html);
         return html;
     }
 
     addFourEyesField() {
-        const planItem = this.cmmnElement.definition;
-        const has4Eyes = planItem.fourEyes.present;
+        const planItem = this.view.definition;
+        const has4Eyes = planItem.fourEyes?.present;
         const checkboxIdentifier = Util.createID();
         const html = $(`<div class="propertyRule">
                             <div class="propertyRow">
@@ -180,15 +152,15 @@ export default class WorkflowProperties extends TaskProperties {
                             </div>
                         </div>`);
         const taskList = html.find('.list-human-tasks');
-        const tasks = this.case.caseDefinition.getAllPlanItems().filter(item => item instanceof HumanTaskDefinition);
-        tasks.filter(task => task !== planItem).forEach(task => this.addTask(taskList, 'fourEyes', task));
-        html.find(`#${checkboxIdentifier}`).on('click', e => {
-            const newPresence = e.target.checked;
+        const tasks = this.case.caseDefinition.getAllPlanItems().filter((item: any) => item instanceof HumanTaskDefinition);
+        tasks.filter((task: any) => task !== planItem).forEach((task: any) => this.addTask(taskList, 'fourEyes', task));
+        html.find(`#${checkboxIdentifier}`).on('click', (e: JQuery.ClickEvent) => {
+            const newPresence = (e.target as HTMLInputElement).checked;
             html.find('.list-human-tasks').css('display', newPresence ? 'block' : 'none');
             if (!newPresence) {
-                planItem.fourEyes.drop();
+                planItem.fourEyes?.drop();
             } else {
-                planItem.fourEyes.present = true;
+                planItem.fourEyes!.present = true;
             }
             this.done();
         });
@@ -197,8 +169,8 @@ export default class WorkflowProperties extends TaskProperties {
     }
 
     addRendezVousField() {
-        const planItem = this.cmmnElement.definition;
-        const hasRendezVous = planItem.rendezVous.present;
+        const planItem = this.view.definition;
+        const hasRendezVous = planItem.rendezVous?.present;
         const checkboxIdentifier = Util.createID();
         const html = $(`<div class="propertyRule">
                             <div class="propertyRow">
@@ -209,15 +181,15 @@ export default class WorkflowProperties extends TaskProperties {
                             </div>
                         </div>`);
         const taskList = html.find('.list-human-tasks');
-        const tasks = this.case.caseDefinition.getAllPlanItems().filter(item => item instanceof HumanTaskDefinition);
-        tasks.filter(task => task !== planItem).forEach(task => this.addTask(taskList, 'rendezVous', task));
-        html.find(`#${checkboxIdentifier}`).on('click', e => {
-            const newPresence = e.target.checked;
+        const tasks = this.case.caseDefinition.getAllPlanItems().filter((item: any) => item instanceof HumanTaskDefinition);
+        tasks.filter((task: any) => task !== planItem).forEach((task: any) => this.addTask(taskList, 'rendezVous', task));
+        html.find(`#${checkboxIdentifier}`).on('click', (e: JQuery.ClickEvent) => {
+            const newPresence = (e.target as HTMLInputElement).checked;
             html.find('.list-human-tasks').css('display', newPresence ? 'block' : 'none');
             if (!newPresence) {
-                planItem.rendezVous.drop();
+                planItem.rendezVous?.drop();
             } else {
-                planItem.rendezVous.present = true;
+                planItem.rendezVous!.present = true;
             }
             this.done();
         });
@@ -228,20 +200,15 @@ export default class WorkflowProperties extends TaskProperties {
     done() {
         super.done();
         // Also refresh other workflow properties ...
-        this.case.items.filter(item => item instanceof HumanTaskView).map((/** @type{HumanTaskView} */ item) => item.workflowProperties && item.workflowProperties.visible && item.workflowProperties.refresh());
+        this.case.items
+            .filter(item => item instanceof HumanTaskView)
+            .forEach((item: HumanTaskView) => item.workflowProperties && item.workflowProperties.visible && item.workflowProperties.refresh());
     }
 
-    /**
-     * Adds a task with a checkbox to enable or disable it with 4-eyes.
-     * @param {String} workflowProperty 
-     * @param {PlanItem} task 
-     */
-    addTask(htmlParent, workflowProperty, task) {
-        const planItem = this.cmmnElement.definition;
-        const isSelected = planItem[workflowProperty] && planItem[workflowProperty].has(task) ? true : false;
-
+    addTask(htmlParent: JQuery<HTMLElement>, workflowProperty: string, task: PlanItem) {
+        const planItem = this.view.definition;
+        const isSelected = (planItem as any)[workflowProperty] && (planItem as any)[workflowProperty].has(task);
         const label = task.name;
-
         const checked = isSelected ? ' checked' : '';
         const checkboxIdentifier = Util.createID();
         const html = $(`<div class="propertyRule">
@@ -250,11 +217,11 @@ export default class WorkflowProperties extends TaskProperties {
                                 <label for="${checkboxIdentifier}">${label}</label>
                             </div>
                         </div>`);
-        html.on('change', e => {
-            if (e.target.checked) {
-                planItem[workflowProperty].add(task)
+        html.on('change', (e: JQuery.ChangeEvent) => {
+            if ((e.target as HTMLInputElement).checked) {
+                (planItem as any)[workflowProperty].add(task);
             } else {
-                planItem[workflowProperty].remove(task)
+                (planItem as any)[workflowProperty].remove(task);
             }
             this.done();
         });
@@ -263,7 +230,7 @@ export default class WorkflowProperties extends TaskProperties {
     }
 
     renderData() {
-        this.addLabelField('Workflow properties for', `'${this.cmmnElement.name}'`);
+        this.addLabelField('Workflow properties for', `'${this.view.name}'`);
         this.addSeparator();
         this.addPerformerField();
         this.addSeparator();
