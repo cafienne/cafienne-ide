@@ -3,14 +3,16 @@ import Images from "../../../util/images/images";
 import CaseView from "../elements/caseview";
 
 export default class UndoRedoBox {
+    private case: CaseView;
+    private spanUndoCounter: JQuery<HTMLElement>;
+    private spanRedoCounter: JQuery<HTMLElement>;
+
     /**
-     *
-     * @param {CaseView} cs
-     * @param {JQuery<HTMLElement>} html
+     * @param cs CaseView
+     * @param html JQuery<HTMLElement>
      */
-    constructor(cs, html) {
+    constructor(cs: CaseView, public html: JQuery<HTMLElement>) {
         this.case = cs;
-        this.html = html;
         this.html.append(
             $(`<div class="formheader">
     <div>
@@ -23,23 +25,24 @@ export default class UndoRedoBox {
             <span></span>
         </div>
     </div>
-</div>`));
+</div>`)
+        );
         html.find('.undo').on('click', () => this.undo());
         html.find('.redo').on('click', () => this.redo());
         this.spanUndoCounter = html.find('.undo span');
         this.spanRedoCounter = html.find('.redo span');
     }
 
-    undo() {
+    undo(): void {
         this.case.editor.undoManager.undo();
     }
 
-    redo() {
+    redo(): void {
         this.case.editor.undoManager.redo();
     }
 
-    updateButtons(undoCount, redoCount) {
-        this.spanUndoCounter.html(undoCount);
-        this.spanRedoCounter.html(redoCount);
+    updateButtons(undoCount: number, redoCount: number): void {
+        this.spanUndoCounter.html(String(undoCount));
+        this.spanRedoCounter.html(String(redoCount));
     }
 }

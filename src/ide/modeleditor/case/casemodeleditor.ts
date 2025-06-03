@@ -10,7 +10,7 @@ import CaseModelEditorMetadata from "./casemodeleditormetadata";
 import CaseView from "./elements/caseview";
 import CMMNElementView from "./elements/cmmnelementview";
 import Grid from "./grid";
-import UndoManager from "./undoredo/undoredo";
+import UndoManager from "./undoredo/undomanager";
 
 export default class CaseModelEditor extends ModelEditor {
     caseFile: CaseFile;
@@ -33,7 +33,7 @@ export default class CaseModelEditor extends ModelEditor {
         super(ide, file);
         this.file = file;
         this.caseFile = file;
-        this.dimensionsFile = this.file.definition?.dimensions?.file;
+        this.dimensionsFile = this.file.definition!.dimensions!.file;
         this.ideCaseFooter = $('.ideCaseFooter');
         this.undoManager = new UndoManager(this);
 
@@ -54,7 +54,7 @@ export default class CaseModelEditor extends ModelEditor {
 
     open(caseDefinition: CaseDefinition) {
         // Reset the undo manager.
-        this.undoManager.resetActionBuffer(caseDefinition);
+        this.undoManager.resetActionBuffer(caseDefinition, caseDefinition.dimensions!);
 
         // Now that the visualization information is available, we can start the import.
         this.loadDefinition();
@@ -210,7 +210,7 @@ export default class CaseModelEditor extends ModelEditor {
         // Validate all models currently active in the ide
         if (this.case) {
             this.case.runValidation();
-            this.undoManager.saveCaseModel(this.case.caseDefinition);
+            this.undoManager.saveCaseModel(this.case.caseDefinition, this.case.dimensions!);
         }
     }
 

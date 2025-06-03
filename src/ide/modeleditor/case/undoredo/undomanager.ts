@@ -1,16 +1,15 @@
 import CaseDefinition from "../../../../repository/definition/cmmn/casedefinition";
+import Dimensions from "../../../../repository/definition/dimensions/dimensions";
 import CaseModelEditor from "../casemodeleditor";
 import Action from "./action";
 
 export default class UndoManager {
-    /**
-     * @param {CaseModelEditor} editor 
-     */
-    constructor(editor) {
-        this.editor = editor;
-    }
+    performingBufferAction: boolean = false;
+    private currentAction?: Action;
 
-    updateUndoRedoButtons(undoCount = this.getUndoCount(), redoCount = this.getRedoCount()) {
+    constructor(public editor: CaseModelEditor) { }
+
+    updateUndoRedoButtons(undoCount: number = this.getUndoCount(), redoCount: number = this.getRedoCount()): void {
         // Only update the buttons once the case is loaded.
         if (this.editor.case) this.editor.case.undoBox.updateButtons(undoCount, redoCount);
     }
@@ -18,34 +17,21 @@ export default class UndoManager {
     /**
      * Clears the action buffer, and prepares it for the new content.
      * This typically only happens when we open a new case model
-     * @param {CaseDefinition} caseDefinition 
      */
-    resetActionBuffer(caseDefinition) {
+    resetActionBuffer(caseDefinition: CaseDefinition, dimensions: Dimensions): void {
         this.performingBufferAction = false;
-        this.currentAction = null;
+        this.currentAction = undefined;
 
         // First action is to add what we have to the undo/redo buffer.
-        this.addCaseAction(caseDefinition);
-    }
-
-    get currentAction() {
-        return this.__action;
-    }
-
-    /**
-     * @param {Action} action
-     */
-    set currentAction(action) {
-        this.__action = action;
+        this.addCaseAction(caseDefinition, dimensions);
     }
 
     /**
      * Save model and upload to server; but only if there are new changes.
-     * @param {CaseDefinition} caseDefinition 
-     * @param {Boolean} forceSave Saving case model is only done on the changes with respect to the previous save action. For creating a new model we have to forcefully save.
+     * @param forceSave Saving case model is only done on the changes with respect to the previous save action. For creating a new model we have to forcefully save.
      */
-    saveCaseModel(caseDefinition, forceSave = false) {
-        const newAction = this.addCaseAction(caseDefinition);
+    saveCaseModel(caseDefinition: CaseDefinition, dimensions: Dimensions, forceSave: boolean = false) {
+        const newAction = this.addCaseAction(caseDefinition, dimensions);
         if (newAction) {
             if (forceSave) {
                 newAction.forceSave();
@@ -58,11 +44,7 @@ export default class UndoManager {
         }
     }
 
-    /**
-     * 
-     * @param {CaseDefinition} caseDefinition 
-     */
-    addCaseAction(caseDefinition) {
+    private addCaseAction(caseDefinition: CaseDefinition, dimensions: Dimensions) {
         if (this.performingBufferAction) {
             // This is not supposed to happen. But order of events and invocations is not so easy, so keeping it for safety reasons if you start changing this code
             console.warn('Adding case action while performing buffer action');
@@ -71,9 +53,9 @@ export default class UndoManager {
 
         // Creating a new action makes it also the current action.
         //  Note that the actual action may not resolve in changes, and in such a case, the currentAction will return itself and remain the same.
-        this.currentAction = new Action(this, caseDefinition, this.currentAction);
+        this.currentAction = new Action(this, caseDefinition, dimensions, this.currentAction as Action | undefined);
         this.updateUndoRedoButtons();
-        return this.currentAction;
+        return this.currentAction as Action;
     }
 
     getUndoCount() {
@@ -113,7 +95,4 @@ export default class UndoManager {
         }
         this.updateUndoRedoButtons();
     }
-
 }
-
-
