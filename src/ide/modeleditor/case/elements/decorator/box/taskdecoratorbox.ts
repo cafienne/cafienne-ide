@@ -1,15 +1,14 @@
+import TaskView from "../../taskview";
 import DecoratorBox from "../decoratorbox";
+import ManualActivationRuleDecorator from "../items/manualactivationrule";
 import RepetitionRuleDecorator from "../items/repetitionrule";
 import RequiredRuleDecorator from "../items/requiredrule";
 
-export default class MilestoneDecoratorBox extends DecoratorBox {
-    /**
-     * @param {MilestoneView} view 
-     */
-    constructor(view) {
+export class TaskDecoratorBox extends DecoratorBox {
+    constructor(view: TaskView) {
         super(view);
-        this.view = view;
         this.decorators = [
+            new ManualActivationRuleDecorator(this, view),
             new RequiredRuleDecorator(this, view),
             new RepetitionRuleDecorator(this, view)
         ];

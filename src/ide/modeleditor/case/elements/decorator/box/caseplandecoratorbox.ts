@@ -3,12 +3,8 @@ import AutoCompleteDecorator from "../items/autocomplete";
 import StageDecoratorBox from "./stagedecoratorbox";
 
 export default class CasePlanDecoratorBox extends StageDecoratorBox {
-    /**
-     * @param {CasePlanView} view
-     */
-    constructor(view) {
+    constructor(view: CasePlanView) {
         super(view);
-        this.view = view;
         this.decorators = [
             new AutoCompleteDecorator(this, view)
         ];

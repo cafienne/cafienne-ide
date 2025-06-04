@@ -626,7 +626,7 @@ export default class CMMNElementView extends CanvasElement {
     /**
      * returns true if this element can contain elements of type 'elementType'.
      * By default it returns false
-     * @param {String} elementType 
+     * @param {Function} elementType 
      * @returns {Boolean}
      */
     __canHaveAsChild(elementType) {

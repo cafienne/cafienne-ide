@@ -7,12 +7,8 @@ import RepetitionRuleDecorator from "../items/repetitionrule";
 import RequiredRuleDecorator from "../items/requiredrule";
 
 export default class StageDecoratorBox extends DecoratorBox {
-    /**
-     * @param {StageView} view 
-     */
-    constructor(view) {
+    constructor(view: StageView) {
         super(view);
-        this.view = view;
         this.decorators = [
             new ManualActivationRuleDecorator(this, view),
             new RequiredRuleDecorator(this, view),

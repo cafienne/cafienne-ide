@@ -5,17 +5,15 @@ import Decorator from "../decorator";
 
 export default class AutoCompleteDecorator extends Decorator {
     /**
-     * @param {StageDecoratorBox} box 
-     * @param {StageView} view 
+     * AutoCompleteDecorator for a stage
      */
-    constructor(box, view) {
+    constructor(box: StageDecoratorBox, protected view: StageView) {
         super(box, view, Images.AutoComplete);
-        this.view = view;
     }
     
     get tooltip() {
         const type = this.view.definition.toString().replace('Definition', '');
-        return `${type} will complete when all active items have been completed and no required items are pending`
+        return `${type} will complete when all active items have been completed and no required items are pending`;
     }
 
     get visibility() {

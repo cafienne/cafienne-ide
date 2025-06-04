@@ -64,7 +64,7 @@ export default class MilestoneView extends PlanItemView {
 
     /**
      * returns true when an element of type 'elementType' can be added as a child to this element
-     * @param {String} elementType 
+     * @param {Function} elementType 
      */
     __canHaveAsChild(elementType) {
         return this.canHaveCriterion(elementType);
@@ -72,7 +72,7 @@ export default class MilestoneView extends PlanItemView {
 
     /**
      * 
-     * @param {String} criterionType 
+     * @param {Function} criterionType 
      * @returns 
      */
     canHaveCriterion(criterionType) {

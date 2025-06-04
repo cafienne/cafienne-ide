@@ -5,26 +5,17 @@ import DecoratorBox from "./decoratorbox";
 export const DECORATORFROMBOTTOM = 4;
 export const DECORATORSIZE = 12;
 
-export default class Decorator {
-    /**
-     * Simple helper class to visualize Decorator images on a PlanItem (like AutoComplete, RequiredRule, etc.)
-     * @param {DecoratorBox} box 
-     * @param {PlanItemView} view 
-     * @param {String} imgURL 
-     */
-    constructor(box, view, imgURL) {
-        this.box = box;
-        this.view = view;
-        this.imgURL = imgURL;
-        this.id = Util.createID();
-    }
+export default abstract class Decorator {
+    id: string = Util.createID();
+
 
     /**
-     * @returns {Boolean}
+     * Simple helper class to visualize Decorator images on a PlanItem (like AutoComplete, RequiredRule, etc.)
      */
-    get visibility() {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
+    constructor(protected box: DecoratorBox, protected view: PlanItemView, private imgURL: string) {
     }
+
+    abstract get visibility(): boolean;
 
     get tooltip() {
         return '';

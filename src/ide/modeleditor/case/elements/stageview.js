@@ -261,7 +261,7 @@ export default class StageView extends TaskStageView {
 
     /**
      * returns true when an element of type 'elementType' can be added as a child to this element
-     * @param {*} elementType 
+     * @param {Function} elementType 
      */
     __canHaveAsChild(elementType) {
         if (this.canHaveCriterion(elementType) ||

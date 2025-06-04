@@ -3,12 +3,16 @@ import PlanItemView from "../../planitemview";
 import DecoratorBox from "../decoratorbox";
 import RuleDecorator from "./rule";
 
-export default class RepetitionRuleDecorator extends RuleDecorator {
+export default class RequiredRuleDecorator extends RuleDecorator {
     /**
      * @param {DecoratorBox} box 
      * @param {PlanItemView} view 
      */
-    constructor(box, view) {
-        super(box, view, Images.Repetition, 'repetitionRule');
+    constructor(box: DecoratorBox, view: PlanItemView) {
+        super(box, view, Images.Required, 'requiredRule');
+    }
+
+    get rule() {
+        return this.view.definition.itemControl.requiredRule;
     }
 }

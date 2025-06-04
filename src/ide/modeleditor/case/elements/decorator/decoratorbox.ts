@@ -2,15 +2,9 @@ import PlanItemView from "../planitemview";
 import Decorator, { DECORATORFROMBOTTOM, DECORATORSIZE } from "./decorator";
 
 export default class DecoratorBox {
-    /**
-     * 
-     * @param {PlanItemView} view 
-     */
-    constructor(view) {
-        this.view = view;
-        /** @type {Array<Decorator>} */
-        this.decorators = [];
-    }
+    public decorators: Decorator[] = [];
+
+    constructor(public view: PlanItemView) {}
 
     refreshView() {
         this.decorators.forEach(d => d.refreshView());
@@ -49,10 +43,10 @@ export default class DecoratorBox {
     moveDecoratorsToMiddle() {
         const decoratorBox = this.view.html.find('.decoratorBox');
         const decoratorImages = decoratorBox.find('image');
-        //y position at bottom of element
-        decoratorImages.attr('y', this.decoratorsTop)
+        // y position at bottom of element
+        decoratorImages.attr('y', this.decoratorsTop);
 
-        //x position in middle
+        // x position in middle
         decoratorBox.attr('transform', 'translate(' + this.decoratorsLeft + ')');
     }
 }
