@@ -4,25 +4,25 @@ import HtmlUtil from "../../util/htmlutil";
 import CMMNElementView from "./elements/cmmnelementview";
 
 export default class Marker {
-    /**
-     * implements the marker object for the element
-     * @param {CMMNElementView} element
-     */
-    constructor(element) {
-        this.element = element;
+    private html: JQuery<HTMLElement>;
+    private scrollListener: (e: JQuery.Event) => void;
 
+    /**
+     * Implements the marker object for the element
+     */
+    constructor(public element: CMMNElementView) {
         // Create global event listeners for proper attach/detach to the scrolling of the paper
-        //  Upon scrolling we also have to change the position of the marker.
-        this.scrollListener = e => this.setPosition();
+        // Upon scrolling we also have to change the position of the marker.
+        this.scrollListener = () => this.setPosition();
 
         // Note: we create the HTML directly, which in general is not good for performance.
-        //  However, marking object is only created once a CFI is clicked on. 
-        //  So, in practice it is a OK to create it here and now.
+        // However, marking object is only created once a CFI is clicked on. 
+        // So, in practice it is OK to create it here and now.
         this.html = $('<div class="markelementimage"></div>');
         this.element.case.markerContainer.append(this.html);
 
         // Reposition the marker when the element is moving
-        this.element.xyz_joint.on('change:position', e => this.setPosition());
+        this.element.xyz_joint.on('change:position', (e: any) => this.setPosition());
     }
 
     delete() {
@@ -31,9 +31,9 @@ export default class Marker {
 
     /**
      * Show or hide the marker if our element has a reference to the definition.
-     * @param {CaseFileItemDef|undefined} definition 
+     * @param definition CaseFileItemDef | undefined
      */
-    refresh(definition) {
+    refresh(definition?: CaseFileItemDef) {
         if (definition && definition.id && this.element.referencesDefinitionElement(definition.id)) {
             this.visible = true;
         } else {
@@ -41,11 +41,11 @@ export default class Marker {
         }
     }
 
-    get visible() {
+    get visible(): boolean {
         return this.html.css('display') == 'block';
     }
 
-    set visible(visible) {
+    set visible(visible: boolean) {
         if (visible) {
             this.setPosition();
             this.element.case.paperContainer.on('scroll', this.scrollListener);
@@ -61,10 +61,12 @@ export default class Marker {
      * So (0, 0) is the top left corner of the canvas, not of the body/document
      */
     setPosition() {
-        //compensate the position of the marker for the scroll of the paper container
+        // Compensate the position of the marker for the scroll of the paper container
         // The reason is, that the marker's html element is outside the paper container, hence needs to accomodate to the scroll of the paper container
-        const markerLeft = this.element.shape.x - this.element.case.paperContainer.scrollLeft();
-        const markerTop = this.element.shape.y - this.element.case.paperContainer.scrollTop();
+        const leftScroll = this.element.case.paperContainer.scrollLeft() || 0;
+        const topScroll = this.element.case.paperContainer.scrollTop() || 0;
+        const markerLeft = this.element.shape.x - leftScroll;
+        const markerTop = this.element.shape.y - topScroll;
 
         this.html.css('left', markerLeft - 8);
         this.html.css('top', markerTop - 8);

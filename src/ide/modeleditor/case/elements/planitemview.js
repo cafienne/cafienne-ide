@@ -49,8 +49,8 @@ export default class PlanItemView extends CMMNElementView {
         return new DecoratorBox(this);
     }
 
-    __resize(w, h) {
-        super.__resize(w, h);
+    resizing(w, h) {
+        super.resizing(w, h);
         this.decoratorBox.moveDecoratorsToMiddle();
         // reposition our sentries on the right and bottom
         this.__childElements.filter(child => child.isCriterion).forEach(sentry => {
@@ -62,9 +62,9 @@ export default class PlanItemView extends CMMNElementView {
             // but only if it is on the right or bottom side (because we're only resizing, not re-positioning)
             const nearestSide = this.xyz_joint.getBBox().sideNearestToPoint(middleOfSentry);
             if (nearestSide == 'right') {
-                sentry.__moveConstraint(this.shape.x + this.shape.width, sentryY);
+                sentry.moving(this.shape.x + this.shape.width, sentryY);
             } else if (nearestSide == 'bottom') {
-                sentry.__moveConstraint(sentryX, this.shape.y + this.shape.height);
+                sentry.moving(sentryX, this.shape.y + this.shape.height);
             }
         })
     }

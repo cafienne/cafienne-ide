@@ -1,27 +1,26 @@
+import { dia } from "jointjs";
+import $ from "jquery";
+import IDE from "../../ide";
+import Settings from "../../settings/settings";
+import CaseView from "./elements/caseview";
+
+const grids: Grid[] = []; // List of all grid objects; forms a memory leak, in anticipation of keeping only one canvas for all cases, instead of a canvas per case.
+
 /**
  * Grid class contains some statics to arrange for the global settings of the grid.
  * Grid settings (size and whether visible or not) are stored in LocalStorage of the browser.
  * Also they can be modified from the IDE header above cases.
  * Grid is currently attached to the paper object of each case (see case.js).
  */
-
-import { dia } from "jointjs";
-import $ from "jquery";
-import Settings from "../../settings/settings";
-import CaseView from "./elements/caseview";
-
-/**
- * @type {Array<Grid>}
- */
-const grids = []; // List of all grid objects; forms a memory leak, in anticipation of keeping only one canvas for all cases, instead of a canvas per case.
-
 export default class Grid {
+    static initialized: boolean = false;
+    static ide: IDE;
+    case: CaseView;
 
     /**
-     * 
-     * @param {Grid} grid 
+     * Register a grid instance and set up global listeners if not already done.
      */
-    static register(grid) {
+    static register(grid: Grid) {
         grids.push(grid);
         if (!this.initialized) {
             this.initialized = true;
@@ -30,11 +29,9 @@ export default class Grid {
             $('#inputShowGrid').prop('checked', Grid.Visible);
 
             // Attach listeners to the HTML with the settings.
-            // These are "global" listeners, and we keep track of an array with ALL grids (so basically a memory leak, because grid objects are create in case.js)
-            // Whenever a settings is modified, all grids will be informed of the change and everything will be recalculated
-            $('#inputGridSize').on('change', e => Grid.Size = e.currentTarget.value);
+            $('#inputGridSize').on('change', e => Grid.Size = Number((e.currentTarget as HTMLInputElement).value));
             $('#inputGridSize').on('keydown', e => e.stopPropagation()); // Avoid backspace and delete to remove elements from the canvas
-            $('#inputShowGrid').on('change', e => Grid.Visible = e.currentTarget.checked);
+            $('#inputShowGrid').on('change', e => Grid.Visible = (e.currentTarget as HTMLInputElement).checked);
         }
     }
 
@@ -42,7 +39,6 @@ export default class Grid {
      * Returns global grid size setting
      */
     static get Size() {
-        // this.initialize();
         return Settings.gridSize;
     }
 
@@ -53,9 +49,8 @@ export default class Grid {
      * - Generates new background raster.
      * - Updates all grid objects with the new size.
      */
-    static set Size(newSize) {
-        // Only set new grid size if it is a valid value.
-        if (newSize <= 0 || !Number.isInteger(Number.parseFloat(newSize)) || isNaN(newSize)) {
+    static set Size(newSize: number) {
+        if (newSize <= 0 || !Number.isInteger(Number.parseFloat(String(newSize))) || isNaN(newSize)) {
             this.ide.warning(`Grid size must be a whole number greater than zero instead of ${newSize}`, 1000);
             // Restore the previous value
             $('#inputGridSize').val(Grid.Size);
@@ -70,17 +65,16 @@ export default class Grid {
 
     /**
      * Snaps the number to the nearest grid dot. If ctrl-key is pressed, it will not snap.
-     * @param {Number} number
-     * @returns {Number}
      */
-    static snap(number) {
+    static snap(number: number) {
+        // @ts-ignore
         return window.event && window.event.ctrlKey ? number : Grid.Size * Math.round(number / Grid.Size);
     }
 
     /**
      * Returns global grid visibility setting
      */
-    static get Visible() {
+    static get Visible(): boolean {
         return Settings.gridVisibility;
     }
 
@@ -90,7 +84,7 @@ export default class Grid {
      * - stores it in local storage
      * - updates all grids with the new background image (visibile or not)
      */
-    static set Visible(visibility) {
+    static set Visible(visibility: boolean) {
         if (typeof(visibility) !== 'boolean') {
             console.warn('Cannot set visibility of the grid with a value of type ' + typeof(visibility) + ', it must be of type boolean');
             return;
@@ -113,10 +107,10 @@ export default class Grid {
     /**
      * Helper class that adds grid structure to the jointjs paper element.
      * We can set the .size and the .visible property.
-     * @param {dia.Paper} paper effectively joint.dia.Paper
-     * @param {CaseView} cs effectively joint.dia.Paper
+     * @param paper effectively joint.dia.Paper
+     * @param cs CaseView
      */
-    constructor(paper, cs) {
+    constructor(public paper: dia.Paper, cs: CaseView) {
         this.paper = paper;
         this.case = cs;
         // Register grid for changes to the settings
@@ -129,7 +123,6 @@ export default class Grid {
         if (Grid.Visible) {
             // Note: we do this asynchronously, because the paper in joint may not yet have been created properly
             window.setTimeout(() => this.paper.drawGrid({ color: 'black' }), 0);
-
         } else {
             this.paper.clearGrid();
         }

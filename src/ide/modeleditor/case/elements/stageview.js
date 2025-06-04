@@ -124,6 +124,11 @@ export default class StageView extends TaskStageView {
         return this.shape.surrounds(other.shape);
     }
 
+    resized() {
+        super.resized();
+        this.resetChildren();
+    }
+
     moved(x, y, newParent) {
         super.moved(x, y, newParent);
         this.resetChildren();

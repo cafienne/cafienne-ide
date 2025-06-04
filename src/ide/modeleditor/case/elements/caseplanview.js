@@ -108,8 +108,8 @@ export default class CasePlanView extends StageView {
      * @param {*} w 
      * @param {*} h 
      */
-    __resize(w, h) {
-        super.__resize(w, h);
+    resizing(w, h) {
+        super.resizing(w, h);
         // The rect must also be given some new dimensions
         this.html.find('.cmmn-border').attr('width', this.shape.width);
         this.html.find('.cmmn-border').attr('height', this.shape.height - CPM_TAB_HEIGHT);

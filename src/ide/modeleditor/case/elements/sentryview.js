@@ -134,12 +134,12 @@ export default class SentryView extends CMMNElementView {
         </polyline>`;
     }
 
-    __resize() {
+    resizing() {
         console.error('Cannot resize a sentry')
     }
 
     moved(x, y, newParent) {
-        this.__moveConstraint(x, y);
+        this.moving(x, y);
     }
 
     /**
@@ -147,7 +147,7 @@ export default class SentryView extends CMMNElementView {
      * @param {*} x the coordinates of the event (cursor/mouse pointer location)
      * @param {*} y the coordinates of the event (cursor/mouse pointer location)
      */
-    __moveConstraint(x, y) {
+    moving(x, y) {
         const parentElement = this.case.graph.getCell(this.parent.xyz_joint.id);
         if (!parentElement) return; // Parent element probably has not yet been added to the case
 

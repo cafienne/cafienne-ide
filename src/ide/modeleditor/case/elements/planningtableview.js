@@ -66,14 +66,14 @@ export default class PlanningTableView extends CMMNElementView {
     }
 
     moved(x, y, newParent) {
-        this.__moveConstraint(x, y);
+        this.moving(x, y);
     }
 
     /**
      * A planningTable has a fixed position on it's parent, it cannot be moved.
      * Position cursor is not relevant
      */
-    __moveConstraint(x, y) {
+    moving(x, y) {
         const parentX = this.parent.shape.x;
         const parentY = this.parent.shape.y;
         //create a point relative to the parentElement, where the planningTable must be positioned relative to the parent

@@ -220,7 +220,7 @@ export default class CaseView {
             // Unclear why, but Grid size input having focus does not blur when we click on the canvas...
             Grid.blurSetSize();
         });
-        this.paper.on('element:pointermove', (elementView, e, x, y) => this.getCMMNElement(elementView).__moveConstraint(x, y)); // Enforce move constraints on certain elements
+        this.paper.on('element:pointermove', (elementView, e, x, y) => this.getCMMNElement(elementView).moving(x, y)); // Enforce move constraints on certain elements
         this.paper.on('element:pointerdblclick', (elementView, e, x, y) => this.getCMMNElement(elementView).propertiesView.show(true));
         this.paper.on('blank:pointerclick', () => this.clearSelection()); // For some reason pointerclick not always works, so also listening to pointerdown on blank.
         this.paper.on('blank:pointerdown', () => this.clearSelection()); // see e.g. https://stackoverflow.com/questions/35443524/jointjs-why-pointerclick-event-doesnt-work-only-pointerdown-gets-fired
@@ -486,7 +486,7 @@ export default class CaseView {
         const y = e.clientY;
         if (!x || !y) {
             console.error('Fetching cursor coordinates without a proper event... ', e);
-            return;
+            return { x: 0, y: 0 };
         }
 
         const offset = this.svg.offset();
@@ -528,7 +528,7 @@ export default class CaseView {
         // TODO: this should no longer be necessary if constructors fill proper joint immediately based upon definition
         cmmnElement.refreshView();
         // TODO: figure out when to properly apply the move constraint logic
-        cmmnElement.__moveConstraint(cmmnElement.shape.x, cmmnElement.shape.y);
+        cmmnElement.moving(cmmnElement.shape.x, cmmnElement.shape.y);
 
         this.editor.completeUserAction();
 

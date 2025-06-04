@@ -4,53 +4,53 @@ import HtmlUtil from "../../util/htmlutil";
 import CMMNElementView from "./elements/cmmnelementview";
 
 export default class Highlighter {
-    /**
-     * implements the marker object for the element
-     * @param {CMMNElementView} element
-     */
-    constructor(element) {
-        this.element = element;
+    private html: JQuery<HTMLElement>;
+    private scrollListener: (e: JQuery.Event) => void;
 
+    /**
+     * Implements the marker object for the element
+     */
+    constructor(public element: CMMNElementView) {        
         // Create global event listeners for proper attach/detach to the scrolling of the paper
-        //  Upon scrolling we also have to change the position of the marker.
-        this.scrollListener = e => this.setPosition();
+        // Upon scrolling we also have to change the position of the marker.
+        this.scrollListener = (e: JQuery.Event) => this.setPosition();
 
         // Note: we create the HTML directly, which in general is not good for performance.
-        //  However, marking object is only created once a CFI is clicked on. 
-        //  So, in practice it is a OK to create it here and now.
+        // However, marking object is only created once a CFI is clicked on. 
+        // So, in practice it is OK to create it here and now.
         this.html = $('<div class="highlightelementimage"></div>');
         this.element.case.markerContainer.append(this.html);
 
         // Reposition the marker when the element is moving
-        this.element.xyz_joint.on('change:position', e => this.setPosition());
+        this.element.xyz_joint.on('change:position', (e: any) => this.setPosition());
     }
 
-    delete() {
+    delete(): void {
         HtmlUtil.removeHTML(this.html);
     }
 
     /**
      * Show or hide the marker if our element has a reference to the definition.
-     * @param {Remark} remark 
+     * @param remark Remark
      */
-    refresh(remark) {
+    refresh(remark: Remark): void {
         if (remark.element === this.element.definition) {
             this.visible = true;
             if (remark.isError()) {
                 this.html.css('border', '3px solid red');
             } else {
-                this.html.css('border', '3px solid orange')
+                this.html.css('border', '3px solid orange');
             }
         } else {
             this.visible = false;
         }
     }
 
-    get visible() {
+    get visible(): boolean {
         return this.html.css('display') == 'block';
     }
 
-    set visible(visible) {
+    set visible(visible: boolean) {
         if (visible) {
             this.setPosition();
             this.element.case.paperContainer.on('scroll', this.scrollListener);
@@ -65,11 +65,13 @@ export default class Highlighter {
      * Positions marker, coordinates are the relative coordinates in the canvas graph area.
      * So (0, 0) is the top left corner of the canvas, not of the body/document
      */
-    setPosition() {
-        //compensate the position of the marker for the scroll of the paper container
+    setPosition(): void {
+        // Compensate the position of the marker for the scroll of the paper container
         // The reason is, that the marker's html element is outside the paper container, hence needs to accomodate to the scroll of the paper container
-        const markerLeft = this.element.shape.x - this.element.case.paperContainer.scrollLeft();
-        const markerTop = this.element.shape.y - this.element.case.paperContainer.scrollTop();
+        const leftScroll = this.element.case.paperContainer.scrollLeft() || 0;
+        const topScroll = this.element.case.paperContainer.scrollTop() || 0;
+        const markerLeft = this.element.shape.x - leftScroll;
+        const markerTop = this.element.shape.y - topScroll;
         const height = this.element.shape.height;
 
         this.html.css('left', markerLeft);

@@ -419,7 +419,7 @@ export default class CMMNElementView extends CanvasElement {
      * @param {Number} w
      * @param {Number} h
      */
-    __resize(w, h) {
+    resizing(w, h) {
         if (w < 0) w = 0;
         if (h < 0) h = 0;
 
@@ -430,7 +430,22 @@ export default class CMMNElementView extends CanvasElement {
         // Refresh the description to apply new text wrapping
         this.refreshText();
     }
+
+    /**
+     * Hook indicating that 'resizing' completed.
+     */
+    resized() { }
+
+    /**
+     * Method invoked during move of an element. Enables enforcing move constraints (e.g. sentries cannot be placed in the midst of an element)
+     * @param {Number} x 
+     * @param {Number} y 
+     */
+    moving(x, y) { }
     
+    /**
+     * Hook indicating that 'moving' completed.
+     */
     moved(x, y, newParent) {
         // Check if this element can serve as a new parent for the cmmn element
         if (newParent && newParent.__canHaveAsChild(this.constructor.name) && newParent != this.parent) {
@@ -688,13 +703,6 @@ export default class CMMNElementView extends CanvasElement {
     toString() {
         return this.__type;
     }
-
-    /**
-     * Method invoked on an element to enforce move constraints (e.g. sentries cannot be placed in the midst of an element)
-     * @param {Number} x 
-     * @param {Number} y 
-     */
-    __moveConstraint(x, y) { }
 
     get isPlanItem() {
         return false;
