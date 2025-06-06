@@ -1,45 +1,42 @@
 import $ from "jquery";
-import CMMNElementDefinition from "../../../../../repository/definition/cmmnelementdefinition";
+import ElementDefinition from "../../../../../repository/definition/elementdefinition";
+import StandardForm from "../../../../editors/standardform";
 import HtmlUtil from "../../../../util/htmlutil";
+import CaseModelEditor from "../../casemodeleditor";
 import CaseView from "../../elements/caseview";
 import ColumnRenderer from "./columnrenderer";
 import RowRenderer from "./rowrenderer";
 
-export default class TableRenderer {
+export default abstract class TableRenderer<E extends ElementDefinition, R extends RowRenderer<E>, C extends ColumnRenderer<E, R>> {
+    case: CaseView;
+    rows: R[] = [];
+
+    private _html!: JQuery<HTMLElement>;
+    htmlContainer!: JQuery<HTMLElement>;
+    private _selectedElement?: E;
+    editor: CaseModelEditor;
     /**
      * Defines a generic control for collections of CMMNElementDefinition, to select and edit data in a table
-     * @param {CaseView} cs
-     * @param {JQuery<HTMLElement>} htmlParent
      */
-    constructor(cs, htmlParent) {
-        this.case = cs;
-        this.htmlParent = htmlParent;
-        /** @type {Array<RowRenderer>} */
-        this.rows = []; // Reset array of row renderers
+    constructor(cs: StandardForm, public htmlParent: JQuery<HTMLElement>) {
+        this.case = cs.case;
+        this.editor = this.case.editor;
     }
 
     get html() {
         return this._html;
     }
 
-    /**
-     * @param {JQuery<HTMLElement>} html
-     */
-    set html(html) {
+    set html(html: JQuery<HTMLElement>) {
         this._html = html;
         // console.log("Setting the html of the table renderer ...")
         this.htmlParent.append(html);
     }
 
-    /** @returns {Array<ColumnRenderer>} */
-    get columns() {
-        throw new Error('Columns must be implemented in table editor');
-    }
-
     /**
-     * Clears the content of the editor and removes all event handlers (recursively on all child html elements)
-     * Note, this is different from "delete()", since delete removes all html, not just the data related content of the editor.
-     */
+      * Clears the content of the editor and removes all event handlers (recursively on all child html elements)
+      * Note, this is different from "delete()", since delete removes all html, not just the data related content of the editor.
+      */
     clear() {
         this.rows = [];
         HtmlUtil.clearHTML(this.htmlContainer);
@@ -58,12 +55,12 @@ export default class TableRenderer {
      * Clears the current content of the editor and renders it again
      */
     renderTable() {
-        if (! this._html) {
-            this.renderHead();            
+        if (!this._html) {
+            this.renderHead();
         }
         this.renderData();
     }
- 
+
     renderHead() {
         //create the html element of the editor form
         this.html = $(`<table>
@@ -89,10 +86,10 @@ export default class TableRenderer {
     renderData() {
         this.clear();
         this.data.forEach(element => this.renderElement(element));
-        const renderer = this.renderElement(); // Add an empty renderer at the bottom, for creating new elements
+        this.renderElement(); // Add an empty renderer at the bottom, for creating new elements
     }
 
-    renderElement(element) {
+    renderElement(element: E | undefined = undefined) {
         const rowRenderer = this.addRenderer(element);
         if (rowRenderer) { // Also create the columns
             const tdElements = rowRenderer.html.find('td');
@@ -101,33 +98,18 @@ export default class TableRenderer {
                 columnRenderer.render($(td), rowRenderer);
             });
         }
+
     }
 
-    /**
-     * 
-     * @param {CMMNElementDefinition} element 
-     * @returns {RowRenderer}
-     */
-    addRenderer(element = undefined) {
-        throw new Error('Method addRenderer must be implemented in table editor ' + this.constructor.name);
-    }
+    abstract addRenderer(element: E | undefined): R;
+    abstract get data(): E[];
+    abstract get columns(): C[];
 
-    /**
-     * @returns {Array<CMMNElementDefinition>}
-     */
-    get data() {
-        throw new Error('Property data is not implemented for ' + this.constructor.name);
-    }
-
-    /** @returns {CMMNElementDefinition} */
-    get activeNode() {
+    get activeNode(): E | undefined {
         return this._selectedElement;
     }
 
-    /**
-     * @param {CMMNElementDefinition} node
-     */
-    set activeNode(node) {
+    set activeNode(node: E | undefined) {
         this._selectedElement = node;
     }
 
@@ -136,22 +118,15 @@ export default class TableRenderer {
         HtmlUtil.removeHTML(this.html);
     }
 
-    /**
-     * 
-     * @param {CMMNElementDefinition} element 
-     * @param {String} field 
-     * @param {*} value 
-     */
-    change(element, field, value) {
+    change(element: E, field: string, value: any) {
         element.change(field, value);
         this.case.editor.completeUserAction();
     }
 
     /**
      * when the name of a case file item is changed the zoom fields must be updated
-     * @param {CMMNElementDefinition} definitionElement 
      */
-    refreshReferencingFields(definitionElement) {
+    refreshReferencingFields(definitionElement: E) {
         this.rows.forEach(row => row.refreshReferencingFields(definitionElement));
     }
 }

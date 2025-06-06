@@ -1,4 +1,4 @@
-import { ParameterRow } from "./caseparameterseditor";
+import ParameterRow from "./parameterrow";
 
 export default class CFIZoom {
     static get label() {
@@ -10,7 +10,7 @@ export default class CFIZoom {
     }
 
     static get tooltip() {
-        return;
+        return '';
     }
 
     constructor(row: ParameterRow, column: JQuery<HTMLTableCellElement>) {

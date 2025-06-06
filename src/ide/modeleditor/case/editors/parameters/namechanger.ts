@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import { ParameterRow } from "./caseparameterseditor";
+import ParameterRow from "./parameterrow";
 
 export default class NameChanger {
     static get label() {
