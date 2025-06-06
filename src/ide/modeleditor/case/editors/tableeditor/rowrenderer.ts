@@ -1,22 +1,23 @@
 import $ from "jquery";
-import CMMNElementDefinition from "../../../../../repository/definition/cmmnelementdefinition";
+import ElementDefinition from "../../../../../repository/definition/elementdefinition";
 import HtmlUtil from "../../../../util/htmlutil";
+import ColumnRenderer from "./columnrenderer";
 import TableRenderer from "./tablerenderer";
 
-export default class RowRenderer {
+export default abstract class RowRenderer<E extends ElementDefinition> {
+    private _element?: E;
+    private _html!: JQuery<HTMLElement>;
+
     /**
      * Base class for rendering a row in a table control
-     * @param {TableRenderer} control 
-     * @param {CMMNElementDefinition} element 
      */
-    constructor(control, element = undefined) {
-        this.control = control;
+    constructor(public control: TableRenderer<E, RowRenderer<E>, ColumnRenderer<E, RowRenderer<E>>>, element?: E) {
         this.control.rows.push(this);
         this._element = element;
         this.html = $(
-`<tr>
-    ${this.control.columns.map(column => "<td />").join('\n')}
-</tr>`);
+            `<tr>
+                ${this.control.columns.map(_ => "<td />").join('\n')}
+            </tr>`);
     }
 
     get case() {
@@ -29,9 +30,8 @@ export default class RowRenderer {
 
     /**
      * Setting the html will also add it to the table  
-     * @returns {JQuery<HTMLElement>}
-     */
-    set html(html) {
+      */
+    set html(html: JQuery<HTMLElement>) {
         this._html = html;
         this.control.htmlContainer.append(html);
         html.on('click', e => { // Highlight selected row
@@ -53,18 +53,15 @@ export default class RowRenderer {
 
     /**
      * Change a property of the element into the new value
-     * @param {String} propertyName 
-     * @param {*} propertyValue 
      */
-    change(propertyName, propertyValue) {
+    change(propertyName: string, propertyValue: any) {
         this.control.change(this.element, propertyName, propertyValue);
     }
 
     /**
      * Deletes this row and the associated definition.
-     * @param {*} e 
      */
-    delete(e) {
+    delete(e: JQuery.Event) {
         e.stopPropagation();
         if (this.isEmpty()) return;
         // Ask whether our element is in use by someone else, before it can be deleted.
@@ -78,25 +75,16 @@ export default class RowRenderer {
         }
     }
 
-    /**
-     * @returns {CMMNElementDefinition}
-     */
-    createElement() {
-        throw new Error('The row renderer ' + this.constructor.name + ' must implement this method');
-    }
+    abstract createElement(): E;
 
     /**
      * Gives an indication whether this is a newly added renderer without any data associated.
-     * @returns {Boolean}
      */
     isEmpty() {
         return this._element == undefined;
     }
 
-    /**
-     * @returns {CMMNElementDefinition}
-     */
-    get element() {
+    get element(): E {
         if (!this._element) {
             this._element = this.createElement();
             this.control.data.push(this._element);
@@ -111,7 +99,6 @@ export default class RowRenderer {
 
     /**
      * Refreshes the visualizers relating to the definition element
-     * @param {CMMNElementDefinition} definitionElement 
      */
-    refreshReferencingFields(definitionElement) {}
+    refreshReferencingFields(definitionElement: E) { }
 }
