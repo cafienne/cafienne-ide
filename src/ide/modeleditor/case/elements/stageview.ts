@@ -18,6 +18,7 @@ import CaseTaskView from "./casetaskview";
 import CaseView from "./caseview";
 import CMMNElementView from "./cmmnelementview";
 import StageDecoratorBox from "./decorator/box/stagedecoratorbox";
+import PlanItemHalo from "./halo/cmmn/planitemhalo";
 import HumanTaskView from "./humantaskview";
 import MilestoneView from "./milestoneview";
 import PlanItemView from "./planitemview";
@@ -130,6 +131,10 @@ export default class StageView<SD extends StageDefinition = StageDefinition> ext
 
     createDecoratorBox() {
         return new StageDecoratorBox(this);
+    }
+
+    createHalo(): PlanItemHalo<SD, StageView<SD>> {
+        return new PlanItemHalo(this);
     }
 
     get __planningTablePosition() {

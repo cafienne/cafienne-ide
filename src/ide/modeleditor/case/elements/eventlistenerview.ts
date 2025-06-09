@@ -1,5 +1,6 @@
 ﻿import EventListenerDefinition from "../../../../repository/definition/cmmn/caseplan/eventlistenerdefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+import PlanItemHalo from "./halo/cmmn/planitemhalo";
 import PlanItemView from "./planitemview";
 import StageView from "./stageview";
 
@@ -10,6 +11,10 @@ export default abstract class EventListenerView<ED extends EventListenerDefiniti
     constructor(public parent: StageView, definition: ED, shape: ShapeDefinition) {
         super(parent.case, parent, definition, shape);
         this.__resizable = false;
+    }
+
+    createHalo() {
+        return new PlanItemHalo(this);
     }
 
     get markup() {

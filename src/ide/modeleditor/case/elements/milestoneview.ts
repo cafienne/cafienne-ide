@@ -2,6 +2,7 @@
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import MilestoneDecoratorBox from "./decorator/box/milestonedecoratorbox";
 import EntryCriterionView from "./entrycriterionview";
+import PlanItemHalo from "./halo/cmmn/planitemhalo";
 import PlanItemView from "./planitemview";
 import MilestoneProperties from "./properties/milestoneproperties";
 import StageView from "./stageview";
@@ -29,6 +30,10 @@ export default class MilestoneView extends PlanItemView<MilestoneDefinition> {
 
     createProperties() {
         return new MilestoneProperties(this);
+    }
+
+    createHalo() {
+        return new PlanItemHalo(this);
     }
 
     createDecoratorBox() {

@@ -6,7 +6,6 @@ import CMMNElementView from "./cmmnelementview";
 import DecoratorBox from "./decorator/decoratorbox";
 import EntryCriterionView from "./entrycriterionview";
 import ExitCriterionView from "./exitcriterionview";
-import PlanItemHalo from "./halo/cmmn/planitemhalo";
 import PlanItemProperties from "./properties/planitemproperties";
 import ReactivateCriterionView from "./reactivatecriterionview";
 
@@ -37,10 +36,6 @@ export default abstract class PlanItemView<PI extends PlanItem = PlanItem> exten
 
     createProperties(): PlanItemProperties<any> {
         return new PlanItemProperties(this);
-    }
-
-    createHalo() {
-        return new PlanItemHalo(this);
     }
 
     createDecoratorBox() {
