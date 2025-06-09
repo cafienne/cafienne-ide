@@ -10,14 +10,14 @@ import WorkflowProperties from "./properties/workflowproperties";
 import StageView from "./stageview";
 import TaskView from "./taskview";
 
-export default class HumanTaskView extends TaskView {
+export default class HumanTaskView extends TaskView<HumanTaskDefinition> {
+    workflowProperties: WorkflowProperties = new WorkflowProperties(this);
+    previewForm: PreviewTaskForm = new PreviewTaskForm(this);
+
     /**
-     * 
-     * @param {StageView} stage 
-     * @param {*} x 
-     * @param {*} y 
+     * Create a new HumanTaskView at the given coordinates.
      */
-    static create(stage, x, y) {
+    static create(stage: StageView, x: number, y: number): HumanTaskView {
         const definition = stage.definition.createPlanItem(HumanTaskDefinition);
         const shape = stage.case.diagram.createShape(x, y, 140, 80, definition.id);
         return new HumanTaskView(stage, definition, shape);
@@ -25,15 +25,9 @@ export default class HumanTaskView extends TaskView {
 
     /**
      * Creates a new HumanTaskView element.
-     * @param {StageView} parent 
-     * @param {HumanTaskDefinition} definition 
-     * @param {ShapeDefinition} shape 
      */
-    constructor(parent, definition, shape) {
+    constructor(parent: StageView, definition: HumanTaskDefinition, shape: ShapeDefinition) {
         super(parent, definition, shape);
-        this.definition = definition;
-        this.workflowProperties = new WorkflowProperties(this);
-        this.previewForm = new PreviewTaskForm(this);
     }
 
     getImplementationList() {
@@ -71,18 +65,16 @@ export default class HumanTaskView extends TaskView {
 
     /**
      * Method invoked after a role or case file item has changed
-     * @param {CMMNElementDefinition} definitionElement 
      */
-    refreshReferencingFields(definitionElement) {
+    refreshReferencingFields(definitionElement: CMMNElementDefinition) {
         super.refreshReferencingFields(definitionElement);
         this.workflowProperties.refresh();
     }
 
     /**
      * This method may only be invoked from within a human task planning table
-     * @param {PlanItem} definition 
      */
-    addDiscretionaryItem(definition) {
+    addDiscretionaryItem(definition: PlanItem) {
         this.parent.addDiscretionaryItem(definition);
     }
 
@@ -97,8 +89,8 @@ export default class HumanTaskView extends TaskView {
         return 'humantask';
     }
 
-    referencesDefinitionElement(definitionId) {
-        if (definitionId == this.definition.performerRef) {
+    referencesDefinitionElement(definitionId: string) {
+        if (this.definition.performerRef.references(definitionId)) {
             return true;
         }
         return super.referencesDefinitionElement(definitionId);

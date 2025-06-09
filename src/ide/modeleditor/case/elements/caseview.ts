@@ -5,7 +5,10 @@ import CaseDefinition from "../../../../repository/definition/cmmn/casedefinitio
 import CaseFileItemDef from "../../../../repository/definition/cmmn/casefile/casefileitemdef";
 import CasePlanDefinition from "../../../../repository/definition/cmmn/caseplan/caseplandefinition";
 import CMMNElementDefinition from "../../../../repository/definition/cmmnelementdefinition";
+import Diagram from "../../../../repository/definition/dimensions/diagram";
+import Dimensions from "../../../../repository/definition/dimensions/dimensions";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+import Remark from "../../../../repository/validate/remark";
 import Validator from "../../../../repository/validate/validator";
 import Util from "../../../../util/util";
 import Debugger from "../../../debugger/debugger";
@@ -32,22 +35,49 @@ import StageView from "./stageview";
 import TextAnnotationView from "./textannotationview";
 
 export default class CaseView {
-    /**
-     * Creates a new CaseView object based on the definition and dimensions
-     * @param {CaseModelEditor} editor
-     * @param {JQuery<HTMLElement>} htmlParent
-     * @param {CaseDefinition} caseDefinition 
-     */
-    constructor(editor, htmlParent, caseDefinition) {
+    readonly definition: CasePlanDefinition;
+    readonly id: string;
+    readonly name: string;
+    readonly case: CaseView;
+    readonly dimensions: Dimensions;
+    readonly diagram: Diagram;
+    readonly html: JQuery<HTMLElement>;
+    readonly divCaseModel: JQuery<HTMLElement>;
+    readonly divUndoRedo: JQuery<HTMLElement>;
+    readonly divShapeBox: JQuery<HTMLElement>;
+    readonly divCFIEditor: JQuery<HTMLElement>;
+    readonly canvas: JQuery<HTMLElement>;
+    readonly paperContainer: JQuery<HTMLElement>;
+    readonly deployForm: DeployForm;
+    readonly sourceEditor: CaseSourceEditor;
+    readonly cfiEditor: CaseFileEditor;
+    readonly undoBox: UndoRedoBox;
+    readonly shapeBox: ShapeBox;
+    readonly splitter: RightSplitter;
+    readonly items: CMMNElementView[] = [];
+    readonly connectors: Connector[] = [];
+    readonly loading: boolean = false;
+    casePlanModel?: CasePlanView;
+    graph!: dia.Graph;
+    paper!: dia.Paper;
+    grid!: Grid;
+    svg!: JQuery<SVGElement>;
+    readonly teamEditor: CaseTeamEditor;
+    readonly caseParametersEditor: CaseParametersEditor;
+    readonly startCaseEditor: StartCaseEditor;
+    readonly debugEditor: Debugger;
+    readonly validateForm: ValidateForm;
+    private _selectedElement?: CMMNElementView;
+    readonly typeDescription = 'Case';
+
+    constructor(public editor: CaseModelEditor, public htmlParent: JQuery<HTMLElement>, public caseDefinition: CaseDefinition) {
         const now = new Date();
-        this.editor = editor;
-        this.editor.case = this; // Quick hack to have inline editors have access to the case in their constructor
-        this.caseDefinition = caseDefinition;
-        this.definition = /** @type {CasePlanDefinition} */ (caseDefinition.casePlan);
+        this.editor.case = this;
+        this.definition = caseDefinition.casePlan;
         this.id = this.caseDefinition.id;
         this.name = this.caseDefinition.name;
         this.case = this;
-        this.dimensions = caseDefinition.dimensions;
+        this.dimensions = caseDefinition.dimensions!;
         this.diagram = this.dimensions.diagram;
         this.htmlParent = htmlParent;
 
@@ -88,9 +118,6 @@ export default class CaseView {
         this.shapeBox = new ShapeBox(this, this.divShapeBox);
         this.splitter = new RightSplitter(this.divCaseModel, '60%', 5);
 
-        this.items = /** @type {Array<CMMNElementView>} */ ([]);
-        this.connectors = /** @type {Array<Connector>} */ ([]);
-
         //add the drawing area for this case
         this.createJointStructure();
 
@@ -103,7 +130,12 @@ export default class CaseView {
 
         if (this.caseDefinition.hasCasePlan()) {
             this.loading = true;
-            this.casePlanModel = new CasePlanView(this, this.caseDefinition.casePlan, this.diagram.getShape(this.caseDefinition.casePlan));
+            const planShape = this.diagram.getShape(this.caseDefinition.casePlan);
+            if (!planShape) {
+                this.editor.ide.danger(`Drawing the case plan is not possible, as the diagram information is missing (check the file ${this.dimensions.file.fileName})`);
+                return;
+            }
+            this.casePlanModel = new CasePlanView(this, this.caseDefinition.casePlan, planShape);
 
             // Now render the "loose" shapes (textboxes and casefileitems) in the appropriate parent stage
             //  Also clean up remaining shapes for which no view can be created
@@ -119,17 +151,17 @@ export default class CaseView {
             this.loading = false;
 
             // Gather the joint elements of the types cmmn-element and connectors. Put them in one big array and give that to joint.
-            const jointElements = this.items.map(item => item.xyz_joint).concat(this.connectors.map(c => c.xyz_joint));
+            const jointElements = this.items.map(item => item.xyz_joint as dia.Cell).concat(this.connectors.map(c => c.xyz_joint));
             this.graph.addCells(jointElements);
             this.casePlanModel.refreshView();
         }
 
         const end = new Date();
-        console.log(`Case '${this.caseDefinition.file.fileName}' loaded in ${((end - now) / 1000)} seconds`)
+        console.log(`Case '${this.caseDefinition.file.fileName}' loaded in ${((end.getTime() - now.getTime()) / 1000)} seconds`)
     }
 
     renderLooseShapesAndDropUnusedShapes() {
-        const getDefinition = shape => {
+        const getDefinition = (shape: ShapeDefinition) => {
             const element = this.caseDefinition.getElement(shape.cmmnElementRef);
             if (element) {
                 return element;
@@ -145,8 +177,8 @@ export default class CaseView {
                 }
             }
         }
-        // Now render the "loose" shapes (textboxes and casefileitems) in the appropriate parent stage            
-        const stages = /** @type {Array<StageView>} */ (this.items.filter(element => element.isStage));
+        // Now render the "loose" shapes (textboxes and casefileitems) in the appropriate parent stage
+        const stages = this.items.filter(element => element.isStage) as StageView[];
         this.diagram.shapes.forEach(shape => {
             const definitionElement = getDefinition(shape);
             // Only take the textboxes and case file items, not the other elements, as they are rendered from caseplanmodel constructor.
@@ -156,8 +188,6 @@ export default class CaseView {
                     parent.__addCMMNChild(new CaseFileItemView(parent, definitionElement, shape));
                 } else if (definitionElement instanceof TextAnnotationDefinition) {
                     parent.__addCMMNChild(new TextAnnotationView(parent, definitionElement, shape));
-                } else {
-                    // Quite weird :)
                 }
             }
 
@@ -179,16 +209,10 @@ export default class CaseView {
         }
     }
 
-    /**
-     * 
-     * @param {Array<StageView>} stages 
-     * @param {ShapeDefinition} shape 
-     * @returns {StageView}
-     */
-    getSurroundingStage(stages, shape) {
+    getSurroundingStage(stages: StageView[], shape: ShapeDefinition): StageView {
         const surroundingStages = stages.filter(stage => stage.shape.surrounds(shape));
         const smallestSurrounder = surroundingStages.find(stage => !surroundingStages.find(smaller => stage.shape.surrounds(smaller.shape)))
-        return smallestSurrounder || this.casePlanModel;
+        return smallestSurrounder || this.casePlanModel!;
     }
 
     createJointStructure() {
@@ -196,7 +220,7 @@ export default class CaseView {
 
         //create drawing area (SVG), all elements will be drawn in here
         this.paper = new dia.Paper({
-            el: this.paperContainer,
+            el: this.paperContainer[0],
             width: '6000px',
             height: '6000px',
             gridSize: 1,
@@ -208,61 +232,56 @@ export default class CaseView {
 
         this.paper.svg.setAttribute('case', this.id);
 
-        //cs.paper.svg has the html element, also store the jQuery svg
+        //this.paper.svg has the html element, also store the jQuery svg
         this.svg = $(this.paper.svg);
 
         // Attach paper events
-        this.paper.on('cell:pointerup', (elementView, e, x, y) => {
-            this.getCMMNElement(elementView).moved(x, y, this.getItemUnderMouse(e, this.getCMMNElement(elementView)));
-            this.editor.completeUserAction();
+        this.paper.on('cell:pointerup', (elementView: any, e: any, x: number, y: number) => {
+            const underMouse = this.getItemUnderMouse(e, this.getCMMNElement(elementView));
+            if (underMouse) {
+                this.getCMMNElement(elementView).moved(x, y, underMouse);
+                this.editor.completeUserAction();
+            }
         });
-        this.paper.on('element:pointerdown', (elementView, e, x, y) => {
+        this.paper.on('element:pointerdown', (elementView: any, e: any, x: number, y: number) => {
             //select the mouse down element, do not set focus on description, makes it hard to delete
-            //the element with [del] keyboard button (you delete the description io element)
+            //the element with [del] keyboard button (you delete the description io element)            
             this.selectedElement = this.getCMMNElement(elementView);
             // Unclear why, but Grid size input having focus does not blur when we click on the canvas...
             Grid.blurSetSize();
         });
-        this.paper.on('element:pointermove', (elementView, e, x, y) => this.getCMMNElement(elementView).moving(x, y)); // Enforce move constraints on certain elements
-        this.paper.on('element:pointerdblclick', (elementView, e, x, y) => this.getCMMNElement(elementView).propertiesView.show(true));
-        this.paper.on('blank:pointerclick', () => this.clearSelection()); // For some reason pointerclick not always works, so also listening to pointerdown on blank.
-        this.paper.on('blank:pointerdown', () => this.clearSelection()); // see e.g. https://stackoverflow.com/questions/35443524/jointjs-why-pointerclick-event-doesnt-work-only-pointerdown-gets-fired
+        // Enforce move constraints on certain elements
+        this.paper.on('element:pointermove', (elementView: any, e: any, x: number, y: number) => this.getCMMNElement(elementView).moving(x, y));
+        this.paper.on('element:pointerdblclick', (elementView: any, e: any, x: number, y: number) => this.getCMMNElement(elementView).propertiesView.show(true));
+        this.paper.on('blank:pointerclick', () => this.clearSelection());
+        // For some reason pointerclick not always works, so also listening to pointerdown on blank.
+        // see e.g. https://stackoverflow.com/questions/35443524/jointjs-why-pointerclick-event-doesnt-work-only-pointerdown-gets-fired
+        this.paper.on('blank:pointerdown', () => this.clearSelection());
         // When we move over an element with the mouse, an event is raised.
         //  This event is captured to enable elements to register themselves with ShapeBox and RepositoryBrowser
-        this.paper.on('element:mouseenter', (elementView, e, x, y) => this.getCMMNElement(elementView).mouseEnter());
-        this.paper.on('element:mouseleave', (elementView, e, x, y) => this.getCMMNElement(elementView).mouseLeave());
-        this.paper.on('link:mouseenter', (elementView, e, x, y) => this.getConnector(elementView).mouseEnter());
-        this.paper.on('link:mouseleave', (elementView, e, x, y) => this.getConnector(elementView).mouseLeave());
+        this.paper.on('element:mouseenter', (elementView: any, e: any, x: number, y: number) => this.getCMMNElement(elementView).mouseEnter());
+        this.paper.on('element:mouseleave', (elementView: any, e: any, x: number, y: number) => this.getCMMNElement(elementView).mouseLeave());
+        this.paper.on('link:mouseenter', (elementView: any, e: any, x: number, y: number) => this.getConnector(elementView).mouseEnter());
+        this.paper.on('link:mouseleave', (elementView: any, e: any, x: number, y: number) => this.getConnector(elementView).mouseLeave());
 
         // Also add special event handlers for case itself. Registers with ShapeBox to support adding case plan element if it does not exist
-        this.svg.on('pointerover', e => this.setDropHandlers());
+        this.svg.on('pointerover', (e: JQuery.Event) => this.setDropHandlers());
         // Only remove drop handlers if we're actually leaving the canvase. If we're leaving an element inside the canvas, keep things as is.
-        this.svg.on('pointerout', e => e.target === e.currentTarget && this.removeDropHandlers());
+        this.svg.on('pointerout', (e: JQuery.TriggeredEvent) => e.target === e.currentTarget && this.removeDropHandlers());
         // Enable/disable the HALO when the mouse is near an item
-        this.svg.on('pointermove', e => this.showHaloAndResizer(e));
+        this.svg.on('pointermove', (e: JQuery.Event) => this.showHaloAndResizer(e));
     }
 
-    /**
-     * 
-     * @param {*} jointElementView 
-     * @returns {Connector}
-     */
-    getConnector(jointElementView) {
+    getConnector(jointElementView: any): Connector {
         return jointElementView.model.xyz_cmmn;
     }
 
-    /**
-     * 
-     * @param {*} jointElementView 
-     * @returns {CMMNElementView}
-     */
-    getCMMNElement(jointElementView) {
+    getCMMNElement(jointElementView: any): CMMNElementView {
         return jointElementView.model.xyz_cmmn;
     }
 
     /**
      * Returns the container in which Halos can render their HTML elements.
-     * @returns {JQuery<HTMLElement>}
      */
     get haloContainer() {
         return this.html.find('.divHalos');
@@ -270,7 +289,6 @@ export default class CaseView {
 
     /**
      * Returns the container in which Resizers can render their HTML elements.
-     * @returns {JQuery<HTMLElement>}
      */
     get resizeContainer() {
         return this.html.find('.divResizers');
@@ -278,37 +296,9 @@ export default class CaseView {
 
     /**
      * Returns the container in which Marker can render their HTML element.
-     * @returns {JQuery<HTMLElement>}
      */
     get markerContainer() {
         return this.html.find('.divMarker');
-    }
-
-    repositionSplitter() {
-        /*When dragging this repository browser splitter, the splitter between the canvas and cfiEditor is not automatically updated
-        Here recalculate the position of the splitter and the width of the canvas.
-
-        canvaswidth is the width of the shapes/canvas/cfi container
-        minus the shapes width minus cfiEditor Width, and compensate for width of gap between areas
-        */
-
-        const containerWidth = this.htmlParent.width(); // Our parent's parent is "divCaseModelEditor"
-        const containerLeft = this.htmlParent.offset().left;
-        const cfiBoxWidth = this.divCFIEditor.width();
-        const shapesWidth = this.divShapeBox.width();
-        const cfiBoxLeft = this.divCFIEditor.offset().left;
-
-        const canvasWidth = containerWidth - shapesWidth - cfiBoxWidth - containerLeft + cfiBoxLeft;
-
-        this.divCaseModel.css('width', canvasWidth);
-    }
-
-    refreshSplitter() {
-        // Recalculate the splitter position in % after refresh
-        const splitterPosition = 100 - (100 * this.divCFIEditor.width() / this.divCaseModel.width());
-        const splitterPercentage = splitterPosition > 0 ? `${splitterPosition}%` : '0%';
-
-        this.splitter.repositionSplitter(splitterPercentage);
     }
 
     /**
@@ -327,7 +317,7 @@ export default class CaseView {
         this.validateForm.loadRemarks(validator);
     }
 
-    highlight(remark) {
+    highlight(remark: Remark) {
         const view = this.items.find(item => item.definition === remark.element)
         if (view) {
             view.highlight(remark);
@@ -336,9 +326,8 @@ export default class CaseView {
 
     /**
      * Method invoked after a role or case file item has changed
-     * @param {CMMNElementDefinition} definitionElement 
      */
-    refreshReferencingFields(definitionElement) {
+    refreshReferencingFields(definitionElement: CMMNElementDefinition) {
         // First tell all items to update their properties, if they refer to this element.
         this.items.forEach(item => item.refreshReferencingFields(definitionElement));
         // Also update the sub editors.
@@ -346,15 +335,14 @@ export default class CaseView {
     }
 
     refreshMovableViews() {
-        this.editor.movableEditors.filter(view => view.visible).forEach(editor => editor.refresh());
+        this.editor.movableEditors.filter(editor => editor.visible).forEach(editor => editor.refresh());
     }
 
     /**
      * Sets/gets the element currently (to be) selected.
      * Upon setting a new selection, the previously selected element is de-selected
-     * @param {CMMNElementView|undefined} element
      */
-    set selectedElement(element) {
+    set selectedElement(element: CMMNElementView | undefined) {
         const previousSelection = this._selectedElement;
         if (previousSelection) {
             previousSelection.__select(false);
@@ -365,7 +353,7 @@ export default class CaseView {
         }
     }
 
-    get selectedElement() {
+    get selectedElement(): CMMNElementView | undefined {
         return this._selectedElement;
     }
 
@@ -379,14 +367,12 @@ export default class CaseView {
     /**
      * Trigger from CaseFileEditor to indicate that a certain definition is selected.
      * This can be used to display markers of individual CMMNElementViews and their sub views.
-     * 
-     * @param {CaseFileItemDef|undefined} definition 
      */
-    updateSelectedCaseFileItemDefinition(definition) {
+    updateSelectedCaseFileItemDefinition(definition: CaseFileItemDef | undefined) {
         this.items.forEach(item => item.marker.refresh(definition));
     }
 
-    showHaloAndResizer(e) {
+    showHaloAndResizer(e: JQuery.Event) {
         // Algorithm for showing halo and resizers when hovering with mouse/pointer over the canvas is as follows:
         //  1. In drag/drop mode, no changes to current situation, just return;
         //  2. If an element is selected, likewise. When an element is selected, halo and resizer of that element are shown in fixed modus.
@@ -405,7 +391,7 @@ export default class CaseView {
 
         // Determine on which element the cursor is and also which halo/resizer is currently visible
         const itemUnderMouse = this.getItemUnderMouse(e);
-        const currentlyVisibleHalo = this.items.find(item => item != this.case.casePlanModel && item.halo.visible);
+        const currentlyVisibleHalo = this.items.find(item => item != this.casePlanModel && item.halo.visible);
 
         if (currentlyVisibleHalo && currentlyVisibleHalo.nearElement(e, 40) && !(itemUnderMouse && itemUnderMouse.hasAncestor(currentlyVisibleHalo))) {
             // Current halo is still visible, and we're still in the wide border around it; 
@@ -422,11 +408,8 @@ export default class CaseView {
     /**
      * Returns the deepest cmmn element under cursor. If that is equal to self, then
      * parent of self is returned.
-     * @param {*} e 
-     * @param {CMMNElementView} self 
-     * @returns {CMMNElementView}
      */
-    getItemUnderMouse(e, self = undefined) {
+    getItemUnderMouse(e: any, self: CMMNElementView | undefined = undefined): CMMNElementView | undefined {
         const itemsUnderMouse = this.items.filter(item => item.nearElement(e, 10));
         const parentsUnderMouse = itemsUnderMouse.filter(item => item.parent instanceof CMMNElementView).map(item => item.parent);
 
@@ -442,7 +425,7 @@ export default class CaseView {
 
     setDropHandlers() {
         if (!this.casePlanModel) {
-            this.shapeBox.setDropHandler(dragData => this.createCasePlan(CasePlanView, dragData.event), dragData => this.__canHaveAsChild(dragData.shapeType));
+            this.shapeBox.setDropHandler(dragData => this.createCasePlan(dragData.event), dragData => this.__canHaveAsChild(dragData.shapeType));
         }
     }
 
@@ -465,67 +448,36 @@ export default class CaseView {
         this.splitter.delete();
         this.items.forEach(canvasItem => canvasItem.deletePropertiesView());
         HtmlUtil.removeHTML(this.html);
-    };
+    }
 
-    /**
-     * Returns description of the element type
-     * @returns {String}
-     */
-    get typeDescription() {
-        return 'Case';
-    };
-
-    //!!!! return true when the graph/background can have an element with elementType as parent
-    __canHaveAsChild(elementType) {
+    __canHaveAsChild(elementType: Function) {
         return elementType == CasePlanView && !this.casePlanModel;
     }
 
     /**
      * Returns the coordinates of the mouse pointer, relative with respect to the top left of the case canvas
-     * @param {*} e 
-     * @returns {Coordinates}
      */
-    getCursorCoordinates(e) {
-        const x = e.clientX;
-        const y = e.clientY;
-        if (!x || !y) {
-            console.error('Fetching cursor coordinates without a proper event... ', e);
-            return { x: 0, y: 0 };
-        }
-
-        const offset = this.svg.offset();
-        return new Coordinates(e.clientX - offset.left, e.clientY - offset.top);
+    getCursorCoordinates(e: JQuery.Event | JQuery<MouseEvent>) {
+        const clientX = (e as any).clientX || 0;
+        const clientY = (e as any).clientY || 0;
+        const offset = this.svg.offset()!;
+        return new Coordinates(clientX - offset.left, clientY - offset.top);
     }
 
-    /**
-     * Creates a case plan model (if that is the expected type)
-     * @param {Function} cmmnType 
-     * @param {*} e 
-     */
-    createCasePlan(cmmnType, e) {
-        if (cmmnType == CasePlanView) {
-            const coor = this.getCursorCoordinates(e);
-            this.casePlanModel = CasePlanView.create(this, coor.x, coor.y);
-            this.__addElement(this.casePlanModel);
-            this.casePlanModel.propertiesView.show(true);
-            return this.casePlanModel;
-        } else {
-            throw new Error('Cannot create an element of type ' + cmmnType.name + ' at the top of a case');
-        }
+    createCasePlan(e: JQuery<PointerEvent>) {
+        const coor = this.getCursorCoordinates(e);
+        this.casePlanModel = CasePlanView.createNew(this, coor.x, coor.y);
+        this.__addElement(this.casePlanModel);
+        this.casePlanModel.propertiesView.show(true);
+        return this.casePlanModel;
     }
 
-    /**
-     * Add an element to the drawing canvas.
-     * @param {CMMNElementView} cmmnElement 
-     */
-    __addElement(cmmnElement) {
-        // Only add the element if we're not loading the entire case. Because then all elements are presented to the joint graphs in one shot.
+    __addElement(cmmnElement: CMMNElementView) {
         if (this.loading) {
             return cmmnElement;
         }
 
         this.graph.addCells([cmmnElement.xyz_joint]);
-
         // TODO: this should no longer be necessary if constructors fill proper joint immediately based upon definition
         cmmnElement.refreshView();
         // TODO: figure out when to properly apply the move constraint logic
@@ -539,11 +491,7 @@ export default class CaseView {
         return cmmnElement;
     }
 
-    /**
-     * Add a connector to the canvas
-     * @param {Connector} connector 
-     */
-    __addConnector(connector) {
+    __addConnector(connector: Connector) {
         this.connectors.push(connector);
         if (!this.loading) {
             this.graph.addCells([connector.xyz_joint]);
@@ -553,21 +501,17 @@ export default class CaseView {
     /**
      * Remove a connector from the registration. This method is invoked when the connector
      * is already removed from the canvas.
-     * @param {Connector} connector 
      */
-    __removeConnector(connector) {
+    __removeConnector(connector: Connector) {
         connector.edge.removeDefinition();
         Util.removeFromArray(this.connectors, connector);
     }
 
     /**
-     * Remove an element from the canvas, including it's children.
-     * @param {CMMNElementView} cmmnElement 
+     * Remove an element from the canvas, including its children.
      */
-    __removeElement(cmmnElement) {
+    __removeElement(cmmnElement: CMMNElementView) {
         console.groupCollapsed(`Removing ${cmmnElement}`);
-
-        // if (cmmnElement instanceof PlanningTableView) return; // Cannot delete planning table images.
 
         // Remove it; which recursively also removes the children; only then save it.
         cmmnElement.__delete();
@@ -575,7 +519,7 @@ export default class CaseView {
         // And save the changes.
         this.editor.completeUserAction();
 
-        //update the column UsedIn in the case file items treetable
+        //update the column UsedIn in the case file editor
         this.cfiEditor.showUsedIn();
 
         // Also refresh the properties visible in the case view
@@ -583,21 +527,12 @@ export default class CaseView {
         console.groupEnd();
     }
 
-    /**
-     * Finds the CMMNElementView with the specified ID or undefined.
-     * @param {String} id 
-     * @returns {CMMNElementView}
-     */
-    getItem(id) {
+    getItem(id: string): CMMNElementView | undefined {
         return this.items.find(item => id && item.id == id);
     }
 
-    /**
-     * returns a case file item element referencing the caseFileItemID
-     * @param {String} caseFileItemID 
-     */
-    getCaseFileItemElement(caseFileItemID) {
-        return this.items.find(item => item.isCaseFileItem && item.definition.id == caseFileItemID);
+    getCaseFileItemElement(caseFileItemID: string): CaseFileItemView | undefined {
+        return this.items.find(item => item.isCaseFileItem && item.definition.id == caseFileItemID) as CaseFileItemView | undefined;
     }
 
     switchLabels() {

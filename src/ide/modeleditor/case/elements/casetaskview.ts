@@ -1,18 +1,14 @@
-import PlanItem from "../../../../repository/definition/cmmn/caseplan/planitem";
 import CaseTaskDefinition from "../../../../repository/definition/cmmn/caseplan/task/casetaskdefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import Images from "../../../util/images/images";
 import StageView from "./stageview";
 import TaskView from "./taskview";
 
-export default class CaseTaskView extends TaskView {
+export default class CaseTaskView extends TaskView<CaseTaskDefinition> {
     /**
-     * 
-     * @param {StageView} stage 
-     * @param {*} x 
-     * @param {*} y 
+     * Create a new CaseTaskView at the given coordinates.
      */
-    static create(stage, x, y) {
+    static create(stage: StageView, x: number, y: number): CaseTaskView {
         const definition = stage.definition.createPlanItem(CaseTaskDefinition);
         const shape = stage.case.diagram.createShape(x, y, 140, 80, definition.id);
         return new CaseTaskView(stage, definition, shape);
@@ -20,14 +16,9 @@ export default class CaseTaskView extends TaskView {
 
     /**
      * Creates a new CaseTaskView element.
-     * @param {StageView} parent 
-     * @param {PlanItem} definition
-     * @param {CaseTaskDefinition} definition 
-     * @param {ShapeDefinition} shape 
      */
-    constructor(parent, definition, shape) {
+    constructor(parent: StageView, definition: CaseTaskDefinition, shape: ShapeDefinition) {
         super(parent, definition, shape);
-        this.definition = definition;
     }
 
     getImplementationList() {

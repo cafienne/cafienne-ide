@@ -1,20 +1,15 @@
 ﻿import CaseFileItemDef from "../../../../repository/definition/cmmn/casefile/casefileitemdef";
+import CMMNElementDefinition from "../../../../repository/definition/cmmnelementdefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
-import { CMMNDocumentationDefinition } from "../../../../repository/definition/elementdefinition";
 import CMMNElementView from "./cmmnelementview";
 import CaseFileItemHalo from "./halo/cmmn/casefileitemhalo";
 import CaseFileItemProperties from "./properties/casefileitemproperties";
 import StageView from "./stageview";
 
-export default class CaseFileItemView extends CMMNElementView {
-    /**
-     * 
-     * @param {StageView} stage 
-     * @param {Number} x 
-     * @param {Number} y 
-     * @param {CaseFileItemDef} y 
-     */
-    static create(stage, x, y, definition = undefined) {
+export default class CaseFileItemView extends CMMNElementView<CaseFileItemDef> {
+    temporaryId?: string;
+
+    static create(stage: StageView, x: number, y: number, definition?: CaseFileItemDef) {
         definition = definition || CaseFileItemDef.createEmptyDefinition(stage.case.caseDefinition);
         const shape = stage.case.diagram.createShape(x, y, 25, 40, definition.id);
         return new CaseFileItemView(stage, definition, shape);
@@ -22,13 +17,9 @@ export default class CaseFileItemView extends CMMNElementView {
 
     /**
      * Creates a new CaseFileItemView
-     * @param {StageView} parent 
-     * @param {CaseFileItemDef} definition 
-     * @param {ShapeDefinition} shape 
      */
-    constructor(parent, definition, shape) {
+    constructor(public parent: StageView, definition: CaseFileItemDef, shape: ShapeDefinition) {
         super(parent.case, parent, definition, shape);
-        this.definition = definition;
         if (definition.isEmpty) {
             // This means it is a temporary definition that will not be saved on the server.
             //  But we want to keep track of the id in case a definition is added and then removed again.
@@ -51,18 +42,14 @@ export default class CaseFileItemView extends CMMNElementView {
         this.shape.removeDefinition();
     }
 
-    refreshReferencingFields(definitionElement) {
+    refreshReferencingFields(definitionElement: CMMNElementDefinition) {
         super.refreshReferencingFields(definitionElement);
         if (this.definition == definitionElement) {
             this.refreshText();
         }
     }
 
-    /**
-     * 
-     * @param {CaseFileItemDef | undefined} definition 
-     */
-    setDefinition(definition) {
+    setDefinition(definition?: CaseFileItemDef) {
         this.definition = definition ? definition : CaseFileItemDef.createEmptyDefinition(this.case.caseDefinition);
         if (this.definition.isEmpty) {
             if (this.temporaryId) {
@@ -81,9 +68,6 @@ export default class CaseFileItemView extends CMMNElementView {
         return this.definition ? this.definition.name : '';
     }
 
-    /**
-     * @returns {CMMNDocumentationDefinition}
-     */
     get documentation() {
         return this.definition && this.definition.documentation;
     }
@@ -95,7 +79,7 @@ export default class CaseFileItemView extends CMMNElementView {
                 <text class="cmmn-text" text-anchor="middle" x="10" y="55" />`;
     }
 
-    referencesDefinitionElement(definitionId) {
+    referencesDefinitionElement(definitionId: string) {
         return this.definition && this.definition.id === definitionId;
     }
 

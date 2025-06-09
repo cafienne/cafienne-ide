@@ -1,4 +1,4 @@
-import { ExitCriterionView } from "../../../../sentryview";
+import ExitCriterionView from "../../../../exitcriterionview";
 import SentryHaloItem from "./sentryhaloitem";
 
 export default class ExitCriterionHaloItem extends SentryHaloItem {

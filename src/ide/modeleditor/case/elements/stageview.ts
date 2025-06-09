@@ -29,29 +29,15 @@ import TextAnnotationView from "./textannotationview";
 import TimerEventView from "./timereventview";
 import UserEventView from "./usereventview";
 
-export default class StageView extends TaskStageView {
-    /**
-     * 
-     * @param {StageView} stage 
-     * @param {*} x 
-     * @param {*} y 
-     */
-    static create(stage, x, y) {
+export default class StageView<SD extends StageDefinition = StageDefinition> extends TaskStageView<SD> {
+    static create(stage: StageView, x: number, y: number): StageView {
         const definition = stage.definition.createPlanItem(StageDefinition);
         const shape = stage.case.diagram.createShape(x, y, 420, 140, definition.id);
         return new StageView(stage.case, stage, definition, shape);
     }
 
-    /**
-     * Creates a new StageView element.
-     * @param {CaseView} cs 
-     * @param {CMMNElementView} parent 
-     * @param {StageDefinition} definition 
-     * @param {ShapeDefinition} shape 
-     */
-    constructor(cs, parent, definition, shape) {
+    constructor(cs: CaseView, parent: CMMNElementView | undefined, definition: SD, shape: ShapeDefinition) {
         super(cs, parent, definition, shape);
-        this.definition = definition;
         this.definition.planItems.forEach(planItem => this.addPlanItem(planItem));
     }
 
@@ -71,27 +57,30 @@ export default class StageView extends TaskStageView {
 
     /**
      * Add a 'drag-dropped' case file item
-     * @param {CaseFileItemDragData} dragData 
      */
-    addCaseFileItem(dragData) {
-        const coor = this.case.getCursorCoordinates(dragData.event);
+    addCaseFileItem(dragData: CaseFileItemDragData) {
+        const evt: JQuery<PointerEvent> | undefined = dragData.event;
+        if (!evt) {
+            console.warn('No event provided for CaseFileItemDragData');
+            return;
+        }
+
+        const coor = this.case.getCursorCoordinates(evt);
         this.__addCMMNChild(CaseFileItemView.create(this, coor.x, coor.y, dragData.item));
     }
 
     /**
      * Add a 'drag-dropped' task implementation
-     * @param {ServerFileDragData} dragData 
      */
-    addTaskModel(dragData) {
+    addTaskModel(dragData: ServerFileDragData) {
         const shapeType = () => {
             if (dragData.file instanceof CaseFile) return CaseTaskView;
             if (dragData.file instanceof HumanTaskFile) return HumanTaskView;
             if (dragData.file instanceof ProcessFile) return ProcessTaskView;
-        }
+        };
         const viewType = shapeType();
         if (viewType) {
-            /** @type {TaskView} */
-            const element = super.addElementView(viewType, dragData.event);
+            const element = super.addElementView(viewType, dragData.event) as TaskView;
             element.changeTaskImplementation(dragData.file, true);
         }
     }
@@ -108,20 +97,21 @@ export default class StageView extends TaskStageView {
         // Create a collection of items we surround visually, but only the "top-level", not their children.
         const visuallySurroundedItems = allCaseItems.filter(item => this.surrounds(item) && !this.surrounds(item.parent));
         // Former children: those that are currently a descendant, but that we no longer surround visually.
+        //  Note: if "we" are the CasePlanView, then we surround also children that are outside our borders, as we are the top level element.
+        //  So in that case - formerChildren will ALWAYS be empty, leaving it save to have an exclamation mark in line 105 on parent being not undefined
         const formerChildren = allCaseItems.filter(item => currentChildren.indexOf(item) >= 0 && visuallySurroundedItems.indexOf(item) < 0);
         // New children: those that are currently not a descendant, but that we now surround visually.
         const newChildren = allCaseItems.filter(item => currentChildren.indexOf(item) < 0 && visuallySurroundedItems.indexOf(item) >= 0);
-        formerChildren.forEach(child => child.changeParent(this.parent));
+        formerChildren.forEach(child => child.changeParent(this.parent!));
         newChildren.forEach(child => child.changeParent(this));
     }
 
     /**
      * Determines whether this stage visually surrounds the cmmn element.
-     * @param {CMMNElementView} other 
      */
-    surrounds(other) {
+    surrounds(other: CMMNElementView | undefined) {
         // Note: this method is added here instead of directly invoking shape.surrounds because logic is different at caseplan level, so caseplan can override.
-        return this.shape.surrounds(other.shape);
+        return other && this.shape.surrounds(other.shape);
     }
 
     resized() {
@@ -129,12 +119,12 @@ export default class StageView extends TaskStageView {
         this.resetChildren();
     }
 
-    moved(x, y, newParent) {
+    moved(x: number, y: number, newParent: any) {
         super.moved(x, y, newParent);
         this.resetChildren();
     }
 
-    createProperties() {
+    createProperties(): StageProperties<any> {
         return new StageProperties(this);
     }
 
@@ -146,33 +136,24 @@ export default class StageView extends TaskStageView {
         return { x: 50, y: -9 };
     }
 
-    /**
-     * 
-     * @param {PlanItem} definition 
-     */
-    addPlanItem(definition) {
-        if (!definition) {
-            // there is no planitemdefinition for the planitem...
-            console.warn('Plan item has NO definition and will be skipped', definition);
-            return;
-        }
+    addPlanItem(definition: PlanItem) {
         // Only add the new plan item if we do not yet visualize it
         if (!this.__childElements.find(planItemView => planItemView.definition.id == definition.id)) {
-            return this.__addCMMNChild(this.createPlanItemView(definition));
+            // Check whether we can find a shape for the definition.
+            const shape = this.case.diagram.getShape(definition);
+            if (!shape) {
+                console.warn(`Error: missing shape definition for ${definition.constructor.name} named "${definition.name}" with id "${definition.id}"`);
+                return;
+            }
+            // Add a view based on the definition with its shape
+            return this.__addCMMNChild(this.createPlanItemView(definition, shape));
         }
     }
 
     /**
      * Creates a new view based on the plan item,
-     * @param {PlanItem} definition 
      */
-    createPlanItemView(definition) {
-        const shape = this.case.diagram.getShape(definition);
-        if (!shape) {
-            console.warn(`Error: missing shape definition for ${definition.constructor.name} named "${definition.name}" with id "${definition.id}"`)
-            return;
-        }
-
+    createPlanItemView(definition: PlanItem, shape: ShapeDefinition) {
         if (definition instanceof HumanTaskDefinition) {
             return new HumanTaskView(this, definition, shape);
         } else if (definition instanceof CaseTaskDefinition) {
@@ -194,16 +175,16 @@ export default class StageView extends TaskStageView {
 
     /**
      * Method invoked when a child is moved into this element from a different parent.
-     * @param {CMMNElementView} childElement 
      */
-    adoptItem(childElement) {
+    adoptItem(childElement: CMMNElementView) {
         const previousParent = childElement.parent;
         super.adoptItem(childElement);
         if (childElement.isPlanItem) {
             // then also move the definition
-            childElement.definition.switchParent(this.definition);
+            const childPlanItemView = childElement as PlanItemView;
+            childPlanItemView.definition.switchParent(this.definition);
             // If the item is discretionary, we may also have to clean up the former planning table and refresh ours.
-            if (childElement.definition.isDiscretionary && previousParent && previousParent.isStage) {
+            if (childPlanItemView.definition.isDiscretionary && previousParent && previousParent instanceof StageView) {
                 previousParent.cleanupPlanningTableIfPossible();
                 this.showPlanningTable();
             }
@@ -221,13 +202,12 @@ export default class StageView extends TaskStageView {
 
     /**
      * Adds a discretionary item definition (that is, a PlanItem with .isDiscretionary set to true)
-     * @param {PlanItem} definition 
      */
-    addDiscretionaryItem(definition) {
+    addDiscretionaryItem(definition: PlanItem) {
         this.addPlanItem(definition);
     }
 
-    createCMMNChild(viewType, x, y) {
+    createCMMNChild(viewType: any, x: number, y: number): CMMNElementView {
         if (Util.isSubClassOf(PlanItemView, viewType)) {
             return this.__addCMMNChild(viewType.create(this, x, y));
         } else if (viewType == CaseFileItemView) {
@@ -261,9 +241,8 @@ export default class StageView extends TaskStageView {
 
     /**
      * returns true when an element of type 'elementType' can be added as a child to this element
-     * @param {Function} elementType 
      */
-    __canHaveAsChild(elementType) {
+    __canHaveAsChild(elementType: Function) {
         if (this.canHaveCriterion(elementType) ||
             elementType == HumanTaskView ||
             elementType == CaseTaskView ||

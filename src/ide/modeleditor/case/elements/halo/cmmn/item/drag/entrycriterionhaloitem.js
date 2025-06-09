@@ -1,4 +1,4 @@
-import { EntryCriterionView } from "../../../../sentryview";
+import EntryCriterionView from "../../../../entrycriterionview";
 import SentryHaloItem from "./sentryhaloitem";
 
 export default class EntryCriterionHaloItem extends SentryHaloItem {

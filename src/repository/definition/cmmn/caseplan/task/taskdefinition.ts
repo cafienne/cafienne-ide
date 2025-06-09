@@ -62,7 +62,7 @@ export default abstract class TaskDefinition extends TaskStageDefinition {
         this.bindImplementation();
     }
 
-    protected get implementationReference(): ExternalReference<ParameterizedModelDefinition> {
+    get implementationReference(): ExternalReference<ParameterizedModelDefinition> {
         throw new Error('Method must be implemented in ' + this.constructor.name);
     }
 

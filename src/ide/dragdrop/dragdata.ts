@@ -7,7 +7,12 @@ export default class DragData {
         return DragData.current !== undefined;
     }
 
-    public event: JQuery<PointerEvent> | undefined = undefined;
+    get event(): JQuery<PointerEvent> {
+        if (!this.activeEvent) throw new Error('No active event found. DragData is not currently being dragged.');
+        return this.activeEvent;
+    }
+
+    private activeEvent: JQuery<PointerEvent> | undefined;
     private dragBox: JQuery<HTMLElement>;
     private pointerMoveHandler = (e: any) => this.handleMousemoveModel(e);
     private pointerUpHandler = (e: any) => this.handleMouseupModel(e);
@@ -90,7 +95,7 @@ export default class DragData {
     }
 
     canDrop(e: JQuery<PointerEvent>) {
-        this.event = e;
+        this.activeEvent = e;
         if (!this.dropHandler) {
             // console.log("No drop handler to invoke")
         }
@@ -99,7 +104,7 @@ export default class DragData {
     }
 
     handleMouseupModel(e: JQuery<PointerEvent>) {
-        this.event = e;
+        this.activeEvent = e;
         if (this.canDrop(e) && this.dropHandler) {
             this.dropHandler(this);
         }
@@ -107,7 +112,7 @@ export default class DragData {
     }
 
     cleanUp() {
-        this.event = undefined;
+        this.activeEvent = undefined;
         DragData.current = undefined;
         this.dragBox.remove();
         this.owner.dragData = undefined;

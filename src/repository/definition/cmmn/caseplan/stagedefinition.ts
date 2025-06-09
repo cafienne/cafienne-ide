@@ -71,10 +71,10 @@ export default class StageDefinition extends TaskStageDefinition {
     /**
      * Creates a new plan item, along with a plan item definition of the specified type
      */
-    createPlanItem(type: Function) {
+    createPlanItem<PI extends PlanItem>(type: new (importNode: Element, caseDefinition: CaseDefinition, parent: StageDefinition) => PI): PI {
         const planItem: PlanItem = super.createDefinition(type);
         this.planItems.push(planItem);
-        return planItem;
+        return planItem as PI;
     }
 
     /**

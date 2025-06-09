@@ -2,21 +2,15 @@
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import CaseView from "./caseview";
 import CasePlanDecoratorBox from "./decorator/box/caseplandecoratorbox";
+import ExitCriterionView from "./exitcriterionview";
 import CasePlanHalo from "./halo/cmmn/caseplanhalo";
 import CasePlanProperties from "./properties/caseplanproperties";
-import { ExitCriterionView } from "./sentryview";
 import StageView from "./stageview";
 
 const CPM_TAB_HEIGHT = 22;
 
-export default class CasePlanView extends StageView {
-    /**
-     * 
-     * @param {CaseView} cs 
-     * @param {*} x 
-     * @param {*} y 
-     */
-    static create(cs, x = 10, y = 10) {
+export default class CasePlanView extends StageView<CasePlanDefinition> {
+    static createNew(cs: CaseView, x = 10, y = 10) {
         const definition = cs.caseDefinition.casePlan;
         const shape = cs.diagram.createShape(x, y, 800, 500, definition.id);
         return new CasePlanView(cs, definition, shape)
@@ -24,16 +18,13 @@ export default class CasePlanView extends StageView {
 
     /**
      * Creates a new CasePlan model
-     * @param {CaseView} cs Must be the CaseView object itself.
-     * @param {CasePlanDefinition} definition 
-     * @param {ShapeDefinition} shape 
-     */
-    constructor(cs, definition, shape) {
+      */
+    constructor(cs: CaseView, definition: CasePlanDefinition, shape: ShapeDefinition) {
         super(cs, undefined, definition, shape);
         this.definition = definition;
     }
 
-    referencesDefinitionElement(definitionId) {
+    referencesDefinitionElement(definitionId: string) {
         // Check whether the case parameters may be using the case file item
         if (this.case.caseDefinition.input.find(p => p.bindingRef.references(definitionId))) {
             return true;
@@ -58,9 +49,8 @@ export default class CasePlanView extends StageView {
 
     /**
      * Show or hide the halo and resizer
-     * @param {Boolean} show 
      */
-    __renderBoundary(show) {
+    __renderBoundary(show: boolean) {
         if (this.case.selectedElement === this) {
             this.resizer.visible = true;
         } else {
@@ -77,7 +67,7 @@ export default class CasePlanView extends StageView {
         return { x: 280, y: 13 };
     }
 
-    surrounds(element) {
+    surrounds(element: CasePlanView) {
         // Avoid the StageView.acquireChildren method to throw out elements outside the case plan (even though visually they can be dragged outside)
         return element != this;
     }
@@ -105,10 +95,8 @@ export default class CasePlanView extends StageView {
 
     /**
      * Override of basic resize method.
-     * @param {*} w 
-     * @param {*} h 
      */
-    resizing(w, h) {
+    resizing(w: number, h: number) {
         super.resizing(w, h);
         // The rect must also be given some new dimensions
         this.html.find('.cmmn-border').attr('width', this.shape.width);
@@ -120,11 +108,11 @@ export default class CasePlanView extends StageView {
         delete this.case.casePlanModel;
     }
 
-    canHaveCriterion(criterionType) {
+    canHaveCriterion(criterionType: any) {
         return criterionType == ExitCriterionView;
     }
 
-    createCMMNChild(viewType, x, y) {
+    createCMMNChild(viewType: any, x: number, y: number) {
         if (viewType == ExitCriterionView) {
             return this.__addCMMNChild(ExitCriterionView.create(this, x, y));
         } else {

@@ -94,10 +94,10 @@ export default abstract class PlanItem extends CMMNElementDefinition {
         return this.authorizedRoleRefs.list;
     }
 
-    private createSentry(criterionConstructor: Function, criterionCollection: CriterionDefinition[]) {
+    private createSentry<CD extends CriterionDefinition>(criterionConstructor: new (importNode: Element, caseDefinition: CaseDefinition, parent: PlanItem) => CD, criterionCollection: CriterionDefinition[]) {
         const criterion: CriterionDefinition = super.createDefinition(criterionConstructor);
         criterionCollection.push(criterion);
-        return criterion;
+        return criterion as CD;
     }
 
     createEntryCriterion() {

@@ -1,17 +1,14 @@
 ﻿import EventListenerDefinition from "../../../../repository/definition/cmmn/caseplan/eventlistenerdefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import PlanItemView from "./planitemview";
+import StageView from "./stageview";
 
-export default class EventListenerView extends PlanItemView {
+export default abstract class EventListenerView<ED extends EventListenerDefinition> extends PlanItemView<ED> {
     /**
      * Creates a new EventListenerView
-     * @param {StageView} parent 
-     * @param {EventListenerDefinition} definition
-     * @param {ShapeDefinition} shape 
      */
-    constructor(parent, definition, shape) {
+    constructor(public parent: StageView, definition: ED, shape: ShapeDefinition) {
         super(parent.case, parent, definition, shape);
-        //define default color
         this.__resizable = false;
     }
 
@@ -21,11 +18,9 @@ export default class EventListenerView extends PlanItemView {
     }
 
     /**
-     * @returns {String}
+     * Returns the image URL for the event listener.
      */
-    get imageURL() {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract get imageURL(): string;
 
     get isEventListener() {
         return true;

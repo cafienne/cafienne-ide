@@ -1,4 +1,4 @@
-import { ReactivateCriterionView } from "../../../../sentryview";
+import ReactivateCriterionView from "../../../../reactivatecriterionview";
 import SentryHaloItem from "./sentryhaloitem";
 
 export default class ReactivateCriterionHaloItem extends SentryHaloItem {

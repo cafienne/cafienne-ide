@@ -1,27 +1,25 @@
 ﻿import TaskDefinition from "../../../../repository/definition/cmmn/caseplan/task/taskdefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+import ParameterizedModelDefinition from "../../../../repository/definition/parameterizedmodeldefinition";
 import ServerFile from "../../../../repository/serverfile/serverfile";
 import ServerFileDragData from "../../../dragdrop/serverfiledragdata";
 import TaskMappingsEditor from "../editors/task/taskmappingseditor";
 import { TaskDecoratorBox } from "./decorator/box/taskdecoratorbox";
+import TaskHalo from "./halo/cmmn/taskhalo";
 import TaskProperties from "./properties/taskproperties";
+import StageView from "./stageview";
 import TaskStageView from "./taskstageview";
-// import TaskHalo from "./halo/taskhalo";
-// BIG TODO HERE
 
-export default class TaskView extends TaskStageView {
+export default abstract class TaskView<TD extends TaskDefinition = TaskDefinition> extends TaskStageView<TD> {
+    mappingsEditor: TaskMappingsEditor;
 
     /**
      * Creates a new TaskView element.
-     * @param {StageView} parent 
-     * @param {TaskDefinition} definition 
-     * @param {ShapeDefinition} shape 
      */
-    constructor(parent, definition, shape) {
+    constructor(public parent: StageView, definition: TD, shape: ShapeDefinition) {
         super(parent.case, parent, definition, shape);
-        this.definition = definition;
 
-        //Define the mapping form to link task parameters with model parameters (case process humantask) 
+        // Define the mapping form to link task parameters with model parameters (case process humantask)
         this.mappingsEditor = new TaskMappingsEditor(this);
 
         if (definition.implementationRef && !definition.implementationModel) {
@@ -35,13 +33,10 @@ export default class TaskView extends TaskStageView {
 
     /**
      * Returns the list of models that can serve as an implementation for this task.
-     * @returns {Array<ServerFile>}
      */
-    getImplementationList() {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract getImplementationList(): ServerFile[];
 
-    createProperties() {
+    createProperties(): TaskProperties<any> {
         return new TaskProperties(this);
     }
 
@@ -65,18 +60,14 @@ export default class TaskView extends TaskStageView {
         return new TaskDecoratorBox(this);
     }
 
-    /**
-     * 
-     * @param {ServerFileDragData} dragData 
-     */
-    supportsFileTypeAsImplementation(dragData) {
+    supportsFileTypeAsImplementation(dragData: ServerFileDragData) {
         return dragData.file instanceof this.definition.implementationClass;
     }
 
     setDropHandlers() {
         super.setDropHandlers();
         // Add drop handler with repository browser to handle changing task implementation when it is drag/dropped from there.
-        this.case.editor.ide.repositoryBrowser.setDropHandler(dragData => this.changeTaskImplementation(dragData.file), dragData => this.supportsFileTypeAsImplementation(dragData));
+        this.case.editor.ide.repositoryBrowser.setDropHandler(dragData => this.changeTaskImplementation(dragData.file as ServerFile<ParameterizedModelDefinition>), dragData => this.supportsFileTypeAsImplementation(dragData));
     }
 
     removeDropHandlers() {
@@ -88,10 +79,10 @@ export default class TaskView extends TaskStageView {
         const potentialImplementationName = this.definition.name.split(' ').join('');
         const existingModel = this.getImplementationList().find(serverFile => serverFile.name === potentialImplementationName);
         if (existingModel) {
-            this.definition.implementationRef = existingModel.fileName;
+            this.definition.implementationReference.update(existingModel.fileName);
         } else {
             const fileName = await this.case.editor.ide.createNewModel(this.fileType, potentialImplementationName, this.definition.documentation.text);
-            this.definition.implementationRef = fileName;
+            this.definition.implementationReference.update(fileName);
             // Open the editor for the new task implementation file
             window.location.hash = fileName;
         }
@@ -102,12 +93,10 @@ export default class TaskView extends TaskStageView {
     /**
      * Changes the task implementation if the model's fileName differs from the current implementationRef.
      * If it is a newly added task, then the name maybe filled with the name of the task implementation.
-     * This can be indicated by passing the "updateTaskDescription" flag to true.
-     * @param {ServerFile} file 
-     * @param {Boolean} updateTaskName 
+     * This can be indicated by passing the "updateTaskName" flag to true.
      */
-    async changeTaskImplementation(file, updateTaskName = false) {
-        console.log("Changing task implementation to '" + file.fileName +"'")
+    async changeTaskImplementation(file: ServerFile, updateTaskName: boolean = false) {
+        console.log("Changing task implementation to '" + file.fileName + "'");
         if (this.definition.implementationRef == file.fileName) {
             // no need to change. Perhaps re-generate parameters??? Better give a separate button for that ...
             return;
@@ -116,7 +105,8 @@ export default class TaskView extends TaskStageView {
         // Now, read the file, and update the information in the task parameters.
         await file.load();
         if (!file.definition) {
-            this.case.editor.ide.warning('Could not read the definition ' + file.fileName + ' which is referenced from the task ' + this.name);
+            this.case.editor.ide.warning('Could not read the definition ' + file.fileName + ' which is referenced from the task ' + this.name
+            );
             return;
         }
 
@@ -131,7 +121,7 @@ export default class TaskView extends TaskStageView {
         }
 
         // Set the implementation.
-        this.definition.changeTaskImplementation(file);
+        this.definition.changeTaskImplementation(file as ServerFile<ParameterizedModelDefinition>);
 
         // Make sure to save changes if any.
         this.case.editor.completeUserAction();
@@ -141,12 +131,9 @@ export default class TaskView extends TaskStageView {
         this.propertiesView.show(true);
     }
 
-    /** @returns {String} */
-    get fileType() {
-        throw new Error('TaskView of type ' + this.constructor.name + ' must implement file type');
-    }
+    abstract get fileType(): string;
 
-    refreshReferencingFields(definitionElement) {
+    refreshReferencingFields(definitionElement: any) {
         super.refreshReferencingFields(definitionElement);
         this.mappingsEditor.refresh();
     }
@@ -168,16 +155,16 @@ export default class TaskView extends TaskStageView {
         return {
             'text': {
                 ref: '.cmmn-shape',
-                'ref-x': .5,
-                'ref-y': .5,
+                'ref-x': 0.5,
+                'ref-y': 0.5,
                 'y-alignment': 'middle',
                 'x-alignment': 'middle'
             }
         };
     }
 
-    //returns true when an element of type 'elementType' can be added as a child to this element
-    __canHaveAsChild(elementType) {
+    // Returns true when an element of type 'elementType' can be added as a child to this element
+    __canHaveAsChild(elementType: any) {
         return super.canHaveCriterion(elementType);
     }
 
@@ -186,25 +173,20 @@ export default class TaskView extends TaskStageView {
         this.mappingsEditor.delete();
     }
 
-    /**
-     * @returns {String}
-     */
-    get imageURL() {
-        throw new Error('This method must be implemented in ' + this.constructor.name);
-    }
+    abstract get imageURL(): string;
 
-    //shows the element properties as icons in the element
+    // Shows the element properties as icons in the element
     refreshView() {
         super.refreshView();
         this.refreshTaskImage();
     }
 
     refreshTaskImage() {
-        //show image of the right task type (typically blocking vs. non-blocking human task)
+        // Show image of the right task type (typically blocking vs. non-blocking human task)
         this.html.find('.taskImage').attr('xlink:href', this.imageURL);
     }
 
-    referencesDefinitionElement(definitionId) {
+    referencesDefinitionElement(definitionId: string) {
         if (this.definition.inputs.find(parameter => parameter.bindingRef.references(definitionId))) {
             return true;
         }

@@ -1,19 +1,16 @@
 ﻿import MilestoneDefinition from "../../../../repository/definition/cmmn/caseplan/milestonedefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import MilestoneDecoratorBox from "./decorator/box/milestonedecoratorbox";
+import EntryCriterionView from "./entrycriterionview";
 import PlanItemView from "./planitemview";
 import MilestoneProperties from "./properties/milestoneproperties";
-import { EntryCriterionView } from "./sentryview";
 import StageView from "./stageview";
 
-export default class MilestoneView extends PlanItemView {
+export default class MilestoneView extends PlanItemView<MilestoneDefinition> {
     /**
-     * 
-     * @param {StageView} stage 
-     * @param {*} x 
-     * @param {*} y 
+     * Create a new MilestoneView at the given coordinates.
      */
-    static create(stage, x, y) {
+    static create(stage: StageView, x: number, y: number): MilestoneView {
         const definition = stage.definition.createPlanItem(MilestoneDefinition);
         const shape = stage.case.diagram.createShape(x, y, 100, 40, definition.id);
         return new MilestoneView(stage, definition, shape);
@@ -21,13 +18,9 @@ export default class MilestoneView extends PlanItemView {
 
     /**
      * Creates a new MilestoneView element.
-     * @param {StageView} parent 
-     * @param {MilestoneDefinition} definition
-     * @param {ShapeDefinition} shape 
      */
-    constructor(parent, definition, shape) {
+    constructor(public parent: StageView, definition: MilestoneDefinition, shape: ShapeDefinition) {
         super(parent.case, parent, definition, shape);
-        this.definition = definition;
     }
 
     get wrapText() {
@@ -63,19 +56,16 @@ export default class MilestoneView extends PlanItemView {
     }
 
     /**
-     * returns true when an element of type 'elementType' can be added as a child to this element
-     * @param {Function} elementType 
+     * Returns true when an element of type 'elementType' can be added as a child to this element
      */
-    __canHaveAsChild(elementType) {
+    __canHaveAsChild(elementType: any) {
         return this.canHaveCriterion(elementType);
     }
 
     /**
-     * 
-     * @param {Function} criterionType 
-     * @returns 
+     * Returns true if the criterionType can be added to this milestone
      */
-    canHaveCriterion(criterionType) {
+    canHaveCriterion(criterionType: any) {
         return criterionType == EntryCriterionView;
     }
 

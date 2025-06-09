@@ -5,14 +5,11 @@ import EventListenerView from "./eventlistenerview";
 import UserEventProperties from "./properties/usereventproperties";
 import StageView from "./stageview";
 
-export default class UserEventView extends EventListenerView {
+export default class UserEventView extends EventListenerView<UserEventDefinition> {
     /**
-     * 
-     * @param {StageView} stage 
-     * @param {*} x 
-     * @param {*} y 
+     * Create a new UserEventView at the given coordinates.
      */
-    static create(stage, x, y) {
+    static create(stage: StageView, x: number, y: number): UserEventView {
         const definition = stage.definition.createPlanItem(UserEventDefinition);
         const shape = stage.case.diagram.createShape(x, y, 32, 32, definition.id);
         return new UserEventView(stage, definition, shape);
@@ -20,13 +17,9 @@ export default class UserEventView extends EventListenerView {
 
     /**
      * Creates a new UserEventView element.
-     * @param {StageView} parent 
-     * @param {UserEventDefinition} definition 
-     * @param {ShapeDefinition} shape 
      */
-    constructor(parent, definition, shape) {
+    constructor(parent: StageView, definition: UserEventDefinition, shape: ShapeDefinition) {
         super(parent, definition, shape);
-        this.definition = definition;
     }
 
     createProperties() {
@@ -37,7 +30,7 @@ export default class UserEventView extends EventListenerView {
         return Images.UserEvent;
     }
 
-    referencesDefinitionElement(definitionId) {
+    referencesDefinitionElement(definitionId: string) {
         if (this.definition.authorizedRoles.find(role => role.id == definitionId)) {
             return true;
         }
