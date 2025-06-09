@@ -1,3 +1,4 @@
+import TaskDefinition from "../../../../../../repository/definition/cmmn/caseplan/task/taskdefinition";
 import TaskView from "../../taskview";
 import InputParametersHaloItem from "./item/click/inputparametershaloitem";
 import NewTaskImplementationHaloItem from "./item/click/newtaskimplementationhaloitem";
@@ -5,16 +6,7 @@ import OutputParametersHaloItem from "./item/click/outputparametershaloitem";
 import ZoomTaskImplementationHaloItem from "./item/click/zoomtaskimplementationhaloitem";
 import PlanItemHalo from "./planitemhalo";
 
-export default class TaskHalo extends PlanItemHalo {
-    /**
-     * Create the halo for the task.
-     * @param {TaskView} element 
-     */
-    constructor(element) {
-        super(element);
-        this.element = element;
-    }
-
+export default class TaskHalo<TD extends TaskDefinition = TaskDefinition, TV extends TaskView = TaskView> extends PlanItemHalo<TD, TV> {
     createItems() {
         super.createItems();
         if (this.element.definition.implementationRef) {

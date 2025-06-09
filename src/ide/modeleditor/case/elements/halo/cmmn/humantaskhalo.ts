@@ -1,3 +1,5 @@
+import HumanTaskDefinition from "../../../../../../repository/definition/cmmn/caseplan/task/humantaskdefinition";
+import HumanTaskView from "../../humantaskview";
 import DeleteHaloItem from "./item/click/deletehaloitem";
 import InputParametersHaloItem from "./item/click/inputparametershaloitem";
 import InvalidPreviewTaskFormHaloItem from "./item/click/invalidpreviewtaskformhaloitem";
@@ -13,16 +15,10 @@ import ExitCriterionHaloItem from "./item/drag/exitcriterionhaloitem";
 import ReactivateCriterionHaloItem from "./item/drag/reactivatecriterionhaloitem";
 import TaskHalo from "./taskhalo";
 
-export default class HumanTaskHalo extends TaskHalo {
+export default class HumanTaskHalo extends TaskHalo<HumanTaskDefinition, HumanTaskView> {
     /**
      * Create the halo for the task.
-     * @param {HumanTaskView} element
      */
-    constructor(element) {
-        super(element);
-        this.element = element;
-    }
-
     createItems() {
         const task = this.element;
         this.addItems(ConnectorHaloItem, PropertiesHaloItem, WorkflowHaloItem, DeleteHaloItem);
@@ -30,7 +26,8 @@ export default class HumanTaskHalo extends TaskHalo {
             this.addItems(EntryCriterionHaloItem, ReactivateCriterionHaloItem, ExitCriterionHaloItem);
         }
         if (this.element.definition.implementationRef) {
-            const model = task.definition.implementationModel && task.definition.implementationModel.taskModel;
+
+            const model = task.definition.workflow.humanTaskRef.getDefinition()?.taskModel;
             const taskModel = model && model.taskModel || '';
             try {
                 JSON.parse(taskModel);
