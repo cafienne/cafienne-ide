@@ -8,8 +8,4 @@ export default abstract class HaloItem<H extends Halo = Halo> {
         this.title = title;
         this.html = html;
     }
-
-    get element() {
-        return this.halo.element;
-    }
 }
