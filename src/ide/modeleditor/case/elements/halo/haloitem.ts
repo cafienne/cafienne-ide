@@ -12,8 +12,4 @@ export default abstract class HaloItem<H extends Halo = Halo> {
     ) {
         defaultBar.add(this);
     }
-
-    get element() {
-        return this.halo.element;
-    }
 }

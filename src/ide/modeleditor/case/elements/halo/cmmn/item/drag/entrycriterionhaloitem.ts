@@ -1,12 +1,9 @@
 import EntryCriterionView from "../../../../entrycriterionview";
+import Halo from "../../../halo";
 import SentryHaloItem from "./sentryhaloitem";
 
 export default class EntryCriterionHaloItem extends SentryHaloItem {
-    constructor(halo) {
-        super(halo, EntryCriterionView.smallImage, EntryCriterionView.typeDescription);
-    }
-
-    get haloType() {
-        return EntryCriterionView;
+    constructor(halo: Halo) {
+        super(halo, EntryCriterionView);
     }
 }

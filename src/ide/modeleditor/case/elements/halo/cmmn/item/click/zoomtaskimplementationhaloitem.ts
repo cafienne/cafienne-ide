@@ -1,23 +1,14 @@
 import $ from "jquery";
 import Images from "../../../../../../../util/images/images";
-import Halo from "../../../halo";
 import HaloClickItem from "../../../haloclickitem";
+import TaskHalo from "../../taskhalo";
 
-export default class ZoomTaskImplementationHaloItem extends HaloClickItem {
-    /**
-     * Returns the default bar in which this item appears
-     * @param {Halo} halo 
-     */
-    static defaultBar(halo) {
-        return halo.bottomBar;
-    }
-
-    constructor(halo) {
+export default class ZoomTaskImplementationHaloItem extends HaloClickItem<TaskHalo> {
+    constructor(halo: TaskHalo) {
         const implementationRef = halo.element.definition.implementationRef;
         const imgURL = Images.ZoomIn;
         const title = 'Open task implementation - ' + implementationRef + '\nRight-click to open in new tab';
         const html = $(`<a href="./#${implementationRef}" title="${title}" ><img src="${imgURL}" /></a>`);
-        super(halo, imgURL, title, e => window.location.hash = implementationRef, html);
+        super(halo, imgURL, title, e => { window.location.hash = implementationRef; }, halo.bottomBar, html);
     }
 }
-
