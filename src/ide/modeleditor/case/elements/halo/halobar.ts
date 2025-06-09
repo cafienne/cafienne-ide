@@ -2,12 +2,13 @@ import HtmlUtil from "../../../../util/htmlutil";
 import Halo from "./halo";
 import HaloItem from "./haloitem";
 
+type HaloItemConstructor = new (halo: Halo) => HaloItem;
+
 export default class HaloBar {
-    /**
-     * @param {Halo} halo 
-     * @param {JQuery<HTMLElement>} html 
-     */
-    constructor(halo, html) {
+    halo: Halo;
+    html: JQuery<HTMLElement>;
+
+    constructor(halo: Halo, html: JQuery<HTMLElement>) {
         this.halo = halo;
         this.html = html;
     }
@@ -19,10 +20,8 @@ export default class HaloBar {
     /**
      * Adds halo items to this specific bar of the halo.
      * It is sufficient to pass a comma separated list of the HaloItem constructors.
-     * @param {Array<Function>} haloItemConstructors 
-     * @returns {Array<HaloItem>}
      */
-    addItems(...haloItemConstructors) {
+    addItems(...haloItemConstructors: HaloItemConstructor[]): HaloItem[] {
         return haloItemConstructors.map(HaloItemConstructor => {
             const item = new HaloItemConstructor(this.halo);
             this.add(item);
@@ -32,9 +31,8 @@ export default class HaloBar {
 
     /**
      * Adds a halo item to the bar
-     * @param {HaloItem} item 
      */
-    add(item) {
+    add(item: HaloItem) {
         this.html.append(item.html);
     }
 }
