@@ -1,7 +1,11 @@
-import CaseFileItemView from "../casefileitemview";
-import Halo from "./halo";
-import { DeleteHaloItem, PropertiesHaloItem } from "./item/haloclickitems";
-import { ConnectorHaloItem, EntryCriterionHaloItem, ExitCriterionHaloItem, ReactivateCriterionHaloItem } from "./item/halodragitems";
+import CaseFileItemView from "../../casefileitemview";
+import Halo from "../halo";
+import DeleteHaloItem from "./item/click/deletehaloitem";
+import PropertiesHaloItem from "./item/click/propertieshaloitem";
+import ConnectorHaloItem from "./item/drag/connectorhaloitem";
+import EntryCriterionHaloItem from "./item/drag/entrycriterionhaloitem";
+import ExitCriterionHaloItem from "./item/drag/exitcriterionhaloitem";
+import ReactivateCriterionHaloItem from "./item/drag/reactivatecriterionhaloitem";
 
 export default class CaseFileItemHalo extends Halo {
     /**

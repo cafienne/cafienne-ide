@@ -1,6 +1,6 @@
 import HtmlUtil from "../../../../util/htmlutil";
 import Halo from "./halo";
-import HaloItem from "./item/haloitem";
+import HaloItem from "./haloitem";
 
 export default class HaloBar {
     /**

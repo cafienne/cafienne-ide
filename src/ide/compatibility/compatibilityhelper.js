@@ -12,7 +12,7 @@
     at __webpack_require__ (bootstrap:19:1)
     at ./src/repository/definition/extensions/cafienneimplementationdefinition.js (elementdefinition.js:153:1)
  */
-import CasePlanHalo from '../modeleditor/case/elements/halo/caseplanhalo';
+import CasePlanHalo from '../modeleditor/case/elements/halo/cmmn/caseplanhalo';
 
 export default function echo(msg) {
 }

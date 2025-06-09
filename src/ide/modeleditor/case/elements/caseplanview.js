@@ -2,9 +2,9 @@
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import CaseView from "./caseview";
 import CasePlanDecoratorBox from "./decorator/box/caseplandecoratorbox";
-import CasePlanHalo from "./halo/caseplanhalo";
+import ExitCriterionView from "./exitcriterionview";
+import CasePlanHalo from "./halo/cmmn/caseplanhalo";
 import CasePlanProperties from "./properties/caseplanproperties";
-import { ExitCriterionView } from "./sentryview";
 import StageView from "./stageview";
 
 const CPM_TAB_HEIGHT = 22;

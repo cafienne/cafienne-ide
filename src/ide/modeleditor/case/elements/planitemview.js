@@ -4,8 +4,10 @@ import ShapeDefinition from "../../../../repository/definition/dimensions/shape"
 import CaseView from "./caseview";
 import CMMNElementView from "./cmmnelementview";
 import DecoratorBox from "./decorator/decoratorbox";
+import EntryCriterionView from "./entrycriterionview";
+import ExitCriterionView from "./exitcriterionview";
 import PlanItemProperties from "./properties/planitemproperties";
-import { EntryCriterionView, ExitCriterionView, ReactivateCriterionView } from "./sentryview";
+import ReactivateCriterionView from "./reactivatecriterionview";
 // import PlanItemHalo from "./halo/planitemhalo";
 // BIG TODO HERE
 

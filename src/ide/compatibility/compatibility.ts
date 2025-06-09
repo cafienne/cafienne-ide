@@ -3,9 +3,11 @@
 import echo from './compatibilityhelper';
 
 import Halo from '../modeleditor/case/elements/halo/halo';
-import PlanItemHalo from '../modeleditor/case/elements/halo/planitemhalo';
-import { EntryCriterionHalo, ExitCriterionHalo, ReactivateCriterionHalo } from '../modeleditor/case/elements/halo/sentryhalo';
-import TaskHalo from '../modeleditor/case/elements/halo/taskhalo';
+import PlanItemHalo from '../modeleditor/case/elements/halo/cmmn/planitemhalo';
+import EntryCriterionHalo from '../modeleditor/case/elements/halo/cmmn/entrycriterionhalo';
+import ExitCriterionHalo from '../modeleditor/case/elements/halo/cmmn/exitcriterionhalo';
+import ReactivateCriterionHalo from '../modeleditor/case/elements/halo/cmmn/reactivatecriterionhalo';
+import TaskHalo from '../modeleditor/case/elements/halo/cmmn/taskhalo';
 
 const pointers = [
     // IDE

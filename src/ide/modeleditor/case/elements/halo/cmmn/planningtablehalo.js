@@ -1,6 +1,7 @@
-import PlanningTableView from "../planningtableview";
-import Halo from "./halo";
-import { DeleteHaloItem, PropertiesHaloItem } from "./item/haloclickitems";
+import PlanningTableView from "../../planningtableview";
+import Halo from "../halo";
+import DeleteHaloItem from "./item/click/deletehaloitem";
+import PropertiesHaloItem from "./item/click/propertieshaloitem";
 
 export default class PlanningTableHalo extends Halo {
     /**

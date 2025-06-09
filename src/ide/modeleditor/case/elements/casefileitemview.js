@@ -2,7 +2,7 @@
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import { CMMNDocumentationDefinition } from "../../../../repository/definition/elementdefinition";
 import CMMNElementView from "./cmmnelementview";
-import CaseFileItemHalo from "./halo/casefileitemhalo";
+import CaseFileItemHalo from "./halo/cmmn/casefileitemhalo";
 import CaseFileItemProperties from "./properties/casefileitemproperties";
 import StageView from "./stageview";
 

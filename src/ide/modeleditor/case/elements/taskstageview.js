@@ -5,9 +5,11 @@ import HtmlUtil from "../../../util/htmlutil";
 import CaseView from "./caseview";
 import CMMNElementView from "./cmmnelementview";
 import Connector from "./connector";
+import EntryCriterionView from "./entrycriterionview";
+import ExitCriterionView from "./exitcriterionview";
 import PlanItemView from "./planitemview";
 import PlanningTableView from "./planningtableview";
-import { EntryCriterionView, ExitCriterionView, ReactivateCriterionView } from "./sentryview";
+import ReactivateCriterionView from "./reactivatecriterionview";
 
 export default class TaskStageView extends PlanItemView {
     /**

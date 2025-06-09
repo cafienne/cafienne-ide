@@ -3,7 +3,7 @@ import PlanningTableDefinition from "../../../../repository/definition/cmmn/case
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import Images from "../../../util/images/images";
 import CMMNElementView from "./cmmnelementview";
-import PlanningTableHalo from "./halo/planningtablehalo";
+import PlanningTableHalo from "./halo/cmmn/planningtablehalo";
 import PlanningTableProperties from "./properties/planningtableproperties";
 import TaskStageView from "./taskstageview";
 

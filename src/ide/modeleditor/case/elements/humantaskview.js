@@ -4,7 +4,7 @@ import CMMNElementDefinition from "../../../../repository/definition/cmmnelement
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import Images from "../../../util/images/images";
 import PreviewTaskForm from "../editors/task/previewtaskform";
-import { HumanTaskHalo } from "./halo/taskhalo";
+import HumanTaskHalo from "./halo/cmmn/humantaskhalo";
 import HumanTaskProperties from "./properties/humantaskproperties";
 import WorkflowProperties from "./properties/workflowproperties";
 import StageView from "./stageview";

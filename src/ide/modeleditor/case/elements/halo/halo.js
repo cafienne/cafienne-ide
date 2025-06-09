@@ -1,9 +1,10 @@
 import $ from "jquery";
 import HtmlUtil from "../../../../util/htmlutil";
 import CMMNElementView from "../cmmnelementview";
+import DeleteHaloItem from "./cmmn/item/click/deletehaloitem";
+import PropertiesHaloItem from "./cmmn/item/click/propertieshaloitem";
+import ConnectorHaloItem from "./cmmn/item/drag/connectorhaloitem";
 import HaloBar from "./halobar";
-import { DeleteHaloItem, PropertiesHaloItem } from "./item/haloclickitems";
-import { ConnectorHaloItem } from "./item/halodragitems";
 
 export default class Halo {
     /**
