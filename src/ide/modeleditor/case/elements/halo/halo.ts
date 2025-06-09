@@ -1,20 +1,28 @@
 import $ from "jquery";
+import CMMNElementDefinition from "../../../../../repository/definition/cmmnelementdefinition";
 import HtmlUtil from "../../../../util/htmlutil";
 import CMMNElementView from "../cmmnelementview";
 import DeleteHaloItem from "./cmmn/item/click/deletehaloitem";
 import PropertiesHaloItem from "./cmmn/item/click/propertieshaloitem";
 import ConnectorHaloItem from "./cmmn/item/drag/connectorhaloitem";
 import HaloBar from "./halobar";
+import HaloItem from "./haloitem";
 
-export default class Halo {
+export default class Halo<D extends CMMNElementDefinition = CMMNElementDefinition, V extends CMMNElementView = CMMNElementView<D>> {
+    html: JQuery<HTMLElement>;
+    rightBar: HaloBar;
+    topBar: HaloBar;
+    topRightBar: HaloBar;
+    leftBar: HaloBar;
+    bottomBar: HaloBar;
+    scrollListener: (e: JQuery.Event) => void;
+
     /**
      * Creates a halo for the cmmn element.
      * The content of the halo need not be set it in the constructor, but rather
      * in the implementation of the createContent() method. This is invoked right after constructor invocation.
-     * @param {CMMNElementView} element 
      */
-    constructor(element) {
-        this.element = element;
+    constructor(public element: V) {
         const html = this.html = $(`<div class="halobox" element="${element.toString()}">
     <div class="halobar top"></div>
     <div class="halobar top-right"></div>
@@ -29,14 +37,14 @@ export default class Halo {
         this.leftBar = new HaloBar(this, html.find('.left'));
         this.bottomBar = new HaloBar(this, html.find('.bottom'));
 
-        //prevent the halo images from being selected while dragging the element (especially for sentries)
+        // Prevent the halo images from being selected while dragging the element (especially for sentries)
         this.html.on('pointermove', e => e.preventDefault());
-        this.element.xyz_joint.on('change:position', e => this.setHaloPosition());
-        this.element.xyz_joint.on('change:size', e => this.setHaloPosition());
+        this.element.xyz_joint.on('change:position', () => this.setHaloPosition());
+        this.element.xyz_joint.on('change:size', () => this.setHaloPosition());
 
         // Create global event listeners for proper attach/detach to the scrolling of the paper
-        //  Upon scrolling we also have to change the position of the halo.
-        this.scrollListener = e => this.setHaloPosition();
+        // Upon scrolling we also have to change the position of the halo.
+        this.scrollListener = () => this.setHaloPosition();
 
         // Setting the position initially.
         this.setHaloPosition();
@@ -82,7 +90,7 @@ export default class Halo {
         return this.html.css('display') == 'block';
     }
 
-    set visible(visible) {
+    set visible(visible: boolean) {
         if (visible) {
             // Clear and refill the halo, since underlying definitions of items may have changed.
             this.refresh();
@@ -93,11 +101,11 @@ export default class Halo {
     }
 
     get haloLeft() {
-        return this.element.shape.x - this.element.case.paperContainer.scrollLeft();
+        return this.element.shape.x - this.element.case.paperContainer.scrollLeft()!;
     }
 
     get haloTop() {
-        return this.element.shape.y - this.element.case.paperContainer.scrollTop();
+        return this.element.shape.y - this.element.case.paperContainer.scrollTop()!;
     }
 
     setHaloPosition() {
@@ -110,14 +118,8 @@ export default class Halo {
     /**
      * Adds halo items according to their default location (right, top, left, bottom) to this halo.
      * It is sufficient to pass a comma separated list of the HaloItem constructors.
-     * @param {Array<Function>} haloItemConstructors 
-     * @returns {Array<HaloItem>}
      */
-    addItems(...haloItemConstructors) {
-        return haloItemConstructors.map(HaloItemConstructor => {
-            const item = new HaloItemConstructor(this);
-            HaloItemConstructor.defaultBar(this).add(item);
-            return item;
-        });
+    addItems(...haloItemConstructors: (new (h: Halo<D, V>) => HaloItem)[]) {
+        haloItemConstructors.forEach(constructor => new constructor(this));
     }
 }

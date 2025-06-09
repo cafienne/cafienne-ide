@@ -1,34 +1,31 @@
 import $ from "jquery";
 import TemporaryConnector from "../connector/temporaryconnector";
 import Halo from "./halo";
+import HaloBar from "./halobar";
 import HaloItem from "./haloitem";
 
-export default class HaloDragItem extends HaloItem {
-    /**
-     * 
-     * @param {Halo} halo 
-     * @param {String} imgURL 
-     * @param {String} title 
-     */
-    constructor(halo, imgURL, title) {
-        super(halo, imgURL, title);
-        this.html.on('pointerdown', e => this.handleMouseDown(e));
+export default abstract class HaloDragItem<H extends Halo = Halo> extends HaloItem<H> {
+    tempConnector!: TemporaryConnector;
+    mouseMoveHandler!: (e: JQuery.TriggeredEvent) => void;
+    mouseUpHandler!: (e: JQuery.TriggeredEvent) => void;
+    keyDownHandler!: (e: JQuery.KeyDownEvent) => void;
+
+    constructor(halo: H, imgURL: string, title: string, defaultBar: HaloBar = halo.topBar) {
+        super(halo, imgURL, title, defaultBar);
+        this.html.on('pointerdown', (e: JQuery.TriggeredEvent) => this.handleMouseDown(e));
     }
 
     /** 
      * Handles mousedown in a halo image (the images to drag e.g connector from element),
      * depending on the halo type a different action is required
      */
-    handleMouseDown(e) {
+    handleMouseDown(e: JQuery.TriggeredEvent) {
         e.preventDefault();
 
-        //get the haloType
-        const haloImg = $(e.currentTarget)[0];
-
         // Start listening to mouse move and mouseup
-        this.mouseMoveHandler = e => this.handleMouseMove(e);
-        this.mouseUpHandler = e => this.handleMouseUp(e);
-        this.keyDownHandler = e => this.handleKeyDown(e);
+        this.mouseMoveHandler = (evt: JQuery.TriggeredEvent) => this.handleMouseMove(evt);
+        this.mouseUpHandler = (evt: JQuery.TriggeredEvent) => this.handleMouseUp(evt);
+        this.keyDownHandler = (evt: JQuery.KeyDownEvent) => this.handleKeyDown(evt);
 
         // Off the handlers to avoid repeated addition
         $(document).off('pointermove', this.mouseMoveHandler);
@@ -46,11 +43,11 @@ export default class HaloDragItem extends HaloItem {
         this.tempConnector = new TemporaryConnector(this.halo.element, this.getCoordinates(e));
     }
 
-    getCoordinates(e) {
-        return this.element.case.getCursorCoordinates(e);
+    getCoordinates(e: JQuery.TriggeredEvent) {
+        return this.halo.element.case.getCursorCoordinates(e);
     }
 
-    handleKeyDown(e) {
+    handleKeyDown(e: JQuery.KeyDownEvent) {
         if (e.keyCode == 27) { // Esc key
             e.stopPropagation();
             e.preventDefault();
@@ -63,24 +60,25 @@ export default class HaloDragItem extends HaloItem {
         $(document).off('pointerup', this.mouseUpHandler);
         $(document).off('keydown', this.keyDownHandler);
         // Remove the temp connector
-        this.tempConnector.remove();
+        if (this.tempConnector) {
+            this.tempConnector.remove();
+        }
     }
 
     /** 
      * Handles mousemove after halo mousedown
      */
-    handleMouseMove(e) {
+    handleMouseMove(e: JQuery.TriggeredEvent) {
         // Move the temporary connector to current coordinates
-        this.tempConnector.target = this.getCoordinates(e);
+        if (this.tempConnector) {
+            this.tempConnector.target = this.getCoordinates(e);
+        }
     }
 
     /**
-     * Handles mousup after mousedown on halo
-     * @param {*} e 
-     * @param {String} haloType
-     * @param {Function} action
+     * Handles mouseup after mousedown on halo
      */
-    handleMouseUp(e) {
+    handleMouseUp(e: JQuery.TriggeredEvent) {
         e.stopPropagation();
         e.preventDefault();
         this.clear(); // Clean up our content.
