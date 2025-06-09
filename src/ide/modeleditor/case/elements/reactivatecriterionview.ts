@@ -1,10 +1,8 @@
+import PlanItemView from "./planitemview";
 import SentryView from "./sentryview";
-// import { EntryCriterionHalo, ExitCriterionHalo, ReactivateCriterionHalo } from "./halo/sentryhalo";
-// BIG TODO HERE
-
 
 export default class ReactivateCriterionView extends SentryView {
-    static create(planItem, x, y) {
+    static create(planItem: PlanItemView, x: number, y: number) {
         const definition = planItem.definition.createReactivateCriterion();
         const shape = planItem.case.diagram.createShape(x, y, 12, 20, definition.id);
         return new ReactivateCriterionView(planItem, definition, shape);
@@ -15,11 +13,11 @@ export default class ReactivateCriterionView extends SentryView {
     }
 
     get purpose() {
-        return `This condition causes '${this.planItem.name}' to reactivate - if it is in failed state`;
+        return `This condition causes '${this.parent.name}' to reactivate - if it is in failed state`;
     }
 
     createHalo() {
-        return new ReactivateCriterionHalo(this);
+        return new (window as any)['ReactivateCriterionHalo'](this);
     }
 
     get isReactivateCriterion() {

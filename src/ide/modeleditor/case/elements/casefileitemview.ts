@@ -1,20 +1,22 @@
 ﻿import CaseFileItemDef from "../../../../repository/definition/cmmn/casefile/casefileitemdef";
+import CMMNDocumentationDefinition from "../../../../repository/definition/cmmndocumentationdefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
-import { CMMNDocumentationDefinition } from "../../../../repository/definition/elementdefinition";
 import CMMNElementView from "./cmmnelementview";
 import CaseFileItemHalo from "./halo/cmmn/casefileitemhalo";
 import CaseFileItemProperties from "./properties/casefileitemproperties";
 import StageView from "./stageview";
 
-export default class CaseFileItemView extends CMMNElementView {
+export default class CaseFileItemView extends CMMNElementView<CaseFileItemDef> {
+    temporaryId?: string;
+
     /**
      * 
-     * @param {StageView} stage 
-     * @param {Number} x 
-     * @param {Number} y 
-     * @param {CaseFileItemDef} y 
+     * @param stage StageView
+     * @param x number
+     * @param y number
+     * @param definition CaseFileItemDef | undefined
      */
-    static create(stage, x, y, definition = undefined) {
+    static create(stage: StageView, x: number, y: number, definition?: CaseFileItemDef): CaseFileItemView {
         definition = definition || CaseFileItemDef.createEmptyDefinition(stage.case.caseDefinition);
         const shape = stage.case.diagram.createShape(x, y, 25, 40, definition.id);
         return new CaseFileItemView(stage, definition, shape);
@@ -22,13 +24,12 @@ export default class CaseFileItemView extends CMMNElementView {
 
     /**
      * Creates a new CaseFileItemView
-     * @param {StageView} parent 
-     * @param {CaseFileItemDef} definition 
-     * @param {ShapeDefinition} shape 
+     * @param parent StageView
+     * @param definition CaseFileItemDef
+     * @param shape ShapeDefinition
      */
-    constructor(parent, definition, shape) {
+    constructor(public parent: StageView, definition: CaseFileItemDef, shape: ShapeDefinition) {
         super(parent.case, parent, definition, shape);
-        this.definition = definition;
         if (definition.isEmpty) {
             // This means it is a temporary definition that will not be saved on the server.
             //  But we want to keep track of the id in case a definition is added and then removed again.
@@ -51,7 +52,7 @@ export default class CaseFileItemView extends CMMNElementView {
         this.shape.removeDefinition();
     }
 
-    refreshReferencingFields(definitionElement) {
+    refreshReferencingFields(definitionElement: any) {
         super.refreshReferencingFields(definitionElement);
         if (this.definition == definitionElement) {
             this.refreshText();
@@ -60,9 +61,9 @@ export default class CaseFileItemView extends CMMNElementView {
 
     /**
      * 
-     * @param {CaseFileItemDef | undefined} definition 
+     * @param definition CaseFileItemDef | undefined
      */
-    setDefinition(definition) {
+    setDefinition(definition?: CaseFileItemDef) {
         this.definition = definition ? definition : CaseFileItemDef.createEmptyDefinition(this.case.caseDefinition);
         if (this.definition.isEmpty) {
             if (this.temporaryId) {
@@ -77,29 +78,26 @@ export default class CaseFileItemView extends CMMNElementView {
         this.editor.completeUserAction();
     }
 
-    get text() {
+    get text(): string {
         return this.definition ? this.definition.name : '';
     }
 
-    /**
-     * @returns {CMMNDocumentationDefinition}
-     */
-    get documentation() {
+    get documentation(): CMMNDocumentationDefinition {
         return this.definition && this.definition.documentation;
     }
 
-    get markup() {
+    get markup(): string {
         return `<g>
                     <polyline class="cmmn-shape cmmn-border cmmn-casefile-shape" points=" 15,0 0,0 0,40 25,40 25,10 15,0 15,10 25,10" />
                 </g>
                 <text class="cmmn-text" text-anchor="middle" x="10" y="55" />`;
     }
 
-    referencesDefinitionElement(definitionId) {
+    referencesDefinitionElement(definitionId: string): boolean {
         return this.definition && this.definition.id === definitionId;
     }
 
-    get isCaseFileItem() {
+    get isCaseFileItem(): boolean {
         return true;
     }
 }

@@ -1,17 +1,15 @@
 ﻿import TextAnnotationDefinition from "../../../../repository/definition/artifact/textannotation";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import CMMNElementView from "./cmmnelementview";
+import Halo from "./halo/halo";
 import TextAnnotationProperties from "./properties/textannotationproperties";
 import StageView from "./stageview";
 
-export default class TextAnnotationView extends CMMNElementView {
+export default class TextAnnotationView extends CMMNElementView<TextAnnotationDefinition> {
     /**
-     * 
-     * @param {StageView} stage 
-     * @param {Number} x 
-     * @param {Number} y 
+     * Create a new TextAnnotationView at the given coordinates.
      */
-    static create(stage, x, y) {
+    static create(stage: StageView, x: number, y: number): TextAnnotationView {
         const definition = stage.case.caseDefinition.createTextAnnotation();
         const shape = stage.case.diagram.createShape(x, y, 100, 60, definition.id);
         return new TextAnnotationView(stage, definition, shape);
@@ -19,20 +17,16 @@ export default class TextAnnotationView extends CMMNElementView {
 
     /**
      * Creates a new TextAnnotationView element
-     * @param {StageView} parent 
-     * @param {TextAnnotationDefinition} definition 
-     * @param {ShapeDefinition} shape 
      */
-    constructor(parent, definition, shape) {
+    constructor(public parent: StageView, definition: TextAnnotationDefinition, shape: ShapeDefinition) {
         super(parent.case, parent, definition, shape);
-        this.definition = definition;
     }
 
-    get text() {
+    get text(): string {
         return this.definition.text;
     }
 
-    get wrapText() {
+    get wrapText(): boolean {
         return true;
     }
 
@@ -40,7 +34,11 @@ export default class TextAnnotationView extends CMMNElementView {
         return new TextAnnotationProperties(this);
     }
 
-    get markup() {
+    createHalo() {
+        return new Halo(this);
+    }
+
+    get markup(): string {
         return `<g class="scalable">
                     <rect class="cmmn-shape cmmn-border cmmn-textannotation-shape" rx="5" ry="5" />
                 </g>
@@ -51,15 +49,15 @@ export default class TextAnnotationView extends CMMNElementView {
         return {
             'text': {
                 ref: '.cmmn-shape',
-                'ref-x': .5,
-                'ref-y': .5,
+                'ref-x': 0.5,
+                'ref-y': 0.5,
                 'y-alignment': 'middle',
                 'x-alignment': 'middle'
             }
         };
     }
 
-    get isTextAnnotation() {
+    get isTextAnnotation(): boolean {
         return true;
     }
 }

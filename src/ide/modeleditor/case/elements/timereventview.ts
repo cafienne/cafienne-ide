@@ -5,14 +5,11 @@ import EventListenerView from "./eventlistenerview";
 import TimerEventProperties from "./properties/timereventproperties";
 import StageView from "./stageview";
 
-export default class TimerEventView extends EventListenerView {
+export default class TimerEventView extends EventListenerView<TimerEventDefinition> {
     /**
-     * 
-     * @param {StageView} stage 
-     * @param {*} x 
-     * @param {*} y 
+     * Create a new TimerEventView at the given coordinates.
      */
-    static create(stage, x, y) {
+    static create(stage: StageView, x: number, y: number): TimerEventView {
         const definition = stage.definition.createPlanItem(TimerEventDefinition);
         const shape = stage.case.diagram.createShape(x, y, 32, 32, definition.id);
         return new TimerEventView(stage, definition, shape);
@@ -20,24 +17,20 @@ export default class TimerEventView extends EventListenerView {
 
     /**
      * Creates a new TimerEventView element.
-     * @param {StageView} parent 
-     * @param {TimerEventDefinition} definition 
-     * @param {ShapeDefinition} shape 
      */
-    constructor(parent, definition, shape) {
+    constructor(parent: StageView, definition: TimerEventDefinition, shape: ShapeDefinition) {
         super(parent, definition, shape);
-        this.definition = definition;
     }
 
     createProperties() {
         return new TimerEventProperties(this);
     }
 
-    get imageURL() {
-        return Images.TimerEvent;       
+    get imageURL(): string {
+        return Images.TimerEvent;
     }
 
-    referencesDefinitionElement(definitionId) {
+    referencesDefinitionElement(definitionId: string): boolean {
         const cfiTrigger = this.definition.caseFileItemStartTrigger;
         if (cfiTrigger && cfiTrigger.sourceRef.references(definitionId)) {
             return true;
@@ -45,7 +38,7 @@ export default class TimerEventView extends EventListenerView {
         return super.referencesDefinitionElement(definitionId);
     }
 
-    get isTimerEvent() {
+    get isTimerEvent(): boolean {
         return true;
     }
 }

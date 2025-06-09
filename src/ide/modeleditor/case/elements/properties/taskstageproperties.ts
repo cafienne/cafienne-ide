@@ -96,7 +96,7 @@ export default abstract class TaskStageProperties<TSV extends TaskStageView = Ta
                 this.view.showPlanningTable();
             } else {
                 // Invoking delete on our planning table will also remove the definition and render this element again (and thus hide the pt image)
-                this.view.planningTableView.__delete();
+                this.view.planningTableView?.__delete();
             }
             this.done();
         });

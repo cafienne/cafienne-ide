@@ -9,7 +9,7 @@ import TaskStageDefinition from "../taskstagedefinition";
 import { ApplicabilityRuleDefinition } from "./applicabilityruledefinition";
 
 export default class PlanningTableDefinition extends UnnamedCMMNElementDefinition {
-    tableItems: any;
+    tableItems: PlanItem[];
     ruleDefinitions: ApplicabilityRuleDefinition[];
 
     constructor(importNode: Element, caseDefinition: CaseDefinition, public parent: TaskStageDefinition) {

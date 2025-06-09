@@ -41,7 +41,7 @@ export default class HumanTaskDefinition extends TaskDefinition {
         }
     }
 
-    protected get implementationReference() {
+    get implementationReference() {
         return this.workflow.humanTaskRef;
     }
 

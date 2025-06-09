@@ -35,11 +35,11 @@ export default class RightSplitter extends HorizontalSplitter {
         return width - this.minimumSize;
     }
 
-    repositionSplitter(newPosition: number) {
+    repositionSplitter(newPosition: string | number) {
         super.repositionSplitter(newPosition);
         if (this.container.width()) {
             // If the splitter moved near the farEnd, then we should show the restore image
-            this.restoreImg?.css('display', newPosition >= this.farEnd - 5 ? 'block' : 'none');
+            // this.restoreImg?.css('display', newPosition >= this.farEnd - 5 ? 'block' : 'none');
         }
     }
 }

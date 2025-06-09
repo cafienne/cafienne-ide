@@ -29,7 +29,7 @@ export default class CaseTaskDefinition extends TaskDefinition {
         // }
     }
 
-    protected get implementationReference() {
+    get implementationReference() {
         return this.caseRef;
     }
 

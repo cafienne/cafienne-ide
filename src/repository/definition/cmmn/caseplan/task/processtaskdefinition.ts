@@ -23,7 +23,7 @@ export default class ProcessTaskDefinition extends TaskDefinition {
         super.validateImplementation(validator);
     }
 
-    protected get implementationReference() {
+    get implementationReference() {
         return this.processRef;
     }
 
