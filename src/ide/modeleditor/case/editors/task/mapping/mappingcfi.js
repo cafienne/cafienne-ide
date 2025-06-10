@@ -1,5 +1,5 @@
 import CaseFileItemDef from "../../../../../../repository/definition/cmmn/casefile/casefileitemdef";
-import BindingRefinementEditor from "../bindingrefinementeditor";
+import BindingRefinementEditor from "./binding/bindingrefinementeditor";
 import MappingRow from "./mappingrow";
 
 export default class MappingCFI {

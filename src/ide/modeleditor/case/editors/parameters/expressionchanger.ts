@@ -1,4 +1,4 @@
-import { ParameterRow } from "./caseparameterseditor";
+import ParameterRow from "./parameterrow";
 
 export default class ExpressionChanger {
     static get label() {
@@ -9,20 +9,15 @@ export default class ExpressionChanger {
         return '';
     }
 
-    /**
-     * 
-     * @param {ParameterRow} row 
-     * @param {JQuery<HTMLTableCellElement>} column 
-     */
-    constructor(row, column) {
+    constructor(row: ParameterRow, column: JQuery<HTMLTableCellElement>) {
         const div = column.html(
-`<div>
-    <textarea>${row.expression}</textarea>
-</div>`);
+            `<div>
+                <textarea>${row.expression}</textarea>
+            </div>`);
         // Binding expression event handlers
         const textarea = div.find('textarea');
         textarea.on('change', e => {
-            const newExpression = e.target.value;
+            const newExpression = (e.target as HTMLTextAreaElement).value;
             if (newExpression) {
                 row.parameter.getBindingRefinement().body = newExpression;
             } else {

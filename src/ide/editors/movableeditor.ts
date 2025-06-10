@@ -1,10 +1,10 @@
 import $ from "jquery";
-import CMMNElementDefinition from "../../repository/definition/cmmnelementdefinition";
+import ElementDefinition from "../../repository/definition/elementdefinition";
 import CaseModelEditor from "../modeleditor/case/casemodeleditor";
 import CaseView from "../modeleditor/case/elements/caseview";
 import HtmlUtil from "../util/htmlutil";
 
-export default class MovableEditor {
+export default class MovableEditor<E extends ElementDefinition = ElementDefinition> {
     case: CaseView;
     modelEditor: CaseModelEditor;
     htmlParent: JQuery<HTMLElement>;
@@ -61,13 +61,13 @@ export default class MovableEditor {
         if (visible) {
             this.renderForm();
             this.toFront();
-            if (! alreadyVisible) {
+            if (!alreadyVisible) {
                 this.positionEditor();
             }
         }
         if (this._html) {
             this.html.css('display', visible ? 'block' : 'none');
-            if (! this._changingVisiblity) {
+            if (!this._changingVisiblity) {
                 this._changingVisiblity = true;
                 const nothing = visible ? this.onShow() : this.onHide();
                 this._changingVisiblity = false;
@@ -121,7 +121,7 @@ export default class MovableEditor {
     /**
      * Method invoked after a role or case file item has changed
      */
-    refreshReferencingFields(definitionElement: CMMNElementDefinition) {}
+    refreshReferencingFields(definitionElement: E) { }
 
     toString() {
         return this.constructor.name;

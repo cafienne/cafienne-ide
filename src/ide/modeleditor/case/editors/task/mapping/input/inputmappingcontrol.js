@@ -1,6 +1,6 @@
 import CaseParameterDefinition from "../../../../../../../repository/definition/cmmn/contract/caseparameterdefinition";
 import ParameterMappingDefinition from "../../../../../../../repository/definition/cmmn/contract/parametermappingdefinition";
-import ColumnRenderer from "../../../tableeditor/columnrenderer";
+import ColumnRenderer from "../../../tablerenderer/columnrenderer";
 import MappingCFI from "../mappingcfi";
 import MappingControl from "../mappingcontrol";
 import MappingOrderChanger from "../mappingorderchanger";
