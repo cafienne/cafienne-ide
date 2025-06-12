@@ -1,4 +1,4 @@
-import * as CodeMirror from "codemirror";
+import CodeMirror from "codemirror";
 import "codemirror/addon/edit/closebrackets";
 import "codemirror/addon/edit/matchbrackets";
 import "codemirror/addon/fold/brace-fold";
@@ -24,7 +24,7 @@ export default class CodeMirrorConfig {
     }
 
     static get XML() {
-        return  {
+        return {
             mode: 'xml',
             matchBrackets: true,
             autoCloseBrackets: true,
@@ -34,21 +34,11 @@ export default class CodeMirrorConfig {
         }
     }
 
-    /**
-     * 
-     * @param {JQuery<HTMLElement>} html 
-     * @returns {CodeMirror.Editor}
-     */
-    static createJSONEditor(html) {
+    static createJSONEditor(html: JQuery): CodeMirror.Editor {
         return CodeMirror(html[0], CodeMirrorConfig.JSON);
     }
 
-    /**
-     * 
-     * @param {JQuery<HTMLElement>} html 
-     * @returns {CodeMirror.Editor}
-     */
-    static createXMLEditor(html) {
+    static createXMLEditor(html: JQuery<HTMLElement>): CodeMirror.Editor {
         return CodeMirror(html[0], CodeMirrorConfig.XML);
     }
 }

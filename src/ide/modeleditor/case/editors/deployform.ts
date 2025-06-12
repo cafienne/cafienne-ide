@@ -1,4 +1,5 @@
 ﻿import Definitions from "../../../../repository/deploy/definitions";
+import ServerFile from "../../../../repository/serverfile/serverfile";
 import CodeMirrorConfig from "../../../editors/external/codemirrorconfig";
 import StandardForm from "../../../editors/standardform";
 import Settings from "../../../settings/settings";
@@ -6,18 +7,18 @@ import $ajax from "../../../util/ajax";
 import CaseView from "../elements/caseview";
 
 export default class DeployForm extends StandardForm {
+    codeMirrorCaseXML: any;
     /**
      * 
      * This class implements the logic to call the repository REST service to deploy a CMMN model.
-     * @param {CaseView} cs 
      */
-    constructor(cs) {
+    constructor(cs: CaseView) {
         super(cs, 'Deploy CMMN Model - ' + cs.case.name, 'deployform');
     }
 
     renderData() {
-        this.htmlContainer.html(
-`<div>
+        this.htmlContainer?.html(
+            `<div>
     <div>
         <button class="btn btn-default btnViewCMMN">View CMMN</button>
         <button class="btn btn-default btnDeploy">Deploy</button>
@@ -42,13 +43,13 @@ export default class DeployForm extends StandardForm {
         this.html.find('.btnDeploy').on('click', () => this.deploy());
         this.html.find('.btnViewCMMN').on('click', () => this.viewCMMN());
         this.html.find('.btnServerValidation').on('click', () => this.runServerValidation());
-        this.html.find('.serverURL').on('change', e => Settings.serverURL = e.currentTarget.value);
+        this.html.find('.serverURL').on('change', e => Settings.serverURL = (e.currentTarget as any).value);
 
-        this.codeMirrorCaseXML = CodeMirrorConfig.createXMLEditor(this.htmlContainer.find('.deployFormContent'));
+        this.codeMirrorCaseXML = CodeMirrorConfig.createXMLEditor(this.htmlContainer!.find('.deployFormContent'));
 
         const model = this.modelEditor.ide.repository.get(this.case.editor.fileName);
-        if (model.usage.length > 0) {
-            const modelRenderer = file => `<a href="./#${file.fileName}?deploy=true" title="Click to open the deploy form of ${file.fileName}">${file.name}</a>`;
+        if (model && model.usage.length > 0) {
+            const modelRenderer = (file: ServerFile) => `<a href="./#${file.fileName}?deploy=true" title="Click to open the deploy form of ${file.fileName}">${file.name}</a>`;
             const whereUsedCounter = `Case '${this.case.caseDefinition.file.name}' is used in ${model.usage.length} other model${model.usage.length == 1 ? '' : 's'}`;
             const whereUsedModels = `${model.usage.map(modelRenderer).join(",&nbsp;&nbsp;")}`;
             this.html.find('.whereUsedContent').html(whereUsedCounter + ": " + whereUsedModels);
@@ -70,21 +71,21 @@ export default class DeployForm extends StandardForm {
         if (window.location.hash.endsWith('?')) window.location.hash = window.location.hash.replace('?', '');
     }
 
-    _setDeployedTimestamp(text) {
+    _setDeployedTimestamp(text: string) {
         this.html.find('.deployed_timestamp').text(text);
     }
 
-    _setContent(label, content, color) {
+    _setContent(label: string, content: string) {
         this.html.find('.deployFormLabel').text(label);
         this.codeMirrorCaseXML.setValue(content);
         this.codeMirrorCaseXML.refresh();
     }
 
-    _setDeployTextArea(text) {
+    _setDeployTextArea(text: string) {
         this._setContent('Deploy definition of the CMMN Model', text);
     }
 
-    _setValidationResult(text) {
+    _setValidationResult(text: string) {
         this._setContent('Server validation messages', text);
     }
 
@@ -136,7 +137,7 @@ export default class DeployForm extends StandardForm {
             } else {
                 console.groupEnd();
                 console.error('Validation failed', error);
-                this._setDeployTextArea(error.message);    
+                this._setDeployTextArea(error.message);
             }
         });
     }

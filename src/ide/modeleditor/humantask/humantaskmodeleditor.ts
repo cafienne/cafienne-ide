@@ -192,7 +192,7 @@ export default class HumantaskModelEditor extends ModelEditor {
             const jsonForm = parseResult.object;
             jsonForm.options = {
                 focus: false
-            }
+            };
             jsonForm.error = errorHandler;
             // Render the task view
             new AlpacaPreview(this.taskPreview).render(jsonForm);

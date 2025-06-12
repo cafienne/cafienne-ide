@@ -1,3 +1,4 @@
+import { Editor } from "codemirror";
 import $ from "jquery";
 import Tags from "../../../../repository/definition/tags";
 import XML from "../../../../util/xml";
@@ -6,14 +7,10 @@ import HtmlUtil from "../../../util/htmlutil";
 import CaseModelEditor from "../casemodeleditor";
 
 export default class CaseSourceEditor {
-    /**
-     * 
-     * @param {CaseModelEditor} editor 
-     * @param {JQuery<HTMLElement>} parentHTML 
-     */
-    constructor(editor, parentHTML) {
-        this.editor = editor;
-        this.parentHTML = parentHTML;
+    html: JQuery<HTMLElement>;
+    codeMirrorCaseXML: Editor;
+    codeMirrorDimensionsXML: Editor;
+    constructor(public editor: CaseModelEditor, public parentHTML: JQuery<HTMLElement>) {
         this.html = $(`<div class="case-source-editor">
     <div class="sourcecontainer">
         <div class="left">
@@ -67,7 +64,7 @@ export default class CaseSourceEditor {
         };
 
         if (!dimensionsXML.getElementsByTagName(Tags.CMMNDIAGRAM).length) {
-            this.editor.ide.danger(`Cannot import because definition does not contain a &lt;${CMMNDIAGRAM}&gt; tag`, 3000);
+            this.editor.ide.danger(`Cannot import because definition does not contain a &lt;${Tags.CMMNDIAGRAM}&gt; tag`, 3000);
             return;
         };
 
@@ -75,8 +72,8 @@ export default class CaseSourceEditor {
 
         // Now replace the content in the editor, and reload
         this.editor.caseFile.source = caseXML;
-        this.editor.dimensionsFile.source = dimensionsXML;
-        this.editor.dimensionsFile.parse();
+        this.editor.dimensionsFile!.source = dimensionsXML;
+        this.editor.dimensionsFile!.parse();
         this.editor.caseFile.parse();
         // Load the new model in the editor, and save it.
         this.editor.loadDefinition();
@@ -95,8 +92,8 @@ export default class CaseSourceEditor {
 
     open() {
         this.html.css('display', 'block');
-        const caseXML = this.editor.case.caseDefinition.toXMLString();
-        const dimensionsXML = this.editor.case.dimensions.toXMLString();
+        const caseXML = this.editor.case!.caseDefinition.toXMLString();
+        const dimensionsXML = this.editor.case!.dimensions!.toXMLString();
         this.codeMirrorCaseXML.setValue(caseXML);
         this.codeMirrorDimensionsXML.setValue(dimensionsXML);
     }

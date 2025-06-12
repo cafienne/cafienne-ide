@@ -3,21 +3,24 @@ import StandardForm from "../../../editors/standardform";
 import CaseView from "../elements/caseview";
 
 export default class StartCaseEditor extends StandardForm {
+    private _codeMirrorEditor: any;
+    private _changed: boolean = false;
+    private _isLoading: any;
+    private _currentAutoSaveTimer?: number;
     /**
      * Editor for the content of the extension element <start-case-schema>
-     * @param {CaseView} cs 
      */
-    constructor(cs) {
+    constructor(cs: CaseView) {
         super(cs, 'Start Case Schema Editor', 'jsoneditor');
     }
 
     renderData() {
-        this.htmlContainer.html(
-`<label>JSON Definition</label>
+        this.htmlContainer?.html(
+            `<label>JSON Definition</label>
 <div class="jsoncode"></div>`);
 
         // add code mirror
-        this._codeMirrorEditor = CodeMirrorConfig.createJSONEditor(this.htmlContainer.find('.jsoncode'));
+        this._codeMirrorEditor = CodeMirrorConfig.createJSONEditor(this.htmlContainer!.find('.jsoncode'));
 
         //._changed keeps track whether user has changed the task model content
         this._codeMirrorEditor.on('focus', () => this._changed = false);
@@ -33,7 +36,7 @@ export default class StartCaseEditor extends StandardForm {
         // CodeMirror onchange fires when content is changed, every change so on keydown (not just after loss of focus)
         this._codeMirrorEditor.on('change', () => {
             //directly after import when the value is loaded, do not save or show as changed
-            if (! this._isLoading) {
+            if (!this._isLoading) {
                 // Update the value inside the definition.
                 this.case.caseDefinition.startCaseSchema.value = this.value;
                 // Set 'changed' flag and enable autosave timer after 10 seconds of no change
@@ -44,7 +47,7 @@ export default class StartCaseEditor extends StandardForm {
 
         // Avoid CTRL-Y and CTRL-Z invoking undo-manager
         //  Apparently, code mirror does not give the event as a parameter to the function, so we work directly on window.event
-        this._codeMirrorEditor.on('keydown', () => window.event.stopPropagation());
+        this._codeMirrorEditor.on('keydown', (e: Event) => e.stopPropagation());
     }
 
     /**
@@ -53,6 +56,7 @@ export default class StartCaseEditor extends StandardForm {
     _removeAutoSave() {
         if (this._currentAutoSaveTimer) {
             window.clearTimeout(this._currentAutoSaveTimer);
+            this._currentAutoSaveTimer = undefined;
         }
     }
 
@@ -78,8 +82,8 @@ export default class StartCaseEditor extends StandardForm {
     }
 
     onShow() {
-        const defaultValue = 
-`{
+        const defaultValue =
+            `{
     "schema":{
         "title": "",
         "type": "object",
