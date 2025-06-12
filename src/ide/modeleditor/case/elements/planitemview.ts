@@ -19,7 +19,7 @@ export default abstract class PlanItemView<PI extends PlanItem = PlanItem> exten
      * This is a generic class for plan item rendering; it takes default properties of the definition
      * It holds a reference both to the PlanItem definition AND to the PlanItemDefinition definition (e.g., HumanTask, StageView, Milestone).
      */
-    constructor(cs: CaseView, parent: CMMNElementView, definition: PI, shape: ShapeDefinition) {
+    constructor(cs: CaseView, parent: CMMNElementView | undefined, definition: PI, shape: ShapeDefinition) {
         super(cs, parent, definition, shape);
         // Add the sentries
         this.definition.entryCriteria.forEach(criterion => this.addCriterion(criterion, EntryCriterionView));

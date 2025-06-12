@@ -30,13 +30,13 @@ import TimerEventView from "./timereventview";
 import UserEventView from "./usereventview";
 
 export default class StageView<SD extends StageDefinition = StageDefinition> extends TaskStageView<SD> {
-    static create(stage: StageView, x: number, y: number): StageView {
+    static create(stage: StageView | CaseView, x: number, y: number): StageView {
         const definition = stage.definition.createPlanItem(StageDefinition);
         const shape = stage.case.diagram.createShape(x, y, 420, 140, definition.id);
-        return new StageView(stage.case, stage, definition, shape);
+        return new StageView(stage.case, stage instanceof StageView ? stage : undefined, definition, shape);
     }
 
-    constructor(cs: CaseView, parent: CMMNElementView, definition: SD, shape: ShapeDefinition) {
+    constructor(cs: CaseView, parent: CMMNElementView | undefined, definition: SD, shape: ShapeDefinition) {
         super(cs, parent, definition, shape);
         this.definition.planItems.forEach(planItem => this.addPlanItem(planItem));
     }
@@ -60,12 +60,12 @@ export default class StageView<SD extends StageDefinition = StageDefinition> ext
     }
 
     addCaseFileItem(dragData: CaseFileItemDragData) {
-        const evt: JQuery<PointerEvent> | undefined  = dragData.event;
+        const evt: JQuery<PointerEvent> | undefined = dragData.event;
         if (!evt) {
             console.warn('No event provided for CaseFileItemDragData');
             return;
         }
-        
+
         const coor = this.case.getCursorCoordinates(evt);
         this.__addCMMNChild(CaseFileItemView.create(this, coor.x, coor.y, dragData.item));
     }
@@ -89,7 +89,7 @@ export default class StageView<SD extends StageDefinition = StageDefinition> ext
         const visuallySurroundedItems = allCaseItems.filter(item => this.surrounds(item) && item.parent instanceof CMMNElementView && !this.surrounds(item.parent));
         const formerChildren = allCaseItems.filter(item => currentChildren.indexOf(item) >= 0 && visuallySurroundedItems.indexOf(item) < 0);
         const newChildren = allCaseItems.filter(item => currentChildren.indexOf(item) < 0 && visuallySurroundedItems.indexOf(item) >= 0);
-        formerChildren.forEach(child => child.changeParent(this.parent));
+        formerChildren.forEach(child => child.changeParent(this.parent as StageView));
         newChildren.forEach(child => child.changeParent(this));
     }
 

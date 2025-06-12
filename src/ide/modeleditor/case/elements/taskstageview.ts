@@ -17,7 +17,7 @@ export default abstract class TaskStageView<TS extends TaskStageDefinition = Tas
     /**
      * Simple class to share some logic from TaskView and StageView.
      */
-    constructor(cs: CaseView, public parent: CMMNElementView, definition: TS, shape: ShapeDefinition) {
+    constructor(cs: CaseView, parent: CMMNElementView | undefined, definition: TS, shape: ShapeDefinition) {
         super(cs, parent, definition, shape);
         this.showPlanningTable();
     }

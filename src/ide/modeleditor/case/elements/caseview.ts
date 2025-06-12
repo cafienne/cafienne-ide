@@ -519,7 +519,7 @@ export default class CaseView {
         // And save the changes.
         this.editor.completeUserAction();
 
-         //update the column UsedIn in the case file editor
+        //update the column UsedIn in the case file editor
         this.cfiEditor.showUsedIn();
 
         // Also refresh the properties visible in the case view
@@ -540,5 +540,8 @@ export default class CaseView {
         this.editor.ide.info(this.diagram.connectorStyle.infoMessage, 8000);
         this.items.filter(item => item.isCriterion).forEach(sentry => sentry.updateConnectorLabels());
         this.editor.saveModel();
+    }
+
+    refreshView() {
     }
 }
