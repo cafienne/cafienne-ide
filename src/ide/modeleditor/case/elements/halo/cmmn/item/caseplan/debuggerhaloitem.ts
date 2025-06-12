@@ -1,9 +1,9 @@
 import Images from "../../../../../../../util/images/images";
+import Halo from "../../../halo";
 import HaloClickItem from "../../../haloclickitem";
-import CasePlanHalo from "../../caseplanhalo";
 
 export default class DebuggerHaloItem extends HaloClickItem {
-    constructor(halo: CasePlanHalo) {
+    constructor(halo: Halo) {
         super(halo, Images.Debug, 'Debug cases of this type', e => this.halo.element.case.debugEditor.show());
     }
 }

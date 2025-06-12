@@ -1,3 +1,4 @@
+import CasePlanDefinition from "../../../../../../repository/definition/cmmn/caseplan/caseplandefinition";
 import CasePlanView from "../../caseplanview";
 import Halo from "../halo";
 import CaseInputParametersHaloItem from "./item/caseplan/caseinputparametershaloitem";
@@ -11,12 +12,11 @@ import ViewSourceHaloItem from "./item/caseplan/viewsourcehaloitem";
 import DeleteHaloItem from "./item/click/deletehaloitem";
 import PropertiesHaloItem from "./item/click/propertieshaloitem";
 
-export default class CasePlanHalo extends Halo {
+export default class CasePlanHalo extends Halo<CasePlanDefinition, CasePlanView> {
     /**
      * Create the halo for the caseplan model. This halo is situated next to the top tab of the case plan model
-     * @param {CasePlanView} element 
      */
-    constructor(element) {
+    constructor(element: CasePlanView) {
         super(element);
         this.element = element;
     }
@@ -34,16 +34,18 @@ export default class CasePlanHalo extends Halo {
 
     setHaloPosition() {
         // Determine new left and top, relative to element's position in the case paper
-        const casePaper = this.element.case.paperContainer;
+        const casePaper = this.element.case.paperContainer!;
 
         // We need to make the halo a bit lower and on the right hand side of the top tab or the planning table.
         const leftCorrection = this.element.definition.planningTable ? 310 : 260;
-        const haloLeft = this.element.shape.x - casePaper.scrollLeft() + leftCorrection;
-        const haloTop = this.element.shape.y - casePaper.scrollTop() + 24;
+        if (this.element.shape) {
+            const haloLeft = this.element.shape.x - (casePaper.scrollLeft() ?? 0) + leftCorrection;
+            const haloTop = this.element.shape.y - (casePaper.scrollTop() ?? 0) + 24;
 
-        this.html.css('left', haloLeft);
-        this.html.css('top', haloTop);
-        this.html.width(this.element.shape.width);
-        this.html.height(this.element.shape.height);
+            this.html.css('left', haloLeft);
+            this.html.css('top', haloTop);
+            this.html.width(this.element.shape.width);
+            this.html.height(this.element.shape.height);
+        }
     }
 }

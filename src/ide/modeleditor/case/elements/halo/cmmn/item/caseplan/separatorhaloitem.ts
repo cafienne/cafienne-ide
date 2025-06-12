@@ -1,12 +1,12 @@
 import $ from "jquery";
+import Halo from "../../../halo";
 import HaloItem from "../../../haloitem";
-import CasePlanHalo from "../../caseplanhalo";
 
 export default class SeparatorHaloItem extends HaloItem {
     /**
      * Create an empty halo item.
      */
-    constructor(halo: CasePlanHalo) {
+    constructor(halo: Halo) {
         super(halo, '', '', $('<div style="width:12px;height:21px" />'));
     }
 }
