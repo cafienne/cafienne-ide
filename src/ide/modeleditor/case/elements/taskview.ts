@@ -5,6 +5,7 @@ import ServerFile from "../../../../repository/serverfile/serverfile";
 import ServerFileDragData from "../../../dragdrop/serverfiledragdata";
 import TaskMappingsEditor from "../editors/task/taskmappingseditor";
 import { TaskDecoratorBox } from "./decorator/box/taskdecoratorbox";
+import TaskHalo from "./halo/cmmn/taskhalo";
 import TaskProperties from "./properties/taskproperties";
 import StageView from "./stageview";
 import TaskStageView from "./taskstageview";
@@ -56,8 +57,8 @@ export default class TaskView<TD extends TaskDefinition = TaskDefinition> extend
         }
     }
 
-    createHalo() {
-        return new (window as any)['TaskHalo'](this);
+    createHalo(): TaskHalo<TaskDefinition, TaskView> {
+        return new TaskHalo(this);
     }
 
     createDecoratorBox() {

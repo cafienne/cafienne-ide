@@ -38,10 +38,6 @@ export default abstract class PlanItemView<PI extends PlanItem = PlanItem> exten
         return new PlanItemProperties(this);
     }
 
-    createHalo() {
-        return new (window as any)['PlanItemHalo'](this);
-    }
-
     createDecoratorBox() {
         return new DecoratorBox(this);
     }

@@ -1,4 +1,5 @@
 import ExitCriterionDefinition from "../../../../repository/definition/cmmn/sentry/exitcriteriondefinition";
+import ExitCriterionHalo from "./halo/cmmn/exitcriterionhalo";
 import PlanItemView from "./planitemview";
 import SentryView from "./sentryview";
 
@@ -20,7 +21,7 @@ export default class ExitCriterionView extends SentryView<ExitCriterionDefinitio
     }
 
     createHalo() {
-        return new (window as any)['ExitCriterionHalo'](this);
+        return new ExitCriterionHalo(this);
     }
 
     get isExitCriterion() {

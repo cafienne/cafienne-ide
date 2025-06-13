@@ -1,3 +1,4 @@
+import ReactivateCriterionHalo from "./halo/cmmn/reactivatecriterionhalo";
 import PlanItemView from "./planitemview";
 import SentryView from "./sentryview";
 
@@ -17,7 +18,7 @@ export default class ReactivateCriterionView extends SentryView {
     }
 
     createHalo() {
-        return new (window as any)['ReactivateCriterionHalo'](this);
+        return new ReactivateCriterionHalo(this);
     }
 
     get isReactivateCriterion() {

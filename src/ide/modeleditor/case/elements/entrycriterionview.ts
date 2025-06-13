@@ -1,5 +1,6 @@
 import PlanItemTransition from "../../../../repository/definition/cmmn/caseplan/planitemtransition";
 import EntryCriterionDefinition from "../../../../repository/definition/cmmn/sentry/entrycriteriondefinition";
+import EntryCriterionHalo from "./halo/cmmn/entrycriterionhalo";
 import PlanItemView from "./planitemview";
 import SentryView from "./sentryview";
 
@@ -33,7 +34,7 @@ export default class EntryCriterionView extends SentryView<EntryCriterionDefinit
     }
 
     createHalo() {
-        return new (window as any)['EntryCriterionHalo'](this);
+        return new EntryCriterionHalo(this);
     }
 
     get isEntryCriterion() {
