@@ -90,7 +90,7 @@ export default abstract class TaskStageView<TS extends TaskStageDefinition = Tas
                 // We are discretionary, and need to be added to the discretionary items in the planning table of the HumanTaskView
                 this.definition.switchParent(target.definition as HumanTaskDefinition);
             }
-            this.parent.refreshView();
+            this.parent?.refreshView();
         }
     }
 
@@ -102,8 +102,8 @@ export default abstract class TaskStageView<TS extends TaskStageDefinition = Tas
         if (this.definition.isDiscretionary) {
             const target = connector.source == this ? connector.target : connector.source;
             if (target.isHumanTask) {
-                this.definition.switchParent(target.parent.definition as HumanTaskDefinition);
-                this.parent.refreshView();
+                this.definition.switchParent(target.parent!.definition as HumanTaskDefinition);
+                this.parent!.refreshView();
             }
         }
     }
