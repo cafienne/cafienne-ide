@@ -5,7 +5,7 @@ import OnPartDefinition from "../../../../repository/definition/cmmn/sentry/onpa
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import CaseFileItemView from "./casefileitemview";
 import CMMNElementView from "./cmmnelementview";
-import Connector from "./connector";
+import Connector from "./connector/connector";
 import PlanItemView from "./planitemview";
 import SentryProperties from "./properties/sentryproperties";
 // import { EntryCriterionHalo, ExitCriterionHalo, ReactivateCriterionHalo } from "./halo/sentryhalo";
@@ -21,6 +21,7 @@ export default class SentryView extends CMMNElementView {
      */
     constructor(planItem, definition, shape) {
         super(planItem.case, planItem, definition, shape);
+        this.parent = planItem;
         this.planItem = planItem;
         this.definition = definition;
 

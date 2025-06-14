@@ -1,20 +1,20 @@
 ﻿import { dia } from "jointjs";
-import Edge from "../../../../repository/definition/dimensions/edge";
-import CanvasElement from "./canvaselement";
-import CaseView from "./caseview";
-import CMMNElementView from "./cmmnelementview";
+import Edge from "../../../../../repository/definition/dimensions/edge";
+import CanvasElement from "../canvaselement";
+import CaseView from "../caseview";
+import CMMNElementView from "../cmmnelementview";
 
-export default class Connector extends CanvasElement {
+export default class Connector extends CanvasElement<dia.Link> {
+    criterion?: CMMNElementView;
+    formerLabel?: string;
+
     /**
-     * 
-     * @param {CaseView} cs 
-     * @param {Edge} edge 
+     * Creates a connector from an edge definition.
      */
-    static createConnectorFromEdge(cs, edge) {
-        const findItem = (cs, edge, propertyName) => {
-            const id = edge[propertyName];
-            const item = cs.getItem(id);
-            if (item) return item;
+    static createConnectorFromEdge(cs: CaseView, edge: Edge): Connector | undefined {
+        const findItem = (cs: CaseView, edge: Edge, propertyName: string): CMMNElementView | undefined => {
+            const id = (edge as any)[propertyName];
+            return cs.getItem(id);
         }
 
         const source = findItem(cs, edge, 'sourceId');
@@ -31,31 +31,30 @@ export default class Connector extends CanvasElement {
         return new Connector(cs, source, target, edge);
     }
 
+    get link(): dia.Link {
+        return this.xyz_joint;
+    }
+
+    set link(link: dia.Link) {
+        this.xyz_joint = link;
+    }
+
     /**
      * Creates a connector object and an edge between the source and the target element.
-     * @param {CMMNElementView} source 
-     * @param {CMMNElementView} target 
      */
-    static createConnector(source, target) {
+    static createConnector(source: CMMNElementView, target: CMMNElementView): Connector {
         const edge = Edge.create(source.definition, target.definition);
-        return new Connector(source.case, source, target, edge);
+        return new Connector(source.case, source, target, edge!);
     }
 
     /**
      * Creates a connector (=link in jointJS) between a source and a target.
-     * @param {CaseView} cs 
-     * @param {CMMNElementView} source 
-     * @param {CMMNElementView} target 
-     * @param {Edge} edge 
      */
-    constructor(cs, source, target, edge) {
+    constructor(cs: CaseView, public source: CMMNElementView, public target: CMMNElementView, public edge: Edge) {
         super(cs);
-        this.source = source;
-        this.target = target;
-        this.edge = edge;
         this.criterion = source.isCriterion ? source : target.isCriterion ? target : undefined;
 
-        const arrowStyle = this.criterion ? '8 3 3 3 3 3' : '5 5'
+        const arrowStyle = this.criterion ? '8 3 3 3 3 3' : '5 5';
 
         this.link = this.xyz_joint = new dia.Link({
             source: { id: this.source.xyz_joint.id },
@@ -69,8 +68,7 @@ export default class Connector extends CanvasElement {
         this.__setJointLabel(edge.label);
 
         // Listen to the native joint event for removing, as removing a connector in the UI is initiated from joint.
-        //  This opposed to how it is done in the other CMMNElements, there we have an explicit delete button ourselves.
-        this.link.on('remove', cell => {
+        this.link.on('remove', () => {
             // Remove connector from source and target, and also remove the edge from the dimensions through the case.
             source.__removeConnector(this);
             target.__removeConnector(this);
@@ -80,7 +78,7 @@ export default class Connector extends CanvasElement {
 
         this.link.on('change:vertices', e => {
             // Joint generates many change events, so we will not completeUserAction() each time,
-            //  Instead, this is done when handlePointerUpPaper in case.js
+            // Instead, this is done when handlePointerUpPaper in case.js
             this.edge.vertices = e.changed.vertices;
         });
 
@@ -95,7 +93,7 @@ export default class Connector extends CanvasElement {
         target.__connectFrom(source);
     }
 
-    __setJointLabel(text) {
+    private __setJointLabel(text: string) {
         this.link.label(0, {
             attrs: {
                 text: { text, 'font-size': 'smaller' }
@@ -105,41 +103,37 @@ export default class Connector extends CanvasElement {
 
     /**
      * Set/get the label of the connector
-     * @param {String} text
      */
-    set label(text) {
+    set label(text: string) {
         this.edge.label = text;
         this.__setJointLabel(text);
     }
 
     get label() {
-        return this.edge.label;
+        return this.edge.label || '';
     }
 
     // Connectors do not do things on move. That is handled by joint
-    moved(x, y, newParent) {
-    }
+    moved(x: number, y: number, newParent: any): void { }
 
-    mouseEnter() {
+    mouseEnter(): void {
         // On mouse enter of a 'sentry' linked connector, we will show the standard event if it is not yet visible.
         //  It is hidden again on mouseout
         this.formerLabel = this.label;
-        if (this.label || ! this.criterion) return;
-        const onPart = this.criterion.__getOnPart(this);
+        if (this.label || !this.criterion) return;
+        const onPart = (this.criterion as any).__getOnPart(this);
         if (onPart) this.__setJointLabel(onPart.standardEvent.toString());
     }
 
     mouseLeave() {
-        this.__setJointLabel(this.formerLabel);
+        this.__setJointLabel(this.formerLabel || "");
     }
 
     /**
      * Returns true if the connector is connected to a cmmn element with the specified id (either as source or target).
      * Note: this does not indicate whether it is connected at the source or the target end of the connector.
-     * @param {String} id 
-     * @returns {Boolean} Whether or not one of the sides of the connector is an element having the specified id.
      */
-    hasElementWithId(id) {
+    hasElementWithId(id: string) {
         return this.source.id == id || this.target.id == id;
     }
 
@@ -148,43 +142,5 @@ export default class Connector extends CanvasElement {
      */
     remove() {
         this.link.remove();
-    }
-}
-
-export class TemporaryConnector extends CanvasElement {
-    /**
-     * Creates a temporary connector (=link in jointJS) from the source to a set of target coordinates
-     * @param {CMMNElementView} source 
-     * @param {*} coordinates 
-     */
-    constructor(source, coordinates) {
-        super(source.case);
-        this.source = source;
-        this.link = this.xyz_joint = new dia.Link({
-            source: { id: source.xyz_joint.id },
-            target: coordinates,
-            attrs: {
-                '.connection': { 'stroke': 'blue' }
-            }
-        });
-        source.case.graph.addCells([this.link]);
-    }
-
-    mouseEnter() {    }
-
-    mouseLeave() {    }
-
-    /**
-     * Removes this temporary connector
-     */
-    remove() {
-        this.link.remove();
-    }
-
-    /**
-     * Changes the end point of the temporary connector. This is done typically on mouse move.
-     */
-    set target(coordinates) {
-        this.link.set('target', coordinates);
     }
 }

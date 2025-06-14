@@ -14,7 +14,7 @@ export default class Edge extends DiagramElement {
     private _vertices: Vertex[];
     sourceId: string;
     targetId: string;
-    label: string | undefined;
+    label: string;
 
     /**
      * Create a new Edge shape that binds the two CMMNElements.
@@ -40,7 +40,7 @@ export default class Edge extends DiagramElement {
         this.targetId = this.parseAttribute(Tags.TARGETCMMNELEMENTREF);
         /** @type {Array<Vertex>} */
         this._vertices = this.parseElements(Tags.WAYPOINT, Vertex);
-        this.label = this.parseAttribute('label', '');
+        this.label = this.parseAttribute('label');
     }
 
     referencesElement(element: XMLSerializable) {

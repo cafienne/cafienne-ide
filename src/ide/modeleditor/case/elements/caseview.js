@@ -26,7 +26,8 @@ import UndoRedoBox from "../undoredo/undoredobox";
 import CaseFileItemView from "./casefileitemview";
 import CasePlanView from "./caseplanview";
 import CMMNElementView from "./cmmnelementview";
-import Connector from "./connector";
+import Connector from "./connector/connector";
+import Coordinates from "./connector/coordinates";
 import StageView from "./stageview";
 import TextAnnotationView from "./textannotationview";
 
@@ -159,7 +160,7 @@ export default class CaseView {
                     // Quite weird :)
                 }
             }
-            
+
             // Now check if we have an actually view element for this shape, if not, it means we have no corresponding definition element, and then we'll remove the shape from the Dimensions.
             const view = this.items.find(view => view.shape === shape);
             if (!view) {
@@ -351,7 +352,7 @@ export default class CaseView {
     /**
      * Sets/gets the element currently (to be) selected.
      * Upon setting a new selection, the previously selected element is de-selected
-     * @param {CMMNElementView} element
+     * @param {CMMNElementView|undefined} element
      */
     set selectedElement(element) {
         const previousSelection = this._selectedElement;
@@ -482,6 +483,7 @@ export default class CaseView {
     /**
      * Returns the coordinates of the mouse pointer, relative with respect to the top left of the case canvas
      * @param {*} e 
+     * @returns {Coordinates}
      */
     getCursorCoordinates(e) {
         const x = e.clientX;
@@ -492,10 +494,7 @@ export default class CaseView {
         }
 
         const offset = this.svg.offset();
-        return {
-            x: e.clientX - offset.left,
-            y: e.clientY - offset.top
-        };
+        return new Coordinates(e.clientX - offset.left, e.clientY - offset.top);
     }
 
     /**
@@ -517,12 +516,12 @@ export default class CaseView {
 
     /**
      * Add an element to the drawing canvas.
-     * @param {CMMNElementView|CaseFileItemView|TextAnnotationView} cmmnElement 
+     * @param {CMMNElementView} cmmnElement 
      */
     __addElement(cmmnElement) {
         // Only add the element if we're not loading the entire case. Because then all elements are presented to the joint graphs in one shot.
         if (this.loading) {
-            return;
+            return cmmnElement;
         }
 
         this.graph.addCells([cmmnElement.xyz_joint]);

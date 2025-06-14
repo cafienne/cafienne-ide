@@ -8,7 +8,7 @@ import PlanItemOnPartDefinition from "../../../../../repository/definition/cmmn/
 import Util from "../../../../../util/util";
 import HtmlUtil from "../../../../util/htmlutil";
 import Images from "../../../../util/images/images";
-import Connector from "../connector";
+import Connector from "../connector/connector";
 import SentryView from "../sentryview";
 import Properties from "./properties";
 
@@ -178,7 +178,7 @@ export default class SentryProperties extends Properties<SentryView> {
     }
 
     getPlanItemsSelect(onPart?: PlanItemOnPartDefinition) {
-        const thisPlanItem = this.view.parent.definition;
+        const thisPlanItem = this.view.parent!.definition;
         const allPlanItems = this.view.definition.caseDefinition.elements.filter((e: any) => e instanceof PlanItem && e != thisPlanItem);
         const planItemOptions = allPlanItems.map((item: any) => {
             const selected = onPart && onPart.source == item ? ' selected="true"' : '';
