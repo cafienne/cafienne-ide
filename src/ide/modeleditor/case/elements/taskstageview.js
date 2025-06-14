@@ -4,7 +4,7 @@ import ShapeDefinition from "../../../../repository/definition/dimensions/shape"
 import HtmlUtil from "../../../util/htmlutil";
 import CaseView from "./caseview";
 import CMMNElementView from "./cmmnelementview";
-import Connector from "./connector";
+import Connector from "./connector/connector";
 import EntryCriterionView from "./entrycriterionview";
 import ExitCriterionView from "./exitcriterionview";
 import PlanItemView from "./planitemview";

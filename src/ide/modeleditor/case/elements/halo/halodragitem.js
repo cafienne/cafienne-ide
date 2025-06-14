@@ -1,5 +1,5 @@
 import $ from "jquery";
-import { TemporaryConnector } from "../connector";
+import TemporaryConnector from "../connector/temporaryconnector";
 import Halo from "./halo";
 import HaloItem from "./haloitem";
 

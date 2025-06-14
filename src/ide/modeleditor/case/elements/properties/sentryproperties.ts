@@ -8,7 +8,7 @@ import PlanItemOnPartDefinition from "../../../../../repository/definition/cmmn/
 import Util from "../../../../../util/util";
 import HtmlUtil from "../../../../util/htmlutil";
 import Images from "../../../../util/images/images";
-import Connector from "../connector";
+import Connector from "../connector/connector";
 import SentryView from "../sentryview";
 import Properties from "./properties";
 
