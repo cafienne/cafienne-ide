@@ -11,7 +11,7 @@ export default class TestRunner extends StandardForm {
      * This class implements the logic to call the repository REST service to test a CMMN model.
      */
     constructor(cs: CaseView) {
-        super(cs, `Run testcases for  CMMN Model - '${cs.case.name}'`, 'testform');
+        super(cs, `Run testcases for  CMMN Model - '${cs.name}'`, 'testform');
 
         this.runner = new Runner(cs.caseDefinition.file.repository as Repository);
     }
