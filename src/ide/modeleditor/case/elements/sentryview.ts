@@ -181,15 +181,15 @@ export default abstract class SentryView<CD extends CriterionDefinition = Criter
         return connectableElements;
     }
 
-    __connectTo(target: CMMNElementView) {
-        this.__connectElement(target);
+    protected adoptOutgoingConnector(connector: Connector) {
+        this.connectElement(connector.target);
     }
 
-    __connectFrom(source: CMMNElementView) {
-        this.__connectElement(source);
+    protected adoptIncomingConnector(connector: Connector) {
+        this.connectElement(connector.source);
     }
 
-    __connectElement(target: CMMNElementView) {
+    private connectElement(target: CMMNElementView) {
         if (target.isCaseFileItem) {
             this.setCaseFileItemOnPart(target as CaseFileItemView, CaseFileItemTransition.Create);
         } else if (target.isPlanItem) {

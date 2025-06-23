@@ -34,6 +34,14 @@ export default class Diagram extends DiagramElement {
         return shape;
     }
 
+    createEdge(source: CMMNElementDefinition, target: CMMNElementDefinition) {
+        const edge = new Edge(source.createImportNode(Tags.CMMNEDGE), this.dimensions, this);
+        edge.sourceId = source.id;
+        edge.targetId = target.id;
+        this.edges.push(edge);
+        return edge;
+    }
+
     /**
      * Returns the shape with the identifier or undefined.
      */

@@ -1,6 +1,5 @@
 import Util from "../../../util/util";
 import { Element } from "../../../util/xml";
-import CMMNElementDefinition from "../cmmnelementdefinition";
 import ElementDefinition from "../elementdefinition";
 import ModelDefinition from "../modeldefinition";
 import Tags from "../tags";
@@ -15,21 +14,6 @@ export default class Edge extends DiagramElement {
     sourceId: string;
     targetId: string;
     label: string;
-
-    /**
-     * Create a new Edge shape that binds the two CMMNElements.
-     */
-    static create(source: CMMNElementDefinition, target: CMMNElementDefinition) {
-        if (! source.caseDefinition.dimensions || ! source.caseDefinition.dimensions.diagram) {
-            return undefined;
-        }
-        
-        const edge = new Edge(source.createImportNode(Tags.CMMNEDGE), source.caseDefinition.dimensions, source.caseDefinition.dimensions.diagram);
-        edge.sourceId = source.id;
-        edge.targetId = target.id;
-        source.caseDefinition.dimensions.diagram.edges.push(edge);
-        return edge;
-    }
 
     /**
      * Representation of a <CMMNEdge> element

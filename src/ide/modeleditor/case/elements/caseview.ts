@@ -142,7 +142,20 @@ export default class CaseView {
             this.renderLooseShapesAndDropUnusedShapes();
 
             // Finally render all connectors
-            this.diagram.edges.forEach(edge => Connector.createConnectorFromEdge(this, edge));
+            this.diagram.edges.forEach(edge => {
+                const source = this.getItem(edge.sourceId);
+                const target = this.getItem(edge.targetId);
+
+                if (!source) {
+                    console.warn('Found illegal edge, without source ' + edge.sourceId, edge, target);
+                    return;
+                }
+                if (!target) {
+                    console.warn('Found illegal edge, without target ' + edge.targetId, edge, source);
+                    return;
+                }
+                source.__connect(target, edge);
+            });
 
             //update the usedIn column of the case file items editor
             this.cfiEditor.showUsedIn();

@@ -1,4 +1,5 @@
 import DimensionsFile from "../../serverfile/dimensionsfile";
+import CMMNElementDefinition from "../cmmnelementdefinition";
 import ModelDefinition from "../modeldefinition";
 import Tags from "../tags";
 import Diagram from "./diagram";
@@ -21,8 +22,18 @@ export default class Dimensions extends ModelDefinition {
         return this._diagram;
     }
 
+    /**
+     * Create a Shape for the CMMNElement with the specified size and position.
+     */
     createShape(x: number, y: number, width: number, height: number, cmmnElementRef: string) {
         return this.diagram.createShape(x, y, width, height, cmmnElementRef);
+    }
+
+    /**
+     * Create a new Edge shape that binds the two CMMNElements.
+     */
+    createEdge(source: CMMNElementDefinition, target: CMMNElementDefinition) {
+        return this.diagram.createEdge(source, target);
     }
 
     /**

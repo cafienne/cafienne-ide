@@ -1,6 +1,7 @@
 import { shapes, util } from "jointjs";
 import CMMNDocumentationDefinition from "../../../../repository/definition/cmmndocumentationdefinition";
 import CMMNElementDefinition from "../../../../repository/definition/cmmnelementdefinition";
+import Edge from "../../../../repository/definition/dimensions/edge";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import Remark from "../../../../repository/validate/remark";
 import Util from "../../../../util/util";
@@ -119,7 +120,7 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
     /**
      * Determines whether or not the cmmn element is our parent or another ancestor of us.
      */
-    hasAncestor(potentialAncestor: CMMNElementView): boolean {
+    hasAncestor(potentialAncestor: CMMNElementView | undefined): boolean {
         if (!potentialAncestor) return false;
         if (!this.parent) return false;
         if (this.parent === potentialAncestor) return true;
@@ -503,10 +504,38 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
     /**
      * creates a connector between the element and the target.
      */
-    __connect(target: CMMNElementView): Connector {
-        const connector = Connector.createConnector(this, target);
+    __connect(target: CMMNElementView, edge?: Edge): Connector {
+        if (!edge) {
+            edge = this.case.dimensions.createEdge(this.definition, target.definition);
+        }
+        const connector = new Connector(this, target, edge!);
+
+        // Render the connector in the case.
+        this.case.__addConnector(connector);
+
+        // Inform both source and target about this new connector; just adds it to their connector collections.
+        this.__addConnector(connector);
+        target.__addConnector(connector);
+        // Now inform source that it has connected to target
+        this.adoptOutgoingConnector(connector);
+        // And inform target that source has connected to it
+        target.adoptIncomingConnector(connector);
         this.case.editor.completeUserAction();
         return connector;
+    }
+
+    /**
+     * Hook when this element becomes the target of a new connector
+     * @param connector the connector has both source and target. <pre>"connector.source"</pre> can be used to know what view element connected to us
+     */
+    protected adoptIncomingConnector(connector: Connector) {
+    }
+
+    /**
+     * Hook when this element becomes the source of a new connector
+     * @param connector the connector has both source and target. <pre>"connector.target"</pre> can be used to know what view element we connected to
+     */
+    protected adoptOutgoingConnector(connector: Connector) {
     }
 
     /**
