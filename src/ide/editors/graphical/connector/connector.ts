@@ -6,6 +6,7 @@ import ModelView from "../view/modelview";
 
 export default abstract class Connector<V extends ElementView> extends CanvasElement<dia.Link, ModelView> {
     formerLabel?: string;
+    private _hiddenLabel?: string;
 
     get link(): dia.Link {
         return this.xyz_joint;
@@ -78,6 +79,10 @@ export default abstract class Connector<V extends ElementView> extends CanvasEle
         this.__setJointLabel(text);
     }
 
+    set hiddenLabel(text: string) {
+        this._hiddenLabel = text;
+    }
+
     get label() {
         return this.edge.label || '';
     }
@@ -90,10 +95,9 @@ export default abstract class Connector<V extends ElementView> extends CanvasEle
         //  It is hidden again on mouseout
         this.formerLabel = this.label;
 
-        // TODO WJG
-        // if (this.label || !this.criterion) return;
-        // const onPart = (this.criterion as any).__getOnPart(this);
-        // if (onPart) this.__setJointLabel(onPart.standardEvent.toString());
+        if (!this.label) {
+            this.label = this._hiddenLabel || '';
+        }
     }
 
     mouseLeave() {

@@ -52,6 +52,13 @@ export default abstract class SentryView<CD extends CriterionDefinition = Criter
     adoptOnPart(sourceElement: CMMNElementView) {
         // Also connect the sentry with the source element to create a corresponding on-part
         sourceElement.__connect(this);
+
+        if (sourceElement.isPlanItem) {
+            const changedOnPart = this.definition.createPlanItemOnPart();
+            changedOnPart.sourceRef.update(sourceElement.id);
+            changedOnPart.standardEvent = (sourceElement.definition as PlanItem).defaultTransition;
+        }
+
         this.updateConnectorLabels();
         this.propertiesView.refresh();
     }
