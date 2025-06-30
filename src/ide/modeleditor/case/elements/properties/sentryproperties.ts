@@ -129,10 +129,12 @@ export default class SentryProperties extends Properties<SentryView> {
             const newStandardEvent = onPart.parseStandardEvent(selectedStandardEvent.value);
             if (connector) {
                 const style = connector.modelView.diagram.connectorStyle;
+                const label = newStandardEvent.toString();
                 if (style.isNone || (style.isDefault && onPart.source.defaultTransition == newStandardEvent)) {
                     connector.label = '';
+                    connector.hiddenLabel = label;
                 } else {
-                    connector.label = newStandardEvent.toString();
+                    connector.label = label;
                 }
             }
             this.change(onPart, 'standardEvent', newStandardEvent);
@@ -255,10 +257,12 @@ export default class SentryProperties extends Properties<SentryView> {
                 if (checked) {
                     const connector = this.view.__connect(planItemView);
                     const style = connector.modelView.diagram.connectorStyle;
+                    const label = onPart.standardEvent.toString();
                     if (style.isNone || (style.isDefault && onPart.source?.defaultTransition == onPart.standardEvent)) {
                         connector.label = '';
+                        connector.hiddenLabel = label;
                     } else {
-                        connector.label = onPart.standardEvent.toString();
+                        connector.label = label;
                     }
                     this.show();
                 } else if (connector) {
@@ -375,7 +379,13 @@ export default class SentryProperties extends Properties<SentryView> {
         }
         if (connector) {
             const checked = e.currentTarget.checked;
-            connector.label = checked ? onPart.standardEvent.toString() : '';
+            const label = onPart.standardEvent.toString();
+            if (checked) {
+                connector.label = label;
+            } else {
+                connector.label = '';
+                connector.hiddenLabel = onPart.standardEvent.toString();
+            }
         }
         this.done();
     }
