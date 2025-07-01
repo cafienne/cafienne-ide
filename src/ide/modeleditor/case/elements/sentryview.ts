@@ -5,9 +5,10 @@ import PlanItemTransition from "../../../../repository/definition/cmmn/caseplan/
 import CriterionDefinition from "../../../../repository/definition/cmmn/sentry/criteriondefinition";
 import OnPartDefinition from "../../../../repository/definition/cmmn/sentry/onpartdefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+import Connector from "../../../editors/graphical/connector/connector";
+import CaseConnector from "../connector/caseconnector";
 import CaseFileItemView from "./casefileitemview";
 import CMMNElementView from "./cmmnelementview";
-import Connector from "./connector/connector";
 import PlanItemView from "./planitemview";
 import SentryProperties from "./properties/sentryproperties";
 
@@ -58,8 +59,8 @@ export default abstract class SentryView<CD extends CriterionDefinition = Criter
     updateConnectorLabels() {
         const style = this.case.diagram.connectorStyle;
 
-        this.__connectors.forEach((connector: Connector) => {
-            const onPart = this.__getOnPart(connector);
+        this.__connectors.forEach(connector => {
+            const onPart = this.__getOnPart(connector as CaseConnector);
             if (style.isNone) {
                 connector.label = '';
             } else {
@@ -184,15 +185,7 @@ export default abstract class SentryView<CD extends CriterionDefinition = Criter
         return connectableElements;
     }
 
-    protected adoptOutgoingConnector(connector: Connector) {
-        this.connectElement(connector.target);
-    }
-
-    protected adoptIncomingConnector(connector: Connector) {
-        this.connectElement(connector.source);
-    }
-
-    private connectElement(target: CMMNElementView) {
+    __connectElement(target: CMMNElementView) {
         if (target.isCaseFileItem) {
             this.setCaseFileItemOnPart(target as CaseFileItemView, CaseFileItemTransition.Create);
         } else if (target.isPlanItem) {
@@ -205,7 +198,7 @@ export default abstract class SentryView<CD extends CriterionDefinition = Criter
         }
     }
 
-    __getOnPart(connector: Connector): OnPartDefinition<any> | undefined {
+    __getOnPart(connector: Connector<CMMNElementView>): OnPartDefinition<any> | undefined {
         const planItemOnPart = this.definition.planItemOnParts.find(onPart => connector.hasElementWithId(onPart.sourceRef.value));
         if (planItemOnPart) return planItemOnPart;
         return this.definition.caseFileItemOnParts.find(onPart => {

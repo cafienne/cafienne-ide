@@ -1,6 +1,6 @@
 import Util from "../../../util/util";
 import { Element } from "../../../util/xml";
-import CMMNElementDefinition from "../cmmnelementdefinition";
+import ElementDefinition from "../elementdefinition";
 import Tags from "../tags";
 import ConnectorStyle from "./connectorstyle";
 import DiagramElement from "./diagramelement";
@@ -34,7 +34,7 @@ export default class Diagram extends DiagramElement {
         return shape;
     }
 
-    createEdge(source: CMMNElementDefinition, target: CMMNElementDefinition) {
+    createEdge(source: ElementDefinition, target: ElementDefinition) {
         const edge = new Edge(source.createImportNode(Tags.CMMNEDGE), this.dimensions, this);
         edge.sourceId = source.id;
         edge.targetId = target.id;
@@ -45,7 +45,7 @@ export default class Diagram extends DiagramElement {
     /**
      * Returns the shape with the identifier or undefined.
      */
-    getShape(definition: CMMNElementDefinition): ShapeDefinition | undefined {
+    getShape(definition: ElementDefinition): ShapeDefinition | undefined {
         return this.shapes.find(shape => definition && shape.cmmnElementRef == definition.id);
     }
 

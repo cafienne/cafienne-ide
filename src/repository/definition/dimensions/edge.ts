@@ -1,6 +1,7 @@
 import Util from "../../../util/util";
 import { Element } from "../../../util/xml";
 import ElementDefinition from "../elementdefinition";
+import GraphicalModel from "../graphicalmodel";
 import ModelDefinition from "../modeldefinition";
 import Tags from "../tags";
 import XMLSerializable from "../xmlserializable";
@@ -16,13 +17,27 @@ export default class Edge extends DiagramElement {
     label: string;
 
     /**
+     * Create a new Edge shape that binds the two CMMNElements.
+     */
+    static create(source: ElementDefinition<GraphicalModel>, target: ElementDefinition): Edge | undefined {
+        if (!source.modelDefinition.dimensions || !source.modelDefinition.dimensions.diagram) {
+            return undefined;
+        }
+
+        const edge = new Edge(source.createImportNode(Tags.CMMNEDGE), source.modelDefinition.dimensions, source.modelDefinition.dimensions.diagram);
+        edge.sourceId = source.id;
+        edge.targetId = target.id;
+        source.modelDefinition.dimensions.diagram.edges.push(edge);
+        return edge;
+    }
+
+    /**
      * Representation of a <CMMNEdge> element
      */
     constructor(importNode: Element, dimensions: Dimensions, public diagram: Diagram) {
         super(importNode, dimensions, diagram);
         this.sourceId = this.parseAttribute(Tags.SOURCECMMNELEMENTREF);
         this.targetId = this.parseAttribute(Tags.TARGETCMMNELEMENTREF);
-        /** @type {Array<Vertex>} */
         this._vertices = this.parseElements(Tags.WAYPOINT, Vertex);
         this.label = this.parseAttribute('label');
     }

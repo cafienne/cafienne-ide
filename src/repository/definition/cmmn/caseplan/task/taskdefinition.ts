@@ -227,11 +227,10 @@ export default abstract class TaskDefinition extends TaskStageDefinition {
         if (!this.implementationModel) {
             return;
         }
-        const implementationModel = this.implementationModel;
         this.inputMappings.forEach(mapping => {
             if (mapping.targetRef) {
                 // Note: if the input parameter cannot be found in the implementation model, the targetRef will be cleared from the mapping
-                mapping.implementationParameter = implementationModel.findInputParameter(mapping.targetRef);
+                mapping.implementationParameter = this.implementationModel!.findInputParameter(mapping.targetRef);
             }
         });
 
@@ -246,7 +245,7 @@ export default abstract class TaskDefinition extends TaskStageDefinition {
 
         this.outputMappings.forEach(mapping => {
             if (mapping.sourceRef) {
-                mapping.implementationParameter = implementationModel.findOutputParameter(mapping.sourceRef);
+                mapping.implementationParameter = this.implementationModel!.findOutputParameter(mapping.sourceRef);
             }
         });
 

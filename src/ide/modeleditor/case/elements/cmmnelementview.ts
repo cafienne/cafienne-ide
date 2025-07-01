@@ -1,26 +1,23 @@
 import { shapes, util } from "jointjs";
 import CMMNDocumentationDefinition from "../../../../repository/definition/cmmndocumentationdefinition";
 import CMMNElementDefinition from "../../../../repository/definition/cmmnelementdefinition";
-import Edge from "../../../../repository/definition/dimensions/edge";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import Remark from "../../../../repository/validate/remark";
 import Util from "../../../../util/util";
 import Grid from "../../../editors/graphical/grid";
+import ElementView from "../../../editors/graphical/view/elementview";
 import HtmlUtil from "../../../util/htmlutil";
 import CaseModelEditor from "../casemodeleditor";
 import Highlighter from "../highlighter";
 import Marker from "../marker";
 import Resizer from "../resizer";
-import CanvasElement from "./canvaselement";
 import CaseView from "./caseview";
-import Connector from "./connector/connector";
 import Halo from "./halo/halo";
 import Properties from "./properties/properties";
 
-export default abstract class CMMNElementView<D extends CMMNElementDefinition = CMMNElementDefinition> extends CanvasElement<shapes.basic.Generic> {
+export default abstract class CMMNElementView<D extends CMMNElementDefinition = CMMNElementDefinition> extends ElementView<D, CaseView> {
     readonly case: CaseView;
     protected editor: CaseModelEditor;
-    protected __connectors: Connector[] = [];
     protected __childElements: CMMNElementView[] = [];
     protected __resizable: boolean = true;
     private __properties?: Properties;
@@ -33,8 +30,8 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
     /**
      * Creates a new CMMNElementView within the case having the corresponding definition and x, y coordinates
      */
-    constructor(cs: CaseView, public parent: CMMNElementView | undefined, public definition: D, public shape: ShapeDefinition) {
-        super(cs);
+    constructor(cs: CaseView, public parent: CMMNElementView | undefined, definition: D, public shape: ShapeDefinition) {
+        super(cs, definition);
         if (!shape) {
             console.warn(`${this.constructor.name}[${definition.id}] does not have a shape`);
         }
@@ -46,14 +43,6 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
             this.parent.__childElements.push(this);
         }
         this.createJointElement();
-    }
-
-    get id() {
-        return this.definition.id;
-    }
-
-    get name() {
-        return this.definition.name;
     }
 
     /**
@@ -499,88 +488,6 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
         this.shape.removeDefinition();
         // Remove the definition
         this.definition.removeDefinition();
-    }
-
-    /**
-     * creates a connector between the element and the target.
-     */
-    __connect(target: CMMNElementView, edge?: Edge): Connector {
-        if (!edge) {
-            edge = this.case.dimensions.createEdge(this.definition, target.definition);
-        }
-        const connector = new Connector(this, target, edge);
-
-        // Render the connector in the case.
-        this.case.__addConnector(connector);
-
-        // Inform both source and target about this new connector; just adds it to their connector collections.
-        this.__addConnector(connector);
-        target.__addConnector(connector);
-        // Now inform source that it has connected to target
-        this.adoptOutgoingConnector(connector);
-        // And inform target that source has connected to it
-        target.adoptIncomingConnector(connector);
-        this.case.editor.completeUserAction();
-        return connector;
-    }
-
-    /**
-     * Hook when this element becomes the target of a new connector
-     * @param connector the connector has both source and target. <pre>"connector.source"</pre> can be used to know what view element connected to us
-     */
-    protected adoptIncomingConnector(connector: Connector) {
-    }
-
-    /**
-     * Hook when this element becomes the source of a new connector
-     * @param connector the connector has both source and target. <pre>"connector.target"</pre> can be used to know what view element we connected to
-     */
-    protected adoptOutgoingConnector(connector: Connector) {
-    }
-
-    /**
-     * Registers a connector with this element.
-     */
-    __addConnector(connector: Connector) {
-        this.__connectors.push(connector);
-    }
-
-    /**
-     * This method is invoked on the element if it created a connection to the target CMMNElementView
-     */
-    __connectTo(target: CMMNElementView) { }
-
-    /**
-     * This method is invoked on the element if a connection to it was made from the source CMMNElementView
-     */
-    __connectFrom(source: CMMNElementView) { }
-
-    /**
-     * Removes a connector from the registration in this element.
-     */
-    __removeConnector(connector: Connector) {
-        Util.removeFromArray(this.__connectors, connector);
-    }
-
-    /**
-     * returns an array of elements that are connected (through a link/connector) with this element
-     */
-    __getConnectedElements(): CMMNElementView[] {
-        const connectedCMMNElements: CMMNElementView[] = [];
-        this.__connectors.forEach(connector => {
-            if (!connectedCMMNElements.find(cmmnElement => connector.source == cmmnElement || connector.target == cmmnElement)) {
-                connectedCMMNElements.push(connector.source == this ? connector.target : connector.source);
-            }
-        });
-        return connectedCMMNElements;
-    }
-
-    /**
-     * Returns the connector between this and the target element with the specified id,
-     * or null
-     */
-    __getConnector(targetId: string): Connector | undefined {
-        return this.__connectors.find(c => c.hasElementWithId(targetId));
     }
 
     /**

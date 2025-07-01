@@ -35,6 +35,10 @@ export default abstract class ModelDefinition extends XMLSerializable {
         this.parseDocumentationElement();
     }
 
+    get isParameterizedModel() {
+        return false;
+    };
+
     /**
      * Initialize resolves both internal and external references and validates the definition.
      */

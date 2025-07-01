@@ -5,7 +5,7 @@ import ParameterizedModelDefinition from "../parameterizedmodeldefinition";
 import ProcessImplementationDefinition from "./processimplementationdefinition";
 
 export default class ProcessModelDefinition extends ModelDefinition implements ParameterizedModelDefinition<ProcessModelDefinition> {
-    input: ParameterDefinition<ProcessModelDefinition>[] = [];
+    input: ParameterDefinition<this>[] = [];
     output: ParameterDefinition<ProcessModelDefinition>[] = [];
     implementation?: ProcessImplementationDefinition;
     /**

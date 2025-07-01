@@ -1,12 +1,10 @@
 import { dia } from "jointjs";
-import CaseView from "./caseview";
+import ModelView from "./modelview";
 
-export default abstract class CanvasElement<JointType extends dia.Cell = dia.Cell> {
-    public case: CaseView;
+export default abstract class CanvasElement<JointType extends dia.Cell, M extends ModelView<any, any, any>> {
     private __jointElement?: JointType;
 
-    constructor(cs: CaseView) {
-        this.case = cs;
+    constructor(public modelView: M) {
     }
 
     set xyz_joint(jointElement: JointType) {
@@ -26,7 +24,7 @@ export default abstract class CanvasElement<JointType extends dia.Cell = dia.Cel
      * Hook invoked after the element has moved.
      * @param newParent - optional new parent 
      */
-    moved(x: number, y: number, newParent: CanvasElement) {        
+    moved(x: number, y: number, newParent: CanvasElement<any, M>) {
     }
 
     /**
@@ -38,5 +36,5 @@ export default abstract class CanvasElement<JointType extends dia.Cell = dia.Cel
     /**
      * Hook invoked upon mouseLeave
      */
-    mouseLeave() {}
+    mouseLeave() { }
 }

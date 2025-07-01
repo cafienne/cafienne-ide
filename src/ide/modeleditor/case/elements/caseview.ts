@@ -5,19 +5,24 @@ import CaseDefinition from "../../../../repository/definition/cmmn/casedefinitio
 import CaseFileItemDef from "../../../../repository/definition/cmmn/casefile/casefileitemdef";
 import CasePlanDefinition from "../../../../repository/definition/cmmn/caseplan/caseplandefinition";
 import CMMNElementDefinition from "../../../../repository/definition/cmmnelementdefinition";
-import Diagram from "../../../../repository/definition/dimensions/diagram";
 import Dimensions from "../../../../repository/definition/dimensions/dimensions";
+import Edge from "../../../../repository/definition/dimensions/edge";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import Remark from "../../../../repository/validate/remark";
 import Validator from "../../../../repository/validate/validator";
 import Util from "../../../../util/util";
 import Debugger from "../../../debugger/debugger";
 import DragData from "../../../dragdrop/dragdata";
+import Connector from "../../../editors/graphical/connector/connector";
+import Coordinates from "../../../editors/graphical/connector/coordinates";
 import Grid from "../../../editors/graphical/grid";
+import ShapeBox from "../../../editors/graphical/shapebox/shapebox";
+import ModelView from "../../../editors/graphical/view/modelview";
 import ValidateForm from "../../../editors/validate/validateform";
 import RightSplitter from "../../../splitter/rightsplitter";
 import HtmlUtil from "../../../util/htmlutil";
 import CaseModelEditor from "../casemodeleditor";
+import CaseConnector from "../connector/caseconnector";
 import CaseSourceEditor from "../editors/casesourceeditor";
 import DeployForm from "../editors/deployform";
 import CaseFileEditor from "../editors/file/casefileeditor";
@@ -25,23 +30,19 @@ import CaseParametersEditor from "../editors/parameters/caseparameterseditor";
 import StartCaseEditor from "../editors/startcaseeditor";
 import CaseTeamEditor from "../editors/team/caseteameditor";
 import TestRunner from "../editors/testrunner";
-import ShapeBox from "../shapebox/shapebox";
 import UndoRedoBox from "../undoredo/undoredobox";
 import CaseFileItemView from "./casefileitemview";
 import CasePlanView from "./caseplanview";
 import CMMNElementView from "./cmmnelementview";
-import Connector from "./connector/connector";
-import Coordinates from "./connector/coordinates";
 import StageView from "./stageview";
 import TextAnnotationView from "./textannotationview";
 
-export default class CaseView {
+export default class CaseView extends ModelView<CaseDefinition, CMMNElementDefinition, CMMNElementView> {
     readonly definition: CasePlanDefinition;
     readonly id: string;
     readonly name: string;
     readonly case: CaseView;
     readonly dimensions: Dimensions;
-    readonly diagram: Diagram;
     readonly html: JQuery<HTMLElement>;
     readonly divCaseModel: JQuery<HTMLElement>;
     readonly divUndoRedo: JQuery<HTMLElement>;
@@ -55,14 +56,8 @@ export default class CaseView {
     readonly undoBox: UndoRedoBox;
     readonly shapeBox: ShapeBox;
     readonly splitter: RightSplitter;
-    readonly items: CMMNElementView[] = [];
-    readonly connectors: Connector[] = [];
-    readonly loading: boolean = false;
     casePlanModel?: CasePlanView;
-    graph!: dia.Graph;
-    paper!: dia.Paper;
     grid!: Grid;
-    svg!: JQuery<SVGElement>;
     readonly teamEditor: CaseTeamEditor;
     readonly caseParametersEditor: CaseParametersEditor;
     readonly startCaseEditor: StartCaseEditor;
@@ -73,6 +68,8 @@ export default class CaseView {
     testRunner: TestRunner;
 
     constructor(public editor: CaseModelEditor, public htmlParent: JQuery<HTMLElement>, public caseDefinition: CaseDefinition) {
+        super(editor, caseDefinition);
+
         const now = new Date();
         this.editor.case = this;
         this.definition = caseDefinition.casePlan;
@@ -145,20 +142,7 @@ export default class CaseView {
             this.renderLooseShapesAndDropUnusedShapes();
 
             // Finally render all connectors
-            this.diagram.edges.forEach(edge => {
-                const source = this.getItem(edge.sourceId);
-                const target = this.getItem(edge.targetId);
-
-                if (!source) {
-                    console.warn('Found illegal edge, without source ' + edge.sourceId, edge, target);
-                    return;
-                }
-                if (!target) {
-                    console.warn('Found illegal edge, without target ' + edge.targetId, edge, source);
-                    return;
-                }
-                source.__connect(target, edge);
-            });
+            this.diagram.edges.forEach(edge => this.createConnectorFromEdge(edge));
 
             //update the usedIn column of the case file items editor
             this.cfiEditor.showUsedIn();
@@ -175,6 +159,43 @@ export default class CaseView {
         const end = new Date();
         console.log(`Case '${this.caseDefinition.file.fileName}' loaded in ${((end.getTime() - now.getTime()) / 1000)} seconds`)
     }
+
+    /**
+     * Creates a connector from an edge definition.
+     */
+    createConnectorFromEdge(edge: Edge): Connector<CMMNElementView> | undefined {
+        const findItem = (edge: Edge, propertyName: string): CMMNElementView | undefined => {
+            const id = (edge as any)[propertyName];
+            return this.getItem(id);
+        }
+
+        const source = findItem(edge, 'sourceId');
+        const target = findItem(edge, 'targetId');
+
+        if (!source) {
+            console.warn('Found illegal edge, without source ' + edge.sourceId, edge, target);
+            return;
+        }
+        if (!target) {
+            console.warn('Found illegal edge, without target ' + edge.targetId, edge, source);
+            return;
+        }
+        const connector = new CaseConnector(this, source, target, edge);
+        connector.draw();
+        return connector;
+    }
+
+    createConnector(source: CMMNElementView, target: CMMNElementView): Connector<CMMNElementView> {
+        const edge = Edge.create(source.definition, target.definition);
+        const connector = new CaseConnector(source.modelView, source, target, edge!);
+        connector.draw();
+
+        this.editor.completeUserAction();
+
+        return connector;
+    }
+
+
 
     renderLooseShapesAndDropUnusedShapes() {
         const getDefinition = (shape: ShapeDefinition) => {
@@ -291,7 +312,7 @@ export default class CaseView {
         this.svg.on('pointermove', (e: JQuery.Event) => this.showHaloAndResizer(e));
     }
 
-    getConnector(jointElementView: any): Connector {
+    getConnector(jointElementView: any): Connector<CMMNElementView> {
         return jointElementView.model.xyz_cmmn;
     }
 
@@ -300,29 +321,8 @@ export default class CaseView {
     }
 
     /**
-     * Returns the container in which Halos can render their HTML elements.
-     */
-    get haloContainer() {
-        return this.html.find('.divHalos');
-    }
-
-    /**
-     * Returns the container in which Resizers can render their HTML elements.
-     */
-    get resizeContainer() {
-        return this.html.find('.divResizers');
-    }
-
-    /**
-     * Returns the container in which Marker can render their HTML element.
-     */
-    get markerContainer() {
-        return this.html.find('.divMarker');
-    }
-
-    /**
-     * Renders the "source" view tab
-     */
+   * Renders the "source" view tab
+   */
     viewSource() {
         this.clearSelection();
         this.editor.hideMovableEditors();
@@ -332,7 +332,7 @@ export default class CaseView {
     }
 
     runValidation() {
-        const validator = new Validator(this.case.caseDefinition).run();
+        const validator = new Validator(this.caseDefinition).run();
         this.validateForm.loadRemarks(validator);
     }
 
@@ -510,22 +510,6 @@ export default class CaseView {
         return cmmnElement;
     }
 
-    __addConnector(connector: Connector) {
-        this.connectors.push(connector);
-        if (!this.loading) {
-            this.graph.addCells([connector.xyz_joint]);
-        }
-    }
-
-    /**
-     * Remove a connector from the registration. This method is invoked when the connector
-     * is already removed from the canvas.
-     */
-    __removeConnector(connector: Connector) {
-        connector.edge.removeDefinition();
-        Util.removeFromArray(this.connectors, connector);
-    }
-
     /**
      * Remove an element from the canvas, including its children.
      */
@@ -546,9 +530,6 @@ export default class CaseView {
         console.groupEnd();
     }
 
-    getItem(id: string): CMMNElementView | undefined {
-        return this.items.find(item => id && item.id == id);
-    }
 
     getCaseFileItemElement(caseFileItemID: string): CaseFileItemView | undefined {
         return this.items.find(item => item.isCaseFileItem && item.definition.id == caseFileItemID) as CaseFileItemView | undefined;

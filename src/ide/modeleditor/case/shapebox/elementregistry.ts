@@ -1,4 +1,5 @@
 
+import ElementMetadata from "../../../editors/graphical/shapebox/elementmetadata";
 import Icons from "../../../util/images/icons";
 import Shapes from "../../../util/images/shapes";
 import CaseFileItemView from "../elements/casefileitemview";
@@ -53,22 +54,5 @@ export default class ElementRegistry {
 
     static getType(name: string) {
         return this.viewMetadata.find(type => type.name === name)?.cmmnElementType;
-    }
-}
-
-export class ElementMetadata {
-    name: string;
-
-    constructor(public cmmnElementType: Function, public typeDescription: string, public smallImage: string, public menuImage: string) {
-        this.name = cmmnElementType.name;
-
-        // TODO: Remove backwards compatibility code. Still used in e.g. modellistpanel 
-        (<any>cmmnElementType).typeDescription = typeDescription;
-        (<any>cmmnElementType).smallImage = smallImage;
-        (<any>cmmnElementType).menuImage = menuImage;
-    }
-
-    get hasImage() {
-        return this.smallImage !== '';
     }
 }

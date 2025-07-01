@@ -6,9 +6,11 @@ import CaseFileItemOnPartDefinition from "../../../../../repository/definition/c
 import OnPartDefinition from "../../../../../repository/definition/cmmn/sentry/onpartdefinition";
 import PlanItemOnPartDefinition from "../../../../../repository/definition/cmmn/sentry/planitemonpartdefinition";
 import Util from "../../../../../util/util";
+import Connector from "../../../../editors/graphical/connector/connector";
 import HtmlUtil from "../../../../util/htmlutil";
 import Images from "../../../../util/images/images";
-import Connector from "../connector/connector";
+import CaseConnector from "../../connector/caseconnector";
+import CMMNElementView from "../cmmnelementview";
 import SentryView from "../sentryview";
 import Properties from "./properties";
 
@@ -121,12 +123,12 @@ export default class SentryProperties extends Properties<SentryView> {
         return html;
     }
 
-    changeStandardEvent(e: any, onPart: OnPartDefinition<any>, connector?: Connector) {
+    changeStandardEvent(e: any, onPart: OnPartDefinition<any>, connector?: Connector<CMMNElementView>) {
         if (onPart) {
             const selectedStandardEvent = e.currentTarget.selectedOptions[0];
             const newStandardEvent = onPart.parseStandardEvent(selectedStandardEvent.value);
             if (connector) {
-                const style = connector.case.diagram.connectorStyle;
+                const style = connector.modelView.diagram.connectorStyle;
                 if (style.isNone || (style.isDefault && onPart.source.defaultTransition == newStandardEvent)) {
                     connector.label = '';
                 } else {
@@ -137,7 +139,7 @@ export default class SentryProperties extends Properties<SentryView> {
         }
     }
 
-    deleteOnPart(onPart: OnPartDefinition<any>, connector?: Connector) {
+    deleteOnPart(onPart: OnPartDefinition<any>, connector?: Connector<CMMNElementView>) {
         if (onPart) {
             onPart.removeDefinition();
             if (connector) {
@@ -199,7 +201,7 @@ export default class SentryProperties extends Properties<SentryView> {
     addPlanItemOnPart(parentHTML: JQuery<HTMLElement>, onPart?: PlanItemOnPartDefinition) {
         const planItemSelection = this.getPlanItemsSelect(onPart);
         const standardEvents = this.getPlanItemStandardEvents(onPart);
-        const connector = onPart ? this.view.__getConnector(onPart.sourceRef.value) : undefined;
+        const connector = onPart ? this.view.__getConnector(onPart.sourceRef.value) as CaseConnector : undefined;
         const checked = connector ? 'checked="true"' : '';
         const checkedLabel = connector && connector.label ? 'checked="true"' : '';
         const html = $(`<tr class="onpart">
@@ -252,7 +254,7 @@ export default class SentryProperties extends Properties<SentryView> {
                 const checked = e.currentTarget.checked;
                 if (checked) {
                     const connector = this.view.__connect(planItemView);
-                    const style = connector.case.diagram.connectorStyle;
+                    const style = connector.modelView.diagram.connectorStyle;
                     if (style.isNone || (style.isDefault && onPart.source?.defaultTransition == onPart.standardEvent)) {
                         connector.label = '';
                     } else {
@@ -311,7 +313,7 @@ export default class SentryProperties extends Properties<SentryView> {
         const caseFileItemName = onPart && onPart.source ? onPart.source.name : '';
         const standardEvents = this.getCaseFileItemStandardEvents(onPart);
         const cfiView = onPart ? this.view.case.getCaseFileItemElement(onPart.sourceRef.value) : undefined;
-        const connector = cfiView ? this.view.__getConnector(cfiView.id) : undefined;
+        const connector = cfiView ? this.view.__getConnector(cfiView.id) as CaseConnector : undefined;
         const checked = connector ? 'checked="true"' : '';
         const checkedLabel = connector && connector.label ? 'checked="true"' : '';
         const html = $(`<tr class="onpart">
@@ -366,7 +368,7 @@ export default class SentryProperties extends Properties<SentryView> {
         return html;
     }
 
-    changeLabelVisibility(e: any, onPart: OnPartDefinition<any>, connector?: Connector) {
+    changeLabelVisibility(e: any, onPart: OnPartDefinition<any>, connector?: Connector<CMMNElementView>) {
         if (!onPart) {
             if (e.currentTarget.checked) e.currentTarget.checked = false;
             return;
@@ -380,7 +382,7 @@ export default class SentryProperties extends Properties<SentryView> {
 
     changeCaseFileItemOnPart(
         onPart: CaseFileItemOnPartDefinition | undefined,
-        connector: Connector | undefined,
+        connector: Connector<CMMNElementView> | undefined,
         html: JQuery<HTMLElement>,
         cfi: CaseFileItemDef
     ) {

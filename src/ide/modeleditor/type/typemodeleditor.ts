@@ -36,4 +36,8 @@ export default class TypeModelEditor extends ModelEditor {
     loadModel() {
         this.typeEditor.setMainType(this.file);
     }
+
+    completeUserAction(): void {
+        throw new Error("Method not implemented.");
+    }
 }

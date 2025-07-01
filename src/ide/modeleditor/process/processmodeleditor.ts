@@ -28,8 +28,8 @@ const CUSTOM_IMPLEMENTATION_DEFINITION = ' ';
 const CUSTOM_IMPLEMENTATION_DEFINITION_IMPLEMENTATION_CLASS = 'SPECIFY_IMPLEMENTATION_CLASS_HERE';
 
 export default class ProcessModelEditor extends ModelEditor {
-    inputParametersControl?: ModelParameters;
-    outputParametersControl?: ModelParameters;
+    inputParametersControl?: ModelParameters<ProcessModelDefinition>;
+    outputParametersControl?: ModelParameters<ProcessModelDefinition>;
     viewSourceEditor?: ModelSourceEditor;
     freeContentEditor: any;
     private _changed: any;

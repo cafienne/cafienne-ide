@@ -95,11 +95,11 @@ export default class ParameterMappingDefinition extends UnnamedCMMNElementDefini
         }
     }
 
-    get implementationParameter(): ParameterDefinition | undefined {
+    get implementationParameter() {
         return this._implementationParameter;
     }
 
-    set implementationParameter(parameter: ParameterDefinition | undefined ) {
+    set implementationParameter(parameter: ParameterDefinition | undefined) {
         this._implementationParameter = parameter;
         if (this.isInputMapping) {
             this.target = parameter;
@@ -175,10 +175,9 @@ export default class ParameterMappingDefinition extends UnnamedCMMNElementDefini
         } else if (task.outputs.find(output => output.id === this.targetRef)) {
             return false;
         } else if (task.implementationModel) {
-            const implementation = task.implementationModel;
-            if (implementation.findInputParameter(this.targetRef)) {
+            if (task.implementationModel.findInputParameter(this.targetRef)) {
                 return true;
-            } else if (implementation.findOutputParameter(this.sourceRef)) {
+            } else if (task.implementationModel.findOutputParameter(this.sourceRef)) {
                 return false;
             } else {
                 if (this.sourceRef && this.targetRef) {

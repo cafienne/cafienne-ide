@@ -3,8 +3,8 @@ import Validator from "../../validate/validator";
 import TextAnnotationDefinition from "../artifact/textannotation";
 import CMMNElementDefinition from "../cmmnelementdefinition";
 import Dimensions from "../dimensions/dimensions";
+import GraphicalModel from "../graphicalmodel";
 import Migrator from "../migration/cmmn/migrator";
-import ModelDefinition from "../modeldefinition";
 import ParameterizedModelDefinition from "../parameterizedmodeldefinition";
 import ExternalReference from "../references/externalreference";
 import CaseFileDefinition from "./casefile/casefiledefinition";
@@ -14,7 +14,7 @@ import CaseTeamDefinition from "./caseteam/caseteamdefinition";
 import CaseParameterDefinition from "./contract/caseparameterdefinition";
 import StartCaseSchemaDefinition from "./startcaseschemadefinition";
 
-export default class CaseDefinition extends ModelDefinition implements ParameterizedModelDefinition<CaseDefinition> {
+export default class CaseDefinition extends GraphicalModel implements ParameterizedModelDefinition<CaseDefinition> {
     private _caseFile?: CaseFileDefinition;
     private _casePlan?: CasePlanDefinition;
     private _caseTeam?: CaseTeamDefinition;
@@ -46,6 +46,10 @@ export default class CaseDefinition extends ModelDefinition implements Parameter
     get dimensions(): Dimensions | undefined {
         return this._dimensions.getDefinition();
     }
+
+    get isParameterizedModel() {
+        return true;
+    };
 
     /**
      * Returns the element that has the specified identifier, or undefined.
