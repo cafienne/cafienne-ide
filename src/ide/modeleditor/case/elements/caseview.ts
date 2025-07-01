@@ -312,12 +312,12 @@ export default class CaseView extends ModelView<CaseDefinition, CMMNElementDefin
         this.svg.on('pointermove', (e: JQuery.Event) => this.showHaloAndResizer(e));
     }
 
-    getConnector(jointElementView: any): Connector<CMMNElementView> {
-        return jointElementView.model.xyz_cmmn;
+    getConnector(jointElementView: joint.dia.LinkView): Connector<CMMNElementView> {
+        return Connector.fromJoint(jointElementView.model);
     }
 
-    getCMMNElement(jointElementView: any): CMMNElementView {
-        return jointElementView.model.xyz_cmmn;
+    getCMMNElement(jointElementView: joint.dia.ElementView): CMMNElementView {
+        return CMMNElementView.fromJoint(jointElementView.model);
     }
 
     /**
