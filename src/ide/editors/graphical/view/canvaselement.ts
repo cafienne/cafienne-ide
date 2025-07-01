@@ -2,6 +2,10 @@ import { dia } from "jointjs";
 import ModelView from "./modelview";
 
 export default abstract class CanvasElement<JointType extends dia.Cell, M extends ModelView<any, any, any>> {
+    static fromJoint<E extends CanvasElement<any, any>>(model: dia.Cell): E {
+        return (model as any).xyz_cmmn;
+    }
+
     private __jointElement?: JointType;
 
     constructor(public modelView: M) {

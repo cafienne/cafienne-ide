@@ -5,7 +5,6 @@ import Coordinates from "./coordinates";
 
 export default class TemporaryConnector<M extends ModelView> extends CanvasElement<dia.Link, ModelView> {
     source: CanvasElement<shapes.basic.Generic, M>;
-    link: dia.Link;
 
     /**
      * Creates a temporary connector (=link in jointJS) from the source to a set of target coordinates
@@ -13,14 +12,14 @@ export default class TemporaryConnector<M extends ModelView> extends CanvasEleme
     constructor(source: CanvasElement<shapes.basic.Generic, M>, coordinates: Coordinates) {
         super(source.modelView);
         this.source = source;
-        this.link = this.xyz_joint = new dia.Link({
+        this.xyz_joint = new dia.Link({
             source: { id: source.xyz_joint.id },
             target: coordinates,
             attrs: {
                 '.connection': { 'stroke': 'blue' }
             }
         });
-        source.modelView.graph!.addCells([this.link]);
+        source.modelView.graph!.addCells([this.xyz_joint]);
     }
 
     mouseEnter(): void { }
@@ -31,13 +30,13 @@ export default class TemporaryConnector<M extends ModelView> extends CanvasEleme
      * Removes this temporary connector
      */
     remove(): void {
-        this.link.remove();
+        this.xyz_joint.remove();
     }
 
     /**
      * Changes the end point of the temporary connector. This is done typically on mouse move.
      */
     set target(coordinates: Coordinates) {
-        this.link.set('target', coordinates);
+        this.xyz_joint.set('target', coordinates);
     }
 }

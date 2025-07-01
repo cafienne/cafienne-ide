@@ -8,14 +8,6 @@ export default abstract class Connector<V extends ElementView> extends CanvasEle
     formerLabel?: string;
     private _hiddenLabel?: string;
 
-    get link(): dia.Link {
-        return this.xyz_joint;
-    }
-
-    set link(link: dia.Link) {
-        this.xyz_joint = link;
-    }
-
     abstract get arrowStyle(): string;
 
     /**
@@ -26,7 +18,7 @@ export default abstract class Connector<V extends ElementView> extends CanvasEle
     }
 
     draw() {
-        this.link = this.xyz_joint = new dia.Link({
+        this.xyz_joint = new dia.Link({
             source: { id: this.source.xyz_joint.id },
             target: { id: this.target.xyz_joint.id },
             attrs: {
@@ -34,11 +26,11 @@ export default abstract class Connector<V extends ElementView> extends CanvasEle
             }
         });
 
-        this.link.set('vertices', this.edge.vertices);
+        this.xyz_joint.set('vertices', this.edge.vertices);
         this.__setJointLabel(this.edge.label);
 
         // Listen to the native joint event for removing, as removing a connector in the UI is initiated from joint.
-        this.link.on('remove', () => {
+        this.xyz_joint.on('remove', () => {
             // Remove connector from source and target, and also remove the edge from the dimensions through the case.
             this.source.__removeConnector(this);
             this.target.__removeConnector(this);
@@ -46,7 +38,7 @@ export default abstract class Connector<V extends ElementView> extends CanvasEle
             this.modelView.completeUserAction(); // Save the case
         });
 
-        this.link.on('change:vertices', e => {
+        this.xyz_joint.on('change:vertices', e => {
             // Joint generates many change events, so we will not completeUserAction() each time,
             // Instead, this is done when handlePointerUpPaper in case.js
             this.edge.vertices = e.changed.vertices;
@@ -64,7 +56,7 @@ export default abstract class Connector<V extends ElementView> extends CanvasEle
     }
 
     private __setJointLabel(text: string) {
-        this.link.label(0, {
+        this.xyz_joint.label(0, {
             attrs: {
                 text: { text, 'font-size': 'smaller' }
             }
@@ -116,6 +108,6 @@ export default abstract class Connector<V extends ElementView> extends CanvasEle
      * Removes this connector
      */
     remove() {
-        this.link.remove();
+        this.xyz_joint.remove();
     }
 }
