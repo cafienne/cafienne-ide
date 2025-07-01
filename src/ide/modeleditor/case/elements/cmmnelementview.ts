@@ -4,22 +4,20 @@ import CMMNElementDefinition from "../../../../repository/definition/cmmnelement
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import Remark from "../../../../repository/validate/remark";
 import Util from "../../../../util/util";
+import ElementView from "../../../editors/graphical/view/elementview";
 import HtmlUtil from "../../../util/htmlutil";
 import CaseModelEditor from "../casemodeleditor";
 import Grid from "../grid";
 import Highlighter from "../highlighter";
 import Marker from "../marker";
 import Resizer from "../resizer";
-import CanvasElement from "./canvaselement";
 import CaseView from "./caseview";
-import Connector from "./connector/connector";
 import Halo from "./halo/halo";
 import Properties from "./properties/properties";
 
-export default abstract class CMMNElementView<D extends CMMNElementDefinition = CMMNElementDefinition> extends CanvasElement<shapes.basic.Generic> {
+export default abstract class CMMNElementView<D extends CMMNElementDefinition = CMMNElementDefinition> extends ElementView<D, CaseView> {
     readonly case: CaseView;
     protected editor: CaseModelEditor;
-    protected __connectors: Connector[] = [];
     protected __childElements: CMMNElementView[] = [];
     protected __resizable: boolean = true;
     private __properties?: Properties;
@@ -32,8 +30,8 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
     /**
      * Creates a new CMMNElementView within the case having the corresponding definition and x, y coordinates
      */
-    constructor(cs: CaseView, public parent: CMMNElementView | undefined, public definition: D, public shape: ShapeDefinition) {
-        super(cs);
+    constructor(cs: CaseView, public parent: CMMNElementView | undefined, definition: D, public shape: ShapeDefinition) {
+        super(cs, definition);
         if (!shape) {
             console.warn(`${this.constructor.name}[${definition.id}] does not have a shape`);
         }
@@ -45,14 +43,6 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
             this.parent.__childElements.push(this);
         }
         this.createJointElement();
-    }
-
-    get id() {
-        return this.definition.id;
-    }
-
-    get name() {
-        return this.definition.name;
     }
 
     /**
@@ -498,60 +488,6 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
         this.shape.removeDefinition();
         // Remove the definition
         this.definition.removeDefinition();
-    }
-
-    /**
-     * creates a connector between the element and the target.
-     */
-    __connect(target: CMMNElementView): Connector {
-        const connector = Connector.createConnector(this, target);
-        this.case.editor.completeUserAction();
-        return connector;
-    }
-
-    /**
-     * Registers a connector with this element.
-     */
-    __addConnector(connector: Connector) {
-        this.__connectors.push(connector);
-    }
-
-    /**
-     * This method is invoked on the element if it created a connection to the target CMMNElementView
-     */
-    __connectTo(target: CMMNElementView) { }
-
-    /**
-     * This method is invoked on the element if a connection to it was made from the source CMMNElementView
-     */
-    __connectFrom(source: CMMNElementView) { }
-
-    /**
-     * Removes a connector from the registration in this element.
-     */
-    __removeConnector(connector: Connector) {
-        Util.removeFromArray(this.__connectors, connector);
-    }
-
-    /**
-     * returns an array of elements that are connected (through a link/connector) with this element
-     */
-    __getConnectedElements(): CMMNElementView[] {
-        const connectedCMMNElements: CMMNElementView[] = [];
-        this.__connectors.forEach(connector => {
-            if (!connectedCMMNElements.find(cmmnElement => connector.source == cmmnElement || connector.target == cmmnElement)) {
-                connectedCMMNElements.push(connector.source == this ? connector.target : connector.source);
-            }
-        });
-        return connectedCMMNElements;
-    }
-
-    /**
-     * Returns the connector between this and the target element with the specified id,
-     * or null
-     */
-    __getConnector(targetId: string): Connector | undefined {
-        return this.__connectors.find(c => c.hasElementWithId(targetId));
     }
 
     /**

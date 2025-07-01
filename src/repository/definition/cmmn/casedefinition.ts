@@ -3,6 +3,7 @@ import Validator from "../../validate/validator";
 import TextAnnotationDefinition from "../artifact/textannotation";
 import CMMNElementDefinition from "../cmmnelementdefinition";
 import Dimensions from "../dimensions/dimensions";
+import GraphicalModel from "../graphicalmodel";
 import Migrator from "../migration/cmmn/migrator";
 import ParameterizedModelDefinition from "../parameterizedmodeldefinition";
 import ExternalReference from "../references/externalreference";
@@ -13,7 +14,7 @@ import CaseTeamDefinition from "./caseteam/caseteamdefinition";
 import CaseParameterDefinition from "./contract/caseparameterdefinition";
 import StartCaseSchemaDefinition from "./startcaseschemadefinition";
 
-export default class CaseDefinition extends ParameterizedModelDefinition {
+export default class CaseDefinition extends GraphicalModel implements ParameterizedModelDefinition<CaseDefinition> {
     private _caseFile?: CaseFileDefinition;
     private _casePlan?: CasePlanDefinition;
     private _caseTeam?: CaseTeamDefinition;
@@ -46,6 +47,10 @@ export default class CaseDefinition extends ParameterizedModelDefinition {
         return this._dimensions.getDefinition();
     }
 
+    get isParameterizedModel() {
+        return true;
+    };
+
     /**
      * Returns the element that has the specified identifier, or undefined.
      * If the constructor argument is specified, the element is checked against the constructor with 'instanceof'
@@ -61,6 +66,14 @@ export default class CaseDefinition extends ParameterizedModelDefinition {
 
     get outputParameters() {
         return this.output;
+    }
+
+    findInputParameter(identifier: string) {
+        return this.inputParameters.find(p => p.hasIdentifier(identifier));
+    }
+
+    findOutputParameter(identifier: string) {
+        return this.outputParameters.find(p => p.hasIdentifier(identifier));
     }
 
     hasCasePlan() {

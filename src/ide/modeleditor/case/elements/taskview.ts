@@ -1,7 +1,6 @@
 ﻿import TaskDefinition from "../../../../repository/definition/cmmn/caseplan/task/taskdefinition";
 import CMMNElementDefinition from "../../../../repository/definition/cmmnelementdefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
-import ParameterizedModelDefinition from "../../../../repository/definition/parameterizedmodeldefinition";
 import ServerFile from "../../../../repository/serverfile/serverfile";
 import ServerFileDragData from "../../../dragdrop/serverfiledragdata";
 import TaskMappingsEditor from "../editors/task/taskmappingseditor";
@@ -68,7 +67,7 @@ export default abstract class TaskView<TD extends TaskDefinition = TaskDefinitio
     setDropHandlers() {
         super.setDropHandlers();
         // Add drop handler with repository browser to handle changing task implementation when it is drag/dropped from there.
-        this.case.editor.ide.repositoryBrowser.setDropHandler(dragData => this.changeTaskImplementation(dragData.file as ServerFile<ParameterizedModelDefinition>), dragData => this.supportsFileTypeAsImplementation(dragData));
+        this.case.editor.ide.repositoryBrowser.setDropHandler(dragData => this.changeTaskImplementation(dragData.file), dragData => this.supportsFileTypeAsImplementation(dragData));
     }
 
     removeDropHandlers() {
@@ -122,7 +121,7 @@ export default abstract class TaskView<TD extends TaskDefinition = TaskDefinitio
         }
 
         // Set the implementation.
-        this.definition.changeTaskImplementation(file as ServerFile<ParameterizedModelDefinition>);
+        this.definition.changeTaskImplementation(file);
 
         // Make sure to save changes if any.
         this.case.editor.completeUserAction();

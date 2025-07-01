@@ -3,6 +3,7 @@ import Util from "../../../../../util/util";
 import { Element } from "../../../../../util/xml";
 import Validator from "../../../../validate/validator";
 import ParameterDefinition from "../../../contract/parameterdefinition";
+import ModelDefinition from "../../../modeldefinition";
 import ParameterizedModelDefinition from "../../../parameterizedmodeldefinition";
 import ExternalReference from "../../../references/externalreference";
 import CaseDefinition from "../../casedefinition";
@@ -62,7 +63,7 @@ export default abstract class TaskDefinition extends TaskStageDefinition {
         this.bindImplementation();
     }
 
-    get implementationReference(): ExternalReference<ParameterizedModelDefinition> {
+    get implementationReference(): ExternalReference<ModelDefinition> {
         throw new Error('Method must be implemented in ' + this.constructor.name);
     }
 
@@ -203,7 +204,7 @@ export default abstract class TaskDefinition extends TaskStageDefinition {
      * Generates new mappings and task input/output parameters based on the
      * given xml node that represents the contract of the task implementation.
      */
-    changeTaskImplementation(file: ServerFile<ParameterizedModelDefinition>) {
+    changeTaskImplementation(file: ServerFile<ModelDefinition>) {
         const implementationRef = file.fileName;
         const implementationModel = file.definition;
 
@@ -215,22 +216,25 @@ export default abstract class TaskDefinition extends TaskStageDefinition {
         this.inputs = [];
         this.outputs = [];
         this.implementationReference.update(file.fileName);
-        if (!this.implementationModel) return;
+        if (!this.implementationModel || !this.implementationModel.isParameterizedModel) return;
 
         // Generate new task input and output parameters and mappings
         //  for each of the input and output parameters of the contract
-        this.implementationModel.inputParameters.forEach((parameter: ParameterDefinition) => this.createInputMapping(parameter));
-        this.implementationModel.outputParameters.forEach((parameter: ParameterDefinition) => this.createOutputMapping(parameter));
+
+        const implementation = this.implementationModel as unknown as ParameterizedModelDefinition<CaseDefinition>;
+
+        implementation.inputParameters.forEach((parameter: ParameterDefinition) => this.createInputMapping(parameter));
+        implementation.outputParameters.forEach((parameter: ParameterDefinition) => this.createOutputMapping(parameter));
     }
 
     /**
      * Sets the task implementation, and optionally updates the implementationRef.
      */
     bindImplementation() {
-        if (!this.implementationModel) {
+        if (!this.implementationModel || !this.implementationModel.isParameterizedModel) {
             return;
         }
-        const implementationModel = this.implementationModel;
+        const implementationModel = this.implementationModel as unknown as ParameterizedModelDefinition<CaseDefinition>;
         this.inputMappings.forEach(mapping => {
             if (mapping.targetRef) {
                 // Note: if the input parameter cannot be found in the implementation model, the targetRef will be cleared from the mapping
@@ -239,7 +243,7 @@ export default abstract class TaskDefinition extends TaskStageDefinition {
         });
 
         // Now iterate all implementation's input parameters and check for unused ones. For those we will generate new, default mappings.
-        this.implementationModel.inputParameters.forEach((parameter: ParameterDefinition) => {
+        implementationModel.inputParameters.forEach((parameter: ParameterDefinition) => {
             const existingMapping = this.inputMappings.find(mapping => parameter.hasIdentifier(mapping.targetRef));
             if (!existingMapping) {
                 // console.log('Generating default input mapping for implementation parameter ' + parameter.name + ' in task "' + this.name + '"');
@@ -255,7 +259,7 @@ export default abstract class TaskDefinition extends TaskStageDefinition {
 
         // Now iterate all task output parameters and check for unused ones. For those we will generate a mapping, in order to have them directly visible in the UI.
         // It also has no sense to have unused output parameters.
-        this.implementationModel.outputParameters.forEach((parameter: ParameterDefinition) => {
+        implementationModel.outputParameters.forEach((parameter: ParameterDefinition) => {
             const existingMapping = this.outputMappings.find(mapping => parameter && parameter.hasIdentifier(mapping.sourceRef));
             if (!existingMapping) {
                 // console.log('Generating default output mapping for implementation parameter ' + parameter.name + ' in task "' + this.name + '"');

@@ -1,10 +1,11 @@
 import ProcessFile from "../../serverfile/processfile";
 import ParameterDefinition from "../contract/parameterdefinition";
+import ModelDefinition from "../modeldefinition";
 import ParameterizedModelDefinition from "../parameterizedmodeldefinition";
 import ProcessImplementationDefinition from "./processimplementationdefinition";
 
-export default class ProcessModelDefinition extends ParameterizedModelDefinition {
-    input: ParameterDefinition<ProcessModelDefinition>[] = [];
+export default class ProcessModelDefinition extends ModelDefinition implements ParameterizedModelDefinition<ProcessModelDefinition> {
+    input: ParameterDefinition<this>[] = [];
     output: ParameterDefinition<ProcessModelDefinition>[] = [];
     implementation?: ProcessImplementationDefinition;
     /**
@@ -25,6 +26,14 @@ export default class ProcessModelDefinition extends ParameterizedModelDefinition
 
     get outputParameters() {
         return this.output;
+    }
+
+    findInputParameter(identifier: string) {
+        return this.inputParameters.find(p => p.hasIdentifier(identifier));
+    }
+
+    findOutputParameter(identifier: string) {
+        return this.outputParameters.find(p => p.hasIdentifier(identifier));
     }
 
     toXML() {

@@ -1,6 +1,7 @@
 import { Element } from "../../../../util/xml";
 import CMMNElementDefinition from "../../cmmnelementdefinition";
 import ParameterDefinition from "../../contract/parameterdefinition";
+import ParameterizedModelDefinition from "../../parameterizedmodeldefinition";
 import UnnamedCMMNElementDefinition from "../../unnamedcmmnelementdefinition";
 import CaseDefinition from "../casedefinition";
 import CaseFileItemDef from "../casefile/casefileitemdef";
@@ -95,11 +96,11 @@ export default class ParameterMappingDefinition extends UnnamedCMMNElementDefini
         }
     }
 
-    get implementationParameter(): ParameterDefinition | undefined {
+    get implementationParameter() {
         return this._implementationParameter;
     }
 
-    set implementationParameter(parameter: ParameterDefinition | undefined ) {
+    set implementationParameter(parameter: ParameterDefinition | undefined) {
         this._implementationParameter = parameter;
         if (this.isInputMapping) {
             this.target = parameter;
@@ -174,8 +175,8 @@ export default class ParameterMappingDefinition extends UnnamedCMMNElementDefini
             return true;
         } else if (task.outputs.find(output => output.id === this.targetRef)) {
             return false;
-        } else if (task.implementationModel) {
-            const implementation = task.implementationModel;
+        } else if (task.implementationModel && task.implementationModel.isParameterizedModel) {
+            const implementation = task.implementationModel as unknown as ParameterizedModelDefinition<CaseDefinition>;
             if (implementation.findInputParameter(this.targetRef)) {
                 return true;
             } else if (implementation.findOutputParameter(this.sourceRef)) {

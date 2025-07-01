@@ -1,9 +1,10 @@
 import HumanTaskFile from "../../serverfile/humantaskfile";
+import ModelDefinition from "../modeldefinition";
 import ParameterizedModelDefinition from "../parameterizedmodeldefinition";
 import { IMPLEMENTATION_TAG } from "../xmlserializable";
 import HumanTaskImplementationDefinition from "./humantaskimplementationdefinition";
 
-export default class HumanTaskModelDefinition extends ParameterizedModelDefinition {
+export default class HumanTaskModelDefinition extends ModelDefinition implements ParameterizedModelDefinition<HumanTaskModelDefinition> {
     private _implementation?: HumanTaskImplementationDefinition;
     /**
      * Imports an XML element and parses it into a in-memory definition structure.
@@ -15,7 +16,7 @@ export default class HumanTaskModelDefinition extends ParameterizedModelDefiniti
     }
 
     get implementation(): HumanTaskImplementationDefinition {
-        if (! this._implementation) {
+        if (!this._implementation) {
             this._implementation = new HumanTaskImplementationDefinition(this.createImportNode(IMPLEMENTATION_TAG), this, undefined);
         }
         return this._implementation;
@@ -40,6 +41,15 @@ export default class HumanTaskModelDefinition extends ParameterizedModelDefiniti
     get outputParameters() {
         return this._implementation?.output || [];
     }
+
+    findInputParameter(identifier: string) {
+        return this.inputParameters.find(p => p.hasIdentifier(identifier));
+    }
+
+    findOutputParameter(identifier: string) {
+        return this.outputParameters.find(p => p.hasIdentifier(identifier));
+    }
+
 
     get taskModel() {
         return this._implementation?.taskModel;

@@ -1,11 +1,12 @@
 import $ from "jquery";
-import TemporaryConnector from "../connector/temporaryconnector";
+import TemporaryConnector from "../../../../editors/graphical/connector/temporaryconnector";
+import CaseView from "../caseview";
 import Halo from "./halo";
 import HaloBar from "./halobar";
 import HaloItem from "./haloitem";
 
 export default abstract class HaloDragItem<H extends Halo = Halo> extends HaloItem<H> {
-    tempConnector!: TemporaryConnector;
+    tempConnector!: TemporaryConnector<CaseView>;
     mouseMoveHandler!: (e: JQuery.TriggeredEvent) => void;
     mouseUpHandler!: (e: JQuery.TriggeredEvent) => void;
     keyDownHandler!: (e: JQuery.KeyDownEvent) => void;
@@ -40,7 +41,7 @@ export default abstract class HaloDragItem<H extends Halo = Halo> extends HaloIt
         this.halo.element.propertiesView.hide();
 
         // Create a temporary connector to the current coordinates
-        this.tempConnector = new TemporaryConnector(this.halo.element, this.getCoordinates(e));
+        this.tempConnector = new TemporaryConnector<CaseView>(this.halo.element, this.getCoordinates(e));
     }
 
     getCoordinates(e: JQuery.TriggeredEvent) {

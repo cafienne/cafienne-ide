@@ -1,23 +1,19 @@
 import ParameterDefinition from "./contract/parameterdefinition";
 import ModelDefinition from "./modeldefinition";
 
-export default abstract class ParameterizedModelDefinition extends ModelDefinition {
+export default interface ParameterizedModelDefinition<M extends ModelDefinition> {
 
     /**
      * A ModelDefinition must have input parameters.
      */
-    abstract get inputParameters(): ParameterDefinition[];
+    get inputParameters(): ParameterDefinition<M>[];
 
     /**
      * A ModelDefinition must have output parameters.
      */
-    abstract get outputParameters(): ParameterDefinition[];
+    get outputParameters(): ParameterDefinition<M>[];
 
-    findInputParameter(identifier: string) {
-        return this.inputParameters.find(p => p.hasIdentifier(identifier));
-    }
+    findInputParameter(identifier: string): ParameterDefinition<M> | undefined;
 
-    findOutputParameter(identifier: string) {
-        return this.outputParameters.find(p => p.hasIdentifier(identifier));
-    }
+    findOutputParameter(identifier: string): ParameterDefinition<M> | undefined;
 }

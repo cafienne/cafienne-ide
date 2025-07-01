@@ -2,10 +2,10 @@ import PlanItem from "../../../../repository/definition/cmmn/caseplan/planitem";
 import HumanTaskDefinition from "../../../../repository/definition/cmmn/caseplan/task/humantaskdefinition";
 import TaskStageDefinition from "../../../../repository/definition/cmmn/caseplan/taskstagedefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+import Connector from "../../../editors/graphical/connector/connector";
 import HtmlUtil from "../../../util/htmlutil";
 import CaseView from "./caseview";
 import CMMNElementView from "./cmmnelementview";
-import Connector from "./connector/connector";
 import EntryCriterionView from "./entrycriterionview";
 import ExitCriterionView from "./exitcriterionview";
 import PlanItemView from "./planitemview";
@@ -82,7 +82,7 @@ export default abstract class TaskStageView<TS extends TaskStageDefinition = Tas
     /**
      * Registers a connector with this element.
      */
-    __addConnector(connector: Connector) {
+    __addConnector(connector: Connector<CMMNElementView>) {
         super.__addConnector(connector);
         if (this.definition.isDiscretionary) {
             const target = connector.source == this ? connector.target : connector.source;
@@ -97,7 +97,7 @@ export default abstract class TaskStageView<TS extends TaskStageDefinition = Tas
     /**
      * Removes a connector from the registration in this element.
      */
-    __removeConnector(connector: Connector) {
+    __removeConnector(connector: Connector<CMMNElementView>) {
         super.__removeConnector(connector);
         if (this.definition.isDiscretionary) {
             const target = connector.source == this ? connector.target : connector.source;

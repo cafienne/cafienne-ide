@@ -1,9 +1,9 @@
 import { Element } from "../../../util/xml";
 import ElementDefinition from "../elementdefinition";
 import CafienneImplementationDefinition from "../extensions/cafienneimplementationdefinition";
-import ParameterizedModelDefinition from "../parameterizedmodeldefinition";
+import ModelDefinition from "../modeldefinition";
 
-export default class ParameterDefinition<M extends ParameterizedModelDefinition = ParameterizedModelDefinition> extends ElementDefinition<M> {
+export default class ParameterDefinition<M extends ModelDefinition = ModelDefinition> extends ElementDefinition<M> {
     required: boolean = false;
     isNew: boolean;
     constructor(importNode: Element, caseDefinition: M, parent: ElementDefinition<M>) {

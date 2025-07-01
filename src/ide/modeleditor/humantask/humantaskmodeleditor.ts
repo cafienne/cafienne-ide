@@ -13,8 +13,8 @@ import ModelSourceEditor from "../xmleditor/modelsourceeditor";
 import HumantaskModelEditorMetadata from "./humantaskmodeleditormetadata";
 
 export default class HumantaskModelEditor extends ModelEditor {
-    inputParametersControl: ModelParameters;
-    outputParametersControl: ModelParameters;
+    inputParametersControl: ModelParameters<HumanTaskModelDefinition>;
+    outputParametersControl: ModelParameters<HumanTaskModelDefinition>;
     viewSourceEditor: ModelSourceEditor;
     freeContentEditor: any;
     private _changed: any;
