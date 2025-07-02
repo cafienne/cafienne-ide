@@ -76,7 +76,7 @@ export default abstract class TaskStageView<TS extends TaskStageDefinition = Tas
      * Returns the PlanningTableView child, if present.
      */
     get planningTableView(): PlanningTableView | undefined {
-        return this.__childElements.find(child => child.isPlanningTable) as PlanningTableView | undefined;
+        return this.__childElements.find(child => (child as CMMNElementView).isPlanningTable) as PlanningTableView | undefined;
     }
 
     /**

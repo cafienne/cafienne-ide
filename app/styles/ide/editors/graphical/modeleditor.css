@@ -1,0 +1,43 @@
+.divModel {
+    position: absolute;
+    top: 0px;
+    left: 59px;
+    right: 0px;
+    bottom: 0px;
+    height: 100%;
+}
+
+/*drawing area*/
+.divCanvas {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    top: 0px;
+    border: none;
+    background-color: white;
+    overflow: hidden;
+}
+
+.paper-container-scroller {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    overflow: scroll;
+}
+
+.paper-container {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    overflow: scroll;
+}
+
+.paper-container svg {
+    width: 6000px;
+    height: 6000px;
+}

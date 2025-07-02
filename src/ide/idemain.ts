@@ -36,6 +36,7 @@ import "@styles/ide/modeleditors/case/editors/file/classic/casefileitemseditor.c
 import "@styles/ide/modeleditors/type/typemodeleditor.css";
 import "@styles/ide/editors/tableeditor.css";
 import "@styles/ide/editors/jsoneditor.css";
+import "@styles/ide/editors/graphical/modeleditor.css";
 import "@styles/ide/editors/task/taskmappingseditor.css";
 import "@styles/ide/modeleditors/modeleditor.css";
 import "@styles/ide/modeleditors/xmleditor/modelparameters.css";

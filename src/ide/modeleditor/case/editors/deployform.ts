@@ -13,7 +13,7 @@ export default class DeployForm extends StandardForm {
      * This class implements the logic to call the repository REST service to deploy a CMMN model.
      */
     constructor(cs: CaseView) {
-        super(cs, 'Deploy CMMN Model - ' + cs.case.name, 'deployform');
+        super(cs, 'Deploy CMMN Model - ' + cs.model.name, 'deployform');
     }
 
     renderData() {

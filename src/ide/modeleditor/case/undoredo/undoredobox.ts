@@ -34,11 +34,11 @@ export default class UndoRedoBox {
     }
 
     undo(): void {
-        this.case.editor.undoManager.undo();
+        this.case.caseEditor.undoManager.undo();
     }
 
     redo(): void {
-        this.case.editor.undoManager.redo();
+        this.case.caseEditor.undoManager.redo();
     }
 
     updateButtons(undoCount: number, redoCount: number): void {

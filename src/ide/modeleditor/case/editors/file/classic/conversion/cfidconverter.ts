@@ -57,8 +57,8 @@ export default class CFIDConverter {
         console.group("Saving modified case and dimensions");
         const newDimensions = this.case.caseDefinition.dimensions?.toXMLString();
         const newCase = this.case.caseDefinition.toXMLString();
-        const dimensionsFile = this.case.editor.dimensionsFile;
-        const caseFile = this.case.editor.caseFile;
+        const dimensionsFile = this.case.caseEditor.dimensionsFile;
+        const caseFile = this.case.caseEditor.caseFile;
         if (!dimensionsFile) return; // only needed because of typescript ...
         dimensionsFile.source = newDimensions;
         await dimensionsFile.save();

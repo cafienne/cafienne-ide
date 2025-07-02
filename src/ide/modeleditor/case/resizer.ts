@@ -1,7 +1,7 @@
 ﻿import $ from "jquery";
+import Grid from "../../editors/graphical/grid";
 import HtmlUtil from "../../util/htmlutil";
 import CMMNElementView from "./elements/cmmnelementview";
-import Grid from "./grid";
 
 type ResizeDirection = 'nw' | 'n' | 'ne' | 'w' | 'e' | 'sw' | 's' | 'se';
 

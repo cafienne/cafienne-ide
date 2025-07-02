@@ -1,11 +1,11 @@
 import $ from "jquery";
 import DragData from "../../../dragdrop/dragdata";
-import ShapeBoxDragData from "../../../modeleditor/case/shapebox/shapeboxdragdata";
-import CaseView from "../elements/caseview";
-import ElementRegistry, { ElementMetadata } from "./elementregistry";
+import ModelView from "../view/modelview";
+import ElementMetadata from "./elementmetadata";
+import ShapeBoxDragData from "./shapeboxdragdata";
 
-export default class ShapeBox {
-    case: CaseView;
+export default class ShapeBox<V extends ModelView> {
+    case: V;
     html: JQuery<HTMLElement>;
     dragData?: ShapeBoxDragData;
     htmlContainer: JQuery<HTMLUListElement>;
@@ -13,8 +13,7 @@ export default class ShapeBox {
     /**
      * Box that has the CMMN shapes that are available for dragging to the canvas
      */
-    constructor(cs: CaseView, htmlElement: JQuery<HTMLElement>) {
-        ElementRegistry.initialize();
+    constructor(cs: V, htmlElement: JQuery<HTMLElement>) {
         this.case = cs;
         this.html = htmlElement;
 
@@ -31,23 +30,13 @@ export default class ShapeBox {
         //stop ghost image dragging, stop text and html-element selection
         html.on('pointerdown', e => e.preventDefault());
         this.htmlContainer = html.find('ul');
-        // add shapes from element registry that have an image.
-        ElementRegistry.viewMetadata.filter(shapeType => shapeType.hasImage).forEach(shapeType => {
-            const description = shapeType.typeDescription;
-            const imgURL = shapeType.smallImage;
-            const html = $(`<li class="list-group-item" title="${description}">
-                                <img src="${imgURL}"/>
-                            </li>`);
-            html.on('pointerdown', e => this.handleMouseDown(e, shapeType));
-            this.htmlContainer.append(html);
-        });
     }
 
     /**
      * Registers a drop handler with the repository browser.
      * If an item from the browser is moved over the canvas, elements can register a drop handler
      */
-    setDropHandler(dropHandler:(dragData: ShapeBoxDragData) => void, filter?: (dragData: ShapeBoxDragData) => boolean) {
+    setDropHandler(dropHandler: (dragData: ShapeBoxDragData) => void, filter?: (dragData: ShapeBoxDragData) => boolean) {
         if (this.dragData) this.dragData.setDropHandler(<(dragData: DragData) => void>dropHandler, <(dragData: DragData) => boolean>filter);
     }
 

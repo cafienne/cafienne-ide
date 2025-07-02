@@ -2,6 +2,7 @@ import $ from "jquery";
 import CaseDefinition from "../../../repository/definition/cmmn/casedefinition";
 import CaseFile from "../../../repository/serverfile/casefile";
 import DimensionsFile from "../../../repository/serverfile/dimensionsfile";
+import Grid from "../../editors/graphical/grid";
 import MovableEditor from "../../editors/movableeditor";
 import IDE from "../../ide";
 import ModelEditor from "../modeleditor";
@@ -9,7 +10,6 @@ import ModelEditorMetadata from "../modeleditormetadata";
 import CaseModelEditorMetadata from "./casemodeleditormetadata";
 import CaseView from "./elements/caseview";
 import CMMNElementView from "./elements/cmmnelementview";
-import Grid from "./grid";
 import UndoManager from "./undoredo/undomanager";
 
 export default class CaseModelEditor extends ModelEditor {

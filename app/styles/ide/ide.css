@@ -260,20 +260,16 @@
 
 /* overrules line 98 joint.css */
 
-.connection-wrap {
-    fill: none;
-    stroke: black;
-    stroke-width: 8;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    opacity: 0;
-    cursor: move;
-}
-
-
 /*HCM CMMN added: do not show the arrow heads while hovering -> user is prevented to drag the line to other element */
-
-.link:hover .marker-arrowheads {
+.joint-viewport .link:hover .marker-arrowheads {
+    display: none;
+}
+/* Change width of connector hover area*/
+.joint-link.joint-theme-default .connection-wrap {
+    stroke-width: 8px;
+}
+/* Hide connector arrowheads (the big green ones)*/
+.joint-viewport .marker-arrowhead {
     display: none;
 }
 

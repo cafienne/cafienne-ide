@@ -4,12 +4,12 @@ import TypeDefinition from "../../../repository/definition/type/typedefinition";
 import CaseFile from "../../../repository/serverfile/casefile";
 import ServerFile from "../../../repository/serverfile/serverfile";
 import Util from "../../../util/util";
+import Grid from "../../editors/graphical/grid";
 import IDE from "../../ide";
 import Icons from "../../util/images/icons";
 import ModelEditorMetadata from "../modeleditormetadata";
 import CaseModelEditor from "./casemodeleditor";
 import CreateNewCaseModelDialog, { CreateCase } from "./createnewcasemodeldialog";
-import Grid from "./grid";
 
 export default class CaseModelEditorMetadata extends ModelEditorMetadata {
     get modelList() {
@@ -103,7 +103,7 @@ export default class CaseModelEditorMetadata extends ModelEditorMetadata {
         const casePlanId = `cm_${guid}_0`;
         const documentation = description ? `<documentation textFormation="text/plain"><text><![CDATA[${description}]]></text></documentation>` : '';
         const caseString =
-`<case id="${caseFileName}" name="${name}" guid="${guid}">
+            `<case id="${caseFileName}" name="${name}" guid="${guid}">
     ${documentation}
     <caseFileModel typeRef="${typeRef}"/>
     <casePlanModel id="${casePlanId}" name="${name}"/>
