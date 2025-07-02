@@ -30,7 +30,7 @@ export default abstract class PlanItemView<PI extends PlanItem = PlanItem> exten
 
     addCriterion(criterion: CriterionDefinition, constructorFunction: new (parent: PlanItemView, criterion: any, shape: ShapeDefinition) => any) {
         // If existing shape for criterion is not found, create a new shape.
-        const shape = this.case.diagram.getShape(criterion) || this.case.diagram.createShape(this.shape.x - 6, this.shape.y + 10, 12, 20, criterion.id);
+        const shape = this.modelView.diagram.getShape(criterion) || this.modelView.diagram.createShape(this.shape.x - 6, this.shape.y + 10, 12, 20, criterion.id);
         const view = new constructorFunction(this, criterion, shape);
         this.__addCMMNChild(view);
     }

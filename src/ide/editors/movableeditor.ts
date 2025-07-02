@@ -5,7 +5,7 @@ import CaseView from "../modeleditor/case/elements/caseview";
 import HtmlUtil from "../util/htmlutil";
 
 export default class MovableEditor {
-    case: CaseView;
+    modelView: CaseView;
     modelEditor: CaseModelEditor;
     htmlParent: JQuery<HTMLElement>;
     private _visible: boolean = false;
@@ -17,7 +17,7 @@ export default class MovableEditor {
      * It can be moved around and resized.
      */
     constructor(cs: CaseView) {
-        this.case = cs;
+        this.modelView = cs;
         this.modelEditor = cs.caseEditor;
         this.htmlParent = this.modelEditor.divMovableEditors;
         this.modelEditor.registerMovableEditor(this);

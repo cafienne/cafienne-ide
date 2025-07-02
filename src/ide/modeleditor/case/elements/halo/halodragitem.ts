@@ -45,7 +45,7 @@ export default abstract class HaloDragItem<H extends Halo = Halo> extends HaloIt
     }
 
     getCoordinates(e: JQuery.TriggeredEvent) {
-        return this.halo.element.case.getCursorCoordinates(e);
+        return this.halo.element.modelView.getCursorCoordinates(e);
     }
 
     handleKeyDown(e: JQuery.KeyDownEvent) {

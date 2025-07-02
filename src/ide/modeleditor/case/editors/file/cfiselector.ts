@@ -6,11 +6,11 @@ import Shapes from "../../../../util/images/shapes";
 import CaseView from "../../elements/caseview";
 
 export default class CFISelector extends Dialog {
-    case: CaseView;
+    modelView: CaseView;
     selectedItem?: CaseFileItemDef;
     constructor(cs: CaseView) {
         super(cs.editor.ide, 'Select a Case File Item');
-        this.case = cs;
+        this.modelView = cs;
         this.selectedItem = undefined;
     }
 
@@ -24,7 +24,7 @@ export default class CFISelector extends Dialog {
             </form>
         `);
         dialogHTML.append(htmlDialog);
-        this.case.caseDefinition.caseFile.children.forEach(cfi => this.renderCaseFileItem(cfi, dialogHTML.find('.cfi-tree')));
+        this.modelView.caseDefinition.caseFile.children.forEach(cfi => this.renderCaseFileItem(cfi, dialogHTML.find('.cfi-tree')));
         dialogHTML.find('.buttonOk').on('click', e => this.ok());
         dialogHTML.find('.buttonCancel').on('click', e => this.cancel());
     }
@@ -37,7 +37,7 @@ export default class CFISelector extends Dialog {
             }
         }
         const html = $(
-        `<div class='cfi-container'>
+            `<div class='cfi-container'>
             <div class='cfi-summary'>
                 <img class="cfi-icon" src="${Shapes.CaseFileItem}" />
                 ${item.name}

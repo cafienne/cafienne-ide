@@ -28,10 +28,10 @@ export default class CasePlanView extends StageView<CasePlanDefinition> {
 
     referencesDefinitionElement(definitionId: string) {
         // Check whether the case parameters may be using the case file item
-        if (this.case.caseDefinition.input.find(p => p.bindingRef.references(definitionId))) {
+        if (this.modelView.caseDefinition.input.find(p => p.bindingRef.references(definitionId))) {
             return true;
         }
-        if (this.case.caseDefinition.output.find(p => p.bindingRef.references(definitionId))) {
+        if (this.modelView.caseDefinition.output.find(p => p.bindingRef.references(definitionId))) {
             return true;
         }
         return super.referencesDefinitionElement(definitionId);
@@ -53,7 +53,7 @@ export default class CasePlanView extends StageView<CasePlanDefinition> {
      * Show or hide the halo and resizer
      */
     __renderBoundary(show: boolean) {
-        if (this.case.selectedElement === this) {
+        if (this.modelView.selectedElement === this) {
             this.resizer.visible = true;
         } else {
             this.resizer.visible = false;
@@ -107,7 +107,7 @@ export default class CasePlanView extends StageView<CasePlanDefinition> {
 
     __delete() {
         super.__delete();
-        delete this.case.casePlanModel;
+        delete this.modelView.casePlanModel;
     }
 
     canHaveCriterion(criterionType: Function) {

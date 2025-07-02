@@ -85,7 +85,7 @@ export default class PlanItemProperties<PIV extends PlanItemView = PlanItemView>
         });
         html.find('textarea').on('change', e => this.change(this.view.definition.itemControl.getRule(ruleName), 'body', e.target.value));
         html.find('.zoombt').on('click', () => {
-            this.view.case.cfiEditor.open((cfi: any) => {
+            this.view.modelView.cfiEditor.open((cfi: any) => {
                 this.change(this.view.definition.itemControl.getRule(ruleName), 'contextRef', cfi.id);
             });
         });
@@ -94,13 +94,13 @@ export default class PlanItemProperties<PIV extends PlanItemView = PlanItemView>
         });
         html.find('.zoomRow').on('pointerover', e => {
             e.stopPropagation();
-            this.view.case.cfiEditor.setDropHandler((dragData: any) => {
+            this.view.modelView.cfiEditor.setDropHandler((dragData: any) => {
                 const newContextRef = dragData.item.id;
                 this.change(this.view.definition.itemControl.getRule(ruleName), 'contextRef', newContextRef);
             });
         });
         html.find('.zoomRow').on('pointerout', () => {
-            this.view.case.cfiEditor.removeDropHandler();
+            this.view.modelView.cfiEditor.removeDropHandler();
         });
         this.htmlContainer.append(html);
         return html;
@@ -124,7 +124,7 @@ export default class PlanItemProperties<PIV extends PlanItemView = PlanItemView>
      */
     getRolesAsHTMLSelect(selectedRole: CaseRoleReference | undefined, buttonClass: string) {
         const isSelected = (caseRole: any) => selectedRole !== undefined && selectedRole.value === caseRole.id;
-        const existingRolesAsOptions = this.case.caseDefinition.caseTeam.roles.map((role: any) =>
+        const existingRolesAsOptions = this.modelView.caseDefinition.caseTeam.roles.map((role: any) =>
             `<option value="${role.id}" ${isSelected(role) ? ' selected' : ''}>${role.name}</option>`
         ).join('');
         const invalidRoleOption = selectedRole && selectedRole.nonEmpty && !selectedRole.getDefinition()

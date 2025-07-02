@@ -22,7 +22,7 @@ export default class TypeEditor {
     jsonSchemaEditor: any; // Should be something like CodeMirror.Editor;
     private _changed: boolean = false;
     visible: boolean = false;
-    case?: CaseView;
+    modelView?: CaseView;
     ide: IDE;
     html: JQuery<HTMLElement>;
     inputName: JQuery<HTMLElement>;
@@ -38,7 +38,7 @@ export default class TypeEditor {
      */
     constructor(public owner: CaseTypeEditor | TypeModelEditor, public htmlParent: JQuery<HTMLElement>, cs?: CaseView) {
         this.ide = owner.ide;
-        this.case = cs;
+        this.modelView = cs;
 
         const biTooltip = 'Cases and Tasks can be queried on business identifiers.\nThe identifiers are tracked in a separate index, but adding identifiers does have a performance impact';
         this.html = $(`
@@ -170,16 +170,16 @@ export default class TypeEditor {
         if (this.selectedPropertyRenderer) {
             this.selectedPropertyRenderer.deselect();
         }
-        if (this.case) {
-            this.case.updateSelectedCaseFileItemDefinition(undefined);
+        if (this.modelView) {
+            this.modelView.updateSelectedCaseFileItemDefinition(undefined);
         }
         this.selectedPropertyRenderer = propertyRenderer;
         if (propertyRenderer) {
             propertyRenderer.select();
-            if (this.case && propertyRenderer.property.isComplexType) {
+            if (this.modelView && propertyRenderer.property.isComplexType) {
                 const references: CaseFileItemTypeDefinition[] = <CaseFileItemTypeDefinition[]>propertyRenderer.property.searchInboundReferences().filter(element => element instanceof CaseFileItemTypeDefinition);
-                const selectedProperty = references.find(cfi => cfi.caseDefinition === this.case?.caseDefinition);
-                this.case.updateSelectedCaseFileItemDefinition(selectedProperty);
+                const selectedProperty = references.find(cfi => cfi.caseDefinition === this.modelView?.caseDefinition);
+                this.modelView.updateSelectedCaseFileItemDefinition(selectedProperty);
             }
         }
         this.renderComplexOrPrimitiveTypeStyle();
@@ -226,7 +226,7 @@ export default class TypeEditor {
     addProperty(e: any, insertAsSibling = false, from?: PropertyRenderer): PropertyRenderer | undefined {
         e.preventDefault();
         e.stopPropagation();
-        if (! this.quickEditMode) {
+        if (!this.quickEditMode) {
             // console.warn("Setting edit mode to true")    
             this.quickEditMode = true;
         }
@@ -238,7 +238,7 @@ export default class TypeEditor {
                 // for primitive types just add as a sibling instead;
                 newProperty = from.parent.addEmptyPropertyRenderer(from);
             } else {
-                if  (from.schemaRenderer) {
+                if (from.schemaRenderer) {
                     newProperty = from.schemaRenderer.addEmptyPropertyRenderer();
                 } else {
                     this.ide.warning('Not possible to add a child to a primitive type property', 3000);
@@ -248,12 +248,12 @@ export default class TypeEditor {
             if (insertAsSibling) {
                 newProperty = this.renderer?.addEmptyPropertyRenderer();
             } else {
-                this.ide.warning('Not possible to add a child here', 3000);               
+                this.ide.warning('Not possible to add a child here', 3000);
             }
         }
         if (newProperty) {
             this.selectPropertyRenderer(newProperty);
-            newProperty.inputNameFocusHandler();    
+            newProperty.inputNameFocusHandler();
         }
         return newProperty;
     }
@@ -271,13 +271,13 @@ export default class TypeEditor {
         renderer?.children.forEach(r => {
             this.removeEmptyPropertyRenderers(r);
             if (r instanceof PropertyRenderer) {
-                if (r.property.isNew && r != this.selectedPropertyRenderer ) {
+                if (r.property.isNew && r != this.selectedPropertyRenderer) {
                     r.removeProperty();
-                }    
-            }           
+                }
+            }
         });
     }
-    
+
     onShow() {
         //always start with editor tab
         this.htmlParent.find('.model-source-tabs').tabs('option', 'active', 0);

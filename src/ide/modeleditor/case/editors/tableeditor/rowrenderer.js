@@ -14,7 +14,7 @@ export default class RowRenderer {
         this.control.rows.push(this);
         this._element = element;
         this.html = $(
-`<tr>
+            `<tr>
     ${this.control.columns.map(column => "<td />").join('\n')}
 </tr>`);
     }
@@ -68,13 +68,13 @@ export default class RowRenderer {
         e.stopPropagation();
         if (this.isEmpty()) return;
         // Ask whether our element is in use by someone else, before it can be deleted.
-        if (this.case.items.find(item => item.referencesDefinitionElement(this.element.id))) {
+        if (this.modelView.items.find(item => item.referencesDefinitionElement(this.element.id))) {
             this.control.case.editor.ide.danger('The element is in use, it cannot be deleted');
         } else {
             // delete the role
             HtmlUtil.removeHTML(this.html);
             this.element.removeDefinition();
-            this.case.editor.completeUserAction();
+            this.modelView.editor.completeUserAction();
         }
     }
 
@@ -113,5 +113,5 @@ export default class RowRenderer {
      * Refreshes the visualizers relating to the definition element
      * @param {CMMNElementDefinition} definitionElement 
      */
-    refreshReferencingFields(definitionElement) {}
+    refreshReferencingFields(definitionElement) { }
 }

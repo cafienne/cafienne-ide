@@ -3,6 +3,7 @@ import ShapeDefinition from "../../../../repository/definition/dimensions/shape"
 import ElementDefinition from "../../../../repository/definition/elementdefinition";
 import GraphicalModel from "../../../../repository/definition/graphicalmodel";
 import Util from "../../../../util/util";
+import ModelEditor from "../../../modeleditor/modeleditor";
 import Connector from "../connector/connector";
 import CanvasElement from "./canvaselement";
 import ModelView from "./modelview";
@@ -14,11 +15,14 @@ export default abstract class ElementView<
 
     __connectors: Connector<ElementView<any, M>>[] = [];
     protected __childElements: ElementView<any, M>[] = [];
+    protected editor: ModelEditor;
 
     private html_id: string = Util.createID(this.definition.id + '-'); // Copy definition id into a fixed internal html_id property to have a stable this.html search function
 
     constructor(modelView: M, public parent: ElementView<any, M> | undefined, public definition: D, public shape: ShapeDefinition) {
         super(modelView);
+
+        this.editor = this.modelView.editor;
 
         if (this.parent) {
             this.parent.__childElements.push(this);

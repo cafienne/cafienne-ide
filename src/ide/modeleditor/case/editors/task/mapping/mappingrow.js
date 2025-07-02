@@ -92,7 +92,7 @@ export default class MappingRow extends RowRenderer {
     }
 
     done() {
-        this.case.editor.completeUserAction();
+        this.modelView.editor.completeUserAction();
         this.control.refresh();
     }
 }

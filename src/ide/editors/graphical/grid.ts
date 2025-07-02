@@ -15,7 +15,7 @@ const grids: Grid[] = []; // List of all grid objects; forms a memory leak, in a
 export default class Grid {
     static initialized: boolean = false;
     static ide: IDE;
-    case: ModelView;
+    modelView: ModelView;
 
     /**
      * Register a grid instance and set up global listeners if not already done.
@@ -24,7 +24,7 @@ export default class Grid {
         grids.push(grid);
         if (!this.initialized) {
             this.initialized = true;
-            this.ide = grid.case.editor.ide;
+            this.ide = grid.modelView.editor.ide;
             $('#inputGridSize').val(Grid.Size);
             $('#inputShowGrid').prop('checked', Grid.Visible);
 
@@ -112,7 +112,7 @@ export default class Grid {
      */
     constructor(public paper: dia.Paper, cs: ModelView) {
         this.paper = paper;
-        this.case = cs;
+        this.modelView = cs;
         // Register grid for changes to the settings
         Grid.register(this);
         // Do a first time render

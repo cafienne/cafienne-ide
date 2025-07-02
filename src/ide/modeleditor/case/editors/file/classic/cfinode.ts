@@ -10,7 +10,7 @@ import CaseFileItemsEditor, { NEWDEF } from "./casefileitemseditor";
 
 export default class CFINode {
     childNodes: CFINode[] = [];
-    case: CaseView;
+    modelView: CaseView;
     html: JQuery<HTMLElement>;
     divCFIDetails: JQuery<HTMLElement>;
     childrenContainer: JQuery<HTMLElement>;
@@ -24,7 +24,7 @@ export default class CFINode {
         if (this.parentNode) {
             this.parentNode.childNodes.push(this);
         }
-        this.case = editor.case;
+        this.modelView = editor.modelView;
         this.editor.cfiNodes.push(this);
 
         this.html = $(
@@ -113,12 +113,12 @@ export default class CFINode {
                     this.editor.caseFileItemDefinitionEditor.loadDefinition(this.definition.definitionRef);
                 }
             }
-            this.case.refreshReferencingFields(this.definition);
-            this.case.editor.completeUserAction();
+            this.modelView.refreshReferencingFields(this.definition);
+            this.modelView.editor.completeUserAction();
         });
         selectMultiplicity.on('change', () => {
             this.definition.multiplicity = Multiplicity.parse(selectMultiplicity.val()?.toString());
-            this.case.editor.completeUserAction();
+            this.modelView.editor.completeUserAction();
         });
         selectMultiplicity.on('focus', () => this.editor.selectCFINode(this));
         selectDefinitionRef.on('change', e => this.editor.changeCaseFileItemDefinition(this.definition, e.currentTarget));
@@ -178,8 +178,8 @@ export default class CFINode {
      * Fills the usage counter of this cfi
      */
     renderUsedIn(): void {
-        if (this.case.items && this.definition.id) { // This means the case has been rendered
-            const references = this.case.items.filter(item => item.referencesDefinitionElement(this.definition.id));
+        if (this.modelView.items && this.definition.id) { // This means the case has been rendered
+            const references = this.modelView.items.filter(item => item.referencesDefinitionElement(this.definition.id));
             if (references.length > 0) {
                 const divUsedIn = this.divCFIDetails.find('.divUsedIn');
                 divUsedIn.html(references.length + ' places');
@@ -191,13 +191,13 @@ export default class CFINode {
         this.divCFIDetails.addClass('cfi-selected');
         // Show the right item in the definitions editor
         this.editor.caseFileItemDefinitionEditor.loadDefinition(this.definition.definitionRef);
-        this.case.updateSelectedCaseFileItemDefinition(this.definition);
+        this.modelView.updateSelectedCaseFileItemDefinition(this.definition);
         this.renderUsedIn(); // Refresh the usedIn count too when markers are refreshed
     }
 
     deselect(): void {
         this.divCFIDetails.removeClass('cfi-selected');
-        this.case.updateSelectedCaseFileItemDefinition(undefined);
+        this.modelView.updateSelectedCaseFileItemDefinition(undefined);
         this.renderUsedIn(); // Refresh the usedIn count too when markers are refreshed
     }
 
@@ -244,7 +244,7 @@ export default class CFINode {
 
     createChild(sibling: CFINode | undefined = undefined): CFINode {
         const newCaseFileItemDefinition = this.definition.createChildDefinition();
-        // newCaseFileItemDefinition.name = this.editor.case.caseDefinition.getNextNameOfType(CaseFileItemDef);
+        // newCaseFileItemDefinition.name = this.editor.modelView.caseDefinition.getNextNameOfType(CaseFileItemDef);
         const childNode = this.renderChild(newCaseFileItemDefinition);
         if (sibling) {
             this.definition.insert(newCaseFileItemDefinition, sibling.definition);

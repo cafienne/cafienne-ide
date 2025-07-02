@@ -12,7 +12,7 @@ import CFIDConverter from "./conversion/cfidconverter";
 export const NEWDEF = '__new__';
 
 export default class CaseFileItemsEditor {
-    case: CaseView;
+    modelView: CaseView;
     ide: IDE;
 
     // Keep track of nodes rendering individual case file items
@@ -30,8 +30,8 @@ export default class CaseFileItemsEditor {
      * Renders the CaseFile definition through fancytree
      */
     constructor(public caseFileEditor: CaseFileEditor, public htmlParent: JQuery<HTMLElement>) {
-        this.case = caseFileEditor.case;
-        this.ide = this.case.editor.ide;
+        this.modelView = caseFileEditor.modelView;
+        this.ide = this.modelView.editor.ide;
 
         // Now render the HTML
         this.renderHTML();
@@ -109,7 +109,7 @@ export default class CaseFileItemsEditor {
     renderCaseFileModel() {
         this.cfiNodes.forEach(node => node.delete());
         HtmlUtil.clearHTML(this.html.find('.cfi-details-container'));
-        this.case.caseDefinition.caseFile.children.forEach(cfi => this.createNode(cfi));
+        this.modelView.caseDefinition.caseFile.children.forEach(cfi => this.createNode(cfi));
     }
 
     selectCFINode(node: CFINode | undefined) {
@@ -173,7 +173,7 @@ export default class CaseFileItemsEditor {
                     newNode = from.parentNode.createChild(from);
                 } else {
                     // Insert a node at root level
-                    const parentDefinition = this.case.caseDefinition.caseFile;
+                    const parentDefinition = this.modelView.caseDefinition.caseFile;
                     newNode = this.createNode(parentDefinition.createChildDefinition());
                     parentDefinition.insert(newNode.definition, from.definition);
                     newNode.html.insertAfter(from.html);
@@ -182,9 +182,9 @@ export default class CaseFileItemsEditor {
                 newNode = from.createChild();
             }
         } else {
-            newNode = this.createNode(this.case.caseDefinition.caseFile.createChildDefinition());
+            newNode = this.createNode(this.modelView.caseDefinition.caseFile.createChildDefinition());
         }
-        this.case.editor.completeUserAction();
+        this.modelView.editor.completeUserAction();
         this.selectCFINode(newNode);
         newNode.inputNameFocusHandler();
         return newNode;
@@ -205,7 +205,7 @@ export default class CaseFileItemsEditor {
             } else {
                 // Remove the cfi
                 node.delete();
-                this.case.editor.completeUserAction();
+                this.modelView.editor.completeUserAction();
             }
         } else {
             this.ide.warning('Select a Case File Item to be removed', 3000);
@@ -214,11 +214,11 @@ export default class CaseFileItemsEditor {
 
     async convertToType(e: JQuery.Event) {
         try {
-            console.groupCollapsed(`Converting CaseFile structure of '${this.case.editor.fileName}'`)
-            await new CFIDConverter(this.case).convert();
+            console.groupCollapsed(`Converting CaseFile structure of '${this.modelView.editor.fileName}'`)
+            await new CFIDConverter(this.modelView).convert();
             console.groupEnd();
             console.log("Completed conversion, refreshing editor");
-            this.case.editor.refresh();
+            this.modelView.editor.refresh();
         } catch (error: any) {
             console.error(error);
             console.groupEnd();
@@ -279,7 +279,7 @@ export default class CaseFileItemsEditor {
 
         // Do the actual definition change and make sure it is saved
         caseFileItem.definitionRef = definitionRef;
-        this.case.editor.completeUserAction();
+        this.modelView.editor.completeUserAction();
     }
 
     /**
@@ -304,13 +304,13 @@ export default class CaseFileItemsEditor {
      * Gets all elements and editors that refer to the definition element
      */
     private getReferences(definitionElement: CaseFileItemDef) {
-        const references: any[] = this.case.items.filter(item => item.referencesDefinitionElement(definitionElement.id));
+        const references: any[] = this.modelView.items.filter(item => item.referencesDefinitionElement(definitionElement.id));
         // Also check whether the case parameters may be using the case file item
-        if (this.case.caseDefinition.input.find(p => p.bindingRef.references(definitionElement))) {
-            references.push(this.case.caseParametersEditor);
-        } else if (this.case.caseDefinition.output.find(p => p.bindingRef.references(definitionElement))) {
+        if (this.modelView.caseDefinition.input.find(p => p.bindingRef.references(definitionElement))) {
+            references.push(this.modelView.caseParametersEditor);
+        } else if (this.modelView.caseDefinition.output.find(p => p.bindingRef.references(definitionElement))) {
             // else statement, since no need to add the same editor twice
-            references.push(this.case.caseParametersEditor);
+            references.push(this.modelView.caseParametersEditor);
         }
         return references;
     }

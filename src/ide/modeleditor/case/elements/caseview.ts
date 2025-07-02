@@ -11,7 +11,6 @@ import Validator from "../../../../repository/validate/validator";
 import Debugger from "../../../debugger/debugger";
 import DragData from "../../../dragdrop/dragdata";
 import Connector from "../../../editors/graphical/connector/connector";
-import Coordinates from "../../../editors/graphical/connector/coordinates";
 import ShapeBox from "../../../editors/graphical/shapebox/shapebox";
 import ElementView from "../../../editors/graphical/view/elementview";
 import ModelView from "../../../editors/graphical/view/modelview";
@@ -53,7 +52,7 @@ export default class CaseView extends ModelView<CaseDefinition, CMMNElementDefin
         super(caseEditor, htmlParent, caseDefinition);
 
         const now = new Date();
-        caseEditor.case = this;
+        caseEditor.modelView = this;
 
         this.divModel.append($('<div class="divCaseFileContainer" />'));
         this.divCFIEditor = this.html.find('.divCaseFileContainer');
@@ -327,16 +326,6 @@ export default class CaseView extends ModelView<CaseDefinition, CMMNElementDefin
 
     __canHaveAsChild(elementType: Function) {
         return elementType == CasePlanView && !this.casePlanModel;
-    }
-
-    /**
-     * Returns the coordinates of the mouse pointer, relative with respect to the top left of the case canvas
-     */
-    getCursorCoordinates(e: JQuery.Event | JQuery<MouseEvent>) {
-        const clientX = (e as any).clientX || 0;
-        const clientY = (e as any).clientY || 0;
-        const offset = this.svg.offset()!;
-        return new Coordinates(clientX - offset.left, clientY - offset.top);
     }
 
     createCasePlan(e: JQuery<PointerEvent>) {

@@ -7,7 +7,7 @@ import CaseView from "../../elements/caseview";
 import CaseFileEditor from "./casefileeditor";
 
 export default class CaseTypeEditor {
-    case: CaseView;
+    modelView: CaseView;
     ide: IDE;
     typeEditor: TypeEditor;
     divTypeEditor!: JQuery<HTMLDivElement>;
@@ -18,10 +18,10 @@ export default class CaseTypeEditor {
      * Renders the caseFileModel definition
      */
     constructor(public caseFileEditor: CaseFileEditor, public htmlParent: JQuery<HTMLElement>) {
-        this.case = caseFileEditor.case;
-        this.ide = this.case.editor.ide;
+        this.modelView = caseFileEditor.modelView;
+        this.ide = this.modelView.editor.ide;
         this.htmlContainer = this.generateHTML();
-        this.typeEditor = new TypeEditor(this, this.divTypeEditor, this.case);
+        this.typeEditor = new TypeEditor(this, this.divTypeEditor, this.modelView);
         this.caseTypeSelector = this.generateCaseTypeSelectorHTML();
         this.typeSelector = new TypeSelector(this.typeEditor.ide.repository, this.htmlContainer.find('.selectCaseFileModel'), this.typeRef, (v: string) => this.typeRef = v);
         this.typeEditor.loadMainType(this.typeRef)
@@ -61,12 +61,12 @@ export default class CaseTypeEditor {
     }
 
     get typeRef() {
-        return this.case.caseDefinition.caseFile.typeRef;
+        return this.modelView.caseDefinition.caseFile.typeRef;
     }
 
     set typeRef(typeRef: string) {
-        this.case.caseDefinition.caseFile.typeRef = typeRef;
+        this.modelView.caseDefinition.caseFile.typeRef = typeRef;
         this.typeEditor.loadMainType(typeRef);
-        this.case.editor.completeUserAction();
+        this.modelView.editor.completeUserAction();
     }
 }

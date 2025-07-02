@@ -7,7 +7,6 @@ import Util from "../../../../util/util";
 import Grid from "../../../editors/graphical/grid";
 import ElementView from "../../../editors/graphical/view/elementview";
 import HtmlUtil from "../../../util/htmlutil";
-import CaseModelEditor from "../casemodeleditor";
 import Highlighter from "../highlighter";
 import Marker from "../marker";
 import Resizer from "../resizer";
@@ -16,8 +15,6 @@ import Halo from "./halo/halo";
 import Properties from "./properties/properties";
 
 export default abstract class CMMNElementView<D extends CMMNElementDefinition = CMMNElementDefinition> extends ElementView<D, CaseView> {
-    readonly case: CaseView;
-    protected editor: CaseModelEditor;
     protected __resizable: boolean = true;
     private __properties?: Properties;
     private _resizer?: Resizer;
@@ -34,9 +31,7 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
             console.warn(`${this.constructor.name}[${definition.id}] does not have a shape`);
         }
 
-        this.case = cs;
-        this.case.items.push(this);
-        this.editor = this.case.caseEditor;
+        this.modelView.items.push(this);
         this.createJointElement();
     }
 
@@ -115,24 +110,24 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
      * Method invoked when mouse hovers on the element
      */
     setDropHandlers() {
-        this.case.shapeBox.setDropHandler(dragData => this.addElementView(dragData.shapeType, dragData.event!), dragData => this.__canHaveAsChild(dragData.shapeType));
+        this.modelView.shapeBox.setDropHandler(dragData => this.addElementView(dragData.shapeType, dragData.event!), dragData => this.__canHaveAsChild(dragData.shapeType));
     }
 
     /**
      * Method invoked when mouse leaves the element.
      */
     removeDropHandlers() {
-        this.case.shapeBox.removeDropHandler();
+        this.modelView.shapeBox.removeDropHandler();
     }
 
     /**
      * Adds a new shape in this element with the specified shape type.
      */
     addElementView(viewType: Function, e: JQuery.Event | JQuery<MouseEvent>): CMMNElementView {
-        const coor = this.case.getCursorCoordinates(e);
+        const coor = this.modelView.getCursorCoordinates(e);
         const cmmnElement = this.createCMMNChild(viewType, Grid.snap(coor.x), Grid.snap(coor.y));
         // Now select the newly added element
-        this.case.selectedElement = cmmnElement;
+        this.modelView.selectedElement = cmmnElement;
         // Show properties of new element
         cmmnElement.propertiesView.show(true);
         return cmmnElement;
@@ -315,8 +310,8 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
      */
     __delete() {
         // Deselect ourselves if we are selected, to avoid invocation of __select(false) after we have been removed.
-        if (this.case.selectedElement == this) {
-            this.case.selectedElement = undefined;
+        if (this.modelView.selectedElement == this) {
+            this.modelView.selectedElement = undefined;
         }
 
         // First, delete our children.
@@ -330,7 +325,7 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
         this.__connectors.forEach(connector => connector.remove());
 
         // Next, inform other elements we're gonna go
-        this.case.items.forEach(cmmnElement => cmmnElement.__removeReferences(this));
+        this.modelView.items.forEach(cmmnElement => cmmnElement.__removeReferences(this));
 
         // Now remove our definition element from the case (overridden in CaseFileItemView, since that only needs to remove the shape)
         // Also let the definition side of the house know we're leaving
@@ -339,7 +334,7 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
         console.groupEnd();
 
         // Delete us from the case
-        Util.removeFromArray(this.case.items, this);
+        Util.removeFromArray(this.modelView.items, this);
 
         // Finally remove the UI element as well. 
         this.xyz_joint.remove();

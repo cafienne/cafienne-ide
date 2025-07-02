@@ -45,8 +45,8 @@ export default class CasePlanProperties extends StageProperties<CasePlanView> {
                                 <button class="btnCaseSchemaEditor">Edit Schema</button>
                             </div>
                         </div>`);
-        html.find('.btnCaseRolesEditor').on('click', e => this.view.case.teamEditor.show());
-        html.find('.btnCaseSchemaEditor').on('click', e => this.view.case.startCaseEditor.show());
+        html.find('.btnCaseRolesEditor').on('click', e => this.view.modelView.teamEditor.show());
+        html.find('.btnCaseSchemaEditor').on('click', e => this.view.modelView.startCaseEditor.show());
         this.htmlContainer.append(html);
         return html;
     }
@@ -60,7 +60,7 @@ export default class CasePlanProperties extends StageProperties<CasePlanView> {
                                 <img src="${Images.Output}" />
                             </div>
                         </div>`);
-        html.find('.btnCaseParameters').on('click', e => this.view.case.caseParametersEditor.show());
+        html.find('.btnCaseParameters').on('click', e => this.view.modelView.caseParametersEditor.show());
         this.htmlContainer.append(html);
         return html;
     }
