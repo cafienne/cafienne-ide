@@ -3,20 +3,18 @@ import $ from "jquery";
 import TextAnnotationDefinition from "../../../../repository/definition/artifact/textannotation";
 import CaseDefinition from "../../../../repository/definition/cmmn/casedefinition";
 import CaseFileItemDef from "../../../../repository/definition/cmmn/casefile/casefileitemdef";
-import CasePlanDefinition from "../../../../repository/definition/cmmn/caseplan/caseplandefinition";
 import CMMNElementDefinition from "../../../../repository/definition/cmmnelementdefinition";
-import Dimensions from "../../../../repository/definition/dimensions/dimensions";
 import Edge from "../../../../repository/definition/dimensions/edge";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import Remark from "../../../../repository/validate/remark";
 import Validator from "../../../../repository/validate/validator";
-import Util from "../../../../util/util";
 import Debugger from "../../../debugger/debugger";
 import DragData from "../../../dragdrop/dragdata";
 import Connector from "../../../editors/graphical/connector/connector";
 import Coordinates from "../../../editors/graphical/connector/coordinates";
 import Grid from "../../../editors/graphical/grid";
 import ShapeBox from "../../../editors/graphical/shapebox/shapebox";
+import ElementView from "../../../editors/graphical/view/elementview";
 import ModelView from "../../../editors/graphical/view/modelview";
 import ValidateForm from "../../../editors/validate/validateform";
 import RightSplitter from "../../../splitter/rightsplitter";
@@ -30,6 +28,7 @@ import CaseParametersEditor from "../editors/parameters/caseparameterseditor";
 import StartCaseEditor from "../editors/startcaseeditor";
 import CaseTeamEditor from "../editors/team/caseteameditor";
 import TestRunner from "../editors/testrunner";
+import CaseShapeBox from "../shapebox/caseshapebox";
 import UndoRedoBox from "../undoredo/undoredobox";
 import CaseFileItemView from "./casefileitemview";
 import CasePlanView from "./caseplanview";
@@ -38,87 +37,38 @@ import StageView from "./stageview";
 import TextAnnotationView from "./textannotationview";
 
 export default class CaseView extends ModelView<CaseDefinition, CMMNElementDefinition, CMMNElementView> {
-    readonly definition: CasePlanDefinition;
-    readonly id: string;
-    readonly name: string;
-    readonly case: CaseView;
-    readonly dimensions: Dimensions;
-    readonly html: JQuery<HTMLElement>;
-    readonly divCaseModel: JQuery<HTMLElement>;
-    readonly divUndoRedo: JQuery<HTMLElement>;
-    readonly divShapeBox: JQuery<HTMLElement>;
+    readonly undoBox: UndoRedoBox;
     readonly divCFIEditor: JQuery<HTMLElement>;
-    readonly canvas: JQuery<HTMLElement>;
-    readonly paperContainer: JQuery<HTMLElement>;
     readonly deployForm: DeployForm;
     readonly sourceEditor: CaseSourceEditor;
     readonly cfiEditor: CaseFileEditor;
-    readonly undoBox: UndoRedoBox;
-    readonly shapeBox: ShapeBox;
-    readonly splitter: RightSplitter;
     casePlanModel?: CasePlanView;
-    grid!: Grid;
     readonly teamEditor: CaseTeamEditor;
     readonly caseParametersEditor: CaseParametersEditor;
     readonly startCaseEditor: StartCaseEditor;
     readonly debugEditor: Debugger;
     readonly validateForm: ValidateForm;
-    private _selectedElement?: CMMNElementView;
-    readonly typeDescription = 'Case';
     testRunner: TestRunner;
 
-    constructor(public editor: CaseModelEditor, public htmlParent: JQuery<HTMLElement>, public caseDefinition: CaseDefinition) {
-        super(editor, caseDefinition);
+    constructor(public caseEditor: CaseModelEditor, htmlParent: JQuery<HTMLElement>, public caseDefinition: CaseDefinition) {
+        super(caseEditor, htmlParent, caseDefinition);
 
         const now = new Date();
-        this.editor.case = this;
-        this.definition = caseDefinition.casePlan;
-        this.id = this.caseDefinition.id;
-        this.name = this.caseDefinition.name;
-        this.case = this;
-        this.dimensions = caseDefinition.dimensions!;
-        this.diagram = this.dimensions.diagram;
-        this.htmlParent = htmlParent;
+        caseEditor.case = this;
 
-        this.html = $(
-            `<div case="${this.id}">
-    <div class="casemodeler">
-        <div class="basicbox basicform undoredobox"></div>
-        <div class="basicbox basicform shapebox"></div>
-        <div class="divCaseModel">
-            <div class="divCaseContainer">
-                <div class="divCaseCanvas basicbox">
-                    <div class="paper-container-scroller">
-                        <div class="paper-container" />
-                        <div class="divResizers"></div>
-                        <div class="divHalos"></div>
-                        <div class="divMarker"></div>
-                        <img class="halodragimgid" />
-                    </div>
-                </div>
-            </div>
-            <div class="divCaseFileContainer" />
-        </div>
-    </div>
-</div>`);
-        this.htmlParent.append(this.html);
-
-        this.divCaseModel = this.html.find('.divCaseModel');
-        this.divUndoRedo = this.html.find('.undoredobox');
-        this.divShapeBox = this.html.find('.shapebox');
+        this.divModel.append($('<div class="divCaseFileContainer" />'));
         this.divCFIEditor = this.html.find('.divCaseFileContainer');
-        this.canvas = this.divCaseModel.find('.divCaseCanvas');
-        this.paperContainer = this.html.find('.paper-container');
 
         this.deployForm = new DeployForm(this);
-        this.sourceEditor = new CaseSourceEditor(editor, this.html);
+        this.sourceEditor = new CaseSourceEditor(caseEditor, this.html);
         this.cfiEditor = new CaseFileEditor(this, this.divCFIEditor);
+
         this.undoBox = new UndoRedoBox(this, this.divUndoRedo);
-        this.shapeBox = new ShapeBox(this, this.divShapeBox);
-        this.splitter = new RightSplitter(this.divCaseModel, '60%', 5);
+        this.splitter = new RightSplitter(this.divModel, '60%', 5);
+
 
         //add the drawing area for this case
-        this.createJointStructure();
+        this.createJointStructureCase();
 
         //create the editor forms for roles, case file items, and case input and output parameters
         this.teamEditor = new CaseTeamEditor(this);
@@ -156,8 +106,11 @@ export default class CaseView extends ModelView<CaseDefinition, CMMNElementDefin
             this.casePlanModel.refreshView();
         }
 
-        const end = new Date();
-        console.log(`Case '${this.caseDefinition.file.fileName}' loaded in ${((end.getTime() - now.getTime()) / 1000)} seconds`)
+        console.log(`Case '${this.caseDefinition.file.fileName}' loaded in ${((new Date().getTime() - now.getTime()) / 1000)} seconds`)
+    }
+
+    createShapeBox(): ShapeBox<any> {
+        return new CaseShapeBox(this, this.divShapeBox);
     }
 
     /**
@@ -231,7 +184,7 @@ export default class CaseView extends ModelView<CaseDefinition, CMMNElementDefin
             // Now check if we have an actually view element for this shape, if not, it means we have no corresponding definition element, and then we'll remove the shape from the Dimensions.
             const view = this.items.find(view => view.shape === shape);
             if (!view) {
-                this.editor.migrated("Removing unused shape " + shape.cmmnElementRef + " from " + this.dimensions.file.fileName);
+                this.caseEditor.migrated("Removing unused shape " + shape.cmmnElementRef + " from " + this.dimensions.file.fileName);
                 shape.removeDefinition();
             }
         });
@@ -255,8 +208,7 @@ export default class CaseView extends ModelView<CaseDefinition, CMMNElementDefin
         return smallestSurrounder || this.casePlanModel!;
     }
 
-    createJointStructure() {
-        this.graph = new dia.Graph();
+    createJointStructureCase() {
 
         //create drawing area (SVG), all elements will be drawn in here
         this.paper = new dia.Paper({
@@ -277,30 +229,30 @@ export default class CaseView extends ModelView<CaseDefinition, CMMNElementDefin
 
         // Attach paper events
         this.paper.on('cell:pointerup', (elementView: any, e: any, x: number, y: number) => {
-            const underMouse = this.getItemUnderMouse(e, this.getCMMNElement(elementView));
+            const underMouse = this.getItemUnderMouse(e, this.getElementView(elementView));
             if (underMouse) {
-                this.getCMMNElement(elementView).moved(x, y, underMouse);
+                this.getElementView(elementView).moved(x, y, underMouse);
                 this.editor.completeUserAction();
             }
         });
         this.paper.on('element:pointerdown', (elementView: any, e: any, x: number, y: number) => {
             //select the mouse down element, do not set focus on description, makes it hard to delete
             //the element with [del] keyboard button (you delete the description io element)            
-            this.selectedElement = this.getCMMNElement(elementView);
+            this.selectedElement = this.getElementView(elementView);
             // Unclear why, but Grid size input having focus does not blur when we click on the canvas...
             Grid.blurSetSize();
         });
         // Enforce move constraints on certain elements
-        this.paper.on('element:pointermove', (elementView: any, e: any, x: number, y: number) => this.getCMMNElement(elementView).moving(x, y));
-        this.paper.on('element:pointerdblclick', (elementView: any, e: any, x: number, y: number) => this.getCMMNElement(elementView).propertiesView.show(true));
+        this.paper.on('element:pointermove', (elementView: any, e: any, x: number, y: number) => this.getElementView(elementView).moving(x, y));
+        this.paper.on('element:pointerdblclick', (elementView: any, e: any, x: number, y: number) => this.getElementView(elementView).propertiesView.show(true));
         this.paper.on('blank:pointerclick', () => this.clearSelection());
         // For some reason pointerclick not always works, so also listening to pointerdown on blank.
         // see e.g. https://stackoverflow.com/questions/35443524/jointjs-why-pointerclick-event-doesnt-work-only-pointerdown-gets-fired
         this.paper.on('blank:pointerdown', () => this.clearSelection());
         // When we move over an element with the mouse, an event is raised.
         //  This event is captured to enable elements to register themselves with ShapeBox and RepositoryBrowser
-        this.paper.on('element:mouseenter', (elementView: any, e: any, x: number, y: number) => this.getCMMNElement(elementView).mouseEnter());
-        this.paper.on('element:mouseleave', (elementView: any, e: any, x: number, y: number) => this.getCMMNElement(elementView).mouseLeave());
+        this.paper.on('element:mouseenter', (elementView: any, e: any, x: number, y: number) => this.getElementView(elementView).mouseEnter());
+        this.paper.on('element:mouseleave', (elementView: any, e: any, x: number, y: number) => this.getElementView(elementView).mouseLeave());
         this.paper.on('link:mouseenter', (elementView: any, e: any, x: number, y: number) => this.getConnector(elementView).mouseEnter());
         this.paper.on('link:mouseleave', (elementView: any, e: any, x: number, y: number) => this.getConnector(elementView).mouseLeave());
 
@@ -310,14 +262,6 @@ export default class CaseView extends ModelView<CaseDefinition, CMMNElementDefin
         this.svg.on('pointerout', (e: JQuery.TriggeredEvent) => e.target === e.currentTarget && this.removeDropHandlers());
         // Enable/disable the HALO when the mouse is near an item
         this.svg.on('pointermove', (e: JQuery.Event) => this.showHaloAndResizer(e));
-    }
-
-    getConnector(jointElementView: joint.dia.LinkView): Connector<CMMNElementView> {
-        return Connector.fromJoint(jointElementView.model);
-    }
-
-    getCMMNElement(jointElementView: joint.dia.ElementView): CMMNElementView {
-        return CMMNElementView.fromJoint(jointElementView.model);
     }
 
     /**
@@ -355,32 +299,6 @@ export default class CaseView extends ModelView<CaseDefinition, CMMNElementDefin
 
     refreshMovableViews() {
         this.editor.movableEditors.filter(editor => editor.visible).forEach(editor => editor.refresh());
-    }
-
-    /**
-     * Sets/gets the element currently (to be) selected.
-     * Upon setting a new selection, the previously selected element is de-selected
-     */
-    set selectedElement(element: CMMNElementView | undefined) {
-        const previousSelection = this._selectedElement;
-        if (previousSelection) {
-            previousSelection.__select(false);
-        }
-        this._selectedElement = element;
-        if (element) {
-            element.__select(true);
-        }
-    }
-
-    get selectedElement(): CMMNElementView | undefined {
-        return this._selectedElement;
-    }
-
-    /**
-     * Clears the currently selected element, if any
-     */
-    clearSelection() {
-        this.selectedElement = undefined;
     }
 
     /**
@@ -424,23 +342,6 @@ export default class CaseView extends ModelView<CaseDefinition, CMMNElementDefin
         }
     }
 
-    /**
-     * Returns the deepest cmmn element under cursor. If that is equal to self, then
-     * parent of self is returned.
-     */
-    getItemUnderMouse(e: any, self: CMMNElementView | undefined = undefined): CMMNElementView | undefined {
-        const itemsUnderMouse = this.items.filter(item => item.nearElement(e, 10));
-        const parentsUnderMouse = itemsUnderMouse.filter(item => item.parent instanceof CMMNElementView).map(item => item.parent);
-
-        // If self is passed, then the collections need to filter it out.
-        if (self) {
-            Util.removeFromArray(itemsUnderMouse, self);
-            Util.removeFromArray(parentsUnderMouse, self.parent);
-        }
-        const itemUnderMouse = this.items.find(item => itemsUnderMouse.indexOf(item) >= 0 && parentsUnderMouse.indexOf(item) < 0);
-        // console.log("Current item under mouse is "+(itemUnderMouse && itemUnderMouse.name));
-        return itemUnderMouse;
-    }
 
     setDropHandlers() {
         if (!this.casePlanModel) {
@@ -491,43 +392,26 @@ export default class CaseView extends ModelView<CaseDefinition, CMMNElementDefin
         return this.casePlanModel;
     }
 
-    __addElement(cmmnElement: CMMNElementView) {
-        if (this.loading) {
-            return cmmnElement;
-        }
-
-        this.graph.addCells([cmmnElement.xyz_joint]);
-        // TODO: this should no longer be necessary if constructors fill proper joint immediately based upon definition
-        cmmnElement.refreshView();
-        // TODO: figure out when to properly apply the move constraint logic
-        cmmnElement.moving(cmmnElement.shape.x, cmmnElement.shape.y);
-
-        this.editor.completeUserAction();
+    __addElement<E extends ElementView<CMMNElementDefinition, any>>(cmmnElement: E) {
+        const returnValue = super.__addElement(cmmnElement);
 
         // Also refresh the properties visible in the case view
         this.refreshMovableViews();
 
-        return cmmnElement;
+        return returnValue;
     }
 
     /**
      * Remove an element from the canvas, including its children.
      */
     __removeElement(cmmnElement: CMMNElementView) {
-        console.groupCollapsed(`Removing ${cmmnElement}`);
-
-        // Remove it; which recursively also removes the children; only then save it.
-        cmmnElement.__delete();
-
-        // And save the changes.
-        this.editor.completeUserAction();
+        super.__removeElement(cmmnElement);
 
         //update the column UsedIn in the case file editor
         this.cfiEditor.showUsedIn();
 
         // Also refresh the properties visible in the case view
         this.refreshMovableViews();
-        console.groupEnd();
     }
 
 
@@ -539,6 +423,6 @@ export default class CaseView extends ModelView<CaseDefinition, CMMNElementDefin
         this.diagram.connectorStyle.shiftRight();
         this.editor.ide.info(this.diagram.connectorStyle.infoMessage, 8000);
         this.items.filter(item => item.isCriterion).forEach(sentry => sentry.updateConnectorLabels());
-        this.editor.saveModel();
+        this.caseEditor.saveModel();
     }
 }

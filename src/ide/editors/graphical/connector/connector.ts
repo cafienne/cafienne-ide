@@ -79,9 +79,6 @@ export default abstract class Connector<V extends ElementView> extends CanvasEle
         return this.edge.label || '';
     }
 
-    // Connectors do not do things on move. That is handled by joint
-    moved(x: number, y: number, newParent: V): void { }
-
     mouseEnter(): void {
         // On mouse enter of a 'sentry' linked connector, we will show the standard event if it is not yet visible.
         //  It is hidden again on mouseout

@@ -18,7 +18,7 @@ export default class MovableEditor {
      */
     constructor(cs: CaseView) {
         this.case = cs;
-        this.modelEditor = cs.editor;
+        this.modelEditor = cs.caseEditor;
         this.htmlParent = this.modelEditor.divMovableEditors;
         this.modelEditor.registerMovableEditor(this);
     }
@@ -61,13 +61,13 @@ export default class MovableEditor {
         if (visible) {
             this.renderForm();
             this.toFront();
-            if (! alreadyVisible) {
+            if (!alreadyVisible) {
                 this.positionEditor();
             }
         }
         if (this._html) {
             this.html.css('display', visible ? 'block' : 'none');
-            if (! this._changingVisiblity) {
+            if (!this._changingVisiblity) {
                 this._changingVisiblity = true;
                 const nothing = visible ? this.onShow() : this.onHide();
                 this._changingVisiblity = false;
@@ -121,7 +121,7 @@ export default class MovableEditor {
     /**
      * Method invoked after a role or case file item has changed
      */
-    refreshReferencingFields(definitionElement: CMMNElementDefinition) {}
+    refreshReferencingFields(definitionElement: CMMNElementDefinition) { }
 
     toString() {
         return this.constructor.name;

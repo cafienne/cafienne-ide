@@ -19,6 +19,7 @@ import CaseView from "./caseview";
 import CMMNElementView from "./cmmnelementview";
 import StageDecoratorBox from "./decorator/box/stagedecoratorbox";
 import PlanItemHalo from "./halo/cmmn/planitemhalo";
+import Halo from "./halo/halo";
 import HumanTaskView from "./humantaskview";
 import MilestoneView from "./milestoneview";
 import PlanItemView from "./planitemview";
@@ -107,14 +108,6 @@ export default class StageView<SD extends StageDefinition = StageDefinition> ext
         newChildren.forEach(child => child.changeParent(this));
     }
 
-    /**
-     * Determines whether this stage visually surrounds the cmmn element.
-     */
-    surrounds(other: CMMNElementView | undefined) {
-        // Note: this method is added here instead of directly invoking shape.surrounds because logic is different at caseplan level, so caseplan can override.
-        return other && this.shape.surrounds(other.shape);
-    }
-
     resized() {
         super.resized();
         this.resetChildren();
@@ -133,8 +126,8 @@ export default class StageView<SD extends StageDefinition = StageDefinition> ext
         return new StageDecoratorBox(this);
     }
 
-    createHalo(): PlanItemHalo<SD, StageView<SD>> {
-        return new PlanItemHalo(this);
+    createHalo(): Halo {
+        return new PlanItemHalo(this) as unknown as Halo;
     }
 
     get __planningTablePosition() {

@@ -1,9 +1,11 @@
 ﻿import CasePlanDefinition from "../../../../repository/definition/cmmn/caseplan/caseplandefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import CaseView from "./caseview";
+import CMMNElementView from "./cmmnelementview";
 import CasePlanDecoratorBox from "./decorator/box/caseplandecoratorbox";
 import ExitCriterionView from "./exitcriterionview";
 import CasePlanHalo from "./halo/cmmn/caseplanhalo";
+import Halo from "./halo/halo";
 import CasePlanProperties from "./properties/caseplanproperties";
 import StageView from "./stageview";
 
@@ -40,7 +42,7 @@ export default class CasePlanView extends StageView<CasePlanDefinition> {
     }
 
     createHalo() {
-        return new CasePlanHalo(this);
+        return new CasePlanHalo(this) as unknown as Halo;
     }
 
     createDecoratorBox() {
@@ -112,7 +114,7 @@ export default class CasePlanView extends StageView<CasePlanDefinition> {
         return criterionType == ExitCriterionView;
     }
 
-    createCMMNChild(viewType: Function, x: number, y: number) {
+    createCMMNChild(viewType: Function, x: number, y: number): CMMNElementView {
         if (viewType == ExitCriterionView) {
             return this.__addCMMNChild(ExitCriterionView.create(this, x, y));
         } else {

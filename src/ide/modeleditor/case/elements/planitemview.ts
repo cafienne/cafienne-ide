@@ -47,7 +47,7 @@ export default abstract class PlanItemView<PI extends PlanItem = PlanItem> exten
         super.resizing(w, h);
         this.decoratorBox.moveDecoratorsToMiddle();
         // reposition our sentries on the right and bottom
-        this.__childElements.filter(child => child.isCriterion).forEach((sentry: any) => {
+        this.__childElements.filter(child => (child as CMMNElementView).isCriterion).forEach((sentry: any) => {
             //get the current position of sentry (the centre)
             const sentryX = sentry.shape.x + sentry.shape.width / 2;
             const sentryY = sentry.shape.y + sentry.shape.height / 2;

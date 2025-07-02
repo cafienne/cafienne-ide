@@ -1,4 +1,4 @@
-import { shapes, util } from "jointjs";
+import { util } from "jointjs";
 import CMMNDocumentationDefinition from "../../../../repository/definition/cmmndocumentationdefinition";
 import CMMNElementDefinition from "../../../../repository/definition/cmmnelementdefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
@@ -18,30 +18,25 @@ import Properties from "./properties/properties";
 export default abstract class CMMNElementView<D extends CMMNElementDefinition = CMMNElementDefinition> extends ElementView<D, CaseView> {
     readonly case: CaseView;
     protected editor: CaseModelEditor;
-    protected __childElements: CMMNElementView[] = [];
     protected __resizable: boolean = true;
     private __properties?: Properties;
     private _resizer?: Resizer;
     private _marker?: Marker;
     private _highlighter?: Highlighter;
     private _halo?: Halo;
-    private html_id: string = Util.createID(this.definition.id + '-'); // Copy definition id into a fixed internal html_id property to have a stable this.html search function
 
     /**
      * Creates a new CMMNElementView within the case having the corresponding definition and x, y coordinates
      */
-    constructor(cs: CaseView, public parent: CMMNElementView | undefined, definition: D, public shape: ShapeDefinition) {
-        super(cs, definition);
+    constructor(cs: CaseView, parent: CMMNElementView | undefined, definition: D, shape: ShapeDefinition) {
+        super(cs, parent, definition, shape);
         if (!shape) {
             console.warn(`${this.constructor.name}[${definition.id}] does not have a shape`);
         }
 
         this.case = cs;
         this.case.items.push(this);
-        this.editor = this.case.editor;
-        if (this.parent) {
-            this.parent.__childElements.push(this);
-        }
+        this.editor = this.case.caseEditor;
         this.createJointElement();
     }
 
@@ -56,26 +51,6 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
      */
     deletePropertiesView() {
         this.__properties && this.__properties.delete();
-    }
-
-    /**
-     * Returns the raw html/svg element.
-     */
-    get html(): JQuery<HTMLElement> {
-        // Element's ID might contain dots, slashes, etc. Escape them with a backslash
-        // Source taken from https://stackoverflow.com/questions/2786538/need-to-escape-a-special-character-in-a-jquery-selector-string
-        // Could also use jquery.escapeSelector, but this method is only from jquery 3 onwards, which is not in this jointjs (?)
-        const jquerySelector = '#' + this.html_id.replace(/[!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "\\$&");
-        return this.case.svg!.find(jquerySelector);
-    }
-
-    /**
-     * Returns the svg markup to be rendered by joint-js.
-     */
-    abstract get markup(): string;
-
-    get textAttributes(): object {
-        return {};
     }
 
     /**
@@ -104,40 +79,6 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
      */
     get wrapText() {
         return false;
-    }
-
-    /**
-     * Determines whether or not the cmmn element is our parent or another ancestor of us.
-     */
-    hasAncestor(potentialAncestor: CMMNElementView): boolean {
-        if (!potentialAncestor) return false;
-        if (!this.parent) return false;
-        if (this.parent === potentialAncestor) return true;
-        return this.parent.hasAncestor(potentialAncestor);
-    }
-
-    createJointElement() {
-        const jointSVGSetup = {
-            // Markup is the SVG that is rendered through the joint element; we surround the markup with an addition <g> element that holds the element id
-            markup: `<g id="${this.html_id}">${this.markup}</g>`,
-            // Type is used to determine whether drag/drop is supported (element border coloring)
-            type: this.constructor.name,
-            // Take size and position from shape.
-            size: this.shape,
-            position: this.shape,
-            // Attrs can contain additional relative styling for the text label inside the element
-            attrs: this.textAttributes
-        };
-        this.xyz_joint = new shapes.basic.Generic(jointSVGSetup as any);
-        // Directly embed into parent
-        if (this.parent && this.parent.xyz_joint) {
-            this.parent.xyz_joint.embed(this.xyz_joint);
-        }
-        this.xyz_joint.on('change:position', (e: any) => {
-            this.shape.x = this.xyz_joint.attributes.position.x;
-            this.shape.y = this.xyz_joint.attributes.position.y;
-        });
-        // We are not listening to joint change of size, since this is only done through "our own" resizer
     }
 
     /**
@@ -203,21 +144,6 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
      */
     createCMMNChild(viewType: Function, x: number, y: number): CMMNElementView {
         throw new Error('Cannot create an element of type' + viewType.name);
-    }
-
-    /**
-     * Informs the element to render again after a change to the underlying definition has happened.
-     */
-    refreshView() {
-        if (this.case.loading) {
-            // No refreshing when still loading.
-            //  This method is being invoked from Connector's constructor when case is being loaded
-            // NOTE: overrides of this method should actually also check the same flag (not all of them do...)
-            return;
-        }
-        this.refreshText();
-        this.refreshSubViews();
-        this.__childElements.forEach(child => child.refreshView());
     }
 
     /**
@@ -370,42 +296,6 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
     }
 
     /**
-     * Hook indicating that 'resizing' completed.
-     */
-    resized() { }
-
-    /**
-     * Method invoked during move of an element. Enables enforcing move constraints (e.g. sentries cannot be placed in the midst of an element)
-     */
-    moving(x: number, y: number) { }
-
-    /**
-     * Hook indicating that 'moving' completed.
-     */
-    moved(x: number, y: number, newParent: CMMNElementView) {
-        // Check if this element can serve as a new parent for the cmmn element
-        if (newParent && newParent.__canHaveAsChild(this.constructor) && newParent != this.parent) {
-            // check if new parent is allowed
-            this.changeParent(newParent);
-        }
-    }
-
-    /**
-     * Adds an element to another element, implements element.__addElement
-     */
-    __addCMMNChild(cmmnChildElement: CMMNElementView): CMMNElementView {
-        return this.case.__addElement(cmmnChildElement);
-    }
-
-    /**
-     * When a item is moved from one stage to another, this method is invoked
-     */
-    changeParent(newParent: CMMNElementView) {
-        if (this.parent) this.parent.releaseItem(this);
-        newParent.adoptItem(this);
-    }
-
-    /**
      * Adds the item to our list of children, and embeds it in the joint structure of this element.
      * It is an existing item in the case.
      */
@@ -418,26 +308,6 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
         childElement.xyz_joint.toFront({
             deep: true
         });
-    }
-
-    /**
-     * Removes the imte from our list of children, and also unembeds it from the joint structure.
-     * Does not delete the item.
-     */
-    releaseItem(childElement: CMMNElementView) {
-        this.xyz_joint.unembed(childElement.xyz_joint);
-        Util.removeFromArray(this.__childElements, childElement);
-    }
-
-    /**
-     * Method invoked on all case elements upon removal of an element.
-     * If there are references to the element to be removed, it can be handled here.
-     */
-    __removeReferences(cmmnElement: CMMNElementView) {
-        if (cmmnElement.parent == this) {
-            // Perhaps also render the parent again?? Since this element about to be deleted ...
-            Util.removeFromArray(this.__childElements, cmmnElement);
-        }
     }
 
     /**
@@ -476,26 +346,13 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
     }
 
     deleteSubViews() {
+        super.deleteSubViews();
+
         this.deleteResizer();
         this.deleteMarker();
         this.deleteHighlighter();
         this.deleteHalo();
         this.deletePropertiesView();
-    }
-
-    __removeElementDefinition() {
-        // Remove the shape
-        this.shape.removeDefinition();
-        // Remove the definition
-        this.definition.removeDefinition();
-    }
-
-    /**
-     * returns true if this element can contain elements of type 'elementType'.
-     * By default it returns false
-     */
-    __canHaveAsChild(elementType: Function) {
-        return false;
     }
 
     /**
