@@ -66,7 +66,7 @@ export default abstract class TaskStageView<TS extends TaskStageDefinition = Tas
         if (this.definition.planningTable) {
             if (!this.planningTableView) {
                 const position = this.__planningTablePosition;
-                const shape = this.case.diagram.getShape(this.definition.planningTable) || this.case.diagram.createShape(position.x, position.y, 24, 16, this.definition.planningTable.id);
+                const shape = this.modelCanvas.diagram.getShape(this.definition.planningTable) || this.modelCanvas.diagram.createShape(position.x, position.y, 24, 16, this.definition.planningTable.id);
                 new PlanningTableView(this, this.definition.planningTable, shape);
             }
         }

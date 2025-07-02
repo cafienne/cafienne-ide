@@ -23,7 +23,7 @@ export default class CaseParametersEditor extends StandardForm {
     renderHead() {
         super.renderHead();
         this.htmlContainer.html(
-`<div class="parameterscontainer">
+            `<div class="parameterscontainer">
     <div class="input parameters">
         <h4>Input Parameters</h4>
         <div class="parameterbox input-parameters"></div>
@@ -134,7 +134,7 @@ export class ParameterRow extends RowRenderer {
         this.bindingName = parameter ? parameter.bindingName : '';
     }
 
-    
+
     get parameter() {
         // Just to have some typesafe reference
         return /** @type {CaseParameterDefinition} */ (this.element);
@@ -145,7 +145,7 @@ export class ParameterRow extends RowRenderer {
      * @param {CaseFileItemDef} cfi 
      */
     changeBindingRef(cfi) {
-        if (! this.parameterName) {
+        if (!this.parameterName) {
             this.parameter.bindingRef.update(cfi.id);
             this.parameterName = this.parameter.name = this.parameter.bindingName;
         }
@@ -176,7 +176,7 @@ export class ParameterRow extends RowRenderer {
      */
     refreshReferencingFields(cfi) {
         super.refreshReferencingFields(cfi);
-        if (! this.isEmpty() && this.parameter.bindingRef.references(cfi)) {
+        if (!this.isEmpty() && this.parameter.bindingRef.references(cfi)) {
             this.html.find('.cfiName').html(cfi.name);
         }
     }
@@ -185,6 +185,6 @@ export class ParameterRow extends RowRenderer {
      * @returns {CaseParameterDefinition}
      */
     createElement() {
-        return this.control.editor.case.caseDefinition.createDefinition(CaseParameterDefinition);
+        return this.control.editor.modelCanvas.caseDefinition.createDefinition(CaseParameterDefinition);
     }
 }

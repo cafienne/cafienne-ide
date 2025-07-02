@@ -12,7 +12,7 @@ export default class PlanningTableView extends CMMNElementView<PlanningTableDefi
     stage: TaskStageView;
 
     constructor(public parent: TaskStageView, definition: PlanningTableDefinition, shape: ShapeDefinition) {
-        super(parent.case, parent, definition, shape);
+        super(parent.modelCanvas, parent, definition, shape);
         this.parent = parent;
         this.__resizable = false;
         parent.__addCMMNChild(this);

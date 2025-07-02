@@ -5,7 +5,7 @@ import CFIWrapper from "./cfiwrapper";
 import TypeWrapper from "./typewrapper";
 
 export default class CFIDConverter {
-    case: CaseView;
+    modelCanvas: CaseView;
     repository: Repository;
     cfiWrappers: CFIWrapper[];
     typeWrappers: TypeWrapper[];
@@ -13,20 +13,20 @@ export default class CFIDConverter {
      * Convert the CaseFileItems and their CaseFileItemDefinitions (.cfid files) to the new type structure for this case.
      */
     constructor(cs: CaseView) {
-        this.case = cs;
-        this.repository = this.case.editor.ide.repository;
+        this.modelCanvas = cs;
+        this.repository = this.modelCanvas.editor.ide.repository;
         this.cfiWrappers = /** @type {Array<CFIWrapper>} */ ([]);
         this.typeWrappers = /** @type {Array<TypeWrapper>} */ ([]);
     }
 
     async convert() {
         // First create an empty type file for the case.
-        const caseName = this.case.caseDefinition.file.name;
+        const caseName = this.modelCanvas.caseDefinition.file.name;
         const topTypeFile = this.repository.createTypeFile('case_' + caseName + '.type', TypeDefinition.createDefinitionSource('case_' + caseName));
         topTypeFile.parse();
 
         // Recursively create the list of CFIWrappers (is actually a hierarchical structure).
-        const topWrappers = this.case.caseDefinition.caseFile.children.map(child => new CFIWrapper(this, child, undefined));
+        const topWrappers = this.modelCanvas.caseDefinition.caseFile.children.map(child => new CFIWrapper(this, child, undefined));
         // Now recursively load all of them (this may need to invoke the async parse() method in some of them)
         for (let i = 0; i < topWrappers.length; i++) {
             await topWrappers[i].load();
@@ -49,16 +49,16 @@ export default class CFIDConverter {
 
         // Now update all model wide references to old CaseFileItemDef identifiers to become "path" based into the new structure
         console.group("Converting usage of the case file items within other parts of the case (expressions, criteria, etc.)");
-        this.case.caseDefinition.caseFile.typeRef = topTypeFile.fileName;
+        this.modelCanvas.caseDefinition.caseFile.typeRef = topTypeFile.fileName;
         this.cfiWrappers.forEach(cfi => cfi.convertUsage());
         console.groupEnd();
 
         // Finally upload the case and the dimensions.
         console.group("Saving modified case and dimensions");
-        const newDimensions = this.case.caseDefinition.dimensions?.toXMLString();
-        const newCase = this.case.caseDefinition.toXMLString();
-        const dimensionsFile = this.case.caseEditor.dimensionsFile;
-        const caseFile = this.case.caseEditor.caseFile;
+        const newDimensions = this.modelCanvas.caseDefinition.dimensions?.toXMLString();
+        const newCase = this.modelCanvas.caseDefinition.toXMLString();
+        const dimensionsFile = this.modelCanvas.caseEditor.dimensionsFile;
+        const caseFile = this.modelCanvas.caseEditor.caseFile;
         if (!dimensionsFile) return; // only needed because of typescript ...
         dimensionsFile.source = newDimensions;
         await dimensionsFile.save();

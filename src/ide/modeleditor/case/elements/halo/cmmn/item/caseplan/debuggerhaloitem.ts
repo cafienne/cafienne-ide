@@ -4,6 +4,6 @@ import HaloClickItem from "../../../haloclickitem";
 
 export default class DebuggerHaloItem extends HaloClickItem {
     constructor(halo: Halo) {
-        super(halo, Images.Debug, 'Debug cases of this type', e => this.halo.element.case.debugEditor.show());
+        super(halo, Images.Debug, 'Debug cases of this type', e => this.halo.element.modelCanvas.debugEditor.show());
     }
 }

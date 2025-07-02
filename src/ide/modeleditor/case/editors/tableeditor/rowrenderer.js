@@ -14,7 +14,7 @@ export default class RowRenderer {
         this.control.rows.push(this);
         this._element = element;
         this.html = $(
-`<tr>
+            `<tr>
     ${this.control.columns.map(column => "<td />").join('\n')}
 </tr>`);
     }
@@ -113,5 +113,5 @@ export default class RowRenderer {
      * Refreshes the visualizers relating to the definition element
      * @param {CMMNElementDefinition} definitionElement 
      */
-    refreshReferencingFields(definitionElement) {}
+    refreshReferencingFields(definitionElement) { }
 }

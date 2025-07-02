@@ -1,10 +1,10 @@
 import $ from "jquery";
-import ModelView from "../view/modelview";
+import ModelCanvas from "../view/modelcanvas";
 import ElementMetadata from "./elementmetadata";
 import ShapeBoxDragData from "./shapeboxdragdata";
 
-export default class ShapeBox<V extends ModelView = ModelView> {
-    modelView: V;
+export default class ShapeBox<V extends ModelCanvas = ModelCanvas> {
+    modelCanvas: V;
     html: JQuery<HTMLElement>;
     dragData?: ShapeBoxDragData;
     htmlContainer: JQuery<HTMLUListElement>;
@@ -13,7 +13,7 @@ export default class ShapeBox<V extends ModelView = ModelView> {
      * Box that has the CMMN shapes that are available for dragging to the canvas
      */
     constructor(cs: V, htmlElement: JQuery<HTMLElement>) {
-        this.modelView = cs;
+        this.modelCanvas = cs;
         this.html = htmlElement;
 
         const html = $(
@@ -52,7 +52,7 @@ export default class ShapeBox<V extends ModelView = ModelView> {
      * 
      */
     handleMouseDown(e: JQuery.TriggeredEvent, shapeType: ElementMetadata) {
-        this.modelView.clearSelection();
+        this.modelCanvas.clearSelection();
         this.dragData = new ShapeBoxDragData(this, shapeType.cmmnElementType, shapeType.typeDescription, shapeType.smallImage);
     }
 }

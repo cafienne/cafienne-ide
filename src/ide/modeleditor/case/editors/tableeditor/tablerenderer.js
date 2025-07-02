@@ -58,12 +58,12 @@ export default class TableRenderer {
      * Clears the current content of the editor and renders it again
      */
     renderTable() {
-        if (! this._html) {
-            this.renderHead();            
+        if (!this._html) {
+            this.renderHead();
         }
         this.renderData();
     }
- 
+
     renderHead() {
         //create the html element of the editor form
         this.html = $(`<table>

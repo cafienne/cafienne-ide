@@ -8,12 +8,13 @@ import Util from "../../../../util/util";
 import ModelEditor from "../../../modeleditor/modeleditor";
 import RightSplitter from "../../../splitter/rightsplitter";
 import Connector from "../connector/connector";
+import Coordinates from "../connector/coordinates";
 import Grid from "../grid";
 import ShapeBox from "../shapebox/shapebox";
 import CanvasElement from "./canvaselement";
 import ElementView from "./elementview";
 
-export default abstract class ModelView<
+export default abstract class ModelCanvas<
     M extends GraphicalModel = GraphicalModel,
     D extends ElementDefinition<M> = ElementDefinition<M>,
     V extends ElementView<D, any> = ElementView<D, any>> {
@@ -154,6 +155,15 @@ export default abstract class ModelView<
         return CanvasElement.fromJoint(jointElementView.model);
     }
 
+    /**
+     * Returns the coordinates of the mouse pointer, relative with respect to the top left of the case canvas
+     */
+    getCursorCoordinates(e: JQuery.Event | JQuery<MouseEvent>) {
+        const clientX = (e as any).clientX || 0;
+        const clientY = (e as any).clientY || 0;
+        const offset = this.svg.offset()!;
+        return new Coordinates(clientX - offset.left, clientY - offset.top);
+    }
 
     /**
      * Returns the deepest cmmn element under cursor. If that is equal to self, then

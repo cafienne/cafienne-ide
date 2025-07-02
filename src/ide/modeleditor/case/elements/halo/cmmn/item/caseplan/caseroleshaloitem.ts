@@ -4,6 +4,6 @@ import HaloClickItem from "../../../haloclickitem";
 
 export default class CaseRolesHaloItem extends HaloClickItem {
     constructor(halo: Halo) {
-        super(halo, Images.Roles, 'Edit case team', e => this.halo.element.case.teamEditor.show());
+        super(halo, Images.Roles, 'Edit case team', e => this.halo.element.modelCanvas.teamEditor.show());
     }
 }

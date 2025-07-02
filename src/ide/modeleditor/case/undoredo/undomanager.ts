@@ -11,7 +11,7 @@ export default class UndoManager {
 
     updateUndoRedoButtons(undoCount: number = this.getUndoCount(), redoCount: number = this.getRedoCount()): void {
         // Only update the buttons once the case is loaded.
-        if (this.editor.case) this.editor.case.undoBox.updateButtons(undoCount, redoCount);
+        if (this.editor.modelCanvas) this.editor.modelCanvas.undoBox.updateButtons(undoCount, redoCount);
     }
 
     /**
@@ -67,7 +67,7 @@ export default class UndoManager {
     }
 
     async undo() {
-        if (!this.editor.case) return; // Function currently only enabled in CaseModelEditor
+        if (!this.editor.modelCanvas) return; // Function currently only enabled in CaseModelEditor
 
         if (this.currentAction) {
             this.currentAction = await this.currentAction.undo();
@@ -86,7 +86,7 @@ export default class UndoManager {
     }
 
     async redo() {
-        if (!this.editor.case) return; // Function currently only enabled in CaseModelEditor
+        if (!this.editor.modelCanvas) return; // Function currently only enabled in CaseModelEditor
 
         if (this.currentAction && this.currentAction.nextAction) {
             this.currentAction = await this.currentAction.nextAction.redo();

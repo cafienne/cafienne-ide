@@ -6,7 +6,7 @@ import Properties from "./properties";
 export default class CaseFileItemProperties extends Properties<CaseFileItemView> {
     renderData() {
         const caseFileItemId = this.view.shape.cmmnElementRef ? this.view.shape.cmmnElementRef : '';
-        const cfi = this.view.case.caseDefinition.getElement(caseFileItemId) as CaseFileItemDef | undefined;
+        const cfi = this.view.modelCanvas.caseDefinition.getElement(caseFileItemId) as CaseFileItemDef | undefined;
         const contextName = cfi ? cfi.name : '';
 
         const html = $(`<div class="zoomRow zoomDoubleRow" title="Drag/drop a case file item from the editor to change the reference">
@@ -17,13 +17,13 @@ export default class CaseFileItemProperties extends Properties<CaseFileItemView>
                         </div>`);
         this.htmlContainer.append(html);
 
-        html.find('.zoombt').on('click', e => this.view.case.cfiEditor.open((cfi: CaseFileItemDef) => this.changeContextRef(html, cfi)));
+        html.find('.zoombt').on('click', e => this.view.modelCanvas.cfiEditor.open((cfi: CaseFileItemDef) => this.changeContextRef(html, cfi)));
         html.find('.removeReferenceButton').on('click', e => this.changeContextRef(html));
         html.on('pointerover', e => {
             e.stopPropagation();
-            this.view.case.cfiEditor.setDropHandler((dragData: { item: CaseFileItemDef }) => this.changeContextRef(html, dragData.item));
+            this.view.modelCanvas.cfiEditor.setDropHandler((dragData: { item: CaseFileItemDef }) => this.changeContextRef(html, dragData.item));
         });
-        html.find('.zoomRow').on('pointerout', e => this.view.case.cfiEditor.removeDropHandler());
+        html.find('.zoomRow').on('pointerout', e => this.view.modelCanvas.cfiEditor.removeDropHandler());
         this.addDocumentationField();
         this.addIdField();
     }

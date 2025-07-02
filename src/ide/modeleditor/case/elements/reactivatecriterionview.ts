@@ -5,7 +5,7 @@ import SentryView from "./sentryview";
 export default class ReactivateCriterionView extends SentryView {
     static create(planItem: PlanItemView, x: number, y: number) {
         const definition = planItem.definition.createReactivateCriterion();
-        const shape = planItem.case.diagram.createShape(x, y, 12, 20, definition.id);
+        const shape = planItem.modelCanvas.diagram.createShape(x, y, 12, 20, definition.id);
         return new ReactivateCriterionView(planItem, definition, shape);
     }
 

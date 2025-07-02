@@ -12,7 +12,7 @@ export default class ProcessTaskView extends TaskView {
      */
     static create(stage: StageView, x: number, y: number): ProcessTaskView {
         const definition = stage.definition.createPlanItem(ProcessTaskDefinition);
-        const shape = stage.case.diagram.createShape(x, y, 140, 80, definition.id);
+        const shape = stage.modelCanvas.diagram.createShape(x, y, 140, 80, definition.id);
         return new ProcessTaskView(stage, definition, shape);
     }
 

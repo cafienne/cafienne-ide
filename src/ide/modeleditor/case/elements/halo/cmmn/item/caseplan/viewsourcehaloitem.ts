@@ -4,6 +4,6 @@ import HaloClickItem from "../../../haloclickitem";
 
 export default class ViewSourceHaloItem extends HaloClickItem {
     constructor(halo: Halo) {
-        super(halo, Images.ViewSource, 'View source of this case', e => this.halo.element.modelView.viewSource());
+        super(halo, Images.ViewSource, 'View source of this case', e => this.halo.element.modelCanvas.viewSource());
     }
 }

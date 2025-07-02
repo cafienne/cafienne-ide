@@ -10,8 +10,8 @@ export default class TextAnnotationView extends CMMNElementView<TextAnnotationDe
      * Create a new TextAnnotationView at the given coordinates.
      */
     static create(stage: StageView, x: number, y: number): TextAnnotationView {
-        const definition = stage.case.caseDefinition.createTextAnnotation();
-        const shape = stage.case.diagram.createShape(x, y, 100, 60, definition.id);
+        const definition = stage.modelCanvas.caseDefinition.createTextAnnotation();
+        const shape = stage.modelCanvas.diagram.createShape(x, y, 100, 60, definition.id);
         return new TextAnnotationView(stage, definition, shape);
     }
 
@@ -19,7 +19,7 @@ export default class TextAnnotationView extends CMMNElementView<TextAnnotationDe
      * Creates a new TextAnnotationView element
      */
     constructor(public parent: StageView, definition: TextAnnotationDefinition, shape: ShapeDefinition) {
-        super(parent.case, parent, definition, shape);
+        super(parent.modelCanvas, parent, definition, shape);
     }
 
     get text() {

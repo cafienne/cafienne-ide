@@ -10,12 +10,10 @@ import Remark from "../../../../repository/validate/remark";
 import Validator from "../../../../repository/validate/validator";
 import Debugger from "../../../debugger/debugger";
 import DragData from "../../../dragdrop/dragdata";
-import Connector from "../../../editors/graphical/connector/connector";
-import Coordinates from "../../../editors/graphical/connector/coordinates";
 import Grid from "../../../editors/graphical/grid";
 import ShapeBox from "../../../editors/graphical/shapebox/shapebox";
 import ElementView from "../../../editors/graphical/view/elementview";
-import ModelView from "../../../editors/graphical/view/modelview";
+import ModelCanvas from "../../../editors/graphical/view/modelcanvas";
 import ValidateForm from "../../../editors/validate/validateform";
 import RightSplitter from "../../../splitter/rightsplitter";
 import HtmlUtil from "../../../util/htmlutil";
@@ -36,7 +34,7 @@ import CMMNElementView from "./cmmnelementview";
 import StageView from "./stageview";
 import TextAnnotationView from "./textannotationview";
 
-export default class CaseView extends ModelView<CaseDefinition, CMMNElementDefinition, CMMNElementView> {
+export default class CaseView extends ModelCanvas<CaseDefinition, CMMNElementDefinition, CMMNElementView> {
     readonly undoBox: UndoRedoBox;
     readonly divCFIEditor: JQuery<HTMLElement>;
     readonly deployForm: DeployForm;
@@ -54,7 +52,7 @@ export default class CaseView extends ModelView<CaseDefinition, CMMNElementDefin
         super(caseEditor, htmlParent, caseDefinition);
 
         const now = new Date();
-        caseEditor.case = this;
+        caseEditor.modelCanvas = this;
 
         this.divModel.append($('<div class="divCaseFileContainer" />'));
         this.divCFIEditor = this.html.find('.divCaseFileContainer');
@@ -116,7 +114,7 @@ export default class CaseView extends ModelView<CaseDefinition, CMMNElementDefin
     /**
      * Creates a connector from an edge definition.
      */
-    createConnectorFromEdge(edge: Edge): Connector<CMMNElementView> | undefined {
+    createConnectorFromEdge(edge: Edge): CaseConnector | undefined {
         const findItem = (edge: Edge, propertyName: string): CMMNElementView | undefined => {
             const id = (edge as any)[propertyName];
             return this.getItem(id);
@@ -138,9 +136,9 @@ export default class CaseView extends ModelView<CaseDefinition, CMMNElementDefin
         return connector;
     }
 
-    createConnector(source: CMMNElementView, target: CMMNElementView): Connector<CMMNElementView> {
+    createConnector(source: CMMNElementView, target: CMMNElementView): CaseConnector {
         const edge = Edge.create(source.definition, target.definition);
-        const connector = new CaseConnector(source.modelView, source, target, edge!);
+        const connector = new CaseConnector(source.modelCanvas, source, target, edge!);
         connector.draw();
 
         this.editor.completeUserAction();
@@ -372,16 +370,6 @@ export default class CaseView extends ModelView<CaseDefinition, CMMNElementDefin
 
     __canHaveAsChild(elementType: Function) {
         return elementType == CasePlanView && !this.casePlanModel;
-    }
-
-    /**
-     * Returns the coordinates of the mouse pointer, relative with respect to the top left of the case canvas
-     */
-    getCursorCoordinates(e: JQuery.Event | JQuery<MouseEvent>) {
-        const clientX = (e as any).clientX || 0;
-        const clientY = (e as any).clientY || 0;
-        const offset = this.svg.offset()!;
-        return new Coordinates(clientX - offset.left, clientY - offset.top);
     }
 
     createCasePlan(e: JQuery<PointerEvent>) {

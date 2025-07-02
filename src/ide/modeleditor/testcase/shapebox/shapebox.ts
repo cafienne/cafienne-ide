@@ -1,8 +1,8 @@
 import $ from "jquery";
-import ElementRegistry, { ElementMetadata } from "./elementregistry";
-import TestCaseView from "../testcaseview";
-import ShapeBoxDragData from "./shapeboxdragdata";
 import DragData from "../../../dragdrop/dragdata";
+import TestCaseView from "../testcaseview";
+import ElementRegistry, { ElementMetadata } from "./elementregistry";
+import ShapeBoxDragData from "./shapeboxdragdata";
 
 export default class ShapeBox {
     dragData?: ShapeBoxDragData;
@@ -43,7 +43,7 @@ export default class ShapeBox {
      * Registers a drop handler with the repository browser.
      * If an item from the browser is moved over the canvas, elements can register a drop handler
      */
-    setDropHandler(dropHandler:(dragData: ShapeBoxDragData) => void, filter?: (dragData: ShapeBoxDragData) => boolean) {
+    setDropHandler(dropHandler: (dragData: ShapeBoxDragData) => void, filter?: (dragData: ShapeBoxDragData) => boolean) {
         if (this.dragData) this.dragData.setDropHandler(<(dragData: DragData) => void>dropHandler, <(dragData: DragData) => boolean>filter);
     }
 
@@ -60,7 +60,7 @@ export default class ShapeBox {
      * 
      */
     handleMouseDown(e: any, shapeType: ElementMetadata) {
-//        this.case.clearSelection();
+        //        this.modelCanvas.clearSelection();
         this.dragData = new ShapeBoxDragData(this, shapeType.cmmnElementType, shapeType.typeDescription, shapeType.smallImage);
     }
 }

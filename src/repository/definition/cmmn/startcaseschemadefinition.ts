@@ -23,7 +23,7 @@ export default class StartCaseSchemaDefinition extends CMMNExtensionDefinition<C
     createExportNode(parentNode: Element) {
         if (this.value?.trim()) {
             // Now dump start case schema if there is one. Should we also do ampersand replacements??? Not sure. Perhaps that belongs in business logic??
-            // const startCaseSchemaValue = this.case.startCaseEditor.value.replace(/&/g, '&amp;');
+            // const startCaseSchemaValue = this.value.replace(/&/g, '&amp;');
             super.createExportNode(parentNode, StartCaseSchemaDefinition.TAG)
             this.exportNode.textContent = this.value;
         }

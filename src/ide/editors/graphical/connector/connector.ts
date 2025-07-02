@@ -2,9 +2,9 @@
 import Edge from "../../../../repository/definition/dimensions/edge";
 import CanvasElement from "../view/canvaselement";
 import ElementView from "../view/elementview";
-import ModelView from "../view/modelview";
+import ModelCanvas from "../view/modelcanvas";
 
-export default abstract class Connector<V extends ElementView> extends CanvasElement<dia.Link, ModelView> {
+export default abstract class Connector<V extends ElementView> extends CanvasElement<dia.Link, ModelCanvas> {
     formerLabel?: string;
     private _hiddenLabel?: string;
 
@@ -13,7 +13,7 @@ export default abstract class Connector<V extends ElementView> extends CanvasEle
     /**
      * Creates a connector (=link in jointJS) between a source and a target.
      */
-    constructor(cs: ModelView<any, any>, public source: V, public target: V, public edge: Edge) {
+    constructor(cs: ModelCanvas<any, any>, public source: V, public target: V, public edge: Edge) {
         super(cs);
     }
 
@@ -34,8 +34,8 @@ export default abstract class Connector<V extends ElementView> extends CanvasEle
             // Remove connector from source and target, and also remove the edge from the dimensions through the case.
             this.source.__removeConnector(this);
             this.target.__removeConnector(this);
-            this.modelView.__removeConnector(this);
-            this.modelView.completeUserAction(); // Save the case
+            this.modelCanvas.__removeConnector(this);
+            this.modelCanvas.completeUserAction(); // Save the case
         });
 
         this.xyz_joint.on('change:vertices', e => {
@@ -45,7 +45,7 @@ export default abstract class Connector<V extends ElementView> extends CanvasEle
         });
 
         // Render the connector in the case.
-        this.modelView.__addConnector(this);
+        this.modelCanvas.__addConnector(this);
         // Inform both source and target about this new connector; just adds it to their connector collections.
         this.source.__addConnector(this);
         this.target.__addConnector(this);

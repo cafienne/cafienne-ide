@@ -3,22 +3,26 @@ import ShapeDefinition from "../../../../repository/definition/dimensions/shape"
 import ElementDefinition from "../../../../repository/definition/elementdefinition";
 import GraphicalModel from "../../../../repository/definition/graphicalmodel";
 import Util from "../../../../util/util";
+import ModelEditor from "../../../modeleditor/modeleditor";
 import Connector from "../connector/connector";
 import CanvasElement from "./canvaselement";
-import ModelView from "./modelview";
+import ModelCanvas from "./modelcanvas";
 
 export default abstract class ElementView<
     D extends ElementDefinition<GraphicalModel> = ElementDefinition<GraphicalModel>,
-    M extends ModelView = ModelView>
+    M extends ModelCanvas = ModelCanvas>
     extends CanvasElement<shapes.basic.Generic, M> {
 
     __connectors: Connector<ElementView<any, M>>[] = [];
     protected __childElements: ElementView<any, M>[] = [];
+    protected editor: ModelEditor;
 
     private html_id: string = Util.createID(this.definition.id + '-'); // Copy definition id into a fixed internal html_id property to have a stable this.html search function
 
-    constructor(modelView: M, public parent: ElementView<any, M> | undefined, public definition: D, public shape: ShapeDefinition) {
-        super(modelView);
+    constructor(modelCanvas: M, public parent: ElementView<any, M> | undefined, public definition: D, public shape: ShapeDefinition) {
+        super(modelCanvas);
+
+        this.editor = this.modelCanvas.editor;
 
         if (this.parent) {
             this.parent.__childElements.push(this);
@@ -50,7 +54,7 @@ export default abstract class ElementView<
      * creates a connector between the element and the target.
      */
     __connect(target: ElementView<any, M>): Connector<ElementView<any, M>> {
-        const connector = this.modelView.createConnector(this, target);
+        const connector = this.modelCanvas.createConnector(this, target);
         return connector;
     }
 
@@ -140,7 +144,7 @@ export default abstract class ElementView<
      * Adds an element to another element, implements element.__addElement
      */
     __addCMMNChild<E extends ElementView<any, M>>(cmmnChildElement: E): E {
-        return this.modelView.__addElement(cmmnChildElement);
+        return this.modelCanvas.__addElement(cmmnChildElement);
     }
 
     /**
@@ -151,7 +155,7 @@ export default abstract class ElementView<
         // Source taken from https://stackoverflow.com/questions/2786538/need-to-escape-a-special-character-in-a-jquery-selector-string
         // Could also use jquery.escapeSelector, but this method is only from jquery 3 onwards, which is not in this jointjs (?)
         const jquerySelector = '#' + this.html_id.replace(/[!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "\\$&");
-        return this.modelView.svg!.find(jquerySelector);
+        return this.modelCanvas.svg!.find(jquerySelector);
     }
 
     createJointElement() {
@@ -213,7 +217,7 @@ export default abstract class ElementView<
      * Informs the element to render again after a change to the underlying definition has happened.
      */
     refreshView() {
-        if (this.modelView.loading) {
+        if (this.modelCanvas.loading) {
             // No refreshing when still loading.
             //  This method is being invoked from Connector's constructor when case is being loaded
             // NOTE: overrides of this method should actually also check the same flag (not all of them do...)
@@ -231,8 +235,8 @@ export default abstract class ElementView<
      */
     __delete() {
         // Deselect ourselves if we are selected, to avoid invocation of __select(false) after we have been removed.
-        if (this.modelView.selectedElement == this) {
-            this.modelView.selectedElement = undefined;
+        if (this.modelCanvas.selectedElement == this) {
+            this.modelCanvas.selectedElement = undefined;
         }
 
         // First, delete our children.
@@ -246,7 +250,7 @@ export default abstract class ElementView<
         this.__connectors.forEach(connector => connector.remove());
 
         // Next, inform other elements we're gonna go
-        this.modelView.items.forEach(cmmnElement => cmmnElement.__removeReferences(this));
+        this.modelCanvas.items.forEach(cmmnElement => cmmnElement.__removeReferences(this));
 
         // Now remove our definition element from the case (overridden in CaseFileItemView, since that only needs to remove the shape)
         // Also let the definition side of the house know we're leaving
@@ -255,7 +259,7 @@ export default abstract class ElementView<
         console.groupEnd();
 
         // Delete us from the case
-        Util.removeFromArray(this.modelView.items, this);
+        Util.removeFromArray(this.modelCanvas.items, this);
 
         // Finally remove the UI element as well. 
         this.xyz_joint.remove();

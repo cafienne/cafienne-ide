@@ -3,7 +3,7 @@ import Images from "../../../util/images/images";
 import CaseView from "../elements/caseview";
 
 export default class UndoRedoBox {
-    private case: CaseView;
+    private modelCanvas: CaseView;
     private spanUndoCounter: JQuery<HTMLElement>;
     private spanRedoCounter: JQuery<HTMLElement>;
 
@@ -12,7 +12,7 @@ export default class UndoRedoBox {
      * @param html JQuery<HTMLElement>
      */
     constructor(cs: CaseView, public html: JQuery<HTMLElement>) {
-        this.case = cs;
+        this.modelCanvas = cs;
         this.html.append(
             $(`<div class="formheader">
     <div>
@@ -34,11 +34,11 @@ export default class UndoRedoBox {
     }
 
     undo(): void {
-        this.case.caseEditor.undoManager.undo();
+        this.modelCanvas.caseEditor.undoManager.undo();
     }
 
     redo(): void {
-        this.case.caseEditor.undoManager.redo();
+        this.modelCanvas.caseEditor.undoManager.redo();
     }
 
     updateButtons(undoCount: number, redoCount: number): void {

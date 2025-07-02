@@ -1,16 +1,16 @@
 import { dia, shapes } from "jointjs";
 import CanvasElement from "../view/canvaselement";
-import ModelView from "../view/modelview";
+import ModelCanvas from "../view/modelcanvas";
 import Coordinates from "./coordinates";
 
-export default class TemporaryConnector<M extends ModelView> extends CanvasElement<dia.Link, ModelView> {
+export default class TemporaryConnector<M extends ModelCanvas> extends CanvasElement<dia.Link, ModelCanvas> {
     source: CanvasElement<shapes.basic.Generic, M>;
 
     /**
      * Creates a temporary connector (=link in jointJS) from the source to a set of target coordinates
      */
     constructor(source: CanvasElement<shapes.basic.Generic, M>, coordinates: Coordinates) {
-        super(source.modelView);
+        super(source.modelCanvas);
         this.source = source;
         this.xyz_joint = new dia.Link({
             source: { id: source.xyz_joint.id },
@@ -19,7 +19,7 @@ export default class TemporaryConnector<M extends ModelView> extends CanvasEleme
                 '.connection': { 'stroke': 'blue' }
             }
         });
-        source.modelView.graph!.addCells([this.xyz_joint]);
+        source.modelCanvas.graph!.addCells([this.xyz_joint]);
     }
 
     mouseEnter(): void { }

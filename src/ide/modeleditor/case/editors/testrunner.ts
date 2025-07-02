@@ -59,7 +59,7 @@ export default class TestRunner extends StandardForm {
         this._settestedTimestamp('Running testcases ...');
 
         try {
-            await this.runner.runTestsForCase(this.case.caseDefinition);
+            await this.runner.runTestsForCase(this.modelCanvas.caseDefinition);
             this._settestedTimestamp('Testcases ran successfully');
         } catch (error) {
             debugger;

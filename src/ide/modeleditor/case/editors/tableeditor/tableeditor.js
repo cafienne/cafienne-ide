@@ -13,7 +13,7 @@ export default class TableEditor extends MovableEditor {
      */
     constructor(cs) {
         super(cs);
-        // this.id = this.case.id + '_' + this.constructor.name;
+        // this.id = this.modelCanvas.id + '_' + this.constructor.name;
         /** @type {Array<RowEditor>} */
         this.rows = []; // Reset array of row renderers
     }
@@ -138,7 +138,7 @@ export default class TableEditor extends MovableEditor {
      */
     change(element, field, value) {
         element.change(field, value);
-        this.case.editor.completeUserAction();
+        this.modelCanvas.editor.completeUserAction();
     }
 
     /**
@@ -237,13 +237,13 @@ export class RowEditor {
         e.stopPropagation();
         if (this.isEmpty()) return;
         // Ask whether our element is in use by someone else, before it can be deleted.
-        if (this.case.items.find(item => item.referencesDefinitionElement(this.element.id))) {
-            this.case.editor.ide.danger('The element is in use, it cannot be deleted');
+        if (this.modelCanvas.items.find(item => item.referencesDefinitionElement(this.element.id))) {
+            this.modelCanvas.editor.ide.danger('The element is in use, it cannot be deleted');
         } else {
             // delete the role
             HtmlUtil.removeHTML(this.html);
             this.element.removeDefinition();
-            this.case.editor.completeUserAction();
+            this.modelCanvas.editor.completeUserAction();
         }
     }
 
