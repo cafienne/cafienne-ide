@@ -51,13 +51,15 @@
     bottom: 0px;
 }
 
-.divClassicCaseFileEditor, .divCaseTypeEditor {
+.divClassicCaseFileEditor,
+.divCaseTypeEditor {
     position: absolute;
     top: 0px;
     left: 0px;
     right: 0px;
     bottom: 0px;
-    overflow:hidden; /* to avoid buttons to show when splitter is minimized */
+    overflow: hidden;
+    /* to avoid buttons to show when splitter is minimized */
 }
 
 .divClassicCaseFileEditor .schemadatabox {
@@ -78,15 +80,4 @@
 
 .divClassicCaseFileEditor .schemadatabox .divCaseFileDefinitions {
     top: 4px;
-}
-
-/* Change width of connector hover area*/
-.joint-link.joint-theme-default .connection-wrap {
-    stroke-width: 8px;
-}
-
-
-/* Hide connector arrowheads (the big green ones)*/
-.joint-viewport .marker-arrowhead {
-    display: none;
 }
