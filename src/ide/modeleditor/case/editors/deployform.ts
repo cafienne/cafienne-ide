@@ -32,11 +32,11 @@ export default class DeployForm extends StandardForm {
     </div>
     <div class="where_used_content">
         <br/>
-        <div class="whereUsedContent"/>
+        <div class="whereUsedContent"></div>
     </div>
     <div class="deploy_content">
         <label class="deployFormLabel"></label>
-        <div class="codeMirrorSource deployFormContent" />
+        <div class="codeMirrorSource deployFormContent"></div>
     </div>
 </div>`);
 

@@ -12,7 +12,7 @@ export default class CFIDefinitionXMLElement {
     constructor(editor, container) {
         this.editor = editor;
         this.container = container;
-        this.html = $('<div class="cfidefxmldoc" />');
+        this.html = $('<div class="cfidefxmldoc"></div>');
         this.container.append(this.html);
     }
 

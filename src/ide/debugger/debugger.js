@@ -102,7 +102,7 @@ export default class Debugger extends StandardForm {
                 </table>
             </div>
             <div class="event-content">
-                <div class="codeMirrorSource debugFormContent" />
+                <div class="codeMirrorSource debugFormContent"></div>
             </div>
         </div>
     </div>

@@ -1,4 +1,4 @@
-﻿import { dia } from "jointjs";
+import { dia } from "jointjs";
 import $ from "jquery";
 import TextAnnotationDefinition from "../../../../repository/definition/artifact/textannotation";
 import CaseDefinition from "../../../../repository/definition/cmmn/casedefinition";
@@ -90,15 +90,15 @@ export default class CaseView {
             <div class="divCaseContainer">
                 <div class="divCaseCanvas basicbox">
                     <div class="paper-container-scroller">
-                        <div class="paper-container" />
+                        <div class="paper-container"></div>
                         <div class="divResizers"></div>
                         <div class="divHalos"></div>
                         <div class="divMarker"></div>
-                        <img class="halodragimgid" />
+                        <img class="halodragimgid"></img>
                     </div>
                 </div>
             </div>
-            <div class="divCaseFileContainer" />
+            <div class="divCaseFileContainer"></div>
         </div>
     </div>
 </div>`);
