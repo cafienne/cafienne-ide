@@ -1,4 +1,4 @@
-﻿import { g } from "jointjs";
+﻿import { g } from '@joint/core';
 import CaseFileItemTransition from "../../../../repository/definition/cmmn/casefile/casefileitemtransition";
 import PlanItem from "../../../../repository/definition/cmmn/caseplan/planitem";
 import PlanItemTransition from "../../../../repository/definition/cmmn/caseplan/planitemtransition";

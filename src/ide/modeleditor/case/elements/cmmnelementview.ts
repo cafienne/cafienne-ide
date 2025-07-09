@@ -1,4 +1,4 @@
-import { shapes, util } from "jointjs";
+import { shapes, util } from '@joint/core';
 import CMMNDocumentationDefinition from "../../../../repository/definition/cmmndocumentationdefinition";
 import CMMNElementDefinition from "../../../../repository/definition/cmmnelementdefinition";
 import Edge from "../../../../repository/definition/dimensions/edge";
@@ -17,7 +17,7 @@ import Connector from "./connector/connector";
 import Halo from "./halo/halo";
 import Properties from "./properties/properties";
 
-export default abstract class CMMNElementView<D extends CMMNElementDefinition = CMMNElementDefinition> extends CanvasElement<shapes.basic.Generic> {
+export default abstract class CMMNElementView<D extends CMMNElementDefinition = CMMNElementDefinition> extends CanvasElement<shapes.standard.EmbeddedImage> {
     readonly case: CaseView;
     protected editor: CaseModelEditor;
     protected __connectors: Connector[] = [];
@@ -128,7 +128,7 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
     }
 
     createJointElement() {
-        const jointSVGSetup = {
+        this.xyz_joint = new shapes.standard.EmbeddedImage({
             // Markup is the SVG that is rendered through the joint element; we surround the markup with an addition <g> element that holds the element id
             markup: `<g id="${this.html_id}">${this.markup}</g>`,
             // Type is used to determine whether drag/drop is supported (element border coloring)
@@ -138,8 +138,7 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
             position: this.shape,
             // Attrs can contain additional relative styling for the text label inside the element
             attrs: this.textAttributes
-        };
-        this.xyz_joint = new shapes.basic.Generic(jointSVGSetup as any);
+        });
         // Directly embed into parent
         if (this.parent && this.parent.xyz_joint) {
             this.parent.xyz_joint.embed(this.xyz_joint);

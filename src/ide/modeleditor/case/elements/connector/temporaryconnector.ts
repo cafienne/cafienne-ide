@@ -1,4 +1,4 @@
-import { shapes } from "jointjs";
+import { shapes } from '@joint/core';
 import CanvasElement from "../canvaselement";
 import CMMNElementView from "../cmmnelementview";
 import Coordinates from "./coordinates";

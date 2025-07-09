@@ -4,7 +4,6 @@ import LeftSplitter from "./splitter/leftsplitter";
 import $ from "jquery";
 
 // NO ALT SHIFT O (Do not apply sorting on imports of stylesheets.)
-import "../../node_modules/jointjs/dist/joint.css";
 import "../../node_modules/bootstrap/dist/css/bootstrap.css";
 import "../../node_modules/jquery-ui/dist/themes/base/jquery-ui.css";
 import "../../node_modules/codemirror/lib/codemirror.css";

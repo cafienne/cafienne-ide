@@ -1,4 +1,4 @@
-﻿import { dia, linkTools, shapes } from 'jointjs';
+﻿import { dia, linkTools, shapes } from '@joint/core';
 import Edge from "../../../../../repository/definition/dimensions/edge";
 import Images from '../../../../util/images/images';
 import CanvasElement from "../canvaselement";

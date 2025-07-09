@@ -1,4 +1,4 @@
-﻿import { g } from "jointjs";
+﻿import { g } from '@joint/core';
 import PlanningTableDefinition from "../../../../repository/definition/cmmn/caseplan/planning/planningtabledefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import Images from "../../../util/images/images";

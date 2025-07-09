@@ -1,4 +1,4 @@
-import { dia } from "jointjs";
+import { dia } from '@joint/core';
 import $ from "jquery";
 import TextAnnotationDefinition from "../../../../repository/definition/artifact/textannotation";
 import CaseDefinition from "../../../../repository/definition/cmmn/casedefinition";

@@ -322,6 +322,11 @@
     "@types/yargs" "^17.0.8"
     chalk "^4.0.0"
 
+"@joint/core@~4.1.3":
+  version "4.1.3"
+  resolved "https://registry.yarnpkg.com/@joint/core/-/core-4.1.3.tgz#cb4c2c3469a4a7355897be6ca7bc1f17100a12f6"
+  integrity sha512-X769blCoVxtx6NNm/cbHDXDOa+Gt7eZwrJMLnqJw8c5NkjmcYWCY1kA3ep8RfRRVG76f3QLNd9a8Q/aItI/WWw==
+
 "@jridgewell/gen-mapping@^0.3.5":
   version "0.3.5"
   resolved "https://registry.yarnpkg.com/@jridgewell/gen-mapping/-/gen-mapping-0.3.5.tgz#dcce6aff74bdf6dad1a95802b69b04a2fcb1fb36"
@@ -1270,13 +1275,6 @@ backbone@~1.3.3:
   dependencies:
     underscore ">=1.8.3"
 
-backbone@~1.4.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/backbone/-/backbone-1.4.1.tgz#099a78184bc07b034048a8332229c2ccca1e3e62"
-  integrity sha512-ADy1ztN074YkWbHi8ojJVFe3vAanO/lrzMGZWUClIP7oDD/Pjy2vrASraUP+2EVCfIiTtCW4FChVow01XneivA==
-  dependencies:
-    underscore ">=1.8.3"
-
 balanced-match@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.2.tgz#e83e3a7e3f300b34cb9d87f615fa0cbf357690ee"
@@ -1759,14 +1757,6 @@ cssesc@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/cssesc/-/cssesc-3.0.0.tgz#37741919903b868565e1c09ea747445cd18983ee"
   integrity sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==
-
-dagre@~0.8.5:
-  version "0.8.5"
-  resolved "https://registry.yarnpkg.com/dagre/-/dagre-0.8.5.tgz#ba30b0055dac12b6c1fcc247817442777d06afee"
-  integrity sha512-/aTqmnRta7x7MCCpExk7HQL2O4owCT2h8NT//9I1OQ9vt29Pa0BzSAkR5lwFUcQ7491yVi/3CXU9jQ5o0Mn2Sw==
-  dependencies:
-    graphlib "^2.1.8"
-    lodash "^4.17.15"
 
 data-uri-to-buffer@^4.0.0:
   version "4.0.1"
@@ -2590,13 +2580,6 @@ grapheme-splitter@^1.0.4:
   resolved "https://registry.yarnpkg.com/grapheme-splitter/-/grapheme-splitter-1.0.4.tgz#9cf3a665c6247479896834af35cf1dbb4400767e"
   integrity sha512-bzh50DW9kTPM00T8y4o8vQg89Di9oLJVLW/KaOGIXJWP/iqCN6WKYkbNOF04vFLJhwcpYUh9ydh/+5vpOqV4YQ==
 
-graphlib@^2.1.8, graphlib@~2.1.8:
-  version "2.1.8"
-  resolved "https://registry.yarnpkg.com/graphlib/-/graphlib-2.1.8.tgz#5761d414737870084c92ec7b5dbcb0592c9d35da"
-  integrity sha512-jcLLfkpoVGmH7/InMC/1hIvOPSUh38oJtGhvrOFGzioE1DZ+0YW16RgmOJhHiuWTvGiJQ9Z1Ik43JvkRPRvE+A==
-  dependencies:
-    lodash "^4.17.15"
-
 handlebars@~4.0.5:
   version "4.0.14"
   resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.0.14.tgz#88de711eb693a5b783ae06065f9b91b0dd373a71"
@@ -3027,17 +3010,6 @@ jest-worker@^27.4.5:
     merge-stream "^2.0.0"
     supports-color "^8.0.0"
 
-jointjs@~3.7.7:
-  version "3.7.7"
-  resolved "https://registry.yarnpkg.com/jointjs/-/jointjs-3.7.7.tgz#d3255f18f6b0ed3074c488ac0178d0338b6051dd"
-  integrity sha512-gwjyLfXIxovVCIHrg57WG0cyPt6dsJjgnGEGOt8gh2F2kp/T1x6z7kBf62eQqSnM7qn1XiheZV4Iopzd2doHlw==
-  dependencies:
-    backbone "~1.4.1"
-    dagre "~0.8.5"
-    graphlib "~2.1.8"
-    jquery "~3.7.1"
-    lodash "~4.17.21"
-
 jquery-ui@~1.14.1:
   version "1.14.1"
   resolved "https://registry.yarnpkg.com/jquery-ui/-/jquery-ui-1.14.1.tgz#ba342ea3ffff662b787595391f607d923313e040"
@@ -3200,7 +3172,7 @@ lodash.zip@^4.2.0:
   resolved "https://registry.yarnpkg.com/lodash.zip/-/lodash.zip-4.2.0.tgz#ec6662e4896408ed4ab6c542a3990b72cc080020"
   integrity sha512-C7IOaBBK/0gMORRBd8OETNx3kmOkgIWIPvyDpZSCTwUrpYmgZwJkjZeOD8ww4xbOUOs4/attY+pciKvadNfFbg==
 
-lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.21, lodash@~4.17.21, lodash@~4.17.4:
+lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.21, lodash@~4.17.4:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
