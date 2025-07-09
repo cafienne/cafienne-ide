@@ -1,17 +1,18 @@
-﻿import { dia } from "jointjs";
+﻿import { dia, linkTools, shapes } from 'jointjs';
 import Edge from "../../../../../repository/definition/dimensions/edge";
+import Images from '../../../../util/images/images';
 import CanvasElement from "../canvaselement";
 import CMMNElementView from "../cmmnelementview";
 
-export default class Connector extends CanvasElement<dia.Link> {
+export default class Connector extends CanvasElement<shapes.standard.Link> {
     criterion?: CMMNElementView;
     formerLabel?: string;
 
-    get link(): dia.Link {
+    get link(): shapes.standard.Link {
         return this.xyz_joint;
     }
 
-    set link(link: dia.Link) {
+    set link(link: shapes.standard.Link) {
         this.xyz_joint = link;
     }
 
@@ -24,15 +25,22 @@ export default class Connector extends CanvasElement<dia.Link> {
 
         const arrowStyle = this.criterion ? '8 3 3 3 3 3' : '5 5';
 
-        this.link = this.xyz_joint = new dia.Link({
+        this.link = this.xyz_joint = new shapes.standard.Link({
             source: { id: this.source.xyz_joint.id },
             target: { id: this.target.xyz_joint.id },
             attrs: {
-                '.connection': { 'stroke-dasharray': arrowStyle }
-            }
+                'line': {
+                    'stroke-dasharray': arrowStyle,
+                    targetMarker: {
+                        'type': 'rect',
+                        'width': 0,
+                        'height': 0,
+                    }
+                }
+            },
         });
 
-        this.link.set('vertices', edge.vertices);
+        this.link.vertices(edge.vertices);
         this.__setJointLabel(edge.label);
 
         // Listen to the native joint event for removing, as removing a connector in the UI is initiated from joint.
@@ -49,6 +57,33 @@ export default class Connector extends CanvasElement<dia.Link> {
             // Instead, this is done when handlePointerUpPaper in case.js
             this.edge.vertices = e.changed.vertices;
         });
+        this.link.connector('straight');
+
+        this.case.graph.addCells([this.xyz_joint]);
+
+        // Create a custom remove tool
+        const customRemoveTool = new linkTools.Remove({
+            markup: [{
+                tagName: 'image',
+                selector: 'remove',
+                attributes: {
+                    'xlink:href': Images.Delete,
+                    width: 16,
+                    height: 16,
+                    x: -8,
+                    y: -8,
+                    cursor: 'pointer'
+                }
+            }]
+        });
+
+        const toolsView = new dia.ToolsView({
+            tools: [customRemoveTool, new linkTools.Vertices()]
+        });
+        const view = this.link.findView(this.case.paper);
+        //    view.removeTools();
+        view.addTools(toolsView);
+        view.hideTools();
     }
 
     private __setJointLabel(text: string) {
@@ -75,15 +110,20 @@ export default class Connector extends CanvasElement<dia.Link> {
     moved(x: number, y: number, newParent: CMMNElementView): void { }
 
     mouseEnter(): void {
+        this.link.findView(this.case.paper).showTools();
+
         // On mouse enter of a 'sentry' linked connector, we will show the standard event if it is not yet visible.
         //  It is hidden again on mouseout
         this.formerLabel = this.label;
         if (this.label || !this.criterion) return;
         const onPart = (this.criterion as any).__getOnPart(this);
         if (onPart) this.__setJointLabel(onPart.standardEvent.toString());
+
     }
 
     mouseLeave() {
+        this.link.findView(this.case.paper).hideTools();
+
         this.__setJointLabel(this.formerLabel || "");
     }
 

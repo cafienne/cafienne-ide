@@ -145,8 +145,8 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
             this.parent.xyz_joint.embed(this.xyz_joint);
         }
         this.xyz_joint.on('change:position', (e: any) => {
-            this.shape.x = this.xyz_joint.attributes.position.x;
-            this.shape.y = this.xyz_joint.attributes.position.y;
+            this.shape.x = this.position.x;
+            this.shape.y = this.position.y;
         });
         // We are not listening to joint change of size, since this is only done through "our own" resizer
     }
@@ -272,8 +272,12 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
         return (this.constructor as any).typeDescription;
     }
 
-    get attributes() {
-        return this.xyz_joint.attributes;
+    get position() {
+        return this.xyz_joint.position();
+    }
+
+    get size() {
+        return this.xyz_joint.size();
     }
 
     /**

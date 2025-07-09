@@ -1,11 +1,11 @@
-import { dia } from "jointjs";
+import { shapes } from "jointjs";
 import CanvasElement from "../canvaselement";
 import CMMNElementView from "../cmmnelementview";
 import Coordinates from "./coordinates";
 
-export default class TemporaryConnector extends CanvasElement<dia.Link> {
+export default class TemporaryConnector extends CanvasElement<shapes.standard.Link> {
     source: CMMNElementView;
-    link: dia.Link;
+    link: shapes.standard.Link;
 
     /**
      * Creates a temporary connector (=link in jointJS) from the source to a set of target coordinates
@@ -13,14 +13,23 @@ export default class TemporaryConnector extends CanvasElement<dia.Link> {
     constructor(source: CMMNElementView, coordinates: Coordinates) {
         super(source.case);
         this.source = source;
-        this.link = this.xyz_joint = new dia.Link({
-            source: { id: source.xyz_joint.id },
+
+        this.link = this.xyz_joint = new shapes.standard.Link({
+            source: { id: this.source.xyz_joint.id },
             target: coordinates,
             attrs: {
-                '.connection': { 'stroke': 'blue' }
-            }
+                'line': {
+                    'stroke': 'blue',
+                    'stroke-dasharray': '1 1',
+                    targetMarker: {
+                        'type': 'rect',
+                        'width': 0,
+                        'height': 0,
+                    }
+                }
+            },
         });
-        source.case.graph!.addCells([this.link]);
+        source.case.graph.addCells([this.link]);
     }
 
     mouseEnter(): void { }

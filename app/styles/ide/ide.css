@@ -213,24 +213,6 @@
     display: block;
 }
 
-
-/* Overruled JointJS classes (joint.css) */
-
-/*HCM CMMN added: do not show the arrow heads while hovering -> user is prevented to drag the line to other element */
-.joint-viewport .link:hover .marker-arrowheads {
-    display: none;
-}
-
-/* Change width of connector hover area*/
-.joint-link.joint-theme-default .connection-wrap {
-    stroke-width: 8px;
-}
-
-/* Hide connector arrowheads (the big green ones)*/
-.joint-viewport .marker-arrowhead {
-    display: none;
-}
-
 /* Overrules JQuery classes (jquery-ui.css) */
 .ui-widget {
     font-family: "myriad-pro", "Helvetica Neue", "Helvetica", "Arial", sans-serif;

@@ -141,6 +141,12 @@ export default class CaseView {
             //  Also clean up remaining shapes for which no view can be created
             this.renderLooseShapesAndDropUnusedShapes();
 
+            // Post load - now render all items; first add them in one shot to joint. Then render the case plan (which will render it's children)
+            this.loading = false;
+
+            // Gather the joint elements of the types cmmn-element. Put them in one big array and give that to joint.
+            this.graph.addCells(this.items.map(item => item.xyz_joint as dia.Cell));
+
             // Finally render all connectors
             this.diagram.edges.forEach(edge => {
                 const source = this.getItem(edge.sourceId);
@@ -160,12 +166,6 @@ export default class CaseView {
             //update the usedIn column of the case file items editor
             this.cfiEditor.showUsedIn();
 
-            // Post load - now render all items; first add them in one shot to joint. Then render the case plan (which will render it's children)
-            this.loading = false;
-
-            // Gather the joint elements of the types cmmn-element and connectors. Put them in one big array and give that to joint.
-            const jointElements = this.items.map(item => item.xyz_joint as dia.Cell).concat(this.connectors.map(c => c.xyz_joint));
-            this.graph.addCells(jointElements);
             this.casePlanModel.refreshView();
         }
 
@@ -272,10 +272,10 @@ export default class CaseView {
         this.paper.on('blank:pointerdown', () => this.clearSelection());
         // When we move over an element with the mouse, an event is raised.
         //  This event is captured to enable elements to register themselves with ShapeBox and RepositoryBrowser
-        this.paper.on('element:mouseenter', (elementView: any, e: any, x: number, y: number) => this.getCMMNElement(elementView).mouseEnter());
-        this.paper.on('element:mouseleave', (elementView: any, e: any, x: number, y: number) => this.getCMMNElement(elementView).mouseLeave());
-        this.paper.on('link:mouseenter', (elementView: any, e: any, x: number, y: number) => this.getConnector(elementView).mouseEnter());
-        this.paper.on('link:mouseleave', (elementView: any, e: any, x: number, y: number) => this.getConnector(elementView).mouseLeave());
+        this.paper.on('element:mouseenter', (elementView: any, e: any,) => this.getCMMNElement(elementView).mouseEnter());
+        this.paper.on('element:mouseleave', (elementView: any, e: any) => this.getCMMNElement(elementView).mouseLeave());
+        this.paper.on('link:mouseenter', (elementView: any, e: any) => this.getConnector(elementView).mouseEnter());
+        this.paper.on('link:mouseleave', (elementView: any, e: any) => this.getConnector(elementView).mouseLeave());
 
         // Also add special event handlers for case itself. Registers with ShapeBox to support adding case plan element if it does not exist
         this.svg.on('pointerover', (e: JQuery.Event) => this.setDropHandlers());
@@ -506,9 +506,6 @@ export default class CaseView {
 
     __addConnector(connector: Connector) {
         this.connectors.push(connector);
-        if (!this.loading) {
-            this.graph.addCells([connector.xyz_joint]);
-        }
     }
 
     /**
