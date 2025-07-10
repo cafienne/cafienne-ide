@@ -17,7 +17,7 @@ import Connector from "./connector/connector";
 import Halo from "./halo/halo";
 import Properties from "./properties/properties";
 
-export default abstract class CMMNElementView<D extends CMMNElementDefinition = CMMNElementDefinition> extends CanvasElement<shapes.standard.EmbeddedImage> {
+export default abstract class CMMNElementView<D extends CMMNElementDefinition = CMMNElementDefinition> extends CanvasElement<shapes.standard.Rectangle> {
     readonly case: CaseView;
     protected editor: CaseModelEditor;
     protected __connectors: Connector[] = [];
@@ -128,16 +128,25 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
     }
 
     createJointElement() {
-        this.xyz_joint = new shapes.standard.EmbeddedImage({
-            // Markup is the SVG that is rendered through the joint element; we surround the markup with an addition <g> element that holds the element id
+        this.xyz_joint = new shapes.standard.Rectangle({
             markup: `<g id="${this.html_id}">${this.markup}</g>`,
-            // Type is used to determine whether drag/drop is supported (element border coloring)
-            type: this.constructor.name,
             // Take size and position from shape.
-            size: this.shape,
             position: this.shape,
-            // Attrs can contain additional relative styling for the text label inside the element
-            attrs: this.textAttributes
+            size: this.shape,
+            body: {
+                // Markup is the SVG that is rendered through the joint element; we surround the markup with an addition <g> element that holds the element id
+                // Type is used to determine whether drag/drop is supported (element border coloring)
+                type: this.constructor.name,
+
+                fill: '#ffffff',
+                stroke: '#000000',
+            },
+            text: {
+                text: 'Testlabel',
+                'x': .5,
+                'y': .5,
+                'text-anchor': 'middle',
+            }
         });
         // Directly embed into parent
         if (this.parent && this.parent.xyz_joint) {
@@ -236,7 +245,7 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
     refreshText() {
         const rawText = this.text;
         const formattedText = this.wrapText ? util.breakText(rawText, { width: this.shape.width, height: this.shape.height }) : rawText;
-        this.xyz_joint.attr('text/text', formattedText);
+        this.xyz_joint.attr('label/text', formattedText);
     }
 
     refreshSubViews() {
