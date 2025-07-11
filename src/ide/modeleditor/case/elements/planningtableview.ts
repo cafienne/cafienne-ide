@@ -41,8 +41,16 @@ export default class PlanningTableView extends CMMNElementView<PlanningTableDefi
     }
 
     get markup() {
-        return `<rect class="cmmn-shape cmmn-planningtable-shape" />
-                <image xlink:href="${Images.PlanningTable}" x="1" y="-3" width="24" height="24" />`;
+        return `<rect @selector='body' class="cmmn-shape cmmn-planningtable-shape" />
+                <image href="${Images.PlanningTable}" x="1" y="-3" width="24" height="24" />`;
+    }
+
+    get textAttributes() {
+        return {
+            body: {
+                stroke: 'none',
+            }
+        };
     }
 
     /**

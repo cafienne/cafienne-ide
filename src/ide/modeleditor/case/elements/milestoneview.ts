@@ -1,5 +1,6 @@
 ﻿import MilestoneDefinition from "../../../../repository/definition/cmmn/caseplan/milestonedefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+import ColorCard from "../colorcard";
 import MilestoneDecoratorBox from "./decorator/box/milestonedecoratorbox";
 import EntryCriterionView from "./entrycriterionview";
 import PlanItemHalo from "./halo/cmmn/planitemhalo";
@@ -42,16 +43,19 @@ export default class MilestoneView extends PlanItemView<MilestoneDefinition> {
 
     get markup() {
         return `<g class="scalable">
-                    <rect class="cmmn-shape cmmn-border cmmn-milestone-shape" rx="20" ry="20" width="100" height="40" />
+                    <rect @selector='body' class="cmmn-shape cmmn-border cmmn-milestone-shape" rx="20" ry="20" width="100" height="40" />
                 </g>
-                <text class="cmmn-text" />
+                <text @selector='label' class="cmmn-text" />
                 ${this.decoratorBox.markup}`;
     }
 
     get textAttributes() {
         return {
-            'text': {
-                ref: '.cmmn-shape',
+            body: {
+                fill: ColorCard.Milestone,
+            },
+            label: {
+                ref: 'body',
                 'ref-x': .5,
                 'ref-y': .5,
                 'y-alignment': 'middle',

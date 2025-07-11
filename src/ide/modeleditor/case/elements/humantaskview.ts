@@ -3,6 +3,7 @@ import HumanTaskDefinition from "../../../../repository/definition/cmmn/caseplan
 import CMMNElementDefinition from "../../../../repository/definition/cmmnelementdefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import Images from "../../../util/images/images";
+import ColorCard from "../colorcard";
 import PreviewTaskForm from "../editors/task/previewtaskform";
 import HumanTaskHalo from "./halo/cmmn/humantaskhalo";
 import HumanTaskProperties from "./properties/humantaskproperties";
@@ -98,5 +99,9 @@ export default class HumanTaskView extends TaskView<HumanTaskDefinition> {
 
     get isHumanTask() {
         return true;
+    }
+
+    get color() {
+        return ColorCard.HumanTask
     }
 }

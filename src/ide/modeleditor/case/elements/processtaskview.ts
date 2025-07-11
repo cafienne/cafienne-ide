@@ -1,6 +1,7 @@
 import ProcessTaskDefinition from "../../../../repository/definition/cmmn/caseplan/task/processtaskdefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import Images from "../../../util/images/images";
+import ColorCard from "../colorcard";
 import StageView from "./stageview";
 import TaskView from "./taskview";
 
@@ -41,5 +42,9 @@ export default class ProcessTaskView extends TaskView {
 
     get isProcessTask() {
         return true;
+    }
+
+    get color() {
+        return ColorCard.ProcessTask;
     }
 }

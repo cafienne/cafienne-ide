@@ -1,4 +1,5 @@
 import ExitCriterionDefinition from "../../../../repository/definition/cmmn/sentry/exitcriteriondefinition";
+import ColorCard from "../colorcard";
 import ExitCriterionHalo from "./halo/cmmn/exitcriterionhalo";
 import PlanItemView from "./planitemview";
 import SentryView from "./sentryview";
@@ -26,5 +27,9 @@ export default class ExitCriterionView extends SentryView<ExitCriterionDefinitio
 
     get isExitCriterion() {
         return true;
+    }
+
+    get color() {
+        return ColorCard.ExitCriterion;
     }
 }

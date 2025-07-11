@@ -1,6 +1,6 @@
 ﻿import { dia, linkTools, shapes } from '@joint/core';
 import Edge from "../../../../../repository/definition/dimensions/edge";
-import Images from '../../../../util/images/images';
+import ColorCard from '../../colorcard';
 import CanvasElement from "../canvaselement";
 import CMMNElementView from "../cmmnelementview";
 
@@ -31,6 +31,8 @@ export default class Connector extends CanvasElement<shapes.standard.Link> {
             attrs: {
                 'line': {
                     'stroke-dasharray': arrowStyle,
+                    stroke: ColorCard.Connector,
+                    strokeWidth: 1,
                     targetMarker: {
                         'type': 'rect',
                         'width': 0,
@@ -59,26 +61,22 @@ export default class Connector extends CanvasElement<shapes.standard.Link> {
         });
         this.link.connector('straight');
 
-        this.case.graph.addCells([this.xyz_joint]);
+        this.xyz_joint.addTo(this.case.graph);
 
         // Create a custom remove tool
         const customRemoveTool = new linkTools.Remove({
-            markup: [{
-                tagName: 'image',
-                selector: 'remove',
-                attributes: {
-                    'xlink:href': Images.Delete,
-                    width: 16,
-                    height: 16,
-                    x: -8,
-                    y: -8,
-                    cursor: 'pointer'
-                }
-            }]
+            // markup: [{
+            //     tagName: 'image',
+            //     selector: 'remove',
+            //     attributes: {
+            //         r: 30
+            //     }
+            // }]
+
         });
 
         const toolsView = new dia.ToolsView({
-            tools: [customRemoveTool, new linkTools.Vertices()]
+            tools: [new linkTools.Vertices(), customRemoveTool,]
         });
         const view = this.link.findView(this.case.paper);
         //    view.removeTools();

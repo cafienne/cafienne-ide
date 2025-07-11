@@ -1,4 +1,4 @@
-import { shapes, util } from '@joint/core';
+import { dia, shapes, util } from '@joint/core';
 import CMMNDocumentationDefinition from "../../../../repository/definition/cmmndocumentationdefinition";
 import CMMNElementDefinition from "../../../../repository/definition/cmmnelementdefinition";
 import Edge from "../../../../repository/definition/dimensions/edge";
@@ -17,7 +17,7 @@ import Connector from "./connector/connector";
 import Halo from "./halo/halo";
 import Properties from "./properties/properties";
 
-export default abstract class CMMNElementView<D extends CMMNElementDefinition = CMMNElementDefinition> extends CanvasElement<shapes.standard.Rectangle> {
+export default abstract class CMMNElementView<D extends CMMNElementDefinition = CMMNElementDefinition> extends CanvasElement<dia.Element> {
     readonly case: CaseView;
     protected editor: CaseModelEditor;
     protected __connectors: Connector[] = [];
@@ -85,9 +85,7 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
      */
     abstract get markup(): string;
 
-    get textAttributes(): object {
-        return {};
-    }
+    abstract get textAttributes(): any;
 
     /**
      * Returns the text to be rendered inside the shape
@@ -128,26 +126,49 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
     }
 
     createJointElement() {
-        this.xyz_joint = new shapes.standard.Rectangle({
-            markup: `<g id="${this.html_id}">${this.markup}</g>`,
-            // Take size and position from shape.
-            position: this.shape,
-            size: this.shape,
-            body: {
-                // Markup is the SVG that is rendered through the joint element; we surround the markup with an addition <g> element that holds the element id
-                // Type is used to determine whether drag/drop is supported (element border coloring)
-                type: this.constructor.name,
-
-                fill: '#ffffff',
-                stroke: '#000000',
+        let attrs = {
+            root: {
+                fill: 'transparent',
+                stroke: '#423d3d',
+                strokeWidth: 1,
+                ...this.textAttributes.root,
             },
-            text: {
-                text: 'Testlabel',
-                'x': .5,
-                'y': .5,
-                'text-anchor': 'middle',
-            }
+            body: {
+                fill: 'transparent',
+                stroke: '#423d3d',
+                strokeWidth: 1,
+                ...this.textAttributes.body,
+            },
+            label: {
+                fill: 'black',
+                stroke: 'none',
+                fontSize: 12,
+                ...this.textAttributes.label,
+            },
+        };
+
+        attrs = {
+            ...this.textAttributes,
+            ...attrs,
+        }
+
+        this.xyz_joint = new shapes.standard.Rectangle({
+            markup: util.svg`
+                <g id="${this.html_id}">${this.markup}</g>
+            `,
+            // Take size and position from shape.
+            position: {
+                x: this.shape.x,
+                y: this.shape.y,
+            },
+            size: {
+                width: this.shape.width,
+                height: this.shape.height,
+            },
+            attrs: attrs,
         });
+
+
         // Directly embed into parent
         if (this.parent && this.parent.xyz_joint) {
             this.parent.xyz_joint.embed(this.xyz_joint);

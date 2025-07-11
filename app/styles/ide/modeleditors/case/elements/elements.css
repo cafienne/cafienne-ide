@@ -12,12 +12,12 @@
 }
 
 .cmmn-text {
-    fill:black;
+    fill: black;
     font-size: 12px;
 }
 
 .cmmn-bold-text {
-    fill:black;
+    fill: black;
     font-weight: bold;
     font-size: 12px;
     font-family: Arial, helvetica, sans-serif;
@@ -83,7 +83,7 @@
 
 .cmmn-processtaskview-shape {
     fill: rgb(236, 232, 241);
-    sfill: rgb(156, 175, 226);
+    fill: rgb(156, 175, 226);
     fill: rgb(103, 133, 216);
 }
 

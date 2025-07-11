@@ -144,8 +144,10 @@ export default class CaseView {
             // Post load - now render all items; first add them in one shot to joint. Then render the case plan (which will render it's children)
             this.loading = false;
 
-            // Gather the joint elements of the types cmmn-element. Put them in one big array and give that to joint.
-            this.graph.addCells(this.items.map(item => item.xyz_joint as dia.Cell));
+            // Give the elements to joint.
+            this.items.forEach(item => {
+                item.xyz_joint.addTo(this.graph);
+            });
 
             // Finally render all connectors
             this.diagram.edges.forEach(edge => {
@@ -237,9 +239,66 @@ export default class CaseView {
             width: '6000px',
             height: '6000px',
             gridSize: 1,
+            strokeWidth: 1,
+            stroke: '#423d3d',
             perpendicularLinks: true,
-            model: this.graph
+            model: this.graph,
         });
+
+
+        // var rect = new shapes.standard.Rectangle({
+        //     markup: util.svg`
+        //         <g class="scalable">
+        //             <rect @selector="body" class="cmmn-shape cmmn-border" rx="5" ry="5" width="100" height="60" />
+        //         </g>
+        //         <text @selector="label" dominant-baseline="middle" text-anchor="middle" class="cmmn-text">HumanTask_1</text>
+        //         <image @selector="picto" class="taskImage" x="0" y="-4" width="24" />`,
+        //     size: { width: 100, height: 40 },
+        //     position: { x: 100, y: 30 },
+        //     attrs: {
+        //         body: {
+        //             fill: 'blue'
+        //         },
+        //         label: {
+        //             x: 'calc(w / 2)',
+        //             y: 'calc(h / 2)',
+        //             text: 'Hello',
+        //             fill: 'white'
+        //         },
+        //         picto: {
+        //             href: Shapes.HumanTask,
+        //             width: 24,
+        //             height: 24,
+        //             x: 0,
+        //             y: -4
+        //         }
+        //     }
+        // });
+
+        // rect.attr('picto/href', Icons.ProcessTask);
+
+        // // rect.position(100, 30);
+        // // rect.resize(100, 40);
+        // // rect.attr({
+        // //     body: {
+        // //         fill: 'blue'
+        // //     },
+        // //     label: {
+        // //         text: 'Hello',
+        // //         fill: 'white'
+        // //     }
+        // // });
+        // rect.addTo(this.graph);
+
+        // var rect2 = rect.clone();
+        // rect2.translate(300, 0);
+        // rect2.attr('label/text', 'World!');
+        // rect2.addTo(this.graph);
+
+        // var link = new shapes.standard.Link();
+        // link.source(rect);
+        // link.target(rect2);
+        // link.addTo(this.graph);
 
         this.grid = new Grid(this.paper, this.editor.ide);
 
@@ -490,7 +549,7 @@ export default class CaseView {
             return cmmnElement;
         }
 
-        this.graph.addCells([cmmnElement.xyz_joint]);
+        cmmnElement.xyz_joint.addTo(this.graph);
         // TODO: this should no longer be necessary if constructors fill proper joint immediately based upon definition
         cmmnElement.refreshView();
         // TODO: figure out when to properly apply the move constraint logic

@@ -1,6 +1,7 @@
 import CaseTaskDefinition from "../../../../repository/definition/cmmn/caseplan/task/casetaskdefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import Images from "../../../util/images/images";
+import ColorCard from "../colorcard";
 import StageView from "./stageview";
 import TaskView from "./taskview";
 
@@ -38,5 +39,9 @@ export default class CaseTaskView extends TaskView<CaseTaskDefinition> {
 
     get isCaseTask() {
         return true;
+    }
+
+    get color() {
+        return ColorCard.CaseTask;
     }
 }

@@ -29,7 +29,7 @@ export default class TemporaryConnector extends CanvasElement<shapes.standard.Li
                 }
             },
         });
-        source.case.graph.addCells([this.link]);
+        this.link.addTo(this.case.graph);
     }
 
     mouseEnter(): void { }

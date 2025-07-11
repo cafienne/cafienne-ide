@@ -11,7 +11,7 @@ export default class MessageBox {
      */
     constructor(public ide: IDE) {
         this.html = $(
-`<div class="messagebox panel panel-default">
+            `<div class="messagebox panel panel-default">
     <div class="panel-heading">
         <button type="button" class="close" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -68,9 +68,10 @@ export default class MessageBox {
      */
     createMessage(message: string, messageType: string, delay: number) {
         this.show();
+        // debugger;
 
         const htmlString =
-`<div class="alert alert-${messageType} alert-dismissible" role="alert">
+            `<div class="alert alert-${messageType} alert-dismissible" role="alert">
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
@@ -78,7 +79,7 @@ export default class MessageBox {
 </div>`
 
         this.messageBoxBody.append(htmlString);
-        
+
 
         //attach onclick to close button
         this.messageBoxBody.find('.alert > button').on('click', () => {
