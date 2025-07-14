@@ -99,4 +99,8 @@ export default class HumanTaskView extends TaskView<HumanTaskDefinition> {
     get isHumanTask() {
         return true;
     }
+
+    get color() {
+        return 'rgb(156, 175, 226)';
+    }
 }

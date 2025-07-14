@@ -74,9 +74,13 @@ export default class CaseFileItemView extends CMMNElementView<CaseFileItemDef> {
 
     get markup() {
         return `<g>
-                    <polyline class="cmmn-shape cmmn-border cmmn-casefile-shape" points=" 15,0 0,0 0,40 25,40 25,10 15,0 15,10 25,10" />
+                    <polyline @selector='body' points=" 15,0 0,0 0,40 25,40 25,10 15,0 15,10 25,10" />
                 </g>
-                <text class="cmmn-text" text-anchor="middle" x="10" y="55" />`;
+                <text @selector='label' text-anchor="middle" x="10" y="55" />`;
+    }
+
+    get markupAttributes() {
+        return {};
     }
 
     referencesDefinitionElement(definitionId: string) {

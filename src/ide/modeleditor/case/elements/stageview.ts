@@ -225,17 +225,18 @@ export default class StageView<SD extends StageDefinition = StageDefinition> ext
     }
 
     get markup() {
-        return `<g class="scalable">
-                    <polyline class="cmmn-shape cmmn-border cmmn-stage-shape" points=" 20,0 0,20 0,280 20,300 480,300 500,280 500,20 480,0 20,0" />
+        return `<g @selector='scalable'>
+                    <polygon @selector='body' points="20,0 0,20 0,280 20,300 480,300 500,280 500,20 480,0" />
                 </g>
-                <text class="cmmn-bold-text" font-size="12" />
+                <text @selector="label" />
                 ${this.decoratorBox.markup}`;
     }
 
-    get textAttributes() {
+    get markupAttributes(): any {
         return {
-            'text': {
-                'ref': '.cmmn-shape',
+            label: {
+                fontWeight: 'bold',
+                'ref': 'body',
                 'ref-x': .5,
                 'ref-y': 8,
                 'x-alignment': 'middle',

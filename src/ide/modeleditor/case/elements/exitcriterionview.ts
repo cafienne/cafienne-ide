@@ -27,4 +27,8 @@ export default class ExitCriterionView extends SentryView<ExitCriterionDefinitio
     get isExitCriterion() {
         return true;
     }
+
+    get color() {
+        return 'black';
+    }
 }

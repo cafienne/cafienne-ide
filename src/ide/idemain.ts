@@ -4,7 +4,6 @@ import LeftSplitter from "./splitter/leftsplitter";
 import $ from "jquery";
 
 // NO ALT SHIFT O (Do not apply sorting on imports of stylesheets.)
-import "../../node_modules/jointjs/dist/joint.css";
 import "../../node_modules/bootstrap/dist/css/bootstrap.css";
 import "../../node_modules/jquery-ui/dist/themes/base/jquery-ui.css";
 import "../../node_modules/codemirror/lib/codemirror.css";
@@ -30,7 +29,6 @@ import "@styles/ide/modeleditors/case/elements/properties/planningtablepropertie
 import "@styles/ide/modeleditors/case/elements/properties/sentryproperties.css";
 import "@styles/ide/modeleditors/case/elements/properties/stageproperties.css";
 import "@styles/ide/modeleditors/case/elements/properties/timereventproperties.css";
-import "@styles/ide/modeleditors/case/elements/elements.css";
 import "@styles/ide/modeleditors/case/editors/cfiselector.css";
 import "@styles/ide/modeleditors/case/editors/file/classic/casefileitemseditor.css";
 import "@styles/ide/modeleditors/type/typemodeleditor.css";

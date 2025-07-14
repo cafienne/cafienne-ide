@@ -39,4 +39,8 @@ export default class CaseTaskView extends TaskView<CaseTaskDefinition> {
     get isCaseTask() {
         return true;
     }
+
+    get color() {
+        return 'rgb(103, 133, 216)';
+    }
 }

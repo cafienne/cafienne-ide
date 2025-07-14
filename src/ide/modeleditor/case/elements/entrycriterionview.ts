@@ -40,4 +40,8 @@ export default class EntryCriterionView extends SentryView<EntryCriterionDefinit
     get isEntryCriterion() {
         return true;
     }
+
+    get color() {
+        return 'white';
+    }
 }

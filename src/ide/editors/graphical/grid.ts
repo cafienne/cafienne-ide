@@ -1,4 +1,4 @@
-import { dia } from "jointjs";
+import { dia } from '@joint/core';
 import $ from "jquery";
 import IDE from "../../ide";
 import Settings from "../../settings/settings";
@@ -119,9 +119,9 @@ export default class Grid {
     render() {
         if (Grid.Visible) {
             // Note: we do this asynchronously, because the paper in joint may not yet have been created properly
-            window.setTimeout(() => this.paper.drawGrid({ color: 'black' }), 0);
+            window.setTimeout(() => this.paper.setGrid({ color: 'black' }), 0);
         } else {
-            this.paper.clearGrid();
+            this.paper.setGrid(null);
         }
         // Set grid size on the JointJS paper object (joint.dia.Paper instance)
         this.paper.options.gridSize = Grid.Size;

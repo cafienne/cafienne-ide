@@ -1,4 +1,4 @@
-import { shapes, util } from "jointjs";
+import { dia, util } from '@joint/core';
 import CMMNDocumentationDefinition from "../../../../repository/definition/cmmndocumentationdefinition";
 import CMMNElementDefinition from "../../../../repository/definition/cmmnelementdefinition";
 import Edge from "../../../../repository/definition/dimensions/edge";
@@ -6,7 +6,6 @@ import ShapeDefinition from "../../../../repository/definition/dimensions/shape"
 import Remark from "../../../../repository/validate/remark";
 import Util from "../../../../util/util";
 import Grid from "../../../editors/graphical/grid";
-import HtmlUtil from "../../../util/htmlutil";
 import CaseModelEditor from "../casemodeleditor";
 import Highlighter from "../highlighter";
 import Marker from "../marker";
@@ -17,7 +16,7 @@ import Connector from "./connector/connector";
 import Halo from "./halo/halo";
 import Properties from "./properties/properties";
 
-export default abstract class CMMNElementView<D extends CMMNElementDefinition = CMMNElementDefinition> extends CanvasElement<shapes.basic.Generic> {
+export default abstract class CMMNElementView<D extends CMMNElementDefinition = CMMNElementDefinition> extends CanvasElement<dia.Element> {
     readonly case: CaseView;
     protected editor: CaseModelEditor;
     protected __connectors: Connector[] = [];
@@ -85,9 +84,7 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
      */
     abstract get markup(): string;
 
-    get textAttributes(): object {
-        return {};
-    }
+    abstract get markupAttributes(): any;
 
     /**
      * Returns the text to be rendered inside the shape
@@ -128,18 +125,43 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
     }
 
     createJointElement() {
-        const jointSVGSetup = {
-            // Markup is the SVG that is rendered through the joint element; we surround the markup with an addition <g> element that holds the element id
-            markup: `<g id="${this.html_id}">${this.markup}</g>`,
-            // Type is used to determine whether drag/drop is supported (element border coloring)
-            type: this.constructor.name,
-            // Take size and position from shape.
-            size: this.shape,
-            position: this.shape,
-            // Attrs can contain additional relative styling for the text label inside the element
-            attrs: this.textAttributes
+        const defaultAttrs = {
+            root: {
+                fill: 'transparent',
+                stroke: '#423d3d',
+                strokeWidth: 1,
+            },
+            body: {
+                fill: 'transparent',
+                stroke: '#423d3d',
+                strokeWidth: 1,
+                vectorEffect: 'non-scaling-stroke',
+            },
+            label: {
+                fill: 'black',
+                stroke: 'none',
+                fontSize: 12,
+            },
         };
-        this.xyz_joint = new shapes.basic.Generic(jointSVGSetup as any);
+
+        const attrs:any = util.merge({}, defaultAttrs, this.markupAttributes);
+
+        this.xyz_joint = new dia.Element({
+            type: this.constructor.name,
+            markup: util.svg`<g id="${this.html_id}">${this.markup}</g>` as any,
+            // Take size and position from shape.
+            position: {
+                x: this.shape.x,
+                y: this.shape.y,
+            },
+            size: {
+                width: this.shape.width,
+                height: this.shape.height,
+            },
+            attrs: attrs,
+        });
+
+
         // Directly embed into parent
         if (this.parent && this.parent.xyz_joint) {
             this.parent.xyz_joint.embed(this.xyz_joint);
@@ -237,7 +259,7 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
     refreshText() {
         const rawText = this.text;
         const formattedText = this.wrapText ? util.breakText(rawText, { width: this.shape.width, height: this.shape.height }) : rawText;
-        this.xyz_joint.attr('text/text', formattedText);
+        this.xyz_joint.attr('label/text', formattedText);
     }
 
     refreshSubViews() {
@@ -348,14 +370,11 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
      */
     __select(selected: boolean) {
         if (selected) {
-            //do not select element twice
-            HtmlUtil.addClassOverride(this.html.find('.cmmn-shape'), 'cmmn-selected-element');
-            // this.html.find('.cmmn-shape').addClass('cmmn-selected-element');
+            this.xyz_joint.attr('body/stroke', 'blue');
             this.__renderBoundary(true);
         } else {
             // Give ourselves default color again.
-            HtmlUtil.removeClassOverride(this.html.find('.cmmn-shape'), 'cmmn-selected-element');
-            // this.html.find('.cmmn-shape').removeClass('cmmn-selected-element');
+            this.xyz_joint.attr('body/stroke', '#423d3d');
             this.propertiesView.hide();
             this.__renderBoundary(false);
         }
@@ -712,3 +731,7 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
         return false;
     }
 }
+function removeAtSign(text: string): any {
+    return text.replace(/@/g, '');
+}
+
