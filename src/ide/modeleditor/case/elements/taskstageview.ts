@@ -2,7 +2,6 @@ import PlanItem from "../../../../repository/definition/cmmn/caseplan/planitem";
 import HumanTaskDefinition from "../../../../repository/definition/cmmn/caseplan/task/humantaskdefinition";
 import TaskStageDefinition from "../../../../repository/definition/cmmn/caseplan/taskstagedefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
-import HtmlUtil from "../../../util/htmlutil";
 import CaseView from "./caseview";
 import CMMNElementView from "./cmmnelementview";
 import Connector from "./connector/connector";
@@ -29,10 +28,7 @@ export default abstract class TaskStageView<TS extends TaskStageDefinition = Tas
     /**
      * Returns the location of the planning table for this type of element. Subclasses must implement this method
      */
-    get __planningTablePosition(): { x: number; y: number } {
-        throw new Error('Planning table position is not set in object of type ' + this.constructor.name);
-    }
-
+    abstract get __planningTablePosition(): { x: number; y: number };
     /**
      * Add a discretionary item to this stage or task.
      */
@@ -50,13 +46,7 @@ export default abstract class TaskStageView<TS extends TaskStageDefinition = Tas
      * Renders the element border freshly, based on whether this is a discretionary item or not.
      */
     refreshDiscretionaryBorder() {
-        const className = 'cmmn-discretionary-border';
-        const cmmnShape = this.html.find('.cmmn-shape');
-        if (this.definition.isDiscretionary) {
-            HtmlUtil.addClassOverride(cmmnShape, className);
-        } else {
-            HtmlUtil.removeClassOverride(cmmnShape, className);
-        }
+        this.xyz_joint.attr("body/stroke-dasharray", this.definition.isDiscretionary ? '10 5' : 'none');
     }
 
     /**

@@ -1,4 +1,4 @@
-import { dia } from "jointjs";
+import { dia } from '@joint/core';
 import CaseView from "./caseview";
 
 export default abstract class CanvasElement<JointType extends dia.Cell = dia.Cell> {
@@ -26,7 +26,7 @@ export default abstract class CanvasElement<JointType extends dia.Cell = dia.Cel
      * Hook invoked after the element has moved.
      * @param newParent - optional new parent 
      */
-    moved(x: number, y: number, newParent: CanvasElement) {        
+    moved(x: number, y: number, newParent: CanvasElement) {
     }
 
     /**
@@ -38,5 +38,5 @@ export default abstract class CanvasElement<JointType extends dia.Cell = dia.Cel
     /**
      * Hook invoked upon mouseLeave
      */
-    mouseLeave() {}
+    mouseLeave() { }
 }

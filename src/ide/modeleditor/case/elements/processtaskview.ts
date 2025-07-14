@@ -42,4 +42,8 @@ export default class ProcessTaskView extends TaskView {
     get isProcessTask() {
         return true;
     }
+
+    get color() {
+        return 'rgb(103, 133, 216)';
+    }
 }

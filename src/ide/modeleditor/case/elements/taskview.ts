@@ -143,25 +143,30 @@ export default abstract class TaskView<TD extends TaskDefinition = TaskDefinitio
     }
 
     get markup() {
-        return `<g class="scalable">
-                    <rect class="cmmn-shape cmmn-border cmmn-${this.constructor.name.toLowerCase()}-shape" rx="5" ry="5" width="100" height="60" />
+        return `<g @selector="scalable">
+                    <rect @selector='body' rx="5" ry="5" width="100" height="60" />
                 </g>
-                <text class="cmmn-text" />
-                <image class="taskImage" x="0" y="-4" width="24" height="24" xlink:href="${this.imageURL}" />
+                <text @selector="label" />
+                <image class="taskImage" x="0" y="-4" width="24" height="24" href="${this.imageURL}" />
                 ${this.decoratorBox.markup}`;
     }
 
-    get textAttributes() {
+    get markupAttributes() {
         return {
-            'text': {
-                ref: '.cmmn-shape',
+            body: {
+                fill: this.color,
+            },
+            label: {
+                ref: 'body',
                 'ref-x': 0.5,
                 'ref-y': 0.5,
                 'y-alignment': 'middle',
-                'x-alignment': 'middle'
-            }
+                'x-alignment': 'middle',
+            },
         };
     }
+
+    abstract get color(): string;
 
     // Returns true when an element of type 'elementType' can be added as a child to this element
     __canHaveAsChild(elementType: Function) {
@@ -183,7 +188,7 @@ export default abstract class TaskView<TD extends TaskDefinition = TaskDefinitio
 
     refreshTaskImage() {
         // Show image of the right task type (typically blocking vs. non-blocking human task)
-        this.html.find('.taskImage').attr('xlink:href', this.imageURL);
+        this.html.find('.taskImage').attr('href', this.imageURL);
     }
 
     referencesDefinitionElement(definitionId: string) {

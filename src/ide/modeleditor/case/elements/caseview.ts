@@ -1,4 +1,4 @@
-﻿import { dia } from "jointjs";
+import { dia } from '@joint/core';
 import $ from "jquery";
 import TextAnnotationDefinition from "../../../../repository/definition/artifact/textannotation";
 import CaseDefinition from "../../../../repository/definition/cmmn/casedefinition";
@@ -238,7 +238,7 @@ export default class CaseView {
             height: '6000px',
             gridSize: 1,
             perpendicularLinks: true,
-            model: this.graph
+            model: this.graph,
         });
 
         this.grid = new Grid(this.paper, this.editor.ide);

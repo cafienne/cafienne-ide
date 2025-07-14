@@ -37,7 +37,7 @@ export default abstract class Decorator {
         const visibility = this.visibility ? 'visible' : 'hidden';
         const i = this.box.decorators.indexOf(this);
         return `
-        <image x="${(i * DECORATORSIZE)}" y="${this.box.decoratorsTop}" visibility="${visibility}" width="${DECORATORSIZE}" height="${DECORATORSIZE}" class="${this.id}" xlink:href="${this.imgURL}">
+        <image x="${(i * DECORATORSIZE)}" y="${this.box.decoratorsTop}" visibility="${visibility}" width="${DECORATORSIZE}" height="${DECORATORSIZE}" class="${this.id}" href="${this.imgURL}">
             <title class="tooltip"></title>
         </image>`;
     }

@@ -1,4 +1,4 @@
-import { g } from "jointjs";
+import { g } from '@joint/core';
 import PlanItem from "../../../../repository/definition/cmmn/caseplan/planitem";
 import CriterionDefinition from "../../../../repository/definition/cmmn/sentry/criteriondefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
@@ -11,9 +11,6 @@ import PlanItemProperties from "./properties/planitemproperties";
 import ReactivateCriterionView from "./reactivatecriterionview";
 
 export default abstract class PlanItemView<PI extends PlanItem = PlanItem> extends CMMNElementView<PI> {
-    get markup(): string {
-        throw new Error("Method not implemented.");
-    }
     _decoratorBox?: DecoratorBox;
 
     /**
