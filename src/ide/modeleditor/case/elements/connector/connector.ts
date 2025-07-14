@@ -87,17 +87,20 @@ export default class Connector extends CanvasElement<shapes.standard.Link> {
     mouseEnter(): void {
         this.addTools();
 
+        this.link.attr('line/stroke', 'blue');
+
         // On mouse enter of a 'sentry' linked connector, we will show the standard event if it is not yet visible.
         //  It is hidden again on mouseout
         this.formerLabel = this.label;
         if (this.label || !this.criterion) return;
         const onPart = (this.criterion as any).__getOnPart(this);
         if (onPart) this.__setJointLabel(onPart.standardEvent.toString());
-
     }
 
     mouseLeave() {
         this.removeTools();
+
+        this.link.attr('line/stroke', '#423d3d');
 
         this.__setJointLabel(this.formerLabel || "");
     }
