@@ -103,11 +103,10 @@ export default class Resizer {
         this.element.propertiesView.hide();
 
         // Store the original dimensions
-        const eA = this.element.attributes;
-        this.startX = eA.position.x;
-        this.startY = eA.position.y;
-        this.startW = eA.size.width;
-        this.startH = eA.size.height;
+        this.startX = this.element.position.x;
+        this.startY = this.element.position.y;
+        this.startW = this.element.size.width;
+        this.startH = this.element.size.height;
         // Store the coordinate of mousedown
         this.downX = e.clientX || 0;
         this.downY = e.clientY || 0;
@@ -135,9 +134,8 @@ export default class Resizer {
         // For new position and size. dx, dy for coordinate change
         let x: number, y: number, w: number, h: number, dx: number, dy: number;
 
-        const jointAttributes = jointElement.attributes;
-        const eX = jointAttributes.position.x;
-        const eY = jointAttributes.position.y;
+        const eX = jointElement.position().x;
+        const eY = jointElement.position().y;
 
         const coor = this.element.case.getCursorCoordinates(e);
 

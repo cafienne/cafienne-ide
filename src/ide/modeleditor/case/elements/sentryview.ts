@@ -135,11 +135,10 @@ export default abstract class SentryView<CD extends CriterionDefinition = Criter
         const point = new g.Point(x, y);
         const boundryPoint = parentElement.getBBox().pointNearestToPoint(point);
 
-        const sA = this.attributes;
-        const sX = sA.position.x;
-        const sY = sA.position.y;
-        const sH = sA.size.height;
-        const sW = sA.size.width;
+        const sX = this.position.x;
+        const sY = this.position.y;
+        const sH = this.size.height;
+        const sW = this.size.width;
 
         const sentryTranslateX = boundryPoint.x - sX - sW / 2;
         const sentryTranslateY = boundryPoint.y - sY - sH / 2;
