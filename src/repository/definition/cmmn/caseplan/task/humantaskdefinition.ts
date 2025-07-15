@@ -28,6 +28,10 @@ export default class HumanTaskDefinition extends TaskDefinition {
             validator.raiseError(this, `${this} has an invalid role reference '${this.performerRef}'`)
         }
 
+        if (this.performer && !this.caseDefinition.caseTeam.hasRole(this.performer)) {
+            validator.raiseError(this, `${this} has a performer '${this.performer.name}' that is not defined in the case team.`);
+        }
+
         // validate TaskPairing
         if (this.rendezVous && this.fourEyes) {
             let counterparts = this.rendezVous.references;

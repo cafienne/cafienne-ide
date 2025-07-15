@@ -57,6 +57,10 @@ export default class CaseTeamDefinition extends UnnamedCMMNElementDefinition {
         }
     }
 
+    hasRole(role: CaseRoleDefinition): boolean {
+        return this.roles.some(existingRole => existingRole.id === role.id);
+    }
+
     changeCaseTeam(newCaseTeamRef: string) {
         this.caseTeamRef.update(newCaseTeamRef);
         // Clear existing roles and adopt roles from the new case team

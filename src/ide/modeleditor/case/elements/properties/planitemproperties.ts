@@ -125,15 +125,15 @@ export default class PlanItemProperties<PIV extends PlanItemView = PlanItemView>
     getRolesAsHTMLSelect(selectedRole: CaseRoleReference | undefined, buttonClass: string) {
         const isSelected = (caseRole: any) => selectedRole !== undefined && selectedRole.value === caseRole.id;
         const existingRolesAsOptions = this.case.caseDefinition.caseTeam.roles.map((role: any) =>
-            `<option value="${role.id}" ${isSelected(role) ? ' selected' : ''}>${role.name}</option>`
+            `<option style="color:green" value="${role.id}" ${isSelected(role) ? ' selected' : ''}>${role.name}</option>`
         ).join('');
-        const invalidRoleOption = selectedRole && selectedRole.nonEmpty && !selectedRole.getDefinition()
-            ? `<option value="${selectedRole.value}" selected>${selectedRole.value}</option>`
+        const invalidRoleOption = selectedRole && selectedRole.nonEmpty && (!selectedRole.getDefinition() || !this.case.caseDefinition.caseTeam.hasRole(selectedRole.getDefinition()!))
+            ? `<option style="color:red" value="${selectedRole.value}" selected>${selectedRole.name ?? selectedRole.value}</option>`
             : '';
         return `<div class="role-selector">
                     <span>
                         <select ${invalidRoleOption ? ' title="Invalid role reference" style="color:red"' : ''}>
-                            <option value="">select a role ...</option>
+                            <option style="color:black" value="">select a role ...</option>
                             ${existingRolesAsOptions}
                             ${invalidRoleOption}
                         </select>
