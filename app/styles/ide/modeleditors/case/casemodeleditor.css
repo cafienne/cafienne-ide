@@ -79,14 +79,3 @@
 .divClassicCaseFileEditor .schemadatabox .divCaseFileDefinitions {
     top: 4px;
 }
-
-/* Change width of connector hover area*/
-.joint-link.joint-theme-default .connection-wrap {
-    stroke-width: 8px;
-}
-
-
-/* Hide connector arrowheads (the big green ones)*/
-.joint-viewport .marker-arrowhead {
-    display: none;
-}

@@ -212,29 +212,6 @@
     display: block;
 }
 
-
-/* Overruled JointJS classes (joint.css) */
-
-
-/* overrules line 98 joint.css */
-
-.connection-wrap {
-    fill: none;
-    stroke: black;
-    stroke-width: 8;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    opacity: 0;
-    cursor: move;
-}
-
-
-/*HCM CMMN added: do not show the arrow heads while hovering -> user is prevented to drag the line to other element */
-
-.link:hover .marker-arrowheads {
-    display: none;
-}
-
 /* Overrules JQuery classes (jquery-ui.css) */
 .ui-widget {
     font-family: "myriad-pro", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
