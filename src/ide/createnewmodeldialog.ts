@@ -20,8 +20,8 @@ export default class CreateNewModelDialog extends Dialog {
                 <label style="width:150px">Description</label><input class = "inputDescription"/>
                 <br>
                 <br>
-                <input style="background-color:steelblue; color:#fff" type="submit" class='buttonOk' value="OK"/>
-                <button class='buttonCancel'>Cancel</button>
+                <input type="button" style="background-color:steelblue; color:#fff" type="submit" class='buttonOk' value="OK"/>
+                <button type="button" class='buttonCancel'>Cancel</button>
             </form>
         `);
         dialogHTML.append(htmlDialog);
