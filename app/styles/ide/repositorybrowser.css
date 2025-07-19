@@ -34,7 +34,7 @@
     position: absolute;
     left: 0px;
     right: 0px;
-    top: 46px;
+    top: 56px;
     bottom: 0px;
     padding: 4px 4px 8px 4px;
     border-bottom: 1px solid rgb(221, 221, 221);
@@ -127,7 +127,7 @@
     position: absolute;
     left: 0px;
     right: 0px;
-    height: 26px;
+    height: 36px;
     top: 20px;
     overflow: hidden;
     background-color: #f5f5f5;
