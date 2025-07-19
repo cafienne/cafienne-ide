@@ -55,7 +55,7 @@ export const config: WebdriverIO.Config = {
     // and 30 processes will get spawned. The property handles how many capabilities
     // from the same test should run tests.
     //
-    maxInstances: debug ? 1 : 10,
+    maxInstances: debug ? 1 : 4,
     //
     // If you have trouble getting all important capabilities together, check out the
     // Sauce Labs platform configurator - a great tool to configure your capabilities:
@@ -65,7 +65,7 @@ export const config: WebdriverIO.Config = {
         browserName: 'chrome',
         'goog:chromeOptions': {
             args: [
-                'headless',
+                //  'headless',
                 'window-size=1920,1200'
             ],
             'excludeSwitches': ['enable-logging'],
@@ -109,7 +109,7 @@ export const config: WebdriverIO.Config = {
     // baseUrl: 'http://localhost:8080',
     //
     // Default timeout for all waitFor* commands.
-    waitforTimeout: debug ? (24 * 60 * 60 * 1000) : 10000,
+    waitforTimeout: debug ? (24 * 60 * 60 * 1000) : 100000,
     //
     // Default timeout in milliseconds for request
     // if browser driver or grid doesn't send response
@@ -156,6 +156,7 @@ export const config: WebdriverIO.Config = {
     // See the full list at http://mochajs.org/
     mochaOpts: {
         ui: 'bdd',
+        require: ['test/integration/hooks.ts'],
         timeout: debug ? (24 * 60 * 60 * 1000) : 60000,
     },
 
