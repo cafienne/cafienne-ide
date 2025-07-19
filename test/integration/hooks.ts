@@ -5,7 +5,6 @@ type logEvent = {
 }
 
 const ignoreEvents = [
-    /Form submission canceled because the form is not connected/, // filter out those messages triggered by faulty button
     /: no source content to parse/, // filter out those warnings due to parallel execution;
 ]
 
