@@ -35,8 +35,8 @@ export default class CreateNewCaseModelDialog extends CreateNewModelDialog {
                 <label style="width:150px">Case Team</label><select class="selectCaseTeam"></select>
                 <br>
                 <br>
-                <input style="background-color:steelblue; color:#fff" type="submit" class='buttonOk' value="OK"/>
-                <button class='buttonCancel'>Cancel</button>
+                <input type="button" style="background-color:steelblue; color:#fff" type="submit" class='buttonOk' value="OK"/>
+                <button type="button" class='buttonCancel'>Cancel</button>
             </form>
         `);
         dialogHTML.append(htmlDialog);
