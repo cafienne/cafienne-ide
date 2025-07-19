@@ -47,7 +47,7 @@ export default class CreateNewCaseModelDialog extends CreateNewModelDialog {
             this.result.caseTeamRef = this.deriveCaseTeamRefFromCaseName(this.readResult(dialogHTML).name); // The caseTeamRef is the fileName including the extension ".caseteam"
             this.caseTeamSelector.listRefresher(this.result.caseTeamRef, this.createOptionalNewCaseTeamOption(this.readResult(dialogHTML).name));
         });
-        dialogHTML.find('.buttonOk').on('click', e => this.closeModalDialog(this.createResult(dialogHTML)));
+        dialogHTML.find('.buttonOk').on('click', e => { e.preventDefault(); this.closeModalDialog(this.createResult(dialogHTML)) });
         dialogHTML.find('.buttonCancel').on('click', e => this.closeModalDialog(false));
         this.typeSelector = new TypeSelector(this.ide.repository, dialogHTML.find('.selectType'), this.result.typeRef, (v: string) => this.result.typeRef = v, false);
         this.caseTeamSelector = new CaseTeamSelector(this.ide.repository, dialogHTML.find('.selectCaseTeam'), this.result.caseTeamRef, (v: string) => this.result.caseTeamRef = v);

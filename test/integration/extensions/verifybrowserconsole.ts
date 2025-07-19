@@ -6,7 +6,6 @@ type logEvent = {
 
 // filter out those warnings
 const ignoreEvents = [
-    /Form submission canceled because the form is not connected/, // filter out those messages triggered by faulty button
     /: no source content to parse/, // due to parallel execution;
     /Still using [^\s]* \?\?\?  Better not, since it no longer exists in the server .../, // due to parallel execution
     /Cannot add renderer again found/, // due to issues in TypeEditor

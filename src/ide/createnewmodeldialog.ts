@@ -26,7 +26,7 @@ export default class CreateNewModelDialog extends Dialog {
         `);
         dialogHTML.append(htmlDialog);
         dialogHTML.find('input').on('focus', e => e.target.select());
-        dialogHTML.find('.buttonOk').on('click', e => this.closeModalDialog(this.readResult(dialogHTML)));
+        dialogHTML.find('.buttonOk').on('click', e => { e.preventDefault(); this.closeModalDialog(this.readResult(dialogHTML)) });
         dialogHTML.find('.buttonCancel').on('click', e => this.closeModalDialog(false));
     }
 

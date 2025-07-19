@@ -25,7 +25,7 @@ export default class CFISelector extends Dialog {
         `);
         dialogHTML.append(htmlDialog);
         this.case.caseDefinition.caseFile.children.forEach(cfi => this.renderCaseFileItem(cfi, dialogHTML.find('.cfi-tree')));
-        dialogHTML.find('.buttonOk').on('click', e => this.ok());
+        dialogHTML.find('.buttonOk').on('click', e => { e.preventDefault(); this.ok(); });
         dialogHTML.find('.buttonCancel').on('click', e => this.cancel());
     }
 
@@ -37,7 +37,7 @@ export default class CFISelector extends Dialog {
             }
         }
         const html = $(
-        `<div class='cfi-container'>
+            `<div class='cfi-container'>
             <div class='cfi-summary'>
                 <img class="cfi-icon" src="${Shapes.CaseFileItem}" />
                 ${item.name}
