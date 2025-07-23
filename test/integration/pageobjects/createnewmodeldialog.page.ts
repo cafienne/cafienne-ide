@@ -1,20 +1,21 @@
 export class NewModelDialog {
-    protected get dialogBase () {
+    protected get dialogBase() {
         return $('dialog');
     }
 
-    public async confirm () {
+    public async confirm() {
         await this.dialogBase.$(`.buttonOk`).click();
     }
 
-    public async candel () {
+    public async candel() {
         await this.dialogBase.$(`.buttonCancel`).click();
     }
 
-    public get nameInput () {
+    public get nameInput() {
         return this.dialogBase.$('.inputName');
     }
-    public get descriptionInput () {
+
+    public get descriptionInput() {
         return this.dialogBase.$('.inputDescription');
     }
 }

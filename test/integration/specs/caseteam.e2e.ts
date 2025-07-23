@@ -10,8 +10,8 @@ describe('Case team', async function () {
     });
 
     it('Create case with new team', async function () {
-        const caseName_1 = Util.getRandomSet(8);
-        const caseName_2 = Util.getRandomSet(8);
+        const caseName_1 = Util.createID('case_with_team_1');
+        const caseName_2 = Util.createID('case_with_team_2');
 
         // create first case
         await ModelListPanel.createCaseModel(caseName_1);
@@ -25,7 +25,6 @@ describe('Case team', async function () {
 
         // try to delete team
         await CaseTeamEditorPage.deleteButton.click();
-        //        await browser.debug();
         await IDEPage.expectWarning(`Cannot delete '${caseName_1}.caseteam' because the model is used in 1 other model`);
         await IDEPage.closeWarning();
 

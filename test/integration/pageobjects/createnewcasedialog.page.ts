@@ -1,10 +1,11 @@
 import { NewModelDialog } from "./createnewmodeldialog.page";
 
 export class CreateNewCaseDialog extends NewModelDialog {
-    public get typeSelect () {
+    public get typeSelect() {
         return this.dialogBase.$('.selectType');
     }
-    public get teamSelect () {
+
+    public get teamSelect() {
         return this.dialogBase.$('.selectCaseTeam');
     }
 }
