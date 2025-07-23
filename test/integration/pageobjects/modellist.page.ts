@@ -21,27 +21,24 @@ export class ModelListPanel {
 
     public async createCaseModel(caseName: string, teamName?: string) {
         await this.selectModelTab('case');
+
         await this.addCaseButton.click();
         await CreateNewCaseDialog.nameInput.addValue(caseName);
         await browser.keys('\t'); // now other fields get filled.
-
         if (teamName) {
             await CreateNewCaseDialog.teamSelect.selectByAttribute('value', teamName + ".caseteam");
         }
-
         await CreateNewCaseDialog.confirm();
 
         await this.modelTabBase.$(`div[filename='${caseName}.case']`).waitForDisplayed();
-
         await CaseModelerPage.shapebox.waitForDisplayed();
     }
 
     async createProcessModel(name: string) {
         await this.selectModelTab('process');
+
         await this.addProcessButton.click();
         await CreateNewModelDialog.nameInput.addValue(name);
-        await browser.keys('\t'); // now other fields get filled.
-
         await CreateNewModelDialog.confirm();
 
         await this.modelTabBase.$(`div[filename='${name}.process']`).waitForDisplayed();
@@ -49,10 +46,9 @@ export class ModelListPanel {
 
     async createTypeModel(name: string) {
         await this.selectModelTab('type');
+
         await this.addTypeButton.click();
         await CreateNewModelDialog.nameInput.addValue(name);
-        await browser.keys('\t'); // now other fields get filled.
-
         await CreateNewModelDialog.confirm();
 
         await this.modelTabBase.$(`div[filename='${name}.type']`).waitForDisplayed();
@@ -61,6 +57,7 @@ export class ModelListPanel {
     public get repositoryPanel() {
         return $('.divModelList');
     }
+
     public get addCaseButton() {
         return this.repositoryPanel.$('[filetype="case"] .plus-icon');
     }

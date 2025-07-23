@@ -23,7 +23,7 @@ export default class Halo<D extends CMMNElementDefinition = CMMNElementDefinitio
      * in the implementation of the createContent() method. This is invoked right after constructor invocation.
      */
     constructor(public element: V) {
-        const html = this.html = $(`<div class="halobox" element="${element.toString()}">
+        const html = this.html = $(`<div class="halobox" element="${element.id}">
     <div class="halobar top"></div>
     <div class="halobar top-right"></div>
     <div class="halobar right"></div>

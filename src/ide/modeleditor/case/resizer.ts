@@ -29,7 +29,7 @@ export default class Resizer {
         this.scrollListener = (e: JQuery.Event) => this.setPosition();
 
         // Create the HTML for the resizer
-        this.html = $(`<div class="resizebox" element="${this.element.toString()}">
+        this.html = $(`<div class="resizebox" element="${this.element.id}">
     <div class="fence"></div>
 </div>`);
         this.element.case.resizeContainer.append(this.html);

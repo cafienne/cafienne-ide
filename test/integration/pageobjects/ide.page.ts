@@ -4,9 +4,11 @@ export class IDEPage extends Page {
     public get currentModelEditor() {
         return $(`.model-editor-base[style*="display: block;"]`);
     }
+
     public modelEditor(modelName: string) {
         return $(`.model-editor-base[model="${modelName}"]`);
     }
+
     public get modelList() {
         return $('.divModelList');
     }
@@ -15,9 +17,11 @@ export class IDEPage extends Page {
         await super.open(model);
         await this.modelList.waitForDisplayed();
     }
+
     async expectWarning(message: string) {
         await expect($('.alert-danger')).toHaveText(expect.stringContaining(message));
     }
+
     async closeWarning() {
         await $('.messagebox button.close').click();
     }

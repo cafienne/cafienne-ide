@@ -241,6 +241,8 @@ export const config: WebdriverIO.Config = {
         browser.on('dialog', async (dialog) => {
             // do not automatically dismiss alerts, need to be handled in the test
         });
+
+        require('extensions/commands');
     },
     /**
      * Runs before a WebdriverIO command gets executed.
