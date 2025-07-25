@@ -3,6 +3,9 @@ import CreateNewCaseDialog from './createnewcasedialog.page';
 import CreateNewModelDialog from './createnewmodeldialog.page';
 
 export class ModelListPanel {
+    modelTab(modelFileName: string) {
+        return this.modelTabBase.$(`div[filename='${modelFileName}']`)
+    }
     private get modelTabBase() {
         return $('.divModelList .divAccordionList');
     }
