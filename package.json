@@ -41,7 +41,7 @@
     "shx": "^0.3.4",
     "style-loader": "^4.0.0",
     "ts-loader": "^9.5.1",
-    "typescript": "^5.4.5",
+    "typescript": "^5.8.3",
     "wdio-json-reporter": "^4.0.1",
     "webpack": "^5.94.0",
     "webpack-cli": "^5.1.4",
