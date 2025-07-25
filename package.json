@@ -60,8 +60,8 @@
     "copy-repository-files": "shx cp ./src/repository/@casefabric-repository-package.json ./dist/repository/package.json && shx cp ./src/repository/README.md ./dist/repository/",
     "package": "npm run copy-repository-files && npm run remove-unnecessary-types && npm pack --pack-destination=./dist ./dist/repository",
     "publishRemote": "npm run build && npm run package && cd ./dist/repository && npm publish --access public",
-    "test": "wdio",
-    "test-debug": "cross-env DEBUG=true wdio --spec ./test/integration/specs/caseteam.e2e.ts",
+    "test": "wdio ./test/integration/wdio.conf.ts",
+    "test-debug": "cross-env DEBUG=true wdio ./test/integration/wdio.conf.ts --spec ./test/integration/specs/caseteam.e2e.ts",
     "compare-compilation-result": "dircompare -c -w --reason -d ./repository_deploy ./dist/deploy_for_compare",
     "test-repository-library": "yarn --cwd ./test/repository_client_project install --no-lockfile && yarn --cwd ./test/repository_client_project build && yarn  --cwd ./test/repository_client_project compileModel && dircompare -c -w --reason -d ./test/repository_client_project_expected ./test/repository_client_project/dist/target"
   }

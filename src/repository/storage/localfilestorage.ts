@@ -11,8 +11,8 @@ function isKnownExtension(extension: string): boolean {
 export default class LocalFileStorage extends FileStorage {
     static logAction = (msg: string): void => { };
 
-    public sourceFolder = this.config.repository;
-    public deployFolder = this.config.deploy;
+    get sourceFolder() { return this.config.repository; }
+    get deployFolder() { return this.config.deploy; }
 
     constructor(public config: RepositoryConfiguration) {
         super();

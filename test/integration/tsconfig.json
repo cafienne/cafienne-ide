@@ -1,12 +1,21 @@
 {
     "compilerOptions": {
+        "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true,
+        "module": "ESNext",
+        "target": "es2022",
         "baseUrl": ".",
         "paths": {
-            "*": [ "./*" ],
+            "*": [
+                "./*"
+            ],
         },
-        "types": ["node", "@wdio/globals/types", "@wdio/mocha-framework"],
-        "target": "ES2015",
-       
+        "types": [
+            "node",
+            "@wdio/globals/types",
+            "@wdio/mocha-framework",
+            "expect-webdriverio",
+        ],
     },
     "include": [
         "./**/*.ts",

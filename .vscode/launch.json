@@ -2,9 +2,31 @@
     "configurations": [
         {
             "type": "chrome",
-            "name": "http://localhost:2081/#a_new_moon.case?test=true",
+            "name": "Debug Case Designer",
             "request": "launch",
-            "url": "http://localhost:2081/#a_new_moon.case?test=true"
+            "url": "http://localhost:2081/#a_new_moon.case"
+        },
+        {
+            "name": "Debug current integration (e2e) test",
+            "type": "node",
+            "request": "launch",
+            "args": [
+                "test/integration/wdio.conf.js",
+                "--spec",
+                "${file}"
+            ],
+            "cwd": "${workspaceFolder}",
+            "autoAttachChildProcesses": true,
+            "program": "${workspaceRoot}/node_modules/@wdio/cli/bin/wdio.js",
+            "console": "integratedTerminal",
+            "skipFiles": [
+                "${workspaceFolder}/node_modules/**/*.js",
+                "${workspaceFolder}/lib/**/*.js",
+                "<node_internals>/**/*.js"
+            ],
+            "env": {
+                "DEBUG": "true"
+            }
         }
     ]
 }
