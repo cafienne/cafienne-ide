@@ -137,7 +137,7 @@ export default class CaseTeamEditor extends MovableEditor {
         const teamName = path.join('/');
         const teamFileName = teamName + '.caseteam';
         const teamFile = this.modelEditor.ide.repository.createCaseTeamFile(teamFileName, CaseTeamModelDefinition.createDefinitionSource(teamName));
-        if (! teamFile.definition) {
+        if (!teamFile.definition) {
             // This would be weird.
             throw new Error("Failed to create case team model definition");
         }
@@ -163,7 +163,15 @@ export default class CaseTeamEditor extends MovableEditor {
 
     async removeTeam(): Promise<void> {
         if (!this.caseTeam.caseTeamRef.file) return;
-        await this.modelEditor.ide.repositoryBrowser.delete(this.caseTeam.caseTeamRef.file, this.case.caseDefinition);
+
+        const teamFile = this.caseTeam.caseTeamRef.file;
+
+        // clear reference from case
+        this.caseTeam.caseTeamRef.update('');
+        this.case.editor.completeUserAction();
+
+        // try to delete, will succeed only when this was the last reference
+        await this.modelEditor.ide.repositoryBrowser.delete(teamFile);
     }
 
     updateCaseTeamReference(caseTeamRef: string) {
