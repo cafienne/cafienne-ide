@@ -42,6 +42,10 @@ describe('Case team', async function () {
         await browser.acceptAlert(); // Accept the alert
 
         await CaseTeamEditorPage.expectTeamNotSelected();
+
+        // refresh to make clear that repository is corrupted, see also in verifybrowserconsole.ts
+        await browser.refresh();
+        await ModelListPanel.modelTab(`${caseName_1}.case`).waitForDisplayed();
     })
 });
 
