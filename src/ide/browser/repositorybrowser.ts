@@ -1,6 +1,5 @@
 import $ from "jquery";
 import "jquery-ui";
-import ModelDefinition from "../../repository/definition/modeldefinition";
 import Repository from "../../repository/repository";
 import ServerFile from "../../repository/serverfile/serverfile";
 import DragData from "../dragdrop/dragdata";
@@ -202,11 +201,8 @@ export default class RepositoryBrowser {
         this.accordion.find('div').css('display', 'block');
     }
 
-    async delete(file: ServerFile, fromModel:ModelDefinition | undefined = undefined) {
-        const usage = fromModel 
-                            ? file.usage.filter(x => x.definition?.id != fromModel.id)
-                            : file.usage;
-
+    async delete(file: ServerFile) {
+        const usage = file.usage;
         if (usage.length) {
             this.ide.danger(`Cannot delete '${file.fileName}' because the model is used in ${usage.length} other model${usage.length == 1 ? '' : 's'}<p/>` +
                 `${usage.length ? usage.map(u => '- ' + u.fileName).join('<p/>') : ''}`);
