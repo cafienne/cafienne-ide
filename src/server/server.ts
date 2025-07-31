@@ -6,7 +6,8 @@ import path from 'path';
 import RepositoryConfiguration from '../config/config';
 import LocalFileStorage from '../repository/storage/localfilestorage';
 import Logger from './logger';
-import ServerConfiguration from './serverconfiguration';
+import ServerConfiguration from './serverconfiguration'; 
+import LocalTrainingStorage from '../repository/llm/localtrainingstorage';
 
 const logger = new Logger();
 
@@ -107,9 +108,28 @@ function buildRouter(storage: LocalFileStorage): express.Router {
             res.status(500).send(err);
         }
     });
+    
+    return router;
+}
+
+function buildTrainingRouter(training: LocalTrainingStorage): express.Router {
+    const router = express.Router();
+    const jsonParser = bodyParser.json({ strict: false, type: 'application/json', limit: '50mb' });
+
+    router.post('/addsetpoint_and_save/*', jsonParser, async function (req: Request, res: Response, _next) {
+        try {
+            const fileName = req.params[0];
+            logger.printAction(`ADDSETPOINT   /${fileName}`);
+            res.json(await training.addSetPointAndSave(fileName, req.body.source, req.body.instruction));
+        } catch (err) {
+            console.error(err);
+            res.status(500).send(err);
+        }
+    });
 
     return router;
 }
+
 
 export function startServer(inTest: boolean = false, port: number = 2081, repositoryConfig: RepositoryConfiguration = new RepositoryConfiguration()): Server {
     const startMoment = new Date();
@@ -121,6 +141,7 @@ export function startServer(inTest: boolean = false, port: number = 2081, reposi
 
     const serverConfig = new ServerConfiguration();
     const storage = new LocalFileStorage(repositoryConfig);
+    const trainingStorage = new LocalTrainingStorage(repositoryConfig);
 
     serverConfig.port = port;
     const app = express();
@@ -138,6 +159,7 @@ export function startServer(inTest: boolean = false, port: number = 2081, reposi
     }
 
     app.use('/repository', buildRouter(storage));
+    app.use('/training_repository', buildTrainingRouter(trainingStorage));
 
     // catch 404 and forward to error handler
     app.use(function (req: Request, _res: Response, next) {

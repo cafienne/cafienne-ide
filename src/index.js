@@ -111,6 +111,8 @@ export { default as DeploymentFactory } from "./repository/deploy/deploymentfact
 export { default as TypeDeployment } from "./repository/deploy/typedeployment";
 export { CaseImporter, CaseTeamImporter, CFIDImporter, DimensionsImporter, HumanTaskImporter, default as ImportElement, ProcessImporter, TypeImporter } from "./repository/import/importelement";
 export { default as Importer } from "./repository/import/importer";
+export { default as LocalTrainingStorage } from "./repository/llm/localtrainingstorage";
+export { default as TrainingStorage } from "./repository/llm/trainingstorage";
 export { default as Repository } from "./repository/repository";
 export { default as CaseFile } from "./repository/serverfile/casefile";
 export { default as CaseTeamFile } from "./repository/serverfile/caseteamfile";

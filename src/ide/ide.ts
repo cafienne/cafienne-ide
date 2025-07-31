@@ -11,6 +11,7 @@ import ModelEditorMetadata from "./modeleditor/modeleditormetadata";
 import ModelEditorRegistry from "./modeleditor/modeleditorregistry";
 import RemoteFileStorage from "./remotefilestorage";
 import SettingsEditor from "./settings/settingseditor";
+import RemoteTrainingStorage from "./remotetrainingstorage";
 
 export default class IDE {
     editorRegistry: ModelEditorRegistry;
@@ -22,6 +23,7 @@ export default class IDE {
     messageBox: MessageBox;
     coverPanel: CoverPanel;
     settingsEditor: SettingsEditor;
+    training: RemoteTrainingStorage;
 
     constructor() {
         this.editorRegistry = new ModelEditorRegistry(this);
@@ -33,6 +35,7 @@ export default class IDE {
         this.messageBox = new MessageBox(this);
         this.coverPanel = new CoverPanel(this); // Helper to show/hide status messages while loading models from the repository
         this.settingsEditor = new SettingsEditor(this);
+        this.training = new RemoteTrainingStorage(window.location.origin);
 
         // Repository object handles the interaction with the server
         this.html.on('keydown', e => {

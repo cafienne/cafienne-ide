@@ -20,6 +20,7 @@ import HtmlUtil from "../../../util/htmlutil";
 import CaseModelEditor from "../casemodeleditor";
 import CaseSourceEditor from "../editors/casesourceeditor";
 import DeployForm from "../editors/deployform";
+import TrainingForm from "../editors/trainingform";
 import CaseFileEditor from "../editors/file/casefileeditor";
 import CaseParametersEditor from "../editors/parameters/caseparameterseditor";
 import StartCaseEditor from "../editors/startcaseeditor";
@@ -49,6 +50,7 @@ export default class CaseView {
     readonly canvas: JQuery<HTMLElement>;
     readonly paperContainer: JQuery<HTMLElement>;
     readonly deployForm: DeployForm;
+    readonly trainingForm: TrainingForm;
     readonly sourceEditor: CaseSourceEditor;
     readonly cfiEditor: CaseFileEditor;
     readonly undoBox: UndoRedoBox;
@@ -112,6 +114,7 @@ export default class CaseView {
         this.paperContainer = this.html.find('.paper-container');
 
         this.deployForm = new DeployForm(this);
+        this.trainingForm = new TrainingForm(this);
         this.sourceEditor = new CaseSourceEditor(editor, this.html);
         this.cfiEditor = new CaseFileEditor(this, this.divCFIEditor);
         this.undoBox = new UndoRedoBox(this, this.divUndoRedo);
@@ -218,6 +221,9 @@ export default class CaseView {
         if (urlQuery.length > 1) {
             if (urlQuery[1].startsWith('deploy=true')) {
                 this.deployForm.show();
+            }
+            if (urlQuery[1].startsWith('train=true')) {
+                this.trainingForm.show();
             }
         }
     }
@@ -457,6 +463,7 @@ export default class CaseView {
         this.startCaseEditor.delete();
         this.sourceEditor.delete();
         this.deployForm.delete();
+        this.trainingForm.delete();
         this.validateForm.delete();
         this.splitter.delete();
         this.items.forEach(canvasItem => canvasItem.deletePropertiesView());

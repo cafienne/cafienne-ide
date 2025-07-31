@@ -1,3 +1,4 @@
+import Logger from "src/server/logger";
 import CasePlanDefinition from "../../../../../../repository/definition/cmmn/caseplan/caseplandefinition";
 import CasePlanView from "../../caseplanview";
 import Halo from "../halo";
@@ -8,6 +9,7 @@ import DebuggerHaloItem from "./item/caseplan/debuggerhaloitem";
 import DeployHaloItem from "./item/caseplan/deployhaloitem";
 import SeparatorHaloItem from "./item/caseplan/separatorhaloitem";
 import StartCaseSchemaHaloItem from "./item/caseplan/startcaseschemahaloitem";
+import TrainingHaloItem from "./item/caseplan/traininghaloitem";
 import ViewSourceHaloItem from "./item/caseplan/viewsourcehaloitem";
 import DeleteHaloItem from "./item/click/deletehaloitem";
 import PropertiesHaloItem from "./item/click/propertieshaloitem";
@@ -25,6 +27,9 @@ export default class CasePlanHalo extends Halo<CasePlanDefinition, CasePlanView>
             SeparatorHaloItem,
             ViewSourceHaloItem, DeployHaloItem, DebuggerHaloItem
         );
+        if (this.isTrainingEnabled()) {
+            this.topBar.addItems(TrainingHaloItem);
+        }
     }
 
     setHaloPosition() {
@@ -41,4 +46,10 @@ export default class CasePlanHalo extends Halo<CasePlanDefinition, CasePlanView>
         this.html.width(this.element.shape.width);
         this.html.height(this.element.shape.height);
     }
+
+    isTrainingEnabled(): boolean {
+        //TODO : make this configurable
+        return true;
+    }
+
 }

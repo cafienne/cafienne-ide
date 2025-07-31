@@ -8,7 +8,8 @@
 export default class RepositoryConfiguration {
     public repository: string = process.env.MODELER_REPOSITORY_PATH ? process.env.MODELER_REPOSITORY_PATH : './repository';
     public deploy: string = process.env.MODELER_DEPLOY_PATH ? process.env.MODELER_DEPLOY_PATH : './repository_deploy';
-
+    public training: string = process.env.MODELER_TRAINING_PATH ? process.env.MODELER_TRAINING_PATH : './repository_training';
+    
     constructor() {
         // Settings for cmmn test framework tests.
         // this.repository = '../cmmn-test-framework/casemodels/src';
