@@ -7,6 +7,7 @@ const GRID_SIZE = 'grid_size';
 const GRID_VISIBILITY = 'grid_visible';
 const VALIDATION_SETTINGS = 'validation_settings';
 const SPLITTER_SETTINGS = 'splitter_settings';
+const LLM_TRAINING = 'llm_training';
 
 export default class Settings {
 
@@ -56,5 +57,13 @@ export default class Settings {
 
     static set splitters(v) {
         SettingsStorage.setItem(SPLITTER_SETTINGS, v);
+    }
+
+    static get llmTraining() {
+        return SettingsStorage.getItem(LLM_TRAINING) || false;
+    }
+
+    static set llmTraining(enabled) {
+        SettingsStorage.setItem(LLM_TRAINING, enabled);
     }
 }

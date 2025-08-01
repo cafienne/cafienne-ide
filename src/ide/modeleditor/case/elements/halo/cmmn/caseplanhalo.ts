@@ -13,6 +13,7 @@ import TrainingHaloItem from "./item/caseplan/traininghaloitem";
 import ViewSourceHaloItem from "./item/caseplan/viewsourcehaloitem";
 import DeleteHaloItem from "./item/click/deletehaloitem";
 import PropertiesHaloItem from "./item/click/propertieshaloitem";
+import Settings from "../../../../../settings/settings";
 
 /**
  * Halo for the caseplan model. This halo is situated next to the top tab of the case plan model
@@ -48,8 +49,7 @@ export default class CasePlanHalo extends Halo<CasePlanDefinition, CasePlanView>
     }
 
     isTrainingEnabled(): boolean {
-        //TODO : make this configurable
-        return true;
+        return Settings.llmTraining;
     }
 
 }
