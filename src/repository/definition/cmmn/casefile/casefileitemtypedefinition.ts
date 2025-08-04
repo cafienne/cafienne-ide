@@ -41,20 +41,8 @@ export default class CaseFileItemTypeDefinition extends CaseFileItemDef {
 
     copyPropertyProperties(propertyDefinition: SchemaPropertyDefinition) {
         this.property = propertyDefinition;
-        this.id = this.getPath();
         this.multiplicity = propertyDefinition.multiplicity;
         return this.property;
-    }
-
-    getPath() {
-        const parentPaths = [];
-        let ancestor = this.parent;
-        while (ancestor && ancestor instanceof CaseFileItemTypeDefinition) {
-            parentPaths.push(ancestor.property.name);
-            ancestor = ancestor.parent;
-        }
-        const parent = parentPaths.filter(p => p !== '').reverse().join('/');
-        return parent.length > 0 ? parent + '/' + this.property.name : this.property.name;
     }
 
     /**
@@ -68,9 +56,9 @@ export default class CaseFileItemTypeDefinition extends CaseFileItemDef {
         const newName = this.name;
         // Now update references to this property
         if (references.length) {
-            console.log(this.modelDefinition.file.fileName + ": found " + references.length + " references to " + this.getPath() + "\n- " + references.map(ref => ref.modelDefinition.file.fileName + ": " + ref.constructor.name + (ref.id ? "[id=" + ref.id + "|name=" + ref.name + "]" : "")).join('\n- '));
+            console.log(this.modelDefinition.file.fileName + ": found " + references.length + " references to " + this.id + "\n- " + references.map(ref => ref.modelDefinition.file.fileName + ": " + ref.constructor.name + (ref.id ? "[id=" + ref.id + "|name=" + ref.name + "]" : "")).join('\n- '));
         } else {
-            console.log(this.modelDefinition.file.fileName + ": no references to " + this.getPath() + " where found");
+            console.log(this.modelDefinition.file.fileName + ": no references to " + this.id + " where found");
         }
         references.forEach(ref => ref.updateReferences(this, oldId, newId, oldName, newName));
 
@@ -79,7 +67,7 @@ export default class CaseFileItemTypeDefinition extends CaseFileItemDef {
             if (childProperty) {
                 child.updatePaths(childProperty);
             } else {
-                console.log(`Could not find property to update child '${this.name}' in '${this.getPath()}'`)
+                console.log(`Could not find property to update child '${this.name}' in '${this.id}'`)
             }
         });
     }

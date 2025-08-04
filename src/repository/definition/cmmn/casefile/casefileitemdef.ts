@@ -64,6 +64,25 @@ export default class CaseFileItemDef extends CaseFileItemCollection {
         this.parseGrandChildren('caseFileItem', CaseFileItemDef, this.children);
     }
 
+    get id() {
+        return (super.id && super.id != '') ? super.id : this.path;
+    }
+
+    set id(value: string) {
+        super.id = value;
+    }
+
+    protected get path(): string {
+        const parentPaths = [];
+        let ancestor = this.parent;
+        while (ancestor) {
+            parentPaths.push(ancestor.name);
+            ancestor = ancestor.parent;
+        }
+        const parent = parentPaths.filter(p => p !== '').reverse().join('/');
+        return parent.length > 0 ? parent + '/' + this.name : this.name;
+    }
+
     get definitionRef(): string {
         return this._definitionRef.fileName;
     }
@@ -74,7 +93,7 @@ export default class CaseFileItemDef extends CaseFileItemCollection {
 
     validate(validator: Validator) {
         super.validate(validator);
-        if (! this.isEmpty) {
+        if (!this.isEmpty) {
             validator.mustHaveName(this);
         }
     }
