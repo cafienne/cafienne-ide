@@ -131,15 +131,12 @@ export default class CaseView extends ModelCanvas<CaseDefinition, CMMNElementDef
             console.warn('Found illegal edge, without target ' + edge.targetId, edge, source);
             return;
         }
-        const connector = new CaseConnector(this, source, target, edge);
-        connector.draw();
-        return connector;
+        return new CaseConnector(this, source, target, edge);
     }
 
     createConnector(source: CMMNElementView, target: CMMNElementView): CaseConnector {
         const edge = Edge.create(source.definition, target.definition);
         const connector = new CaseConnector(source.modelCanvas, source, target, edge!);
-        connector.draw();
 
         this.editor.completeUserAction();
 

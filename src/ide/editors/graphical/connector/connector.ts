@@ -8,22 +8,15 @@ export default abstract class Connector<V extends ElementView> extends CanvasEle
     formerLabel?: string;
     private _hiddenLabel?: string;
 
-    abstract get arrowStyle(): string;
-
     /**
      * Creates a connector (=link in jointJS) between a source and a target.
      */
     constructor(cs: ModelCanvas<any, any>, public source: V, public target: V, public edge: Edge) {
         super(cs);
-    }
 
-    draw() {
         this.xyz_joint = new dia.Link({
             source: { id: this.source.xyz_joint.id },
             target: { id: this.target.xyz_joint.id },
-            attrs: {
-                '.connection': { 'stroke-dasharray': this.arrowStyle }
-            }
         });
 
         this.xyz_joint.set('vertices', this.edge.vertices);
@@ -60,6 +53,12 @@ export default abstract class Connector<V extends ElementView> extends CanvasEle
             attrs: {
                 text: { text, 'font-size': 'smaller' }
             }
+        });
+    }
+
+    protected set connectionStyle(strokeDashArray: string) {
+        this.xyz_joint.attr('.connection', {
+            'stroke-dasharray': strokeDashArray
         });
     }
 
