@@ -1,23 +1,40 @@
-import { shapes } from "jointjs";
+import { shapes, util } from "jointjs";
+import CMMNDocumentationDefinition from "../../../../repository/definition/cmmndocumentationdefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
-import ElementDefinition from "../../../../repository/definition/elementdefinition";
+import DocumentableElementDefinition from "../../../../repository/definition/documentableelementdefinition";
 import GraphicalModel from "../../../../repository/definition/graphicalmodel";
+import Remark from "../../../../repository/validate/remark";
 import Util from "../../../../util/util";
+import Halo from "../../../modeleditor/case/elements/halo/halo";
+import Properties from "../../../modeleditor/case/elements/properties/properties";
+import Highlighter from "../../../modeleditor/case/highlighter";
+import Marker from "../../../modeleditor/case/marker";
+import Resizer from "../../../modeleditor/case/resizer";
 import ModelEditor from "../../../modeleditor/modeleditor";
+import HtmlUtil from "../../../util/htmlutil";
 import Connector from "../connector/connector";
+import Grid from "../grid";
 import CanvasElement from "./canvaselement";
 import ModelCanvas from "./modelcanvas";
 
 export default abstract class ElementView<
-    D extends ElementDefinition<GraphicalModel> = ElementDefinition<GraphicalModel>,
+    D extends DocumentableElementDefinition<GraphicalModel> = DocumentableElementDefinition<GraphicalModel>,
     M extends ModelCanvas = ModelCanvas>
     extends CanvasElement<shapes.basic.Generic, M> {
+
 
     __connectors: Connector<ElementView<any, M>>[] = [];
     protected __childElements: ElementView<any, M>[] = [];
     protected editor: ModelEditor;
-
     private html_id: string = Util.createID(this.definition.id + '-'); // Copy definition id into a fixed internal html_id property to have a stable this.html search function
+
+    protected __properties?: Properties;
+    protected __resizable: boolean = true;
+    private _resizer?: Resizer;
+    private _halo?: Halo;
+    private _marker?: Marker;
+    private _highlighter?: Highlighter;
+
 
     constructor(modelCanvas: M, public parent: ElementView<any, M> | undefined, public definition: D, public shape: ShapeDefinition) {
         super(modelCanvas);
@@ -27,7 +44,16 @@ export default abstract class ElementView<
         if (this.parent) {
             this.parent.__childElements.push(this);
         }
+
+        if (!shape) {
+            console.warn(`${this.constructor.name}[${definition.id}] does not have a shape`);
+        }
+
+        this.createJointElement();
+
+        this.modelCanvas.items.push(this);
     }
+
 
     get id(): string {
         return this.definition.id;
@@ -35,6 +61,31 @@ export default abstract class ElementView<
 
     get name() {
         return this.definition.name;
+    }
+    /**
+     * Returns the "nice" type description of this CMMN Element.
+     * Sub classes must implement this, otherwise an error is thrown.
+     */
+    get typeDescription(): string {
+        if (!(this.constructor as any).typeDescription) {
+            throw new Error(`The type ${(this.constructor as any).name} does not have an typeDescription function ?!`);
+        }
+        return (this.constructor as any).typeDescription;
+    }
+
+    get attributes() {
+        return this.xyz_joint.attributes;
+    }
+
+
+    refreshSubViews() {
+        this.refreshHalo();
+        this.refreshProperties();
+    }
+
+
+    highlight(remark: Remark) {
+        // this.highlighter.refresh(remark);
     }
 
     /**
@@ -89,22 +140,11 @@ export default abstract class ElementView<
         return this.__connectors.find(c => c.hasElementWithId(targetId));
     }
 
-    abstract __select(selected: boolean): void;
-
     /**
      * Returns the svg markup to be rendered by joint-js.
      */
     abstract get markup(): string;
 
-
-    /**
-     * Determines whether the cursor is near the element, i.e., within a certain range of 'distance' pixels around this element.
-     * Used to show/hide the halo of the element.
-     * distance is a parameter to distinguish between moving from within to outside the element, or moving from outside towards the element.
-     * In case.js, moving towards an element is "near" when within 10px, moving out of an element can be done up to 40px. 
-     * 
-     */
-    abstract nearElement(e: JQuery.Event, distance: number): boolean;
 
     get textAttributes(): object {
         return {};
@@ -192,8 +232,6 @@ export default abstract class ElementView<
         return this.parent.hasAncestor(potentialAncestor);
     }
 
-    abstract adoptItem(childElement: ElementView<any, M>): void;
-
     /**
      * Determines whether this stage visually surrounds the cmmn element.
      */
@@ -211,7 +249,33 @@ export default abstract class ElementView<
         newParent.adoptItem(this);
     }
 
+    /**
+     * Determines whether the cursor is near the element, i.e., within a certain range of 'distance' pixels around this element.
+     * Used to show/hide the halo of the element.
+     * distance is a parameter to distinguish between moving from within to outside the element, or moving from outside towards the element.
+     * In case.js, moving towards an element is "near" when within 10px, moving out of an element can be done up to 40px. 
+     * 
+     */
+    nearElement(e: JQuery.Event, distance: number) {
+        const clientRect = this.html[0].getBoundingClientRect();
 
+        const left = clientRect.left - distance;
+        const right = clientRect.right + distance;
+        const top = clientRect.top - distance;
+        const bottom = clientRect.bottom + distance;
+        const x = e.clientX || 0;
+        const y = e.clientY || 0;
+
+        return x > left && x < right && y > top && y < bottom;
+    }
+
+
+    /**
+     * Method invoked after a role or case file item has changed
+     */
+    refreshReferencingFields(definitionElement: DocumentableElementDefinition<GraphicalModel>) {
+        this.propertiesView.refreshReferencingFields(definitionElement);
+    }
 
     /**
      * Informs the element to render again after a change to the underlying definition has happened.
@@ -227,8 +291,14 @@ export default abstract class ElementView<
         this.refreshSubViews();
         this.__childElements.forEach(child => child.refreshView());
     }
-    abstract refreshText(): void;
-    abstract refreshSubViews(): void;
+    /**
+     * Invoked from the refreshView. Assumes there is a text element inside the joint element holding the text to display on the element.
+     */
+    refreshText() {
+        const rawText = this.text;
+        const formattedText = this.wrapText ? util.breakText(rawText, { width: this.shape.width, height: this.shape.height }) : rawText;
+        this.xyz_joint.attr('text/text', formattedText);
+    }
 
     /**
      * delete and element and its' children if available
@@ -265,9 +335,6 @@ export default abstract class ElementView<
         this.xyz_joint.remove();
     }
 
-    deleteSubViews() {
-    }
-
     __removeElementDefinition() {
         // Remove the shape
         this.shape.removeDefinition();
@@ -295,6 +362,240 @@ export default abstract class ElementView<
             // Perhaps also render the parent again?? Since this element about to be deleted ...
             Util.removeFromArray(this.__childElements, cmmnElement);
         }
+    }
+
+    /**
+     * Returns the text to be rendered inside the shape
+     */
+    get text(): string {
+        const documentation = this.definition.documentation.text;
+        if (this.name === Util.withoutNewlinesAndTabs(documentation)) {
+            return documentation;
+        } else {
+            return this.definition.name;
+        }
+    }
+
+    /**
+     * Properties show the documentation. For CaseFileItemView shape we also have
+     * to render documentation, but there the "definition" refers may not be present.
+     * Through this method CaseFileItemView shape can override the getter.
+     */
+    get documentation(): CMMNDocumentationDefinition {
+        return this.definition.documentation;
+    }
+
+    /**
+     * Boolean indicating whether the text to be rendered must be wrapped or not.
+     */
+    get wrapText() {
+        return false;
+    }
+
+    mouseEnter() {
+        this.setDropHandlers();
+    }
+
+    mouseLeave() {
+        this.removeDropHandlers();
+    }
+
+    /**
+     * Method invoked when mouse hovers on the element
+     */
+    setDropHandlers() {
+        this.modelCanvas.shapeBox.setDropHandler(dragData => this.addElementView(dragData.shapeType, dragData.event!), dragData => this.__canHaveAsChild(dragData.shapeType));
+    }
+
+    /**
+     * Method invoked when mouse leaves the element.
+     */
+    removeDropHandlers() {
+        this.modelCanvas.shapeBox.removeDropHandler();
+    }
+    /**
+     * Override this method to provide type specific Properties object
+     */
+    protected abstract createProperties(): Properties;
+
+    /**
+    * Adds a new shape in this element with the specified shape type.
+    */
+    addElementView(viewType: Function, e: JQuery.Event | JQuery<MouseEvent>): ElementView {
+        const coor = this.modelCanvas.getCursorCoordinates(e);
+        const cmmnElement = this.createCMMNChild(viewType, Grid.snap(coor.x), Grid.snap(coor.y));
+        // Now select the newly added element
+        this.modelCanvas.selectedElement = cmmnElement;
+        // Show properties of new element
+        cmmnElement.propertiesView.show(true);
+        return cmmnElement;
+    }
+
+    get propertiesView() {
+        if (!this.__properties) {
+            this.__properties = this.createProperties(); // Create an object to hold the element properties.
+        }
+        return this.__properties;
+    }
+
+    /**
+     * Removes properties view when the case is refreshed.
+     * Can be used in sub classes to remove other element pop up views (e.g. workflow properties in a human task)
+     */
+    deletePropertiesView() {
+        this.__properties && this.__properties.delete();
+    }
+
+
+
+    /**
+     * Creates a cmmn child under this element with the specified type, and renders it at the given position.
+     * @returns the newly created CMMN child
+     */
+    createCMMNChild(viewType: Function, x: number, y: number): ElementView {
+        throw new Error('Cannot create an element of type' + viewType.name);
+    }
+
+    get resizer() {
+        if (!this._resizer) {
+            this._resizer = new Resizer(this);
+        }
+        return this._resizer;
+    }
+
+    deleteResizer() {
+        if (this._resizer) this.resizer.delete();
+    }
+
+    /**
+     * Show or hide the halo and resizer
+     */
+    __renderBoundary(show: boolean) {
+        this.resizer.visible = show;
+        this.halo.visible = show;
+    }
+
+    /**
+     * Resizes the element, move sentries and decorators
+     */
+    resizing(w: number, h: number) {
+        if (w < 0) w = 0;
+        if (h < 0) h = 0;
+
+        this.shape.width = w;
+        this.shape.height = h;
+        // Also have joint resize
+        this.xyz_joint.resize(w, h);
+        // Refresh the description to apply new text wrapping
+        this.refreshText();
+    }
+
+    refreshHalo() {
+        if (this._halo && this._halo.visible) {
+            this._halo.refresh();
+        }
+    }
+
+    refreshProperties() {
+        if (this.__properties && this.__properties.visible) {
+            this.__properties.refresh();
+        }
+    }
+
+    /**
+     * Invoked when an element is (de)selected.
+     * Shows/removes a border, halo, resizer.
+     */
+    __select(selected: boolean) {
+        if (selected) {
+            //do not select element twice
+            HtmlUtil.addClassOverride(this.html.find('.cmmn-shape'), 'cmmn-selected-element');
+            // this.html.find('.cmmn-shape').addClass('cmmn-selected-element');
+            this.__renderBoundary(true);
+        } else {
+            // Give ourselves default color again.
+            HtmlUtil.removeClassOverride(this.html.find('.cmmn-shape'), 'cmmn-selected-element');
+            // this.html.find('.cmmn-shape').removeClass('cmmn-selected-element');
+            this.propertiesView.hide();
+            this.__renderBoundary(false);
+        }
+    }
+
+
+    abstract createHalo(): Halo;
+
+
+    deleteHalo() {
+        if (this._halo) this.halo.delete();
+    }
+
+    get halo() {
+        if (!this._halo) {
+            // Creating the halo and it's content in 2 phases to give flexibility.
+            this._halo = this.createHalo();
+            this._halo.createItems();
+        }
+        return this._halo;
+    }
+
+    get marker() {
+        if (!this._marker) {
+            this._marker = new Marker(this);
+        }
+        return this._marker;
+    }
+
+    get highlighter() {
+        if (!this._highlighter) {
+            this._highlighter = new Highlighter(this);
+        }
+        return this._highlighter;
+    }
+
+    deleteHighlighter() {
+        if (this._highlighter) this.highlighter.delete();
+    }
+
+    deleteMarker() {
+        if (this._marker) this.marker.delete();
+    }
+
+    /**
+     * Returns true when this element references the definitionId (typically a casefile item or a role)
+     */
+    referencesDefinitionElement(definitionId: string) {
+        return false;
+    }
+
+    get __type() {
+        return `${this.constructor.name}[${this.id}]`;
+    }
+
+    toString(): string {
+        return this.__type;
+    }
+
+    deleteSubViews() {
+        this.deleteResizer();
+        this.deleteMarker();
+        this.deleteHighlighter();
+        this.deleteHalo();
+        this.deletePropertiesView();
+    }
+
+    /**
+      * Adds the item to our list of children, and embeds it in the joint structure of this element.
+      * It is an existing item in the case.
+      */
+    adoptItem(childElement: ElementView<any, M>) {
+        childElement.parent = this;
+        this.__childElements.push(childElement);
+        this.xyz_joint.embed(childElement.xyz_joint);
+        // Also move the child's joint element toFront, to make sure it gets mouse attention before the parent.
+        //  "deep" option also brings all descendents to front, maintaining order
+        childElement.xyz_joint.toFront({
+            deep: true
+        });
     }
 
 

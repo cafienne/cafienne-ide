@@ -1,5 +1,13 @@
 <case xmlns="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:cafienne="org.cafienne" id="a_new_moon.case" name="a_new_moon" expressionLanguage="spel" guid="_lqS7a">
     <caseFileModel typeRef="Helloworld.type"/>
-    <casePlanModel id="cm__lqS7a_0" name="a_new_moon" autoComplete="true"/>
+    <casePlanModel id="cm__lqS7a_0" name="a_new_moon" autoComplete="true">
+        <humanTask id="_lqS7a_1" name="HumanTask_0" isBlocking="true"/>
+        <humanTask id="_lqS7a_3" name="HumanTask_1" isBlocking="true"/>
+        <stage id="_lqS7a_11" name="Stage_0" autoComplete="true"/>
+    </casePlanModel>
     <caseRoles caseTeamRef="world.caseteam"/>
+    <textAnnotation id="_lqS7a_7">
+        <text><![CDATA[dsdfsdfsdfsdsdfsdfsdfsd asdfsdf sdfasdfsdfsdf sdfsdfsd fsdfsd fsdfsdfsdfsda
+]]></text>
+    </textAnnotation>
 </case>

@@ -10,7 +10,6 @@ import Remark from "../../../../repository/validate/remark";
 import Validator from "../../../../repository/validate/validator";
 import Debugger from "../../../debugger/debugger";
 import DragData from "../../../dragdrop/dragdata";
-import Grid from "../../../editors/graphical/grid";
 import ShapeBox from "../../../editors/graphical/shapebox/shapebox";
 import ElementView from "../../../editors/graphical/view/elementview";
 import ModelCanvas from "../../../editors/graphical/view/modelcanvas";
@@ -63,10 +62,6 @@ export default class CaseView extends ModelCanvas<CaseDefinition, CMMNElementDef
 
         this.undoBox = new UndoRedoBox(this, this.divUndoRedo);
         this.splitter = new RightSplitter(this.divModel, '60%', 5);
-
-
-        //add the drawing area for this case
-        this.createJointStructureCase();
 
         //create the editor forms for roles, case file items, and case input and output parameters
         this.teamEditor = new CaseTeamEditor(this);
@@ -203,65 +198,9 @@ export default class CaseView extends ModelCanvas<CaseDefinition, CMMNElementDef
         return smallestSurrounder || this.casePlanModel!;
     }
 
-    createJointStructureCase() {
-
-        //create drawing area (SVG), all elements will be drawn in here
-        this.paper = new dia.Paper({
-            el: this.paperContainer[0],
-            width: '6000px',
-            height: '6000px',
-            gridSize: 1,
-            perpendicularLinks: true,
-            model: this.graph
-        });
-
-        this.grid = new Grid(this.paper, this.editor.ide);
-
-        this.paper.svg.setAttribute('case', this.id);
-
-        //this.paper.svg has the html element, also store the jQuery svg
-        this.svg = $(this.paper.svg);
-
-        // Attach paper events
-        this.paper.on('cell:pointerup', (elementView: any, e: any, x: number, y: number) => {
-            const underMouse = this.getItemUnderMouse(e, this.getElementView(elementView));
-            if (underMouse) {
-                this.getElementView(elementView).moved(x, y, underMouse);
-                this.editor.completeUserAction();
-            }
-        });
-        this.paper.on('element:pointerdown', (elementView: any, e: any, x: number, y: number) => {
-            //select the mouse down element, do not set focus on description, makes it hard to delete
-            //the element with [del] keyboard button (you delete the description io element)            
-            this.selectedElement = this.getElementView(elementView);
-            // Unclear why, but Grid size input having focus does not blur when we click on the canvas...
-            Grid.blurSetSize();
-        });
-        // Enforce move constraints on certain elements
-        this.paper.on('element:pointermove', (elementView: any, e: any, x: number, y: number) => this.getElementView(elementView).moving(x, y));
-        this.paper.on('element:pointerdblclick', (elementView: any, e: any, x: number, y: number) => this.getElementView(elementView).propertiesView.show(true));
-        this.paper.on('blank:pointerclick', () => this.clearSelection());
-        // For some reason pointerclick not always works, so also listening to pointerdown on blank.
-        // see e.g. https://stackoverflow.com/questions/35443524/jointjs-why-pointerclick-event-doesnt-work-only-pointerdown-gets-fired
-        this.paper.on('blank:pointerdown', () => this.clearSelection());
-        // When we move over an element with the mouse, an event is raised.
-        //  This event is captured to enable elements to register themselves with ShapeBox and RepositoryBrowser
-        this.paper.on('element:mouseenter', (elementView: any, e: any, x: number, y: number) => this.getElementView(elementView).mouseEnter());
-        this.paper.on('element:mouseleave', (elementView: any, e: any, x: number, y: number) => this.getElementView(elementView).mouseLeave());
-        this.paper.on('link:mouseenter', (elementView: any, e: any, x: number, y: number) => this.getConnector(elementView).mouseEnter());
-        this.paper.on('link:mouseleave', (elementView: any, e: any, x: number, y: number) => this.getConnector(elementView).mouseLeave());
-
-        // Also add special event handlers for case itself. Registers with ShapeBox to support adding case plan element if it does not exist
-        this.svg.on('pointerover', (e: JQuery.Event) => this.setDropHandlers());
-        // Only remove drop handlers if we're actually leaving the canvase. If we're leaving an element inside the canvas, keep things as is.
-        this.svg.on('pointerout', (e: JQuery.TriggeredEvent) => e.target === e.currentTarget && this.removeDropHandlers());
-        // Enable/disable the HALO when the mouse is near an item
-        this.svg.on('pointermove', (e: JQuery.Event) => this.showHaloAndResizer(e));
-    }
-
     /**
-   * Renders the "source" view tab
-   */
+     * Renders the "source" view tab
+     */
     viewSource() {
         this.clearSelection();
         this.editor.hideMovableEditors();
@@ -317,7 +256,7 @@ export default class CaseView extends ModelCanvas<CaseDefinition, CMMNElementDef
 
         if (DragData.dragging) return;
         // If an element is selected, avoid on/off behavior when the mouse moves.
-        if (this.selectedElement) {
+        if (this.selectedElement && !this.selectedElement.isCasePlan && !this.selectedElement.isStage) {
             return;
         }
 
@@ -336,7 +275,6 @@ export default class CaseView extends ModelCanvas<CaseDefinition, CMMNElementDef
             else this.casePlanModel && this.casePlanModel.hideHalo();
         }
     }
-
 
     setDropHandlers() {
         if (!this.casePlanModel) {

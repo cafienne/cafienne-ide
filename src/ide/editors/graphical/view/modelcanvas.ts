@@ -2,7 +2,7 @@ import { dia } from "jointjs";
 import $ from "jquery";
 import Diagram from "../../../../repository/definition/dimensions/diagram";
 import Dimensions from "../../../../repository/definition/dimensions/dimensions";
-import ElementDefinition from "../../../../repository/definition/elementdefinition";
+import DocumentableElementDefinition from "../../../../repository/definition/documentableelementdefinition";
 import GraphicalModel from "../../../../repository/definition/graphicalmodel";
 import Util from "../../../../util/util";
 import ModelEditor from "../../../modeleditor/modeleditor";
@@ -16,7 +16,7 @@ import ElementView from "./elementview";
 
 export default abstract class ModelCanvas<
     M extends GraphicalModel = GraphicalModel,
-    D extends ElementDefinition<M> = ElementDefinition<M>,
+    D extends DocumentableElementDefinition<M> = DocumentableElementDefinition<M>,
     V extends ElementView<D, any> = ElementView<D, any>> {
 
     readonly id: string;
@@ -116,10 +116,11 @@ export default abstract class ModelCanvas<
         this.svg = $(this.paper.svg);
 
         // Attach paper events
-        this.paper.on('cell:pointerup', (elementView: any, e: any, x: number, y: number) => {
-            const underMouse = this.getItemUnderMouse(e, this.getElementView(elementView));
-            if (underMouse) {
-                this.getElementView(elementView).moved(x, y, underMouse);
+        this.paper.on('cell:pointerup', (cell: any, e: any, x: number, y: number) => {
+            const elementView = this.getElementView(cell);
+            const underMouse = this.getItemUnderMouse(e, elementView);
+            if (underMouse && elementView) {
+                elementView.moved(x, y, underMouse);
                 this.editor.completeUserAction();
             }
         });
@@ -130,6 +131,11 @@ export default abstract class ModelCanvas<
             // Unclear why, but Grid size input having focus does not blur when we click on the canvas...
             Grid.blurSetSize();
         });
+
+        // Enforce move constraints on certain elements
+        this.paper.on('element:pointermove', (elementView: any, e: any, x: number, y: number) => this.getElementView(elementView).moving(x, y));
+        this.paper.on('element:pointerdblclick', (elementView: any, e: any, x: number, y: number) => this.getElementView(elementView).propertiesView.show(true));
+        this.paper.on('blank:pointerclick', () => this.clearSelection());
 
         // For some reason pointerclick not always works, so also listening to pointerdown on blank.
         // see e.g. https://stackoverflow.com/questions/35443524/jointjs-why-pointerclick-event-doesnt-work-only-pointerdown-gets-fired
@@ -146,7 +152,19 @@ export default abstract class ModelCanvas<
         this.paper.on('link:mouseenter', (elementView: any, e: any, x: number, y: number) => this.getConnector(elementView).mouseEnter());
         this.paper.on('link:mouseleave', (elementView: any, e: any, x: number, y: number) => this.getConnector(elementView).mouseLeave());
 
+        // Also add special event handlers for case itself. Registers with ShapeBox to support adding case plan element if it does not exist
+        this.svg.on('pointerover', (e: JQuery.Event) => this.setDropHandlers());
+        // Only remove drop handlers if we're actually leaving the canvase. If we're leaving an element inside the canvas, keep things as is.
+        this.svg.on('pointerout', (e: JQuery.TriggeredEvent) => e.target === e.currentTarget && this.removeDropHandlers());
+        // Enable/disable the HALO when the mouse is near an item
+        this.svg.on('pointermove', (e: JQuery.Event) => this.showHaloAndResizer(e));
+
     }
+
+    abstract setDropHandlers(): void;
+    abstract removeDropHandlers(): void;
+    abstract showHaloAndResizer(e: JQuery.Event): void;
+
     getConnector(jointElementView: joint.dia.LinkView): Connector<V> {
         return CanvasElement.fromJoint(jointElementView.model);
     }
@@ -171,7 +189,7 @@ export default abstract class ModelCanvas<
      */
     getItemUnderMouse(e: any, self: V | undefined = undefined): V | undefined {
         const itemsUnderMouse = this.items.filter(item => item.nearElement(e, 10));
-        const parentsUnderMouse = itemsUnderMouse.filter(item => item.parent instanceof ElementView).map(item => item.parent);
+        const parentsUnderMouse = itemsUnderMouse.filter(item => item.parent).map(item => item.parent);
 
         // If self is passed, then the collections need to filter it out.
         if (self) {

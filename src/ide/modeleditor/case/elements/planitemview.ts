@@ -89,7 +89,7 @@ export default abstract class PlanItemView<PI extends PlanItem = PlanItem> exten
         } else if (viewType == ExitCriterionView) {
             return this.__addCMMNChild(ExitCriterionView.create(this, x, y));
         } else {
-            return super.createCMMNChild(viewType, x, y);
+            return super.createCMMNChild(viewType, x, y) as CMMNElementView<any>;
         }
     }
 

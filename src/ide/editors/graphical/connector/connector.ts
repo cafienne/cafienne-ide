@@ -106,4 +106,11 @@ export default abstract class Connector<V extends ElementView> extends CanvasEle
     remove() {
         this.xyz_joint.remove();
     }
+
+    /**
+     * Hook indicating that 'moving' completed.
+     */
+    moved(x: number, y: number, newParent: ElementView) {
+
+    }
 }

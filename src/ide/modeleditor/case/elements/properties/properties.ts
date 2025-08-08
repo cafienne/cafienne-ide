@@ -1,5 +1,6 @@
 import $ from "jquery";
-import CMMNElementDefinition from "../../../../../repository/definition/cmmnelementdefinition";
+import DocumentableElementDefinition from "../../../../../repository/definition/documentableelementdefinition";
+import GraphicalModel from "../../../../../repository/definition/graphicalmodel";
 import XMLSerializable from "../../../../../repository/definition/xmlserializable";
 import Util from "../../../../../util/util";
 import MovableEditor from "../../../../editors/movableeditor";
@@ -283,7 +284,7 @@ export default class Properties<V extends CMMNElementView = CMMNElementView> ext
     /**
      * Method invoked after a role or case file item has changed
      */
-    refreshReferencingFields(definitionElement: CMMNElementDefinition) {
+    refreshReferencingFields(definitionElement: DocumentableElementDefinition<GraphicalModel>) {
         if (this.visible) {
             this.show();
         }

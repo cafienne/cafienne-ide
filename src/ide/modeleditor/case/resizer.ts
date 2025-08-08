@@ -1,12 +1,12 @@
 ﻿import $ from "jquery";
 import Grid from "../../editors/graphical/grid";
+import ElementView from "../../editors/graphical/view/elementview";
 import HtmlUtil from "../../util/htmlutil";
-import CMMNElementView from "./elements/cmmnelementview";
 
 type ResizeDirection = 'nw' | 'n' | 'ne' | 'w' | 'e' | 'sw' | 's' | 'se';
 
 export default class Resizer {
-    element: CMMNElementView;
+    element: ElementView;
     html: JQuery<HTMLElement>;
     scrollListener: (e: JQuery.Event) => void;
     startX!: number;
@@ -22,7 +22,7 @@ export default class Resizer {
      * Implements the resizer object for the element
      * @param element CMMNElementView
      */
-    constructor(element: CMMNElementView) {
+    constructor(element: ElementView) {
         this.element = element;
 
         // Create global event listeners for proper attach/detach to the scrolling of the paper
@@ -90,7 +90,7 @@ export default class Resizer {
      * Handles the moving of an element to position the resizer around the element
      * This event handler is invoked from case.js
      */
-    handleMoveElement(elementView: CMMNElementView, e: JQuery.Event, x: number, y: number) {
+    handleMoveElement(elementView: ElementView, e: JQuery.Event, x: number, y: number) {
         this.setPosition();
     }
 
