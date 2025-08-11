@@ -4,7 +4,7 @@ import TaskStageDefinition from "../../../../repository/definition/cmmn/caseplan
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import CaseElementView from "./caseelementview";
 import CaseView from "./caseview";
-import Connector from "./connector/connector";
+import CaseConnector from "./connector/caseconnector";
 import EntryCriterionView from "./entrycriterionview";
 import ExitCriterionView from "./exitcriterionview";
 import PlanItemView from "./planitemview";
@@ -72,7 +72,7 @@ export default abstract class TaskStageView<TS extends TaskStageDefinition = Tas
     /**
      * Registers a connector with this element.
      */
-    __addConnector(connector: Connector) {
+    __addConnector(connector: CaseConnector) {
         super.__addConnector(connector);
         if (this.definition.isDiscretionary) {
             const target = connector.source == this ? connector.target : connector.source;
@@ -87,7 +87,7 @@ export default abstract class TaskStageView<TS extends TaskStageDefinition = Tas
     /**
      * Removes a connector from the registration in this element.
      */
-    __removeConnector(connector: Connector) {
+    __removeConnector(connector: CaseConnector) {
         super.__removeConnector(connector);
         if (this.definition.isDiscretionary) {
             const target = connector.source == this ? connector.target : connector.source;

@@ -6,9 +6,9 @@ import CaseFileItemOnPartDefinition from "../../../../../repository/definition/c
 import OnPartDefinition from "../../../../../repository/definition/cmmn/sentry/onpartdefinition";
 import PlanItemOnPartDefinition from "../../../../../repository/definition/cmmn/sentry/planitemonpartdefinition";
 import Util from "../../../../../util/util";
+import Connector from "../../../../editors/modelcanvas/connector/connector";
 import HtmlUtil from "../../../../util/htmlutil";
 import Images from "../../../../util/images/images";
-import Connector from "../connector/connector";
 import SentryView from "../sentryview";
 import Properties from "./properties";
 
@@ -127,10 +127,12 @@ export default class SentryProperties extends Properties<SentryView> {
             const newStandardEvent = onPart.parseStandardEvent(selectedStandardEvent.value);
             if (connector) {
                 const style = connector.case.diagram.connectorStyle;
+                const label = newStandardEvent.toString();
                 if (style.isNone || (style.isDefault && onPart.source.defaultTransition == newStandardEvent)) {
                     connector.label = '';
+                    connector.hiddenLabel = label;
                 } else {
-                    connector.label = newStandardEvent.toString();
+                    connector.label = label;
                 }
             }
             this.change(onPart, 'standardEvent', newStandardEvent);
@@ -253,10 +255,12 @@ export default class SentryProperties extends Properties<SentryView> {
                 if (checked) {
                     const connector = this.view.__connect(planItemView);
                     const style = connector.case.diagram.connectorStyle;
+                    const label = onPart.standardEvent.toString();
                     if (style.isNone || (style.isDefault && onPart.source?.defaultTransition == onPart.standardEvent)) {
                         connector.label = '';
+                        connector.hiddenLabel = label;
                     } else {
-                        connector.label = onPart.standardEvent.toString();
+                        connector.label = label;
                     }
                     this.show();
                 } else if (connector) {
@@ -373,7 +377,13 @@ export default class SentryProperties extends Properties<SentryView> {
         }
         if (connector) {
             const checked = e.currentTarget.checked;
-            connector.label = checked ? onPart.standardEvent.toString() : '';
+            const label = onPart.standardEvent.toString();
+            if (checked) {
+                connector.label = label;
+            } else {
+                connector.label = '';
+                connector.hiddenLabel = onPart.standardEvent.toString();
+            }
         }
         this.done();
     }
