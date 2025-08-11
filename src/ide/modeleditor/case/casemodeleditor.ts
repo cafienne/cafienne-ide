@@ -3,6 +3,7 @@ import CaseDefinition from "../../../repository/definition/cmmn/casedefinition";
 import CaseFile from "../../../repository/serverfile/casefile";
 import DimensionsFile from "../../../repository/serverfile/dimensionsfile";
 import Grid from "../../editors/modelcanvas/grid";
+import UndoManager from "../../editors/modelcanvas/undoredo/undomanager";
 import MovableEditor from "../../editors/movableeditor";
 import IDE from "../../ide";
 import ModelEditor from "../modeleditor";
@@ -10,13 +11,12 @@ import ModelEditorMetadata from "../modeleditormetadata";
 import CaseModelEditorMetadata from "./casemodeleditormetadata";
 import CaseElementView from "./elements/caseelementview";
 import CaseView from "./elements/caseview";
-import UndoManager from "./undoredo/undomanager";
 
 export default class CaseModelEditor extends ModelEditor {
     caseFile: CaseFile;
     dimensionsFile?: DimensionsFile;
     ideCaseFooter: JQuery<HTMLElement>;
-    undoManager: UndoManager;
+    undoManager: UndoManager<CaseDefinition>;
     case?: CaseView;
     trackChanges: boolean = false;
     private __migrated: any;
@@ -35,7 +35,7 @@ export default class CaseModelEditor extends ModelEditor {
         this.caseFile = file;
         this.dimensionsFile = this.file.definition!.dimensions!.file;
         this.ideCaseFooter = $('.ideCaseFooter');
-        this.undoManager = new UndoManager(this);
+        this.undoManager = new UndoManager<CaseDefinition>(() => this.case?.undoBox, definition => this.loadDefinition(definition));
 
         // Upon clicking the case footer's validation label, render the validateform of the case (if a case is there)
         this.ideCaseFooter.find('.validateLabel').on('click', () => this.case && this.case.validateForm.show());

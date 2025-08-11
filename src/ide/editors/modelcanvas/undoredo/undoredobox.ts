@@ -1,6 +1,6 @@
 import $ from "jquery";
+import CaseView from "../../../modeleditor/case/elements/caseview";
 import Images from "../../../util/images/images";
-import CaseView from "../elements/caseview";
 
 export default class UndoRedoBox {
     private case: CaseView;
