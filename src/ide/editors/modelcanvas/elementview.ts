@@ -11,10 +11,10 @@ import CaseModelEditor from '../../modeleditor/case/casemodeleditor';
 import CaseView from '../../modeleditor/case/elements/caseview';
 import Halo from "../../modeleditor/case/elements/halo/halo";
 import Properties from "../../modeleditor/case/elements/properties/properties";
-import Highlighter from "../../modeleditor/case/highlighter";
 import CanvasElement from "./canvaselement";
 import Connector from './connector/connector';
 import Grid from "./grid";
+import Highlighter from "./highlighter";
 import Marker from "./marker";
 import Resizer from "./resizer";
 
