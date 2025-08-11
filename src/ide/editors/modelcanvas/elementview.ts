@@ -12,10 +12,10 @@ import CaseView from '../../modeleditor/case/elements/caseview';
 import Halo from "../../modeleditor/case/elements/halo/halo";
 import Properties from "../../modeleditor/case/elements/properties/properties";
 import Highlighter from "../../modeleditor/case/highlighter";
-import Marker from "../../modeleditor/case/marker";
 import CanvasElement from "./canvaselement";
 import Connector from './connector/connector';
 import Grid from "./grid";
+import Marker from "./marker";
 import Resizer from "./resizer";
 
 export default abstract class ElementView<

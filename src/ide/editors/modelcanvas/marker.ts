@@ -1,7 +1,7 @@
 ﻿import $ from "jquery";
 import CaseFileItemDef from "../../../repository/definition/cmmn/casefile/casefileitemdef";
 import HtmlUtil from "../../util/htmlutil";
-import CaseElementView from "./elements/caseelementview";
+import ElementView from "./elementview";
 
 export default class Marker {
     private html: JQuery<HTMLElement>;
@@ -10,7 +10,7 @@ export default class Marker {
     /**
      * Implements the marker object for the element
      */
-    constructor(public element: CaseElementView) {
+    constructor(public element: ElementView) {
         // Create global event listeners for proper attach/detach to the scrolling of the paper
         // Upon scrolling we also have to change the position of the marker.
         this.scrollListener = () => this.setPosition();
