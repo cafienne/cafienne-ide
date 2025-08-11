@@ -8,8 +8,8 @@ import IDE from "../../ide";
 import ModelEditor from "../modeleditor";
 import ModelEditorMetadata from "../modeleditormetadata";
 import CaseModelEditorMetadata from "./casemodeleditormetadata";
+import CaseElementView from "./elements/caseelementview";
 import CaseView from "./elements/caseview";
-import CMMNElementView from "./elements/cmmnelementview";
 import UndoManager from "./undoredo/undomanager";
 
 export default class CaseModelEditor extends ModelEditor {
@@ -168,7 +168,7 @@ export default class CaseModelEditor extends ModelEditor {
      * Handles pressing an arrow key. Moves either top editor or selected element around.
      * @returns false if the event must be canceled, true if the arrow press was not handled.
      */
-    handleArrowPress(keyCode: number, visibleMovableEditor?: MovableEditor, selectedElement?: CMMNElementView) {
+    handleArrowPress(keyCode: number, visibleMovableEditor?: MovableEditor, selectedElement?: CaseElementView) {
         // 37: arrow left, 39: arrow right, 38: arrow up, 40: arrow down 
         const xMove = (keyCode == 37 ? -1 : keyCode == 39 ? 1 : 0) * Grid.Size;
         const yMove = (keyCode == 38 ? -1 : keyCode == 40 ? 1 : 0) * Grid.Size;

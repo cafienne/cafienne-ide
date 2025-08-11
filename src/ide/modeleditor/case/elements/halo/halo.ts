@@ -1,14 +1,14 @@
 import $ from "jquery";
 import CMMNElementDefinition from "../../../../../repository/definition/cmmnelementdefinition";
 import HtmlUtil from "../../../../util/htmlutil";
-import CMMNElementView from "../cmmnelementview";
+import CaseElementView from "../caseelementview";
 import DeleteHaloItem from "./cmmn/item/click/deletehaloitem";
 import PropertiesHaloItem from "./cmmn/item/click/propertieshaloitem";
 import ConnectorHaloItem from "./cmmn/item/drag/connectorhaloitem";
 import HaloBar from "./halobar";
 import HaloItem from "./haloitem";
 
-export default class Halo<D extends CMMNElementDefinition = CMMNElementDefinition, V extends CMMNElementView = CMMNElementView<D>> {
+export default class Halo<D extends CMMNElementDefinition = CMMNElementDefinition, V extends CaseElementView = CaseElementView<D>> {
     html: JQuery<HTMLElement>;
     rightBar: HaloBar;
     topBar: HaloBar;

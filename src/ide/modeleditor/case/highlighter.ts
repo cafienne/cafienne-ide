@@ -1,7 +1,7 @@
 ﻿import $ from "jquery";
 import Remark from "../../../repository/validate/remark";
 import HtmlUtil from "../../util/htmlutil";
-import CMMNElementView from "./elements/cmmnelementview";
+import CaseElementView from "./elements/caseelementview";
 
 export default class Highlighter {
     private html: JQuery<HTMLElement>;
@@ -10,7 +10,7 @@ export default class Highlighter {
     /**
      * Implements the marker object for the element
      */
-    constructor(public element: CMMNElementView) {        
+    constructor(public element: CaseElementView) {
         // Create global event listeners for proper attach/detach to the scrolling of the paper
         // Upon scrolling we also have to change the position of the marker.
         this.scrollListener = (e: JQuery.Event) => this.setPosition();

@@ -5,13 +5,13 @@ import PlanItemTransition from "../../../../repository/definition/cmmn/caseplan/
 import CriterionDefinition from "../../../../repository/definition/cmmn/sentry/criteriondefinition";
 import OnPartDefinition from "../../../../repository/definition/cmmn/sentry/onpartdefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+import CaseElementView from "./caseelementview";
 import CaseFileItemView from "./casefileitemview";
-import CMMNElementView from "./cmmnelementview";
 import Connector from "./connector/connector";
 import PlanItemView from "./planitemview";
 import SentryProperties from "./properties/sentryproperties";
 
-export default abstract class SentryView<CD extends CriterionDefinition = CriterionDefinition> extends CMMNElementView<CD> {
+export default abstract class SentryView<CD extends CriterionDefinition = CriterionDefinition> extends CaseElementView<CD> {
     /**
      * Creates a new SentryView element.
      * Is an abstract sub class for EntryCriterionView and ExitCriterionView.
@@ -48,7 +48,7 @@ export default abstract class SentryView<CD extends CriterionDefinition = Criter
         this.refreshIfPartTooltip();
     }
 
-    adoptOnPart(sourceElement: CMMNElementView) {
+    adoptOnPart(sourceElement: CaseElementView) {
         // Also connect the sentry with the source element to create a corresponding on-part
         sourceElement.__connect(this);
         this.updateConnectorLabels();
@@ -131,7 +131,7 @@ export default abstract class SentryView<CD extends CriterionDefinition = Criter
         console.error('Cannot resize a sentry');
     }
 
-    moved(x: number, y: number, newParent: CMMNElementView) {
+    moved(x: number, y: number, newParent: CaseElementView) {
         this.moving(x, y);
     }
 
@@ -159,7 +159,7 @@ export default abstract class SentryView<CD extends CriterionDefinition = Criter
     /**
      * returns array with all planItems/sentries that can be connected to the sentry
      */
-    __getConnectableElements(): CMMNElementView[] {
+    __getConnectableElements(): CaseElementView[] {
         const connectableElements = this.case.items.filter(cmmnElementView => {
             if (!(cmmnElementView.isCriterion || cmmnElementView.isPlanItem)) {
                 return false;
@@ -198,7 +198,7 @@ export default abstract class SentryView<CD extends CriterionDefinition = Criter
         this.connectElement(connector.source);
     }
 
-    private connectElement(target: CMMNElementView) {
+    private connectElement(target: CaseElementView) {
         if (target.isCaseFileItem) {
             this.setCaseFileItemOnPart(target as CaseFileItemView, CaseFileItemTransition.Create);
         } else if (target.isPlanItem) {
@@ -220,7 +220,7 @@ export default abstract class SentryView<CD extends CriterionDefinition = Criter
         });
     }
 
-    __connectSentry(target: CMMNElementView) {
+    __connectSentry(target: CaseElementView) {
         // Empty implementation; only EntryCriteria can connect to other sentries.
     }
 

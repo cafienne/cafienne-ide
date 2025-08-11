@@ -1,5 +1,5 @@
 import { dia } from '@joint/core';
-import CaseView from "./caseview";
+import CaseView from "../../modeleditor/case/elements/caseview";
 
 export default abstract class CanvasElement<JointType extends dia.Cell = dia.Cell> {
     public case: CaseView;
