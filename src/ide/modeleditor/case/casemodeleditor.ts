@@ -2,7 +2,7 @@ import $ from "jquery";
 import CaseDefinition from "../../../repository/definition/cmmn/casedefinition";
 import CaseFile from "../../../repository/serverfile/casefile";
 import DimensionsFile from "../../../repository/serverfile/dimensionsfile";
-import Grid from "../../editors/graphical/grid";
+import Grid from "../../editors/modelcanvas/grid";
 import MovableEditor from "../../editors/movableeditor";
 import IDE from "../../ide";
 import ModelEditor from "../modeleditor";

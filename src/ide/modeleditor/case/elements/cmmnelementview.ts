@@ -5,7 +5,7 @@ import Edge from "../../../../repository/definition/dimensions/edge";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import Remark from "../../../../repository/validate/remark";
 import Util from "../../../../util/util";
-import Grid from "../../../editors/graphical/grid";
+import Grid from "../../../editors/modelcanvas/grid";
 import CaseModelEditor from "../casemodeleditor";
 import Highlighter from "../highlighter";
 import Marker from "../marker";
@@ -144,7 +144,7 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
             },
         };
 
-        const attrs:any = util.merge({}, defaultAttrs, this.markupAttributes);
+        const attrs: any = util.merge({}, defaultAttrs, this.markupAttributes);
 
         this.xyz_joint = new dia.Element({
             type: this.constructor.name,
