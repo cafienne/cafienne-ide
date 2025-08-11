@@ -1,5 +1,5 @@
 ﻿import $ from "jquery";
-import Grid from "../../editors/graphical/grid";
+import Grid from "../../editors/modelcanvas/grid";
 import HtmlUtil from "../../util/htmlutil";
 import CMMNElementView from "./elements/cmmnelementview";
 
