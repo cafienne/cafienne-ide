@@ -9,13 +9,13 @@ import Remark from "../../../repository/validate/remark";
 import Util from "../../../util/util";
 import CaseModelEditor from '../../modeleditor/case/casemodeleditor';
 import CaseView from '../../modeleditor/case/elements/caseview';
-import Connector from '../../modeleditor/case/elements/connector/connector';
 import Halo from "../../modeleditor/case/elements/halo/halo";
 import Properties from "../../modeleditor/case/elements/properties/properties";
 import Highlighter from "../../modeleditor/case/highlighter";
 import Marker from "../../modeleditor/case/marker";
 import Resizer from "../../modeleditor/case/resizer";
 import CanvasElement from "./canvaselement";
+import Connector from './connector/connector';
 import Grid from "./grid";
 
 export default abstract class ElementView<
@@ -533,7 +533,7 @@ export default abstract class ElementView<
         if (!edge) {
             edge = this.case.dimensions.createEdge(this.definition as any, target.definition);
         }
-        const connector = new Connector(this as any, target, edge);
+        const connector = this.case.__createConnector(this, target, edge!) as any;
 
         // Render the connector in the case.
         this.case.__addConnector(connector);

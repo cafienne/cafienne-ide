@@ -1,5 +1,5 @@
 import $ from "jquery";
-import TemporaryConnector from "../connector/temporaryconnector";
+import TemporaryConnector from "../../../../editors/modelcanvas/connector/temporaryconnector";
 import Halo from "./halo";
 import HaloBar from "./halobar";
 import HaloItem from "./haloitem";

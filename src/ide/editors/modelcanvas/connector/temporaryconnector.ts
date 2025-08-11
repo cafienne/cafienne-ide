@@ -1,16 +1,16 @@
 import { shapes } from '@joint/core';
-import CanvasElement from "../../../../editors/modelcanvas/canvaselement";
-import CaseElementView from "../caseelementview";
+import CanvasElement from "../canvaselement";
+import ElementView from '../elementview';
 import Coordinates from "./coordinates";
 
 export default class TemporaryConnector extends CanvasElement<shapes.standard.Link> {
-    source: CaseElementView;
+    source: ElementView;
     link: shapes.standard.Link;
 
     /**
      * Creates a temporary connector (=link in jointJS) from the source to a set of target coordinates
      */
-    constructor(source: CaseElementView, coordinates: Coordinates) {
+    constructor(source: ElementView, coordinates: Coordinates) {
         super(source.case);
         this.source = source;
 

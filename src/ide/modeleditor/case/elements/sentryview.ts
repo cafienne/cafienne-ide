@@ -5,9 +5,10 @@ import PlanItemTransition from "../../../../repository/definition/cmmn/caseplan/
 import CriterionDefinition from "../../../../repository/definition/cmmn/sentry/criteriondefinition";
 import OnPartDefinition from "../../../../repository/definition/cmmn/sentry/onpartdefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+import Connector from '../../../editors/modelcanvas/connector/connector';
 import CaseElementView from "./caseelementview";
 import CaseFileItemView from "./casefileitemview";
-import Connector from "./connector/connector";
+import CaseConnector from "./connector/caseconnector";
 import PlanItemView from "./planitemview";
 import SentryProperties from "./properties/sentryproperties";
 
@@ -51,6 +52,13 @@ export default abstract class SentryView<CD extends CriterionDefinition = Criter
     adoptOnPart(sourceElement: CaseElementView) {
         // Also connect the sentry with the source element to create a corresponding on-part
         sourceElement.__connect(this);
+
+        if (sourceElement.isPlanItem) {
+            const changedOnPart = this.definition.createPlanItemOnPart();
+            changedOnPart.sourceRef.update(sourceElement.id);
+            changedOnPart.standardEvent = (sourceElement.definition as PlanItem).defaultTransition;
+        }
+
         this.updateConnectorLabels();
         this.propertiesView.refresh();
     }
@@ -190,11 +198,11 @@ export default abstract class SentryView<CD extends CriterionDefinition = Criter
         return connectableElements;
     }
 
-    protected adoptOutgoingConnector(connector: Connector) {
+    protected adoptOutgoingConnector(connector: CaseConnector) {
         this.connectElement(connector.target);
     }
 
-    protected adoptIncomingConnector(connector: Connector) {
+    protected adoptIncomingConnector(connector: CaseConnector) {
         this.connectElement(connector.source);
     }
 
