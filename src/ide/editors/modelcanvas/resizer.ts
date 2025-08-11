@@ -1,12 +1,11 @@
 ﻿import $ from "jquery";
-import Grid from "../../editors/modelcanvas/grid";
 import HtmlUtil from "../../util/htmlutil";
-import CaseElementView from "./elements/caseelementview";
+import ElementView from "./elementview";
+import Grid from "./grid";
 
 type ResizeDirection = 'nw' | 'n' | 'ne' | 'w' | 'e' | 'sw' | 's' | 'se';
 
 export default class Resizer {
-    element: CaseElementView;
     html: JQuery<HTMLElement>;
     scrollListener: (e: JQuery.Event) => void;
     startX!: number;
@@ -20,11 +19,8 @@ export default class Resizer {
 
     /**
      * Implements the resizer object for the element
-     * @param element CaseElementView
      */
-    constructor(element: CaseElementView) {
-        this.element = element;
-
+    constructor(public element: ElementView) {
         // Create global event listeners for proper attach/detach to the scrolling of the paper
         this.scrollListener = (e: JQuery.Event) => this.setPosition();
 
@@ -90,7 +86,7 @@ export default class Resizer {
      * Handles the moving of an element to position the resizer around the element
      * This event handler is invoked from case.js
      */
-    handleMoveElement(elementView: CaseElementView, e: JQuery.Event, x: number, y: number) {
+    handleMoveElement(elementView: ElementView, e: JQuery.Event, x: number, y: number) {
         this.setPosition();
     }
 

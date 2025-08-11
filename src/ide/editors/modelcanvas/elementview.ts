@@ -13,10 +13,10 @@ import Halo from "../../modeleditor/case/elements/halo/halo";
 import Properties from "../../modeleditor/case/elements/properties/properties";
 import Highlighter from "../../modeleditor/case/highlighter";
 import Marker from "../../modeleditor/case/marker";
-import Resizer from "../../modeleditor/case/resizer";
 import CanvasElement from "./canvaselement";
 import Connector from './connector/connector';
 import Grid from "./grid";
+import Resizer from "./resizer";
 
 export default abstract class ElementView<
     D extends DocumentableElementDefinition<ModelDefinition> = DocumentableElementDefinition<ModelDefinition>>
