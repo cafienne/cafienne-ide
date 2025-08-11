@@ -1,7 +1,7 @@
 import $ from "jquery";
 import CaseFileItemDef from "../../../../../repository/definition/cmmn/casefile/casefileitemdef";
+import Properties from "../../../../editors/modelcanvas/properties";
 import CaseFileItemView from "../casefileitemview";
-import Properties from "./properties";
 
 export default class CaseFileItemProperties extends Properties<CaseFileItemView> {
     renderData() {

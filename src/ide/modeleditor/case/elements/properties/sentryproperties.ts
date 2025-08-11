@@ -7,10 +7,10 @@ import OnPartDefinition from "../../../../../repository/definition/cmmn/sentry/o
 import PlanItemOnPartDefinition from "../../../../../repository/definition/cmmn/sentry/planitemonpartdefinition";
 import Util from "../../../../../util/util";
 import Connector from "../../../../editors/modelcanvas/connector/connector";
+import Properties from "../../../../editors/modelcanvas/properties";
 import HtmlUtil from "../../../../util/htmlutil";
 import Images from "../../../../util/images/images";
 import SentryView from "../sentryview";
-import Properties from "./properties";
 
 export default class SentryProperties extends Properties<SentryView> {
     renderData() {

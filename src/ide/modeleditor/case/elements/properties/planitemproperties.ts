@@ -2,10 +2,10 @@ import $ from "jquery";
 import ItemControlRuleDefinition from "../../../../../repository/definition/cmmn/caseplan/itemcontrol/itemcontrolruledefinition";
 import CaseRoleReference from "../../../../../repository/definition/cmmn/caseteam/caserolereference";
 import Util from "../../../../../util/util";
+import Properties from "../../../../editors/modelcanvas/properties";
 import HtmlUtil from "../../../../util/htmlutil";
 import Images from "../../../../util/images/images";
 import PlanItemView from "../planitemview";
-import Properties from "./properties";
 
 export default class PlanItemProperties<PIV extends PlanItemView = PlanItemView> extends Properties<PIV> {
 
