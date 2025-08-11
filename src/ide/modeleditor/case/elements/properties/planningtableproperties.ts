@@ -1,8 +1,8 @@
 import $ from "jquery";
 import { ApplicabilityRuleDefinition } from "../../../../../repository/definition/cmmn/caseplan/planning/applicabilityruledefinition";
+import Properties from "../../../../editors/modelcanvas/properties";
 import Images from "../../../../util/images/images";
 import PlanningTableView from "../planningtableview";
-import Properties from "./properties";
 
 export default class PlanningTableProperties extends Properties<PlanningTableView> {
     rulesTable!: JQuery<HTMLElement>;

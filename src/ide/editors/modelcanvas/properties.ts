@@ -1,13 +1,13 @@
 import $ from "jquery";
-import CMMNElementDefinition from "../../../../../repository/definition/cmmnelementdefinition";
-import XMLSerializable from "../../../../../repository/definition/xmlserializable";
-import Util from "../../../../../util/util";
-import MovableEditor from "../../../../editors/movableeditor";
-import HtmlUtil from "../../../../util/htmlutil";
-import Images from "../../../../util/images/images";
-import CaseElementView from "../caseelementview";
+import ElementDefinition from "../../../repository/definition/elementdefinition";
+import XMLSerializable from "../../../repository/definition/xmlserializable";
+import Util from "../../../util/util";
+import HtmlUtil from "../../util/htmlutil";
+import Images from "../../util/images/images";
+import MovableEditor from "../movableeditor";
+import ElementView from "./elementview";
 
-export default class Properties<V extends CaseElementView = CaseElementView> extends MovableEditor {
+export default class Properties<V extends ElementView = ElementView> extends MovableEditor {
     id: string;
     pinned: boolean = false; //pinned determines whether a properties menu is pinned, pinned=true means that the menu stays on the same spot all the time
     htmlContainer!: JQuery<HTMLElement>;
@@ -105,7 +105,7 @@ export default class Properties<V extends CaseElementView = CaseElementView> ext
         // Make us visible.
         this.visible = true;
         // Hide other properties editors (if they are not pinned)
-        this.case.items.filter(item => item != this.view).forEach(item => item.propertiesView.hide());
+        this.case.items.filter(item => item != this.view as any).forEach(item => item.propertiesView.hide());
 
         if (focusNameField) {
             this.htmlContainer.find('.cmmn-element-name').select();
@@ -282,7 +282,7 @@ export default class Properties<V extends CaseElementView = CaseElementView> ext
     /**
      * Method invoked after a role or case file item has changed
      */
-    refreshReferencingFields(definitionElement: CMMNElementDefinition) {
+    refreshReferencingFields(definitionElement: ElementDefinition) {
         if (this.visible) {
             this.show();
         }

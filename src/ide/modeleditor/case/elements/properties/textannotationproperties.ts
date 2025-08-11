@@ -1,5 +1,5 @@
+import Properties from "../../../../editors/modelcanvas/properties";
 import TextAnnotationView from "../textannotationview";
-import Properties from "./properties";
 
 export default class TextAnnotationProperties extends Properties<TextAnnotationView> {
     constructor(textAnnotation: TextAnnotationView) {
