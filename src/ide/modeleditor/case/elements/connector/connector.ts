@@ -1,11 +1,11 @@
 ﻿import { dia, linkTools, shapes } from '@joint/core';
 import Edge from "../../../../../repository/definition/dimensions/edge";
+import CanvasElement from "../../../../editors/modelcanvas/canvaselement";
 import Images from '../../../../util/images/images';
-import CanvasElement from "../canvaselement";
-import CMMNElementView from "../cmmnelementview";
+import CaseElementView from "../caseelementview";
 
 export default class Connector extends CanvasElement<shapes.standard.Link> {
-    criterion?: CMMNElementView;
+    criterion?: CaseElementView;
     formerLabel?: string;
 
     get link(): shapes.standard.Link {
@@ -19,7 +19,7 @@ export default class Connector extends CanvasElement<shapes.standard.Link> {
     /**
      * Creates a connector (=link in jointJS) between a source and a target.
      */
-    constructor(public source: CMMNElementView, public target: CMMNElementView, public edge: Edge) {
+    constructor(public source: CaseElementView, public target: CaseElementView, public edge: Edge) {
         super(source.case);
         this.criterion = source.isCriterion ? source : target.isCriterion ? target : undefined;
 
@@ -82,7 +82,7 @@ export default class Connector extends CanvasElement<shapes.standard.Link> {
     }
 
     // Connectors do not do things on move. That is handled by joint
-    moved(x: number, y: number, newParent: CMMNElementView): void { }
+    moved(x: number, y: number, newParent: CaseElementView): void { }
 
     mouseEnter(): void {
         this.addTools();

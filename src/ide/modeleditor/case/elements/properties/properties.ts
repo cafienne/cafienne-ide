@@ -5,9 +5,9 @@ import Util from "../../../../../util/util";
 import MovableEditor from "../../../../editors/movableeditor";
 import HtmlUtil from "../../../../util/htmlutil";
 import Images from "../../../../util/images/images";
-import CMMNElementView from "../cmmnelementview";
+import CaseElementView from "../caseelementview";
 
-export default class Properties<V extends CMMNElementView = CMMNElementView> extends MovableEditor {
+export default class Properties<V extends CaseElementView = CaseElementView> extends MovableEditor {
     id: string;
     pinned: boolean = false; //pinned determines whether a properties menu is pinned, pinned=true means that the menu stays on the same spot all the time
     htmlContainer!: JQuery<HTMLElement>;
@@ -289,7 +289,7 @@ export default class Properties<V extends CMMNElementView = CMMNElementView> ext
     }
 
     /**
-     * Complete a change. Refreshes the CMMNElementView and saves the case model.
+     * Complete a change. Refreshes the CaseElementView and saves the case model.
      */
     done() {
         this.view.refreshView();

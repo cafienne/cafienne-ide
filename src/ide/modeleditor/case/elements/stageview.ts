@@ -13,10 +13,10 @@ import ProcessFile from "../../../../repository/serverfile/processfile";
 import Util from "../../../../util/util";
 import CaseFileItemDragData from "../../../dragdrop/casefileitemdragdata";
 import ServerFileDragData from "../../../dragdrop/serverfiledragdata";
+import CaseElementView from "./caseelementview";
 import CaseFileItemView from "./casefileitemview";
 import CaseTaskView from "./casetaskview";
 import CaseView from "./caseview";
-import CMMNElementView from "./cmmnelementview";
 import StageDecoratorBox from "./decorator/box/stagedecoratorbox";
 import PlanItemHalo from "./halo/cmmn/planitemhalo";
 import HumanTaskView from "./humantaskview";
@@ -37,7 +37,7 @@ export default class StageView<SD extends StageDefinition = StageDefinition> ext
         return new StageView(stage.case, stage, definition, shape);
     }
 
-    constructor(cs: CaseView, parent: CMMNElementView | undefined, definition: SD, shape: ShapeDefinition) {
+    constructor(cs: CaseView, parent: CaseElementView | undefined, definition: SD, shape: ShapeDefinition) {
         super(cs, parent, definition, shape);
         this.definition.planItems.forEach(planItem => this.addPlanItem(planItem));
     }
@@ -110,7 +110,7 @@ export default class StageView<SD extends StageDefinition = StageDefinition> ext
     /**
      * Determines whether this stage visually surrounds the cmmn element.
      */
-    surrounds(other: CMMNElementView | undefined) {
+    surrounds(other: CaseElementView | undefined) {
         // Note: this method is added here instead of directly invoking shape.surrounds because logic is different at caseplan level, so caseplan can override.
         return other && this.shape.surrounds(other.shape);
     }
@@ -120,7 +120,7 @@ export default class StageView<SD extends StageDefinition = StageDefinition> ext
         this.resetChildren();
     }
 
-    moved(x: number, y: number, newParent: CMMNElementView) {
+    moved(x: number, y: number, newParent: CaseElementView) {
         super.moved(x, y, newParent);
         this.resetChildren();
     }
@@ -181,7 +181,7 @@ export default class StageView<SD extends StageDefinition = StageDefinition> ext
     /**
      * Method invoked when a child is moved into this element from a different parent.
      */
-    adoptItem(childElement: CMMNElementView) {
+    adoptItem(childElement: CaseElementView) {
         const previousParent = childElement.parent;
         super.adoptItem(childElement);
         if (childElement.isPlanItem) {
@@ -212,7 +212,7 @@ export default class StageView<SD extends StageDefinition = StageDefinition> ext
         this.addPlanItem(definition);
     }
 
-    createCMMNChild(viewType: Function, x: number, y: number): CMMNElementView {
+    createCMMNChild(viewType: Function, x: number, y: number): CaseElementView {
         if (Util.isSubClassOf(PlanItemView, viewType)) {
             return this.__addCMMNChild((viewType as any).create(this, x, y));
         } else if (viewType == CaseFileItemView) {

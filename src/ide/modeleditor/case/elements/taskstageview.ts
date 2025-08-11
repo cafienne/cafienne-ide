@@ -2,8 +2,8 @@ import PlanItem from "../../../../repository/definition/cmmn/caseplan/planitem";
 import HumanTaskDefinition from "../../../../repository/definition/cmmn/caseplan/task/humantaskdefinition";
 import TaskStageDefinition from "../../../../repository/definition/cmmn/caseplan/taskstagedefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+import CaseElementView from "./caseelementview";
 import CaseView from "./caseview";
-import CMMNElementView from "./cmmnelementview";
 import Connector from "./connector/connector";
 import EntryCriterionView from "./entrycriterionview";
 import ExitCriterionView from "./exitcriterionview";
@@ -16,7 +16,7 @@ export default abstract class TaskStageView<TS extends TaskStageDefinition = Tas
     /**
      * Simple class to share some logic from TaskView and StageView.
      */
-    constructor(cs: CaseView, parent: CMMNElementView | undefined, definition: TS, shape: ShapeDefinition) {
+    constructor(cs: CaseView, parent: CaseElementView | undefined, definition: TS, shape: ShapeDefinition) {
         super(cs, parent, definition, shape);
         this.showPlanningTable();
     }
@@ -66,7 +66,7 @@ export default abstract class TaskStageView<TS extends TaskStageDefinition = Tas
      * Returns the PlanningTableView child, if present.
      */
     get planningTableView(): PlanningTableView | undefined {
-        return this.__childElements.find(child => child.isPlanningTable) as PlanningTableView | undefined;
+        return this.__childElements.find(child => (child as CaseElementView).isPlanningTable) as PlanningTableView | undefined;
     }
 
     /**

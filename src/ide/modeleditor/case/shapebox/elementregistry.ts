@@ -41,7 +41,7 @@ export default class ElementRegistry {
     }
 
     /**
-     * Registers a class that extends CMMNElementView by it's name.
+     * Registers a class that extends CaseElementView by it's name.
      * @param cmmnElementType 
      * @param typeDescription Friendly description of the type
      * @param smallImageURL url of small image (for drag/drop, shapebox, etc.)

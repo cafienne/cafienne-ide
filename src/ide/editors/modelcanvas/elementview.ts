@@ -1,26 +1,30 @@
 import { dia, util } from '@joint/core';
-import CMMNDocumentationDefinition from "../../../../repository/definition/cmmndocumentationdefinition";
-import CMMNElementDefinition from "../../../../repository/definition/cmmnelementdefinition";
-import Edge from "../../../../repository/definition/dimensions/edge";
-import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
-import Remark from "../../../../repository/validate/remark";
-import Util from "../../../../util/util";
-import Grid from "../../../editors/modelcanvas/grid";
-import CaseModelEditor from "../casemodeleditor";
-import Highlighter from "../highlighter";
-import Marker from "../marker";
-import Resizer from "../resizer";
+import CMMNDocumentationDefinition from '../../../repository/definition/cmmndocumentationdefinition';
+import CMMNElementDefinition from '../../../repository/definition/cmmnelementdefinition';
+import Edge from '../../../repository/definition/dimensions/edge';
+import ShapeDefinition from "../../../repository/definition/dimensions/shape";
+import DocumentableElementDefinition from "../../../repository/definition/documentableelementdefinition";
+import ModelDefinition from '../../../repository/definition/modeldefinition';
+import Remark from "../../../repository/validate/remark";
+import Util from "../../../util/util";
+import CaseModelEditor from '../../modeleditor/case/casemodeleditor';
+import CaseView from '../../modeleditor/case/elements/caseview';
+import Connector from '../../modeleditor/case/elements/connector/connector';
+import Halo from "../../modeleditor/case/elements/halo/halo";
+import Properties from "../../modeleditor/case/elements/properties/properties";
+import Highlighter from "../../modeleditor/case/highlighter";
+import Marker from "../../modeleditor/case/marker";
+import Resizer from "../../modeleditor/case/resizer";
 import CanvasElement from "./canvaselement";
-import CaseView from "./caseview";
-import Connector from "./connector/connector";
-import Halo from "./halo/halo";
-import Properties from "./properties/properties";
+import Grid from "./grid";
 
-export default abstract class CMMNElementView<D extends CMMNElementDefinition = CMMNElementDefinition> extends CanvasElement<dia.Element> {
+export default abstract class ElementView<
+    D extends DocumentableElementDefinition<ModelDefinition> = DocumentableElementDefinition<ModelDefinition>>
+    extends CanvasElement<dia.Element> {
     readonly case: CaseView;
     protected editor: CaseModelEditor;
     protected __connectors: Connector[] = [];
-    protected __childElements: CMMNElementView[] = [];
+    protected __childElements: ElementView<any>[] = [];
     protected __resizable: boolean = true;
     private __properties?: Properties;
     private _resizer?: Resizer;
@@ -30,16 +34,16 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
     private html_id: string = Util.createID(this.definition.id + '-'); // Copy definition id into a fixed internal html_id property to have a stable this.html search function
 
     /**
-     * Creates a new CMMNElementView within the case having the corresponding definition and x, y coordinates
+     * Creates a new CaseElementView within the case having the corresponding definition and x, y coordinates
      */
-    constructor(cs: CaseView, public parent: CMMNElementView | undefined, public definition: D, public shape: ShapeDefinition) {
+    constructor(cs: CaseView, public parent: ElementView<any> | undefined, public definition: D, public shape: ShapeDefinition) {
         super(cs);
         if (!shape) {
             console.warn(`${this.constructor.name}[${definition.id}] does not have a shape`);
         }
 
         this.case = cs;
-        this.case.items.push(this);
+        this.case.items.push(this as any);
         this.editor = this.case.editor;
         if (this.parent) {
             this.parent.__childElements.push(this);
@@ -117,7 +121,7 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
     /**
      * Determines whether or not the cmmn element is our parent or another ancestor of us.
      */
-    hasAncestor(potentialAncestor: CMMNElementView): boolean {
+    hasAncestor(potentialAncestor: ElementView<any>): boolean {
         if (!potentialAncestor) return false;
         if (!this.parent) return false;
         if (this.parent === potentialAncestor) return true;
@@ -218,11 +222,11 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
     /**
      * Adds a new shape in this element with the specified shape type.
      */
-    addElementView(viewType: Function, e: JQuery.Event | JQuery<MouseEvent>): CMMNElementView {
+    addElementView(viewType: Function, e: JQuery.Event | JQuery<MouseEvent>): ElementView<any> {
         const coor = this.case.getCursorCoordinates(e);
         const cmmnElement = this.createCMMNChild(viewType, Grid.snap(coor.x), Grid.snap(coor.y));
         // Now select the newly added element
-        this.case.selectedElement = cmmnElement;
+        this.case.selectedElement = cmmnElement as any;
         // Show properties of new element
         cmmnElement.propertiesView.show(true);
         return cmmnElement;
@@ -232,7 +236,7 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
      * Creates a cmmn child under this element with the specified type, and renders it at the given position.
      * @returns the newly created CMMN child
      */
-    createCMMNChild(viewType: Function, x: number, y: number): CMMNElementView {
+    createCMMNChild(viewType: Function, x: number, y: number): ElementView<any> {
         throw new Error('Cannot create an element of type' + viewType.name);
     }
 
@@ -316,7 +320,7 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
 
     get resizer() {
         if (!this._resizer) {
-            this._resizer = new Resizer(this);
+            this._resizer = new Resizer(this as any);
         }
         return this._resizer;
     }
@@ -327,14 +331,14 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
 
     get marker() {
         if (!this._marker) {
-            this._marker = new Marker(this);
+            this._marker = new Marker(this as any);
         }
         return this._marker;
     }
 
     get highlighter() {
         if (!this._highlighter) {
-            this._highlighter = new Highlighter(this);
+            this._highlighter = new Highlighter(this as any);
         }
         return this._highlighter;
     }
@@ -414,7 +418,7 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
     /**
      * Hook indicating that 'moving' completed.
      */
-    moved(x: number, y: number, newParent: CMMNElementView) {
+    moved(x: number, y: number, newParent: ElementView<any>) {
         // Check if this element can serve as a new parent for the cmmn element
         if (newParent && newParent.__canHaveAsChild(this.constructor) && newParent != this.parent) {
             // check if new parent is allowed
@@ -425,14 +429,14 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
     /**
      * Adds an element to another element, implements element.__addElement
      */
-    __addCMMNChild(cmmnChildElement: CMMNElementView): CMMNElementView {
-        return this.case.__addElement(cmmnChildElement);
+    __addCMMNChild(cmmnChildElement: ElementView<any>): ElementView<any> {
+        return this.case.__addElement(cmmnChildElement as any);
     }
 
     /**
      * When a item is moved from one stage to another, this method is invoked
      */
-    changeParent(newParent: CMMNElementView) {
+    changeParent(newParent: ElementView<any>) {
         if (this.parent) this.parent.releaseItem(this);
         newParent.adoptItem(this);
     }
@@ -441,7 +445,7 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
      * Adds the item to our list of children, and embeds it in the joint structure of this element.
      * It is an existing item in the case.
      */
-    adoptItem(childElement: CMMNElementView) {
+    adoptItem(childElement: ElementView<any>) {
         childElement.parent = this;
         this.__childElements.push(childElement);
         this.xyz_joint.embed(childElement.xyz_joint);
@@ -456,7 +460,7 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
      * Removes the imte from our list of children, and also unembeds it from the joint structure.
      * Does not delete the item.
      */
-    releaseItem(childElement: CMMNElementView) {
+    releaseItem(childElement: ElementView<any>) {
         this.xyz_joint.unembed(childElement.xyz_joint);
         Util.removeFromArray(this.__childElements, childElement);
     }
@@ -465,7 +469,7 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
      * Method invoked on all case elements upon removal of an element.
      * If there are references to the element to be removed, it can be handled here.
      */
-    __removeReferences(cmmnElement: CMMNElementView) {
+    __removeReferences(cmmnElement: ElementView<any>) {
         if (cmmnElement.parent == this) {
             // Perhaps also render the parent again?? Since this element about to be deleted ...
             Util.removeFromArray(this.__childElements, cmmnElement);
@@ -477,7 +481,7 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
      */
     __delete() {
         // Deselect ourselves if we are selected, to avoid invocation of __select(false) after we have been removed.
-        if (this.case.selectedElement == this) {
+        if (this.case.selectedElement == this as any) {
             this.case.selectedElement = undefined;
         }
 
@@ -525,11 +529,11 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
     /**
      * creates a connector between the element and the target.
      */
-    __connect(target: CMMNElementView, edge?: Edge): Connector {
+    __connect(target: ElementView<any>, edge?: Edge): Connector {
         if (!edge) {
-            edge = this.case.dimensions.createEdge(this.definition, target.definition);
+            edge = this.case.dimensions.createEdge(this.definition as any, target.definition);
         }
-        const connector = new Connector(this, target, edge);
+        const connector = new Connector(this as any, target, edge);
 
         // Render the connector in the case.
         this.case.__addConnector(connector);
@@ -567,14 +571,14 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
     }
 
     /**
-     * This method is invoked on the element if it created a connection to the target CMMNElementView
+     * This method is invoked on the element if it created a connection to the target CaseElementView
      */
-    __connectTo(target: CMMNElementView) { }
+    __connectTo(target: ElementView<any>) { }
 
     /**
-     * This method is invoked on the element if a connection to it was made from the source CMMNElementView
+     * This method is invoked on the element if a connection to it was made from the source CaseElementView
      */
-    __connectFrom(source: CMMNElementView) { }
+    __connectFrom(source: ElementView<any>) { }
 
     /**
      * Removes a connector from the registration in this element.
@@ -586,11 +590,11 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
     /**
      * returns an array of elements that are connected (through a link/connector) with this element
      */
-    __getConnectedElements(): CMMNElementView[] {
-        const connectedCMMNElements: CMMNElementView[] = [];
+    __getConnectedElements(): ElementView<any>[] {
+        const connectedCMMNElements: ElementView<any>[] = [];
         this.__connectors.forEach(connector => {
             if (!connectedCMMNElements.find(cmmnElement => connector.source == cmmnElement || connector.target == cmmnElement)) {
-                connectedCMMNElements.push(connector.source == this ? connector.target : connector.source);
+                connectedCMMNElements.push(connector.source == this as any ? connector.target : connector.source);
             }
         });
         return connectedCMMNElements;
@@ -623,7 +627,7 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
      * Add a criterion to this element sourcing the incoming element.
      * Default implementation is empty, task, stage, caseplan and milestone can override it.
      */
-    createCriterionAndConnect(criterionType: Function, sourceElement: CMMNElementView, e: JQuery.Event) {
+    createCriterionAndConnect(criterionType: Function, sourceElement: ElementView<any>, e: JQuery.Event) {
         // Create a new criterion and add the source as an on part
         this.addElementView(criterionType, e).adoptOnPart(sourceElement);
     }
@@ -631,7 +635,7 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
     /**
      * Hook for sentries to override.
      */
-    adoptOnPart(sourceElement: CMMNElementView) { }
+    adoptOnPart(sourceElement: ElementView<any>) { }
 
     /**
      * Hook for sentries to override.
@@ -653,83 +657,5 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
         return this.__type;
     }
 
-    get isPlanItem() {
-        return false;
-    }
-
-    get isTask() {
-        return false;
-    }
-
-    get isTaskOrStage() {
-        return false;
-    }
-
-    get isMilestone() {
-        return false;
-    }
-
-    get isEventListener() {
-        return false;
-    }
-
-    get isUserEvent() {
-        return false;
-    }
-
-    get isTimerEvent() {
-        return false;
-    }
-
-    get isStage() {
-        return false;
-    }
-
-    get isCasePlan() {
-        return false;
-    }
-
-    get isCaseTask() {
-        return false;
-    }
-
-    get isProcessTask() {
-        return false;
-    }
-
-    get isHumanTask() {
-        return false;
-    }
-
-    get isCriterion() {
-        return false;
-    }
-
-    get isEntryCriterion() {
-        return false;
-    }
-
-    get isExitCriterion() {
-        return false;
-    }
-
-    get isReactivateCriterion() {
-        return false;
-    }
-
-    get isPlanningTable() {
-        return false;
-    }
-
-    get isCaseFileItem() {
-        return false;
-    }
-
-    get isTextAnnotation() {
-        return false;
-    }
-}
-function removeAtSign(text: string): any {
-    return text.replace(/@/g, '');
 }
 

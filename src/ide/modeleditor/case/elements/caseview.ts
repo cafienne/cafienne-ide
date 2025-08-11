@@ -26,9 +26,9 @@ import StartCaseEditor from "../editors/startcaseeditor";
 import CaseTeamEditor from "../editors/team/caseteameditor";
 import ShapeBox from "../shapebox/shapebox";
 import UndoRedoBox from "../undoredo/undoredobox";
+import CaseElementView from "./caseelementview";
 import CaseFileItemView from "./casefileitemview";
 import CasePlanView from "./caseplanview";
-import CMMNElementView from "./cmmnelementview";
 import Connector from "./connector/connector";
 import Coordinates from "./connector/coordinates";
 import StageView from "./stageview";
@@ -54,7 +54,7 @@ export default class CaseView {
     readonly undoBox: UndoRedoBox;
     readonly shapeBox: ShapeBox;
     readonly splitter: RightSplitter;
-    readonly items: CMMNElementView[] = [];
+    readonly items: CaseElementView[] = [];
     readonly connectors: Connector[] = [];
     readonly loading: boolean = false;
     casePlanModel?: CasePlanView;
@@ -67,7 +67,7 @@ export default class CaseView {
     readonly startCaseEditor: StartCaseEditor;
     readonly debugEditor: Debugger;
     readonly validateForm: ValidateForm;
-    private _selectedElement?: CMMNElementView;
+    private _selectedElement?: CaseElementView;
     readonly typeDescription = 'Case';
 
     constructor(public editor: CaseModelEditor, public htmlParent: JQuery<HTMLElement>, public caseDefinition: CaseDefinition) {
@@ -289,7 +289,7 @@ export default class CaseView {
         return jointElementView.model.xyz_cmmn;
     }
 
-    getCMMNElement(jointElementView: any): CMMNElementView {
+    getCMMNElement(jointElementView: any): CaseElementView {
         return jointElementView.model.xyz_cmmn;
     }
 
@@ -355,7 +355,7 @@ export default class CaseView {
      * Sets/gets the element currently (to be) selected.
      * Upon setting a new selection, the previously selected element is de-selected
      */
-    set selectedElement(element: CMMNElementView | undefined) {
+    set selectedElement(element: CaseElementView | undefined) {
         const previousSelection = this._selectedElement;
         if (previousSelection) {
             previousSelection.__select(false);
@@ -366,7 +366,7 @@ export default class CaseView {
         }
     }
 
-    get selectedElement(): CMMNElementView | undefined {
+    get selectedElement(): CaseElementView | undefined {
         return this._selectedElement;
     }
 
@@ -379,7 +379,7 @@ export default class CaseView {
 
     /**
      * Trigger from CaseFileEditor to indicate that a certain definition is selected.
-     * This can be used to display markers of individual CMMNElementViews and their sub views.
+     * This can be used to display markers of individual CaseElementViews and their sub views.
      */
     updateSelectedCaseFileItemDefinition(definition: CaseFileItemDef | undefined) {
         this.items.forEach(item => item.marker.refresh(definition));
@@ -422,9 +422,9 @@ export default class CaseView {
      * Returns the deepest cmmn element under cursor. If that is equal to self, then
      * parent of self is returned.
      */
-    getItemUnderMouse(e: any, self: CMMNElementView | undefined = undefined): CMMNElementView | undefined {
+    getItemUnderMouse(e: any, self: CaseElementView | undefined = undefined): CaseElementView | undefined {
         const itemsUnderMouse = this.items.filter(item => item.nearElement(e, 10));
-        const parentsUnderMouse = itemsUnderMouse.filter(item => item.parent instanceof CMMNElementView).map(item => item.parent);
+        const parentsUnderMouse = itemsUnderMouse.filter(item => item.parent instanceof CaseElementView).map(item => item.parent);
 
         // If self is passed, then the collections need to filter it out.
         if (self) {
@@ -485,7 +485,7 @@ export default class CaseView {
         return this.casePlanModel;
     }
 
-    __addElement(cmmnElement: CMMNElementView) {
+    __addElement(cmmnElement: CaseElementView) {
         if (this.loading) {
             return cmmnElement;
         }
@@ -523,7 +523,7 @@ export default class CaseView {
     /**
      * Remove an element from the canvas, including its children.
      */
-    __removeElement(cmmnElement: CMMNElementView) {
+    __removeElement(cmmnElement: CaseElementView) {
         console.groupCollapsed(`Removing ${cmmnElement}`);
 
         // Remove it; which recursively also removes the children; only then save it.
@@ -540,7 +540,7 @@ export default class CaseView {
         console.groupEnd();
     }
 
-    getItem(id: string): CMMNElementView | undefined {
+    getItem(id: string): CaseElementView | undefined {
         return this.items.find(item => id && item.id == id);
     }
 

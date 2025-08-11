@@ -1,12 +1,12 @@
 ﻿import CaseFileItemDef from "../../../../repository/definition/cmmn/casefile/casefileitemdef";
 import CMMNElementDefinition from "../../../../repository/definition/cmmnelementdefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
-import CMMNElementView from "./cmmnelementview";
+import CaseElementView from "./caseelementview";
 import CaseFileItemHalo from "./halo/cmmn/casefileitemhalo";
 import CaseFileItemProperties from "./properties/casefileitemproperties";
 import StageView from "./stageview";
 
-export default class CaseFileItemView extends CMMNElementView<CaseFileItemDef> {
+export default class CaseFileItemView extends CaseElementView<CaseFileItemDef> {
     temporaryId?: string;
 
     static create(stage: StageView, x: number, y: number, definition?: CaseFileItemDef) {

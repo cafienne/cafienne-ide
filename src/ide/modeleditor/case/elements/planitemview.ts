@@ -2,22 +2,22 @@ import { g } from '@joint/core';
 import PlanItem from "../../../../repository/definition/cmmn/caseplan/planitem";
 import CriterionDefinition from "../../../../repository/definition/cmmn/sentry/criteriondefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+import CaseElementView from "./caseelementview";
 import CaseView from "./caseview";
-import CMMNElementView from "./cmmnelementview";
 import DecoratorBox from "./decorator/decoratorbox";
 import EntryCriterionView from "./entrycriterionview";
 import ExitCriterionView from "./exitcriterionview";
 import PlanItemProperties from "./properties/planitemproperties";
 import ReactivateCriterionView from "./reactivatecriterionview";
 
-export default abstract class PlanItemView<PI extends PlanItem = PlanItem> extends CMMNElementView<PI> {
+export default abstract class PlanItemView<PI extends PlanItem = PlanItem> extends CaseElementView<PI> {
     _decoratorBox?: DecoratorBox;
 
     /**
      * This is a generic class for plan item rendering; it takes default properties of the definition
      * It holds a reference both to the PlanItem definition AND to the PlanItemDefinition definition (e.g., HumanTask, StageView, Milestone).
      */
-    constructor(cs: CaseView, parent: CMMNElementView | undefined, definition: PI, shape: ShapeDefinition) {
+    constructor(cs: CaseView, parent: CaseElementView | undefined, definition: PI, shape: ShapeDefinition) {
         super(cs, parent, definition, shape);
         // Add the sentries
         this.definition.entryCriteria.forEach(criterion => this.addCriterion(criterion, EntryCriterionView));
@@ -44,7 +44,7 @@ export default abstract class PlanItemView<PI extends PlanItem = PlanItem> exten
         super.resizing(w, h);
         this.decoratorBox.moveDecoratorsToMiddle();
         // reposition our sentries on the right and bottom
-        this.__childElements.filter(child => child.isCriterion).forEach((sentry: any) => {
+        this.__childElements.filter(child => (<CaseElementView>child).isCriterion).forEach((sentry: any) => {
             //get the current position of sentry (the centre)
             const sentryX = sentry.shape.x + sentry.shape.width / 2;
             const sentryY = sentry.shape.y + sentry.shape.height / 2;
@@ -78,7 +78,7 @@ export default abstract class PlanItemView<PI extends PlanItem = PlanItem> exten
         return this._decoratorBox;
     }
 
-    createCMMNChild(viewType: Function, x: number, y: number): CMMNElementView<any> {
+    createCMMNChild(viewType: Function, x: number, y: number): CaseElementView<any> {
         if (viewType == EntryCriterionView) {
             return this.__addCMMNChild(EntryCriterionView.create(this, x, y));
         } else if (viewType == ReactivateCriterionView) {
