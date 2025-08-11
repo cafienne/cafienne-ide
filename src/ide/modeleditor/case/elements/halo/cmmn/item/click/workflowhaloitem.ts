@@ -1,5 +1,5 @@
+import HaloClickItem from "../../../../../../../editors/modelcanvas/halo/haloclickitem";
 import Images from "../../../../../../../util/images/images";
-import HaloClickItem from "../../../haloclickitem";
 import HumanTaskHalo from "../../humantaskhalo";
 
 export default class WorkflowHaloItem extends HaloClickItem {

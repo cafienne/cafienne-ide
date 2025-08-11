@@ -1,14 +1,14 @@
-import HtmlUtil from "../../../../util/htmlutil";
+import HtmlUtil from "../../../util/htmlutil";
 import Halo from "./halo";
 import HaloItem from "./haloitem";
 
-type HaloItemConstructor = new (halo: Halo) => HaloItem;
+type HaloItemConstructor<H extends Halo = Halo> = new (halo: H) => HaloItem;
 
-export default class HaloBar {
-    halo: Halo;
+export default class HaloBar<H extends Halo = Halo> {
+    halo: H;
     html: JQuery<HTMLElement>;
 
-    constructor(halo: Halo, html: JQuery<HTMLElement>) {
+    constructor(halo: H, html: JQuery<HTMLElement>) {
         this.halo = halo;
         this.html = html;
     }
@@ -21,7 +21,7 @@ export default class HaloBar {
      * Adds halo items to this specific bar of the halo.
      * It is sufficient to pass a comma separated list of the HaloItem constructors.
      */
-    addItems(...haloItemConstructors: HaloItemConstructor[]): HaloItem[] {
+    addItems(...haloItemConstructors: HaloItemConstructor<H>[]): HaloItem[] {
         return haloItemConstructors.map(HaloItemConstructor => {
             const item = new HaloItemConstructor(this.halo);
             this.add(item);

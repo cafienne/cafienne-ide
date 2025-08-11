@@ -3,7 +3,7 @@ import CMMNDocumentationDefinition from "./cmmndocumentationdefinition";
 import ElementDefinition from "./elementdefinition";
 import ModelDefinition from "./modeldefinition";
 
-export default class DocumentableElementDefinition<M extends ModelDefinition> extends ElementDefinition<M> {
+export default class DocumentableElementDefinition<M extends ModelDefinition = ModelDefinition> extends ElementDefinition<M> {
     private __documentation?: CMMNDocumentationDefinition;
     /**
      * Creates an XML element that can be referred to by the value of the name or id attribute of the underlying XML element.

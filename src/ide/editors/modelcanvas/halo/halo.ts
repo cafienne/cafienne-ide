@@ -1,20 +1,19 @@
 import $ from "jquery";
-import CMMNElementDefinition from "../../../../../repository/definition/cmmnelementdefinition";
-import HtmlUtil from "../../../../util/htmlutil";
-import CaseElementView from "../caseelementview";
-import DeleteHaloItem from "./cmmn/item/click/deletehaloitem";
-import PropertiesHaloItem from "./cmmn/item/click/propertieshaloitem";
-import ConnectorHaloItem from "./cmmn/item/drag/connectorhaloitem";
+import DocumentableElementDefinition from "../../../../repository/definition/documentableelementdefinition";
+import HtmlUtil from "../../../util/htmlutil";
+import ElementView from "../elementview";
+import DeleteHaloItem from "./deletehaloitem";
 import HaloBar from "./halobar";
 import HaloItem from "./haloitem";
+import PropertiesHaloItem from "./propertieshaloitem";
 
-export default class Halo<D extends CMMNElementDefinition = CMMNElementDefinition, V extends CaseElementView = CaseElementView<D>> {
+export default class Halo<D extends DocumentableElementDefinition = DocumentableElementDefinition, V extends ElementView<D> = ElementView<D>> {
     html: JQuery<HTMLElement>;
-    rightBar: HaloBar;
-    topBar: HaloBar;
-    topRightBar: HaloBar;
-    leftBar: HaloBar;
-    bottomBar: HaloBar;
+    rightBar: HaloBar<this>;
+    topBar: HaloBar<this>;
+    topRightBar: HaloBar<this>;
+    leftBar: HaloBar<this>;
+    bottomBar: HaloBar<this>;
     scrollListener: (e: JQuery.Event) => void;
 
     /**
@@ -54,7 +53,7 @@ export default class Halo<D extends CMMNElementDefinition = CMMNElementDefinitio
      * Can be overridden to put the element specific content in the halo
      */
     createItems() {
-        this.addItems(ConnectorHaloItem, PropertiesHaloItem, DeleteHaloItem);
+        this.addItems(PropertiesHaloItem, DeleteHaloItem);
     }
 
     /**

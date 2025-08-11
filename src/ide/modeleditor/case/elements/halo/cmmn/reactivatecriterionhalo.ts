@@ -1,15 +1,15 @@
 import ReactivateCriterionDefinition from "../../../../../../repository/definition/cmmn/sentry/reactivatecriteriondefinition";
+import ConnectorHaloItem from "../../../../../editors/modelcanvas/halo/connectorhaloitem";
+import DeleteHaloItem from "../../../../../editors/modelcanvas/halo/deletehaloitem";
+import PropertiesHaloItem from "../../../../../editors/modelcanvas/halo/propertieshaloitem";
 import ReactivateCriterionView from "../../reactivatecriterionview";
-import Halo from "../halo";
-import DeleteHaloItem from "./item/click/deletehaloitem";
-import PropertiesHaloItem from "./item/click/propertieshaloitem";
-import ConnectorHaloItem from "./item/drag/connectorhaloitem";
+import CaseHalo from "../casehalo";
 
-export default class ReactivateCriterionHalo extends Halo<ReactivateCriterionDefinition, ReactivateCriterionView> {
-    /**
-     * Sets the halo images in the resizer
-     */
+export default class ReactivateCriterionHalo extends CaseHalo<ReactivateCriterionDefinition, ReactivateCriterionView> {
+
     createItems() {
-        this.addItems(ConnectorHaloItem, PropertiesHaloItem, DeleteHaloItem);
+        this.topBar.addItems(ConnectorHaloItem);
+
+        this.addItems(PropertiesHaloItem, DeleteHaloItem);
     }
 }

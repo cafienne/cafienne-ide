@@ -1,8 +1,9 @@
+import ReactivateCriterionDefinition from "../../../../repository/definition/cmmn/sentry/reactivatecriteriondefinition";
 import ReactivateCriterionHalo from "./halo/cmmn/reactivatecriterionhalo";
 import PlanItemView from "./planitemview";
 import SentryView from "./sentryview";
 
-export default class ReactivateCriterionView extends SentryView {
+export default class ReactivateCriterionView extends SentryView<ReactivateCriterionDefinition> {
     static create(planItem: PlanItemView, x: number, y: number) {
         const definition = planItem.definition.createReactivateCriterion();
         const shape = planItem.case.diagram.createShape(x, y, 12, 20, definition.id);

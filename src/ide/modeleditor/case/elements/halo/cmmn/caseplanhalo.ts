@@ -1,6 +1,8 @@
 import CasePlanDefinition from "../../../../../../repository/definition/cmmn/caseplan/caseplandefinition";
+import DeleteHaloItem from "../../../../../editors/modelcanvas/halo/deletehaloitem";
+import PropertiesHaloItem from "../../../../../editors/modelcanvas/halo/propertieshaloitem";
 import CasePlanView from "../../caseplanview";
-import Halo from "../halo";
+import CaseHalo from "../casehalo";
 import CaseInputParametersHaloItem from "./item/caseplan/caseinputparametershaloitem";
 import CaseOutputParametersHaloItem from "./item/caseplan/caseoutputparametershaloitem";
 import CaseRolesHaloItem from "./item/caseplan/caseroleshaloitem";
@@ -9,13 +11,12 @@ import DeployHaloItem from "./item/caseplan/deployhaloitem";
 import SeparatorHaloItem from "./item/caseplan/separatorhaloitem";
 import StartCaseSchemaHaloItem from "./item/caseplan/startcaseschemahaloitem";
 import ViewSourceHaloItem from "./item/caseplan/viewsourcehaloitem";
-import DeleteHaloItem from "./item/click/deletehaloitem";
-import PropertiesHaloItem from "./item/click/propertieshaloitem";
 
 /**
  * Halo for the caseplan model. This halo is situated next to the top tab of the case plan model
  */
-export default class CasePlanHalo extends Halo<CasePlanDefinition, CasePlanView> {
+export default class CasePlanHalo extends CaseHalo<CasePlanDefinition, CasePlanView> {
+
     createItems() {
         // All content in the topbar, next to the top tab (or next to the planning table).
         this.topBar.addItems(

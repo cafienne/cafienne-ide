@@ -6,7 +6,8 @@ import OutputParametersHaloItem from "./item/click/outputparametershaloitem";
 import ZoomTaskImplementationHaloItem from "./item/click/zoomtaskimplementationhaloitem";
 import PlanItemHalo from "./planitemhalo";
 
-export default class TaskHalo<TD extends TaskDefinition = TaskDefinition, TV extends TaskView = TaskView> extends PlanItemHalo<TD, TV> {
+export default class TaskHalo<TD extends TaskDefinition = TaskDefinition, TV extends TaskView<TD> = TaskView<TD>> extends PlanItemHalo<TD, TV> {
+
     createItems() {
         super.createItems();
         if (this.element.definition.implementationRef) {

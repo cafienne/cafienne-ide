@@ -1,10 +1,10 @@
-import Images from "../../../../../../../util/images/images";
-import Halo from "../../../halo";
-import HaloDragItem from "../../../halodragitem";
+import Images from "../../../util/images/images";
+import Halo from "./halo";
+import HaloDragItem from "./halodragitem";
 
-export default class ConnectorHaloItem extends HaloDragItem {
+export default class ConnectorHaloItem extends HaloDragItem<Halo> {
     constructor(halo: Halo) {
-        super(halo, Images.Link, 'Connector', halo.element.isEventListener ? halo.topRightBar : halo.rightBar);
+        super(halo, Images.Link, 'Connector', halo.rightBar);
     }
 
     handleMouseUp(e: JQuery.TriggeredEvent) {
