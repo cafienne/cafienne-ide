@@ -1,7 +1,7 @@
 ﻿import TextAnnotationDefinition from "../../../../repository/definition/artifact/textannotation";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+import Halo from "../../../editors/modelcanvas/halo/halo";
 import CaseElementView from "./caseelementview";
-import Halo from "./halo/halo";
 import TextAnnotationProperties from "./properties/textannotationproperties";
 import StageView from "./stageview";
 

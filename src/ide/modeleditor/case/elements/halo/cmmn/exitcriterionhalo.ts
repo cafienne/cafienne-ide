@@ -1,9 +1,9 @@
 import ExitCriterionDefinition from "../../../../../../repository/definition/cmmn/sentry/exitcriteriondefinition";
+import ConnectorHaloItem from "../../../../../editors/modelcanvas/halo/connectorhaloitem";
+import DeleteHaloItem from "../../../../../editors/modelcanvas/halo/deletehaloitem";
+import Halo from "../../../../../editors/modelcanvas/halo/halo";
+import PropertiesHaloItem from "../../../../../editors/modelcanvas/halo/propertieshaloitem";
 import ExitCriterionView from "../../exitcriterionview";
-import Halo from "../halo";
-import DeleteHaloItem from "./item/click/deletehaloitem";
-import PropertiesHaloItem from "./item/click/propertieshaloitem";
-import ConnectorHaloItem from "./item/drag/connectorhaloitem";
 import EntryCriterionHaloItem from "./item/drag/entrycriterionhaloitem";
 
 export default class ExitCriterionHalo extends Halo<ExitCriterionDefinition, ExitCriterionView> {

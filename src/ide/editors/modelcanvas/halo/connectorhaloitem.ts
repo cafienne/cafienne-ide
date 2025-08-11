@@ -1,6 +1,6 @@
-import Images from "../../../../../../../util/images/images";
-import Halo from "../../../halo";
-import HaloDragItem from "../../../halodragitem";
+import Images from "../../../util/images/images";
+import Halo from "./halo";
+import HaloDragItem from "./halodragitem";
 
 export default class ConnectorHaloItem extends HaloDragItem {
     constructor(halo: Halo) {

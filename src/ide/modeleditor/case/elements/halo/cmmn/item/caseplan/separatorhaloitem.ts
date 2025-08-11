@@ -1,6 +1,6 @@
 import $ from "jquery";
-import Halo from "../../../halo";
-import HaloItem from "../../../haloitem";
+import Halo from "../../../../../../../editors/modelcanvas/halo/halo";
+import HaloItem from "../../../../../../../editors/modelcanvas/halo/haloitem";
 
 export default class SeparatorHaloItem extends HaloItem {
     /**

@@ -1,10 +1,10 @@
-import Halo from "../../../halo";
-import HaloDragItem from "../../../halodragitem";
+import HaloDragItem from "../../../../../../../editors/modelcanvas/halo/halodragitem";
+import CaseHalo from "../../../casehalo";
 
-export default abstract class SentryHaloItem extends HaloDragItem {
+export default abstract class SentryHaloItem extends HaloDragItem<CaseHalo> {
     dragImage: JQuery<HTMLElement>;
 
-    constructor(halo: Halo, private haloType: Function) {
+    constructor(halo: CaseHalo, private haloType: Function) {
         super(halo, (haloType as any).smallImage, (haloType as any).typeDescription, halo.rightBar);
         this.dragImage = halo.element.case.html.find('.halodragimgid');
     }

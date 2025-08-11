@@ -1,9 +1,9 @@
+import HaloClickItem from "../../../../../../../editors/modelcanvas/halo/haloclickitem";
 import Images from "../../../../../../../util/images/images";
-import Halo from "../../../halo";
-import HaloClickItem from "../../../haloclickitem";
+import CaseHalo from "../../../casehalo";
 
-export default class DebuggerHaloItem extends HaloClickItem {
-    constructor(halo: Halo) {
+export default class DebuggerHaloItem extends HaloClickItem<CaseHalo> {
+    constructor(halo: CaseHalo) {
         super(halo, Images.Debug, 'Debug cases of this type', e => this.halo.element.case.debugEditor.show());
     }
 }

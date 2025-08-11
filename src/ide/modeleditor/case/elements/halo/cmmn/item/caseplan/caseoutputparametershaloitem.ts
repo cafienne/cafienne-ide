@@ -1,9 +1,9 @@
+import HaloClickItem from "../../../../../../../editors/modelcanvas/halo/haloclickitem";
 import Images from "../../../../../../../util/images/images";
-import Halo from "../../../halo";
-import HaloClickItem from "../../../haloclickitem";
+import CaseHalo from "../../../casehalo";
 
-export default class CaseOutputParametersHaloItem extends HaloClickItem {
-    constructor(halo: Halo) {
+export default class CaseOutputParametersHaloItem extends HaloClickItem<CaseHalo> {
+    constructor(halo: CaseHalo) {
         super(halo, Images.Output, 'Edit case output parameters', e => this.halo.element.case.caseParametersEditor.show());
     }
 }

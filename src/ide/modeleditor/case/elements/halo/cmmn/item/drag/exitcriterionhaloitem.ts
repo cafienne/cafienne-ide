@@ -1,9 +1,9 @@
 import ExitCriterionView from "../../../../exitcriterionview";
-import Halo from "../../../halo";
+import CaseHalo from "../../../casehalo";
 import SentryHaloItem from "./sentryhaloitem";
 
 export default class ExitCriterionHaloItem extends SentryHaloItem {
-    constructor(halo: Halo) {
+    constructor(halo: CaseHalo) {
         super(halo, ExitCriterionView);
     }
 }
