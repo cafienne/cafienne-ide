@@ -181,14 +181,12 @@ export default abstract class CMMNElementView<D extends CMMNElementDefinition = 
      * 
      */
     nearElement(e: JQuery.Event, distance: number) {
-        const offset: any = this.html.offset();
+        const clientRect = this.html.find('[joint-selector="body"]')[0].getBoundingClientRect();
 
-        // EventListenerView somehow have an unclear and weird positioning with jointjs. Hence we need to do some correction for that.
-        //  Note that this is still not a flawless improvement :(
-        const left = this.isEventListener ? offset.left - 0.5 * distance : offset.left - distance;
-        const right = this.isEventListener ? offset.left + this.shape.width + 1.5 * distance : offset.left + this.shape.width + distance;
-        const top = offset.top - distance;
-        const bottom = offset.top + this.shape.height + distance;
+        const left = clientRect.left - distance;
+        const right = clientRect.right + distance;
+        const top = clientRect.top - distance;
+        const bottom = clientRect.bottom + distance;
         const x = e.clientX || 0;
         const y = e.clientY || 0;
 
