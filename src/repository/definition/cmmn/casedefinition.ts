@@ -2,11 +2,9 @@ import CaseFile from "../../serverfile/casefile";
 import Validator from "../../validate/validator";
 import TextAnnotationDefinition from "../artifact/textannotation";
 import CMMNElementDefinition from "../cmmnelementdefinition";
-import Dimensions from "../dimensions/dimensions";
+import GraphicalModelDefinition from "../graphicalmodeldefinition";
 import Migrator from "../migration/cmmn/migrator";
-import ModelDefinition from "../modeldefinition";
 import ParameterizedModelDefinition from "../parameterizedmodeldefinition";
-import ExternalReference from "../references/externalreference";
 import CaseFileDefinition from "./casefile/casefiledefinition";
 import CasePlanDefinition from "./caseplan/caseplandefinition";
 import PlanItem from "./caseplan/planitem";
@@ -14,7 +12,7 @@ import CaseTeamDefinition from "./caseteam/caseteamdefinition";
 import CaseParameterDefinition from "./contract/caseparameterdefinition";
 import StartCaseSchemaDefinition from "./startcaseschemadefinition";
 
-export default class CaseDefinition extends ModelDefinition implements ParameterizedModelDefinition<CaseDefinition> {
+export default class CaseDefinition extends GraphicalModelDefinition implements ParameterizedModelDefinition<CaseDefinition> {
     private _caseFile?: CaseFileDefinition;
     private _casePlan?: CasePlanDefinition;
     private _caseTeam?: CaseTeamDefinition;
@@ -23,13 +21,12 @@ export default class CaseDefinition extends ModelDefinition implements Parameter
     annotations: TextAnnotationDefinition[];
     startCaseSchema: StartCaseSchemaDefinition;
     defaultExpressionLanguage: string;
-    _dimensions: ExternalReference<Dimensions>;
 
     /**
      * Imports an XML element and parses it into a in-memory definition structure.
      */
     constructor(public file: CaseFile) {
-        super(file);
+        super(file, file.name + '.dimensions');
         // First run migrations if necessary.
         Migrator.updateXMLElement(this);
         this._caseFile = this.parseElement('caseFileModel', CaseFileDefinition);
@@ -40,11 +37,6 @@ export default class CaseDefinition extends ModelDefinition implements Parameter
         this.annotations = this.parseElements('textAnnotation', TextAnnotationDefinition);
         this.startCaseSchema = this.parseExtension(StartCaseSchemaDefinition);
         this.defaultExpressionLanguage = this.parseAttribute('expressionLanguage', 'spel');
-        this._dimensions = this.addReference(this.file.name + '.dimensions');
-    }
-
-    get dimensions(): Dimensions | undefined {
-        return this._dimensions.getDefinition();
     }
 
     /**
