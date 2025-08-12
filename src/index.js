@@ -75,6 +75,7 @@ export { default as DocumentableElementDefinition } from "./repository/definitio
 export { default as ElementDefinition } from "./repository/definition/elementdefinition";
 export { default as CafienneImplementationDefinition } from "./repository/definition/extensions/cafienneimplementationdefinition";
 export { default as CMMNExtensionDefinition } from "./repository/definition/extensions/cmmnextensiondefinition";
+export { default as GraphicalModelDefinition } from "./repository/definition/graphicalmodeldefinition";
 export { default as HumanTaskImplementationDefinition } from "./repository/definition/humantask/humantaskimplementationdefinition";
 export { default as HumanTaskModelDefinition } from "./repository/definition/humantask/humantaskmodeldefinition";
 export { default as HumanTaskModelElementDefinition } from "./repository/definition/humantask/humantaskmodelelementdefinition";
