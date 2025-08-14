@@ -3,7 +3,7 @@ import Images from "../../../util/images/images";
 import ModelCanvas from "../modelcanvas";
 
 export default class UndoRedoBox<CanvasT extends ModelCanvas> {
-    private case: CanvasT;
+    private canvas: CanvasT;
     private spanUndoCounter: JQuery<HTMLElement>;
     private spanRedoCounter: JQuery<HTMLElement>;
 
@@ -12,7 +12,7 @@ export default class UndoRedoBox<CanvasT extends ModelCanvas> {
      * @param html JQuery<HTMLElement>
      */
     constructor(cs: CanvasT, public html: JQuery<HTMLElement>) {
-        this.case = cs;
+        this.canvas = cs;
         this.html.append(
             $(`<div class="formheader">
     <div>
@@ -34,11 +34,11 @@ export default class UndoRedoBox<CanvasT extends ModelCanvas> {
     }
 
     undo(): void {
-        this.case.undoManager.undo();
+        this.canvas.undoManager.undo();
     }
 
     redo(): void {
-        this.case.undoManager.redo();
+        this.canvas.undoManager.redo();
     }
 
     updateButtons(undoCount: number, redoCount: number): void {

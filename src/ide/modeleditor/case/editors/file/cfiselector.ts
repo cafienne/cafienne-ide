@@ -6,11 +6,9 @@ import Shapes from "../../../../util/images/shapes";
 import CaseCanvas from "../../elements/casecanvas";
 
 export default class CFISelector extends Dialog {
-    case: CaseCanvas;
     selectedItem?: CaseFileItemDef;
-    constructor(cs: CaseCanvas) {
-        super(cs.editor.ide, 'Select a Case File Item');
-        this.case = cs;
+    constructor(public canvas: CaseCanvas) {
+        super(canvas.editor.ide, 'Select a Case File Item');
         this.selectedItem = undefined;
     }
 
@@ -24,7 +22,7 @@ export default class CFISelector extends Dialog {
             </form>
         `);
         dialogHTML.append(htmlDialog);
-        this.case.caseDefinition.caseFile.children.forEach(cfi => this.renderCaseFileItem(cfi, dialogHTML.find('.cfi-tree')));
+        this.canvas.caseDefinition.caseFile.children.forEach(cfi => this.renderCaseFileItem(cfi, dialogHTML.find('.cfi-tree')));
         dialogHTML.find('.buttonOk').on('click', e => this.ok());
         dialogHTML.find('.buttonCancel').on('click', e => this.cancel());
     }

@@ -10,7 +10,7 @@ export default class CaseTaskView extends TaskView<CaseTaskDefinition> {
      */
     static create(stage: StageView, x: number, y: number): CaseTaskView {
         const definition = stage.definition.createPlanItem(CaseTaskDefinition);
-        const shape = stage.case.diagram.createShape(x, y, 140, 80, definition.id);
+        const shape = stage.canvas.diagram.createShape(x, y, 140, 80, definition.id);
         return new CaseTaskView(stage, definition, shape);
     }
 

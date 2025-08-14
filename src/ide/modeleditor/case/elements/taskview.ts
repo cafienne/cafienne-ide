@@ -17,7 +17,7 @@ export default abstract class TaskView<TD extends TaskDefinition = TaskDefinitio
      * Creates a new TaskView element.
      */
     constructor(public parent: StageView, definition: TD, shape: ShapeDefinition) {
-        super(parent.case, parent, definition, shape);
+        super(parent.canvas, parent, definition, shape);
 
         // Define the mapping form to link task parameters with model parameters (case process humantask)
         this.mappingsEditor = new TaskMappingsEditor(this);
@@ -67,12 +67,12 @@ export default abstract class TaskView<TD extends TaskDefinition = TaskDefinitio
     setDropHandlers() {
         super.setDropHandlers();
         // Add drop handler with repository browser to handle changing task implementation when it is drag/dropped from there.
-        this.case.editor.ide.repositoryBrowser.setDropHandler(dragData => this.changeTaskImplementation(dragData.file), dragData => this.supportsFileTypeAsImplementation(dragData));
+        this.canvas.editor.ide.repositoryBrowser.setDropHandler(dragData => this.changeTaskImplementation(dragData.file), dragData => this.supportsFileTypeAsImplementation(dragData));
     }
 
     removeDropHandlers() {
         super.removeDropHandlers();
-        this.case.editor.ide.repositoryBrowser.removeDropHandler();
+        this.canvas.editor.ide.repositoryBrowser.removeDropHandler();
     }
 
     async generateNewTaskImplementation() {
@@ -81,12 +81,12 @@ export default abstract class TaskView<TD extends TaskDefinition = TaskDefinitio
         if (existingModel) {
             this.definition.implementationReference.update(existingModel.fileName);
         } else {
-            const fileName = await this.case.editor.ide.createNewModel(this.fileType, potentialImplementationName, this.definition.documentation.text);
+            const fileName = await this.canvas.editor.ide.createNewModel(this.fileType, potentialImplementationName, this.definition.documentation.text);
             this.definition.implementationReference.update(fileName);
             // Open the editor for the new task implementation file
             window.location.hash = fileName;
         }
-        this.case.editor.completeUserAction();
+        this.canvas.editor.completeUserAction();
         this.refreshView();
     }
 
@@ -105,7 +105,7 @@ export default abstract class TaskView<TD extends TaskDefinition = TaskDefinitio
         // Now, read the file, and update the information in the task parameters.
         await file.load();
         if (!file.definition) {
-            this.case.editor.ide.warning('Could not read the definition ' + file.fileName + ' which is referenced from the task ' + this.name
+            this.canvas.editor.ide.warning('Could not read the definition ' + file.fileName + ' which is referenced from the task ' + this.name
             );
             return;
         }
@@ -124,7 +124,7 @@ export default abstract class TaskView<TD extends TaskDefinition = TaskDefinitio
         this.definition.changeTaskImplementation(file);
 
         // Make sure to save changes if any.
-        this.case.editor.completeUserAction();
+        this.canvas.editor.completeUserAction();
 
         // Now refresh the renderers and optionally the propertiesmenu.
         this.mappingsEditor.refresh();

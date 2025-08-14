@@ -19,7 +19,7 @@ export default class Highlighter {
         // However, marking object is only created once a CFI is clicked on. 
         // So, in practice it is OK to create it here and now.
         this.html = $('<div class="highlightelementimage"></div>');
-        this.element.case.markerContainer.append(this.html);
+        this.element.canvas.markerContainer.append(this.html);
 
         // Reposition the marker when the element is moving
         this.element.xyz_joint.on('change:position', (e: any) => this.setPosition());
@@ -53,9 +53,9 @@ export default class Highlighter {
     set visible(visible: boolean) {
         if (visible) {
             this.setPosition();
-            this.element.case.paperContainer.on('scroll', this.scrollListener);
+            this.element.canvas.paperContainer.on('scroll', this.scrollListener);
         } else {
-            this.element.case.paperContainer.off('scroll', this.scrollListener);
+            this.element.canvas.paperContainer.off('scroll', this.scrollListener);
         }
         const visibility = visible ? 'block' : 'none';
         this.html.css('display', visibility);
@@ -68,8 +68,8 @@ export default class Highlighter {
     setPosition(): void {
         // Compensate the position of the marker for the scroll of the paper container
         // The reason is, that the marker's html element is outside the paper container, hence needs to accomodate to the scroll of the paper container
-        const leftScroll = this.element.case.paperContainer.scrollLeft() || 0;
-        const topScroll = this.element.case.paperContainer.scrollTop() || 0;
+        const leftScroll = this.element.canvas.paperContainer.scrollLeft() || 0;
+        const topScroll = this.element.canvas.paperContainer.scrollTop() || 0;
         const markerLeft = this.element.shape.x - leftScroll;
         const markerTop = this.element.shape.y - topScroll;
         const height = this.element.shape.height;

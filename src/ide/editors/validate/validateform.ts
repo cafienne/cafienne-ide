@@ -19,8 +19,8 @@ export default class ValidateForm extends StandardForm {
         return ValidateForm._settings;
     }
 
-    constructor(cs: CaseCanvas) {
-        super(cs, '');
+    constructor(canvas: CaseCanvas) {
+        super(canvas, '');
         this.html = $(
             `<div class="basicbox basicform" id="validateformid">
                 <div class="formheader">
@@ -89,8 +89,8 @@ export default class ValidateForm extends StandardForm {
         const wForm = this.html.width();
         const hForm = this.html.height();
 
-        const wBody = this.case.editor.html.width();
-        const hBody = this.case.editor.html.height();
+        const wBody = this.canvas.editor.html.width();
+        const hBody = this.canvas.editor.html.height();
 
         if (!wBody || !hBody || !wForm || !hForm) return;
 
@@ -136,9 +136,9 @@ export default class ValidateForm extends StandardForm {
         // validator.problems.forEach(p => this.addProblemRow(p));
 
         // Sort the problems; first render the errors, then only the warnings
-        validator.errors.filter(e => e.modelDefinition === this.case.caseDefinition).forEach(p => this.addProblemRow(p));
+        validator.errors.filter(e => e.modelDefinition === this.canvas.caseDefinition).forEach(p => this.addProblemRow(p));
         validator.warnings.forEach(p => this.addProblemRow(p));
-        validator.errors.filter(e => e.modelDefinition !== this.case.caseDefinition).forEach(p => this.addProblemRow(p));
+        validator.errors.filter(e => e.modelDefinition !== this.canvas.caseDefinition).forEach(p => this.addProblemRow(p));
 
         const iErrors = validator.errors.length;
         const iWarnings = validator.warnings.length;
@@ -154,7 +154,7 @@ export default class ValidateForm extends StandardForm {
      * problem     : object having the problem properties
      */
     addProblemRow(remark: Remark) {
-        const link = remark.modelDefinition === this.case.caseDefinition ? '' : '#' + remark.modelDefinition.file.fileName;
+        const link = remark.modelDefinition === this.canvas.caseDefinition ? '' : '#' + remark.modelDefinition.file.fileName;
         const html = $(`<div class="problemrow">
             <div class="problemmodel">
                 <a href="${'#' + remark.modelDefinition.file.fileName}">${remark.modelDefinition.file.fileName}</a>
@@ -166,7 +166,7 @@ export default class ValidateForm extends StandardForm {
                 ${remark.description}
             </div>
         </div>`);
-        html.on('click', e => this.case.highlight(remark));
+        html.on('click', e => this.canvas.highlight(remark));
         this.containers.append(html);
     }
 }

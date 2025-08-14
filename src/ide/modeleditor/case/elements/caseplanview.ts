@@ -11,25 +11,25 @@ import StageView from "./stageview";
 const CPM_TAB_HEIGHT = 22;
 
 export default class CasePlanView extends StageView<CasePlanDefinition> {
-    static createNew(cs: CaseCanvas, x = 10, y = 10) {
-        const definition = cs.caseDefinition.casePlan;
-        const shape = cs.diagram.createShape(x, y, 800, 500, definition.id);
-        return new CasePlanView(cs, definition, shape)
+    static createNew(canvas: CaseCanvas, x = 10, y = 10) {
+        const definition = canvas.caseDefinition.casePlan;
+        const shape = canvas.diagram.createShape(x, y, 800, 500, definition.id);
+        return new CasePlanView(canvas, definition, shape)
     }
 
     /**
      * Creates a new CasePlan model
       */
-    constructor(cs: CaseCanvas, definition: CasePlanDefinition, shape: ShapeDefinition) {
-        super(cs, undefined, definition, shape);
+    constructor(canvas: CaseCanvas, definition: CasePlanDefinition, shape: ShapeDefinition) {
+        super(canvas, undefined, definition, shape);
     }
 
     referencesDefinitionElement(definitionId: string) {
         // Check whether the case parameters may be using the case file item
-        if (this.case.caseDefinition.input.find(p => p.bindingRef.references(definitionId))) {
+        if (this.canvas.caseDefinition.input.find(p => p.bindingRef.references(definitionId))) {
             return true;
         }
-        if (this.case.caseDefinition.output.find(p => p.bindingRef.references(definitionId))) {
+        if (this.canvas.caseDefinition.output.find(p => p.bindingRef.references(definitionId))) {
             return true;
         }
         return super.referencesDefinitionElement(definitionId);
@@ -51,7 +51,7 @@ export default class CasePlanView extends StageView<CasePlanDefinition> {
      * Show or hide the halo and resizer
      */
     __renderBoundary(show: boolean) {
-        if (this.case.selectedElement === this) {
+        if (this.canvas.selectedElement === this) {
             this.resizer.visible = true;
         } else {
             this.resizer.visible = false;
@@ -111,7 +111,7 @@ export default class CasePlanView extends StageView<CasePlanDefinition> {
 
     __delete() {
         super.__delete();
-        delete this.case.casePlanModel;
+        delete this.canvas.casePlanModel;
     }
 
     canHaveCriterion(criterionType: Function) {

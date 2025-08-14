@@ -18,9 +18,9 @@ export default class CaseTeamEditor extends MovableEditor {
     caseTeam: CaseTeamDefinition;
     private htmlContainer!: JQuery<HTMLElement>;
 
-    constructor(public cs: CaseCanvas) {
-        super(cs);
-        this.caseTeam = this.cs.caseDefinition.caseTeam;
+    constructor(public canvas: CaseCanvas) {
+        super(canvas);
+        this.caseTeam = this.canvas.caseDefinition.caseTeam;
     }
 
     clear() {
@@ -39,7 +39,7 @@ export default class CaseTeamEditor extends MovableEditor {
     private get removeTooltip(): string {
         const teamFile = this.caseTeam.caseTeamRef.file;
         if (teamFile) {
-            const usage = teamFile.usage.filter((file: ServerFile) => file.definition?.id !== this.case.caseDefinition.id);
+            const usage = teamFile.usage.filter((file: ServerFile) => file.definition?.id !== this.canvas.caseDefinition.id);
             return `Remove team...\nTeam ${teamFile.name} is used in ${usage.length} other model${usage.length === 1 ? '' : 's'}\n${usage.length ? usage.map((u: any) => '- ' + u.fileName).join('\n') : ''}`;
         } else {
             return 'Remove team...';
@@ -93,7 +93,7 @@ export default class CaseTeamEditor extends MovableEditor {
         this.html.find('.convert-team').on('click', () => this.convertTeam());
         // Event handlers for modern team
         const teamSelector = this.html.find('.selectTeam');
-        new CaseTeamSelector(this.case.editor.ide.repository, teamSelector, this.caseTeam.caseTeamRef.toString(), (newTeamRef: string) => this.updateCaseTeamReference(newTeamRef), [{ option: '&lt;new&gt;', value: '<new>' }]);
+        new CaseTeamSelector(this.canvas.editor.ide.repository, teamSelector, this.caseTeam.caseTeamRef.toString(), (newTeamRef: string) => this.updateCaseTeamReference(newTeamRef), [{ option: '&lt;new&gt;', value: '<new>' }]);
         this.html.find('.rename-team').on('click', () => this.renameTeam());
         this.html.find('.remove-team').on('click', () => this.removeTeam());
         this.html.find('.teamDocumentation').on('change', (e) => {
@@ -132,7 +132,7 @@ export default class CaseTeamEditor extends MovableEditor {
 
     async convertTeam(): Promise<void> {
         // prefix the case team name with 'case_' ... but only on the last part of the name, to create it in the same folder as the case
-        const path = this.case.name.split('/');
+        const path = this.canvas.name.split('/');
         path[path.length - 1] = 'case_' + path[path.length - 1];
         const teamName = path.join('/');
         const teamFileName = teamName + '.caseteam';
@@ -163,7 +163,7 @@ export default class CaseTeamEditor extends MovableEditor {
 
     async removeTeam(): Promise<void> {
         if (!this.caseTeam.caseTeamRef.file) return;
-        await this.modelEditor.ide.repositoryBrowser.delete(this.caseTeam.caseTeamRef.file, this.case.caseDefinition);
+        await this.modelEditor.ide.repositoryBrowser.delete(this.caseTeam.caseTeamRef.file, this.canvas.caseDefinition);
     }
 
     updateCaseTeamReference(caseTeamRef: string) {
@@ -171,7 +171,7 @@ export default class CaseTeamEditor extends MovableEditor {
             this.openCreateCaseTeamModelDialog();
         } else {
             this.caseTeam.changeCaseTeam(caseTeamRef);
-            this.case.editor.completeUserAction();
+            this.canvas.editor.completeUserAction();
             if (this.caseTeam.caseTeamRef.getDefinition()) {
                 this.renderData();
             } else {
@@ -181,7 +181,7 @@ export default class CaseTeamEditor extends MovableEditor {
     }
 
     async saveCaseTeam() {
-        this.case.editor.completeUserAction();
+        this.canvas.editor.completeUserAction();
         const team = this.caseTeam.caseTeamRef.getDefinition();
         if (team) {
             const file = team.file;
@@ -192,12 +192,12 @@ export default class CaseTeamEditor extends MovableEditor {
                 await file.save();
                 file.usage
                     .filter(f => f.definition instanceof CaseDefinition)
-                    .map(file => this.case.editor.ide.editorRegistry.get(file))
+                    .map(file => this.canvas.editor.ide.editorRegistry.get(file))
                     .filter(caseEditor => caseEditor !== undefined).map(caseEditor => <CaseModelEditor>caseEditor)
-                    .filter(caseEditor => caseEditor.case?.teamEditor.visible && caseEditor.case.teamEditor !== this)
+                    .filter(caseEditor => caseEditor.canvas?.teamEditor.visible && caseEditor.canvas.teamEditor !== this)
                     .forEach(caseEditor => {
                         // console.log("Refreshing team in case " + caseEditor.file.fileName);
-                        caseEditor.case?.teamEditor.renderData();
+                        caseEditor.canvas?.teamEditor.renderData();
                     });
             }
         }
@@ -206,7 +206,7 @@ export default class CaseTeamEditor extends MovableEditor {
     async openCreateCaseTeamModelDialog(): Promise<void> {
         const filetype = 'caseteam';
         const text = `Create a new case team`;
-        const ide = this.case.editor.ide;
+        const ide = this.canvas.editor.ide;
         if (!ide) return;
         const dialog = new CreateNewModelDialog(ide, text);
         dialog.showModalDialog(async (newModelInfo: any) => {
@@ -237,7 +237,7 @@ export default class CaseTeamEditor extends MovableEditor {
             this.updateCaseTeamReference('');
             window.setTimeout(() => {
                 if (file.usage.length) {
-                    this.case.editor.ide.warning(
+                    this.canvas.editor.ide.warning(
                         `Case team '${file.fileName}' is still used in ${file.usage.length} other model${file.usage.length === 1 ? '' : 's'
                         }\n${file.usage.length ?
                             file.usage.map((u: any) => '- ' + u.fileName).join('\n')
@@ -247,7 +247,7 @@ export default class CaseTeamEditor extends MovableEditor {
                 } else {
                     const text = `This case team is not used anymore in other case models, Do you want to delete '${file.fileName}'? (Cancel to keep)`;
                     if (confirm(text) === true) {
-                        this.case.editor.ide.repository.delete(file.fileName);
+                        this.canvas.editor.ide.repository.delete(file.fileName);
                     }
                 }
             }, 0);

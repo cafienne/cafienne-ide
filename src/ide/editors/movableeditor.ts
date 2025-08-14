@@ -10,7 +10,6 @@ export default class MovableEditor<
     ModelDefT extends GraphicalModelDefinition = GraphicalModelDefinition,
     ViewT extends ElementView<DocumentableElementDefinition<ModelDefT>> = ElementView<DocumentableElementDefinition<ModelDefT>>> {
 
-    case: ModelCanvas<ModelDefT, DocumentableElementDefinition<ModelDefT>, ViewT>;
     modelEditor: ModelEditor;
     htmlParent: JQuery<HTMLElement>;
     private _visible: boolean = false;
@@ -21,9 +20,8 @@ export default class MovableEditor<
      * Usually it is something that pops up upon button click (e.g., Properties of an element, Roles Editor, Parameters Editor, etc)
      * It can be moved around and resized.
      */
-    constructor(cs: ModelCanvas<ModelDefT, DocumentableElementDefinition<ModelDefT>, ViewT>) {
-        this.case = cs;
-        this.modelEditor = cs.editor;
+    constructor(public canvas: ModelCanvas<ModelDefT, DocumentableElementDefinition<ModelDefT>, ViewT>) {
+        this.modelEditor = canvas.editor;
         this.htmlParent = this.modelEditor.divMovableEditors;
         this.modelEditor.registerMovableEditor(this);
     }

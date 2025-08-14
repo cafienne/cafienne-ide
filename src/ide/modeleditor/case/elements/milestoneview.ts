@@ -13,7 +13,7 @@ export default class MilestoneView extends PlanItemView<MilestoneDefinition> {
      */
     static create(stage: StageView, x: number, y: number): MilestoneView {
         const definition = stage.definition.createPlanItem(MilestoneDefinition);
-        const shape = stage.case.diagram.createShape(x, y, 100, 40, definition.id);
+        const shape = stage.canvas.diagram.createShape(x, y, 100, 40, definition.id);
         return new MilestoneView(stage, definition, shape);
     }
 
@@ -21,7 +21,7 @@ export default class MilestoneView extends PlanItemView<MilestoneDefinition> {
      * Creates a new MilestoneView element.
      */
     constructor(public parent: StageView, definition: MilestoneDefinition, shape: ShapeDefinition) {
-        super(parent.case, parent, definition, shape);
+        super(parent.canvas, parent, definition, shape);
     }
 
     get wrapText() {

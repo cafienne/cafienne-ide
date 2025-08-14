@@ -4,6 +4,6 @@ import CaseHalo from "../../../casehalo";
 
 export default class DeployHaloItem extends HaloClickItem<CaseHalo> {
     constructor(halo: CaseHalo) {
-        super(halo, Images.Deploy, 'Deploy this case', e => this.halo.element.case.deployForm.show());
+        super(halo, Images.Deploy, 'Deploy this case', e => this.halo.element.canvas.deployForm.show());
     }
 }

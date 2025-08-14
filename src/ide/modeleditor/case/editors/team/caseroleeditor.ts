@@ -26,7 +26,7 @@ export default class CaseRoleEditor {
                 this.role = this.addNewRoleDefinition();
             }
             this.role.change('name', (e.currentTarget as HTMLInputElement).value);
-            this.teamEditor.case.refreshReferencingFields(this.role);
+            this.teamEditor.canvas.refreshReferencingFields(this.role);
             this.teamEditor.saveCaseTeam();
         });
         this.html.find('.inputDocumentation').on('change', (e) => {
@@ -43,8 +43,8 @@ export default class CaseRoleEditor {
         e.stopPropagation();
         if (!this.role) return;
         // Ask whether our element is in use by someone else, before it can be deleted.
-        if (this.teamEditor.case.items.find(item => item.referencesDefinitionElement(this.role!.id))) {
-            this.teamEditor.case.editor.ide.danger('The role is in use, it cannot be deleted');
+        if (this.teamEditor.canvas.items.find(item => item.referencesDefinitionElement(this.role!.id))) {
+            this.teamEditor.canvas.editor.ide.danger('The role is in use, it cannot be deleted');
         } else {
             // delete the role
             HtmlUtil.removeHTML(this.html);

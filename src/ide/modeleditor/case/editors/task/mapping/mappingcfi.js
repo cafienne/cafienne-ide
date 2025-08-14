@@ -56,7 +56,7 @@ export default class MappingCFI {
             row.mapping.updateBindingRef(undefined);
             row.control.refresh(); // This will also refresh the task parameters editor, and hence this zoom field
             //update the column UsedIn in the case file items treetable
-            row.control.task.case.cfiEditor.showUsedIn();
+            row.control.task.canvas.cfiEditor.showUsedIn();
             row.case.editor.completeUserAction();
         }
     }
@@ -71,7 +71,7 @@ export default class MappingCFI {
         row.mapping.updateBindingRef(newBinding);
         row.control.refresh(); // This will also refresh the task parameters editor, and hence this zoom field
         //update the column UsedIn in the case file items treetable
-        row.control.task.case.cfiEditor.showUsedIn();
+        row.control.task.canvas.cfiEditor.showUsedIn();
         row.case.editor.completeUserAction();
     }
 }

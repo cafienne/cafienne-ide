@@ -16,8 +16,8 @@ export default abstract class TaskStageView<TS extends TaskStageDefinition = Tas
     /**
      * Simple class to share some logic from TaskView and StageView.
      */
-    constructor(cs: CaseCanvas, parent: CaseElementView | undefined, definition: TS, shape: ShapeDefinition) {
-        super(cs, parent, definition, shape);
+    constructor(canvas: CaseCanvas, parent: CaseElementView | undefined, definition: TS, shape: ShapeDefinition) {
+        super(canvas, parent, definition, shape);
         this.showPlanningTable();
     }
 
@@ -56,7 +56,7 @@ export default abstract class TaskStageView<TS extends TaskStageDefinition = Tas
         if (this.definition.planningTable) {
             if (!this.planningTableView) {
                 const position = this.__planningTablePosition;
-                const shape = this.case.diagram.getShape(this.definition.planningTable) || this.case.diagram.createShape(position.x, position.y, 24, 16, this.definition.planningTable.id);
+                const shape = this.canvas.diagram.getShape(this.definition.planningTable) || this.canvas.diagram.createShape(position.x, position.y, 24, 16, this.definition.planningTable.id);
                 new PlanningTableView(this, this.definition.planningTable, shape);
             }
         }

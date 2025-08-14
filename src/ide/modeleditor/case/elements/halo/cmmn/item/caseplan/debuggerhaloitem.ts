@@ -4,6 +4,6 @@ import CaseHalo from "../../../casehalo";
 
 export default class DebuggerHaloItem extends HaloClickItem<CaseHalo> {
     constructor(halo: CaseHalo) {
-        super(halo, Images.Debug, 'Debug cases of this type', e => this.halo.element.case.debugEditor.show());
+        super(halo, Images.Debug, 'Debug cases of this type', e => this.halo.element.canvas.debugEditor.show());
     }
 }

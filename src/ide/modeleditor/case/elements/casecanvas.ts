@@ -49,7 +49,7 @@ export default class CaseCanvas extends ModelCanvas<CaseDefinition, CMMNElementD
         const now = new Date();
         super(editor, htmlParent, caseDefinition);
 
-        this.editor.case = this;
+        this.editor.canvas = this;
         this.definition = caseDefinition.casePlan;
 
         this.divCaseModel.append($('<div class="divCaseFileContainer" />'));
@@ -183,7 +183,7 @@ export default class CaseCanvas extends ModelCanvas<CaseDefinition, CMMNElementD
     }
 
     runValidation() {
-        const validator = new Validator(this.case.caseDefinition).run();
+        const validator = new Validator(this.caseDefinition).run();
         this.validateForm.loadRemarks(validator);
     }
 

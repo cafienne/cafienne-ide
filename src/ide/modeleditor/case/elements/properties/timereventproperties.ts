@@ -123,7 +123,7 @@ export default class TimerEventProperties extends PlanItemProperties<TimerEventV
             this.show();
         });
         html.find('.zoombt').on('click', () => {
-            this.view.case.cfiEditor.open((cfi: any) => {
+            this.view.canvas.cfiEditor.open((cfi: any) => {
                 const trigger = this.view.definition.getCaseFileItemStartTrigger();
                 this.change(trigger, 'sourceRef', cfi.id);
                 this.show();
@@ -136,7 +136,7 @@ export default class TimerEventProperties extends PlanItemProperties<TimerEventV
         });
         html.find('.zoomRow').on('pointerover', (e: JQuery.Event) => {
             e.stopPropagation();
-            this.view.case.cfiEditor.setDropHandler((dragData: any) => {
+            this.view.canvas.cfiEditor.setDropHandler((dragData: any) => {
                 const trigger = this.view.definition.getCaseFileItemStartTrigger();
                 this.change(trigger, 'sourceRef', dragData.item.id);
                 this.show();
@@ -150,7 +150,7 @@ export default class TimerEventProperties extends PlanItemProperties<TimerEventV
             this.show();
         });
         html.find('.zoomRow').on('pointerout', () => {
-            this.view.case.cfiEditor.removeDropHandler();
+            this.view.canvas.cfiEditor.removeDropHandler();
         });
         this.htmlContainer.append(html);
     }

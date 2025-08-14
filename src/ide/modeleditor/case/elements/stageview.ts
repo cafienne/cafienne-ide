@@ -34,27 +34,27 @@ import UserEventView from "./usereventview";
 export default class StageView<SD extends StageDefinition = StageDefinition> extends TaskStageView<SD> {
     static create(stage: StageView, x: number, y: number): StageView {
         const definition = stage.definition.createPlanItem(StageDefinition);
-        const shape = stage.case.diagram.createShape(x, y, 420, 140, definition.id);
-        return new StageView(stage.case, stage, definition, shape);
+        const shape = stage.canvas.diagram.createShape(x, y, 420, 140, definition.id);
+        return new StageView(stage.canvas, stage, definition, shape);
     }
 
-    constructor(cs: CaseCanvas, parent: CaseElementView | undefined, definition: SD, shape: ShapeDefinition) {
-        super(cs, parent, definition, shape);
+    constructor(canvas: CaseCanvas, parent: CaseElementView | undefined, definition: SD, shape: ShapeDefinition) {
+        super(canvas, parent, definition, shape);
         this.definition.planItems.forEach(planItem => this.addPlanItem(planItem));
     }
 
     setDropHandlers() {
         super.setDropHandlers();
         // allow for dropping tasks directly from repository browser ...
-        this.case.editor.ide.repositoryBrowser.setDropHandler(dragData => this.addTaskModel(dragData), dragData => dragData.file instanceof CaseFile || dragData.file instanceof HumanTaskFile || dragData.file instanceof ProcessFile);
+        this.canvas.editor.ide.repositoryBrowser.setDropHandler(dragData => this.addTaskModel(dragData), dragData => dragData.file instanceof CaseFile || dragData.file instanceof HumanTaskFile || dragData.file instanceof ProcessFile);
         // ... and case file items to be dropped from the cfiEditor
-        this.case.cfiEditor.setDropHandler(dragData => this.addCaseFileItem(dragData));
+        this.canvas.cfiEditor.setDropHandler(dragData => this.addCaseFileItem(dragData));
     }
 
     removeDropHandlers() {
         super.removeDropHandlers();
-        this.case.editor.ide.repositoryBrowser.removeDropHandler();
-        this.case.cfiEditor.removeDropHandler();
+        this.canvas.editor.ide.repositoryBrowser.removeDropHandler();
+        this.canvas.cfiEditor.removeDropHandler();
     }
 
     /**
@@ -67,7 +67,7 @@ export default class StageView<SD extends StageDefinition = StageDefinition> ext
             return;
         }
 
-        const coor = this.case.getCursorCoordinates(evt);
+        const coor = this.canvas.getCursorCoordinates(evt);
         this.__addChildElement(CaseFileItemView.create(this, coor.x, coor.y, dragData.item));
     }
 
@@ -95,7 +95,7 @@ export default class StageView<SD extends StageDefinition = StageDefinition> ext
     resetChildren() {
         const currentChildren = this.__childElements;
         // Only other plan items, case file items and textboxes can move in/out of us. Not planning tables or sentries.
-        const allCaseItems = this.case.items.filter(item => !item.isPlanningTable && !item.isCriterion);
+        const allCaseItems = this.canvas.items.filter(item => !item.isPlanningTable && !item.isCriterion);
         // Create a collection of items we surround visually, but only the "top-level", not their children.
         const visuallySurroundedItems = allCaseItems.filter(item => this.surrounds(item) && !this.surrounds(item.parent));
         // Former children: those that are currently a descendant, but that we no longer surround visually.
@@ -146,7 +146,7 @@ export default class StageView<SD extends StageDefinition = StageDefinition> ext
         // Only add the new plan item if we do not yet visualize it
         if (!this.__childElements.find(planItemView => planItemView.definition.id == definition.id)) {
             // Check whether we can find a shape for the definition.
-            const shape = this.case.diagram.getShape(definition);
+            const shape = this.canvas.diagram.getShape(definition);
             if (!shape) {
                 console.warn(`Error: missing shape definition for ${definition.constructor.name} named "${definition.name}" with id "${definition.id}"`);
                 return;
@@ -167,7 +167,7 @@ export default class StageView<SD extends StageDefinition = StageDefinition> ext
         } else if (definition instanceof ProcessTaskDefinition) {
             return new ProcessTaskView(this, definition, shape);
         } else if (definition instanceof StageDefinition) {
-            return new StageView(this.case, this, definition, shape);
+            return new StageView(this.canvas, this, definition, shape);
         } else if (definition instanceof MilestoneDefinition) {
             return new MilestoneView(this, definition, shape);
         } else if (definition instanceof UserEventDefinition) {

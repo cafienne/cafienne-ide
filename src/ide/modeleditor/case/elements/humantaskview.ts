@@ -19,7 +19,7 @@ export default class HumanTaskView extends TaskView<HumanTaskDefinition> {
      */
     static create(stage: StageView, x: number, y: number): HumanTaskView {
         const definition = stage.definition.createPlanItem(HumanTaskDefinition);
-        const shape = stage.case.diagram.createShape(x, y, 140, 80, definition.id);
+        const shape = stage.canvas.diagram.createShape(x, y, 140, 80, definition.id);
         return new HumanTaskView(stage, definition, shape);
     }
 
@@ -31,7 +31,7 @@ export default class HumanTaskView extends TaskView<HumanTaskDefinition> {
     }
 
     getImplementationList() {
-        return this.case.editor.ide.repository.getHumanTasks();
+        return this.canvas.editor.ide.repository.getHumanTasks();
     }
 
     createProperties() {

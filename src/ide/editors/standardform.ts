@@ -18,8 +18,8 @@ export default class StandardForm<
     classNames: string[];
     _container?: JQuery<HTMLElement>;
 
-    constructor(cs: ModelCanvas<ModelDefT, DocumentableElementDefinition<ModelDefT>, ViewT>, label: string, ...classNames: string[]) {
-        super(cs);
+    constructor(canvas: ModelCanvas<ModelDefT, DocumentableElementDefinition<ModelDefT>, ViewT>, label: string, ...classNames: string[]) {
+        super(canvas);
         this._label = label;
         this.classNames = classNames;
     }

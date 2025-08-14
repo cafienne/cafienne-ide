@@ -6,31 +6,26 @@ import ElementRegistry from "./elementregistry";
 import ShapeBoxDragData from "./shapeboxdragdata";
 
 export default class ShapeBox {
-    case: ModelCanvas;
-    html: JQuery<HTMLElement>;
     dragData?: ShapeBoxDragData;
     htmlContainer: JQuery<HTMLUListElement>;
 
     /**
      * Box that has the shapes that are available for dragging to the canvas
      */
-    constructor(cs: ModelCanvas, typeRegistry: ElementRegistry, htmlElement: JQuery<HTMLElement>) {
-        this.case = cs;
-        this.html = htmlElement;
-
-        const html = $(
+    constructor(private canvas: ModelCanvas, typeRegistry: ElementRegistry, public html: JQuery<HTMLElement>) {
+        const innerhtml = $(
             `<div>
-    <div class="formheader">
-        <label>Shapes</label>
-    </div>
-    <div class="shapesbody">
-        <ul class="list-group"></ul>
-    </div>
-</div>`);
-        this.html.append(html);
+                <div class="formheader">
+                    <label>Shapes</label>
+                </div>
+                <div class="shapesbody">
+                    <ul class="list-group"></ul>
+                </div>
+            </div>`);
+        this.html.append(innerhtml);
         //stop ghost image dragging, stop text and html-element selection
-        html.on('pointerdown', e => e.preventDefault());
-        this.htmlContainer = html.find('ul');
+        innerhtml.on('pointerdown', e => e.preventDefault());
+        this.htmlContainer = innerhtml.find('ul');
         // add shapes from element registry that have an image.
         typeRegistry.viewMetadata.filter(shapeType => shapeType.hasImage).forEach(shapeType => {
             const description = shapeType.typeDescription;
@@ -64,7 +59,7 @@ export default class ShapeBox {
      * 
      */
     handleMouseDown(e: JQuery.TriggeredEvent, shapeType: ElementMetadata) {
-        this.case.clearSelection();
+        this.canvas.clearSelection();
         this.dragData = new ShapeBoxDragData(this, shapeType.elementType, shapeType.typeDescription, shapeType.smallImage);
     }
 }

@@ -106,13 +106,13 @@ export default class PropertyRenderer extends TypeRenderer<SchemaPropertyDefinit
         this.htmlContainer.find('.selectMultiplicity').val(this.property.multiplicity.toString());
         this.htmlContainer.find('.checkboxBusinessIdentifier').on('change', e => this.changeProperty('isBusinessIdentifier', (e.currentTarget as any).checked));
         this.htmlContainer.find('.cfi-icon').on('pointerdown', e => {
-            if (this.property.isComplexType && this.editor.case) {
+            if (this.property.isComplexType && this.editor.canvas) {
                 // Only support drag/drop for complex type
                 e.preventDefault();
                 e.stopPropagation();
                 // Note: we can simply create a definition time and time again, as these CaseFileItemDef objects are not stored in the resulting xml of the case definition
-                const cfi: CaseFileItemDef = this.editor.case.caseDefinition.createDefinition(CaseFileItemDef, undefined, this.path, this.name);
-                this.editor.case.cfiEditor.startDragging(cfi);
+                const cfi: CaseFileItemDef = this.editor.canvas.caseDefinition.createDefinition(CaseFileItemDef, undefined, this.path, this.name);
+                this.editor.canvas.cfiEditor.startDragging(cfi);
             }
         });
         // ??? Why is this here? this.htmlContainer.on('keydown', e => e.stopPropagation());
