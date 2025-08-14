@@ -70,7 +70,7 @@ export default class WorkflowProperties extends TaskProperties<HumanTaskView> {
             if (!newPresence) {
                 this.humanTaskDefinition.workflow.assignment = undefined;
             } else {
-                this.humanTaskDefinition.workflow.assignment = <AssignmentDefinition> this.humanTaskDefinition.createDefinition(AssignmentDefinition);
+                this.humanTaskDefinition.workflow.assignment = this.humanTaskDefinition.workflow.createDefinition(AssignmentDefinition);
             }
             this.done();
         });
@@ -120,7 +120,7 @@ export default class WorkflowProperties extends TaskProperties<HumanTaskView> {
             if (!newPresence) {
                 this.humanTaskDefinition.workflow.dueDate = undefined;
             } else {
-                this.humanTaskDefinition.workflow.dueDate = this.humanTaskDefinition.createDefinition(DueDateDefinition);
+                this.humanTaskDefinition.workflow.dueDate = this.humanTaskDefinition.workflow.createDefinition(DueDateDefinition);
             }
             this.done();
         });
