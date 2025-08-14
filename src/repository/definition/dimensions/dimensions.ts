@@ -1,5 +1,5 @@
 import DimensionsFile from "../../serverfile/dimensionsfile";
-import CMMNElementDefinition from "../cmmnelementdefinition";
+import ElementDefinition from "../elementdefinition";
 import ModelDefinition from "../modeldefinition";
 import Tags from "../tags";
 import Diagram from "./diagram";
@@ -16,7 +16,7 @@ export default class Dimensions extends ModelDefinition {
     }
 
     get diagram(): Diagram {
-        if (! this._diagram) {
+        if (!this._diagram) {
             this._diagram = this.createDefinition(Diagram);
         }
         return this._diagram;
@@ -32,7 +32,7 @@ export default class Dimensions extends ModelDefinition {
     /**
      * Create a new Edge shape that binds the two CMMNElements.
      */
-    createEdge(source: CMMNElementDefinition, target: CMMNElementDefinition) {
+    createEdge(source: ElementDefinition, target: ElementDefinition) {
         return this.diagram.createEdge(source, target);
     }
 
