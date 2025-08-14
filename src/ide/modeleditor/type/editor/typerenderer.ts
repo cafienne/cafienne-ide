@@ -141,7 +141,7 @@ export default abstract class TypeRenderer<D extends TypeDefinitionElement> {
     }
 
     get prefix() {
-        return this.editor.case ? 'Case ' + this.editor.case.editor.fileName : 'Type editor of ' + this.editor.mainType?.file.fileName;;
+        return this.editor.canvas ? 'Case ' + this.editor.canvas.editor.fileName : 'Type editor of ' + this.editor.mainType?.file.fileName;;
     }
 
     toString() {

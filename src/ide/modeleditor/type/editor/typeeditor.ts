@@ -22,7 +22,6 @@ export default class TypeEditor {
     jsonSchemaEditor: any; // Should be something like CodeMirror.Editor;
     private _changed: boolean = false;
     visible: boolean = false;
-    case?: CaseCanvas;
     ide: IDE;
     html: JQuery<HTMLElement>;
     inputName: JQuery<HTMLElement>;
@@ -36,9 +35,8 @@ export default class TypeEditor {
     /**
      * Edit the Type definition
      */
-    constructor(public owner: CaseTypeEditor | TypeModelEditor, public htmlParent: JQuery<HTMLElement>, cs?: CaseCanvas) {
+    constructor(public owner: CaseTypeEditor | TypeModelEditor, public htmlParent: JQuery<HTMLElement>, public canvas?: CaseCanvas) {
         this.ide = owner.ide;
-        this.case = cs;
 
         const biTooltip = 'Cases and Tasks can be queried on business identifiers.\nThe identifiers are tracked in a separate index, but adding identifiers does have a performance impact';
         this.html = $(`
@@ -170,16 +168,16 @@ export default class TypeEditor {
         if (this.selectedPropertyRenderer) {
             this.selectedPropertyRenderer.deselect();
         }
-        if (this.case) {
-            this.case.updateSelectedCaseFileItemDefinition(undefined);
+        if (this.canvas) {
+            this.canvas.updateSelectedCaseFileItemDefinition(undefined);
         }
         this.selectedPropertyRenderer = propertyRenderer;
         if (propertyRenderer) {
             propertyRenderer.select();
-            if (this.case && propertyRenderer.property.isComplexType) {
+            if (this.canvas && propertyRenderer.property.isComplexType) {
                 const references: CaseFileItemTypeDefinition[] = <CaseFileItemTypeDefinition[]>propertyRenderer.property.searchInboundReferences().filter(element => element instanceof CaseFileItemTypeDefinition);
-                const selectedProperty = references.find(cfi => cfi.caseDefinition === this.case?.caseDefinition);
-                this.case.updateSelectedCaseFileItemDefinition(selectedProperty);
+                const selectedProperty = references.find(cfi => cfi.caseDefinition === this.canvas?.caseDefinition);
+                this.canvas.updateSelectedCaseFileItemDefinition(selectedProperty);
             }
         }
         this.renderComplexOrPrimitiveTypeStyle();

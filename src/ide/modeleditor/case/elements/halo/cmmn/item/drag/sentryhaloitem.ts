@@ -6,7 +6,7 @@ export default abstract class SentryHaloItem extends HaloDragItem<CaseHalo> {
 
     constructor(halo: CaseHalo, private haloType: Function) {
         super(halo, (haloType as any).smallImage, (haloType as any).typeDescription, halo.rightBar);
-        this.dragImage = halo.element.case.html.find('.halodragimgid');
+        this.dragImage = halo.element.canvas.html.find('.halodragimgid');
     }
 
     handleMouseDown(e: JQuery.TriggeredEvent) {
@@ -41,7 +41,7 @@ export default abstract class SentryHaloItem extends HaloDragItem<CaseHalo> {
 
     handleMouseUp(e: JQuery.TriggeredEvent) {
         super.handleMouseUp(e);
-        const newParent = this.halo.element.case.getItemUnderMouse(e);
+        const newParent = this.halo.element.canvas.getItemUnderMouse(e);
         if (newParent && newParent.canHaveCriterion(this.haloType)) {
             newParent.createCriterionAndConnect(this.haloType, this.halo.element, e);
         }

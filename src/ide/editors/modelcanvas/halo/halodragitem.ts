@@ -44,7 +44,7 @@ export default abstract class HaloDragItem<HaloT extends Halo = Halo> extends Ha
     }
 
     getCoordinates(e: JQuery.TriggeredEvent) {
-        return this.halo.element.case.getCursorCoordinates(e);
+        return this.halo.element.canvas.getCursorCoordinates(e);
     }
 
     handleKeyDown(e: JQuery.KeyDownEvent) {

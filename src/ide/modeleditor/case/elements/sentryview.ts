@@ -19,7 +19,7 @@ export default abstract class SentryView<CD extends CriterionDefinition = Criter
      * Is an abstract sub class for EntryCriterionView and ExitCriterionView.
      */
     constructor(public parent: PlanItemView, definition: CD, shape: ShapeDefinition) {
-        super(parent.case, parent, definition, shape);
+        super(parent.canvas, parent, definition, shape);
         this.__resizable = false;
     }
 
@@ -65,7 +65,7 @@ export default abstract class SentryView<CD extends CriterionDefinition = Criter
     }
 
     updateConnectorLabels() {
-        const style = this.case.diagram.connectorStyle;
+        const style = this.canvas.diagram.connectorStyle;
 
         this.__connectors.forEach((connector: Connector) => {
             const onPart = this.__getOnPart(connector);
@@ -148,7 +148,7 @@ export default abstract class SentryView<CD extends CriterionDefinition = Criter
      * when moving a sentry, it can only move along the edge of its' parent
      */
     moving(x: number, y: number) {
-        const parentElement = this.case.graph?.getCell(this.parent.xyz_joint.id);
+        const parentElement = this.canvas.graph?.getCell(this.parent.xyz_joint.id);
         if (!parentElement) return;
 
         const point = new g.Point(x, y);
@@ -169,7 +169,7 @@ export default abstract class SentryView<CD extends CriterionDefinition = Criter
      * returns array with all planItems/sentries that can be connected to the sentry
      */
     __getConnectableElements(): CaseElementView[] {
-        const connectableElements = this.case.items.filter(cmmnElementView => {
+        const connectableElements = this.canvas.items.filter(cmmnElementView => {
             if (!(cmmnElementView.isCriterion || cmmnElementView.isPlanItem)) {
                 return false;
             }
@@ -224,7 +224,7 @@ export default abstract class SentryView<CD extends CriterionDefinition = Criter
         const planItemOnPart = this.definition.planItemOnParts.find(onPart => connector.hasElementWithId(onPart.sourceRef.value));
         if (planItemOnPart) return planItemOnPart;
         return this.definition.caseFileItemOnParts.find(onPart => {
-            const casefileElement = this.case.getCaseFileItemElement(onPart.sourceRef.value);
+            const casefileElement = this.canvas.getCaseFileItemElement(onPart.sourceRef.value);
             if (casefileElement) return connector.hasElementWithId(casefileElement.id);
         });
     }

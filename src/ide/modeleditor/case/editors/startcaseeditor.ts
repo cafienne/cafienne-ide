@@ -10,8 +10,8 @@ export default class StartCaseEditor extends StandardForm {
     /**
      * Editor for the content of the extension element <start-case-schema>
      */
-    constructor(public cs: CaseCanvas) {
-        super(cs, 'Start Case Schema Editor', 'jsoneditor');
+    constructor(public canvas: CaseCanvas) {
+        super(canvas, 'Start Case Schema Editor', 'jsoneditor');
     }
 
     renderData() {
@@ -38,7 +38,7 @@ export default class StartCaseEditor extends StandardForm {
             //directly after import when the value is loaded, do not save or show as changed
             if (!this._isLoading) {
                 // Update the value inside the definition.
-                this.cs.caseDefinition.startCaseSchema.value = this.value;
+                this.canvas.caseDefinition.startCaseSchema.value = this.value;
                 // Set 'changed' flag and enable autosave timer after 10 seconds of no change
                 this._changed = true;
                 this._enableAutoSave();
@@ -78,7 +78,7 @@ export default class StartCaseEditor extends StandardForm {
     //test json code and saves case model
     _save() {
         this._changed = false;
-        this.case.editor.completeUserAction();
+        this.canvas.editor.completeUserAction();
     }
 
     onShow() {
@@ -91,7 +91,7 @@ export default class StartCaseEditor extends StandardForm {
         }
     }
 }`
-        const definitionValue = this.cs.caseDefinition.startCaseSchema.value;
+        const definitionValue = this.canvas.caseDefinition.startCaseSchema.value;
         // Upon opening the editor, set the value with the current start-case-schema, or use the default value.
         //  Note, default value will not be written into case definition if it is not changed.
         this.value = definitionValue ? definitionValue : defaultValue;

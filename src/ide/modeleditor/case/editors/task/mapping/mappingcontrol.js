@@ -9,7 +9,7 @@ export default class MappingControl extends TableRenderer {
      * @param {JQuery<HTMLElement>} htmlParent 
      */
     constructor(editor, htmlParent) {
-        super(editor.task.case, htmlParent);
+        super(editor.task.canvas, htmlParent);
         this.editor = editor;
         this.task = editor.task;
         this.taskDefinition = this.task.definition;

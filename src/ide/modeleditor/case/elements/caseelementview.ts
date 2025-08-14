@@ -6,14 +6,11 @@ import CaseCanvas from "./casecanvas";
 export default abstract class CaseElementView<D extends CMMNElementDefinition = CMMNElementDefinition>
     extends ElementView<D> {
 
-    readonly case: CaseCanvas;
     /**
      * Creates a new CaseElementView within the case having the corresponding definition and x, y coordinates
      */
-    constructor(cs: CaseCanvas, public parent: CaseElementView | undefined, public definition: D, public shape: ShapeDefinition) {
-        super(cs, parent, definition, shape);
-
-        this.case = cs;
+    constructor(public canvas: CaseCanvas, public parent: CaseElementView | undefined, public definition: D, public shape: ShapeDefinition) {
+        super(canvas, parent, definition, shape);
     }
 
     /**

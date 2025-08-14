@@ -11,7 +11,7 @@ export default class TimerEventView extends EventListenerView<TimerEventDefiniti
      */
     static create(stage: StageView, x: number, y: number): TimerEventView {
         const definition = stage.definition.createPlanItem(TimerEventDefinition);
-        const shape = stage.case.diagram.createShape(x, y, 32, 32, definition.id);
+        const shape = stage.canvas.diagram.createShape(x, y, 32, 32, definition.id);
         return new TimerEventView(stage, definition, shape);
     }
 

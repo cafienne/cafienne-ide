@@ -11,7 +11,7 @@ export default class UserEventView extends EventListenerView<UserEventDefinition
      */
     static create(stage: StageView, x: number, y: number): UserEventView {
         const definition = stage.definition.createPlanItem(UserEventDefinition);
-        const shape = stage.case.diagram.createShape(x, y, 32, 32, definition.id);
+        const shape = stage.canvas.diagram.createShape(x, y, 32, 32, definition.id);
         return new UserEventView(stage, definition, shape);
     }
 

@@ -70,21 +70,21 @@ export default class WorkflowProperties extends TaskProperties<HumanTaskView> {
             if (!newPresence) {
                 this.humanTaskDefinition.workflow.assignment = undefined;
             } else {
-                this.humanTaskDefinition.workflow.assignment = <AssignmentDefinition> this.humanTaskDefinition.createDefinition(AssignmentDefinition);
+                this.humanTaskDefinition.workflow.assignment = <AssignmentDefinition>this.humanTaskDefinition.createDefinition(AssignmentDefinition);
             }
             this.done();
         });
         html.find('textarea').on('change', (e: JQuery.ChangeEvent) => this.change(this.humanTaskDefinition.workflow.assignment!, 'body', (e.target as HTMLTextAreaElement).value));
-        html.find('.zoombt').on('click', () => this.view.case.cfiEditor.open(cfi => this.change(this.humanTaskDefinition.workflow.assignment!, 'contextRef', cfi.id)));
+        html.find('.zoombt').on('click', () => this.view.canvas.cfiEditor.open(cfi => this.change(this.humanTaskDefinition.workflow.assignment!, 'contextRef', cfi.id)));
         html.find('.removeReferenceButton').on('click', () => this.change(this.humanTaskDefinition.workflow.assignment!, 'contextRef', undefined));
         html.find('.zoomRow').on('pointerover', (e: JQuery.Event) => {
             e.stopPropagation();
-            this.view.case.cfiEditor.setDropHandler((dragData: any) => {
+            this.view.canvas.cfiEditor.setDropHandler((dragData: any) => {
                 const newContextRef = dragData.item.id;
                 this.change(this.humanTaskDefinition.workflow.assignment!, 'contextRef', newContextRef);
             });
         });
-        html.find('.zoomRow').on('pointerout', () => this.view.case.cfiEditor.removeDropHandler());
+        html.find('.zoomRow').on('pointerout', () => this.view.canvas.cfiEditor.removeDropHandler());
         this.htmlContainer.append(html);
         return html;
     }
@@ -125,16 +125,16 @@ export default class WorkflowProperties extends TaskProperties<HumanTaskView> {
             this.done();
         });
         html.find('textarea').on('change', (e: JQuery.ChangeEvent) => this.change(this.humanTaskDefinition.workflow.dueDate!, 'body', (e.target as HTMLTextAreaElement).value));
-        html.find('.zoombt').on('click', () => this.view.case.cfiEditor.open(cfi => this.change(this.humanTaskDefinition.workflow.dueDate!, 'contextRef', cfi.id)));
+        html.find('.zoombt').on('click', () => this.view.canvas.cfiEditor.open(cfi => this.change(this.humanTaskDefinition.workflow.dueDate!, 'contextRef', cfi.id)));
         html.find('.removeReferenceButton').on('click', () => this.change(this.humanTaskDefinition.workflow.dueDate!, 'contextRef', undefined));
         html.find('.zoomRow').on('pointerover', (e: JQuery.Event) => {
             e.stopPropagation();
-            this.view.case.cfiEditor.setDropHandler((dragData: any) => {
+            this.view.canvas.cfiEditor.setDropHandler((dragData: any) => {
                 const newContextRef = dragData.item.id;
                 this.change(this.humanTaskDefinition.workflow.dueDate!, 'contextRef', newContextRef);
             });
         });
-        html.find('.zoomRow').on('pointerout', () => this.view.case.cfiEditor.removeDropHandler());
+        html.find('.zoomRow').on('pointerout', () => this.view.canvas.cfiEditor.removeDropHandler());
         this.htmlContainer.append(html);
         return html;
     }
@@ -152,7 +152,7 @@ export default class WorkflowProperties extends TaskProperties<HumanTaskView> {
                             </div>
                         </div>`);
         const taskList = html.find('.list-human-tasks');
-        const tasks = this.case.caseDefinition.getAllPlanItems().filter((item: any) => item instanceof HumanTaskDefinition);
+        const tasks = this.canvas.caseDefinition.getAllPlanItems().filter((item: any) => item instanceof HumanTaskDefinition);
         tasks.filter((task: any) => task !== planItem).forEach((task: any) => this.addTask(taskList, 'fourEyes', task));
         html.find(`#${checkboxIdentifier}`).on('click', (e: JQuery.ClickEvent) => {
             const newPresence = (e.target as HTMLInputElement).checked;
@@ -181,7 +181,7 @@ export default class WorkflowProperties extends TaskProperties<HumanTaskView> {
                             </div>
                         </div>`);
         const taskList = html.find('.list-human-tasks');
-        const tasks = this.case.caseDefinition.getAllPlanItems().filter((item: any) => item instanceof HumanTaskDefinition);
+        const tasks = this.canvas.caseDefinition.getAllPlanItems().filter((item: any) => item instanceof HumanTaskDefinition);
         tasks.filter((task: any) => task !== planItem).forEach((task: any) => this.addTask(taskList, 'rendezVous', task));
         html.find(`#${checkboxIdentifier}`).on('click', (e: JQuery.ClickEvent) => {
             const newPresence = (e.target as HTMLInputElement).checked;
@@ -200,7 +200,7 @@ export default class WorkflowProperties extends TaskProperties<HumanTaskView> {
     done() {
         super.done();
         // Also refresh other workflow properties ...
-        this.case.items
+        this.canvas.items
             .filter(item => item instanceof HumanTaskView)
             .forEach((item: HumanTaskView) => item.workflowProperties && item.workflowProperties.visible && item.workflowProperties.refresh());
     }

@@ -21,7 +21,7 @@ export default class Connector<BaseViewT extends ElementView = ElementView> exte
      * Creates a connector (=link in jointJS) between a source and a target.
      */
     constructor(public source: BaseViewT, public target: BaseViewT, public edge: Edge) {
-        super(source.case);
+        super(source.canvas);
 
         this.link = this.xyz_joint = new shapes.standard.Link({
             source: { id: this.source.xyz_joint.id },
@@ -47,8 +47,8 @@ export default class Connector<BaseViewT extends ElementView = ElementView> exte
             // Remove connector from source and target, and also remove the edge from the dimensions through the case.
             source.__removeConnector(this);
             target.__removeConnector(this);
-            this.case.__removeConnector(this);
-            this.case.editor.completeUserAction(); // Save the case
+            this.canvas.__removeConnector(this);
+            this.canvas.editor.completeUserAction(); // Save the case
         });
 
         this.link.on('change:vertices', e => {
@@ -129,12 +129,12 @@ export default class Connector<BaseViewT extends ElementView = ElementView> exte
         const toolsView = new dia.ToolsView({
             tools: [new linkTools.Vertices(), customRemoveTool]
         });
-        const view = this.link.findView(this.case.paper);
+        const view = this.link.findView(this.canvas.paper);
         view.addTools(toolsView);
     }
 
     private removeTools() {
-        const view = this.link.findView(this.case.paper);
+        const view = this.link.findView(this.canvas.paper);
         view.removeTools();
     }
 

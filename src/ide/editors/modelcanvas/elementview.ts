@@ -34,14 +34,14 @@ export default abstract class ElementView<
     /**
      * Creates a new CaseElementView within the case having the corresponding definition and x, y coordinates
      */
-    constructor(cs: ModelCanvas, public parent: ElementView | undefined, public definition: D, public shape: ShapeDefinition) {
-        super(cs);
+    constructor(canvas: ModelCanvas, public parent: ElementView | undefined, public definition: D, public shape: ShapeDefinition) {
+        super(canvas);
         if (!shape) {
             console.warn(`${this.constructor.name}[${definition.id}] does not have a shape`);
         }
 
-        this.case.items.push(this);
-        this.editor = this.case.editor;
+        this.canvas.items.push(this);
+        this.editor = this.canvas.editor;
         if (this.parent) {
             this.parent.__childElements.push(this);
         }
@@ -77,7 +77,7 @@ export default abstract class ElementView<
         // Source taken from https://stackoverflow.com/questions/2786538/need-to-escape-a-special-character-in-a-jquery-selector-string
         // Could also use jquery.escapeSelector, but this method is only from jquery 3 onwards, which is not in this jointjs (?)
         const jquerySelector = '#' + this.html_id.replace(/[!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "\\$&");
-        return this.case.svg!.find(jquerySelector);
+        return this.canvas.svg!.find(jquerySelector);
     }
 
     /**
@@ -206,24 +206,24 @@ export default abstract class ElementView<
      * Method invoked when mouse hovers on the element
      */
     setDropHandlers() {
-        this.case.shapeBox.setDropHandler(dragData => this.addElementView(dragData.shapeType, dragData.event!), dragData => this.__canHaveAsChild(dragData.shapeType));
+        this.canvas.shapeBox.setDropHandler(dragData => this.addElementView(dragData.shapeType, dragData.event!), dragData => this.__canHaveAsChild(dragData.shapeType));
     }
 
     /**
      * Method invoked when mouse leaves the element.
      */
     removeDropHandlers() {
-        this.case.shapeBox.removeDropHandler();
+        this.canvas.shapeBox.removeDropHandler();
     }
 
     /**
      * Adds a new shape in this element with the specified shape type.
      */
     addElementView(viewType: Function, e: JQuery.Event | JQuery<MouseEvent>): ElementView {
-        const coor = this.case.getCursorCoordinates(e);
+        const coor = this.canvas.getCursorCoordinates(e);
         const element = this.createChildView(viewType, Grid.snap(coor.x), Grid.snap(coor.y));
         // Now select the newly added element
-        this.case.selectedElement = element;
+        this.canvas.selectedElement = element;
         // Show properties of new element
         element.propertiesView.show(true);
         return element;
@@ -241,7 +241,7 @@ export default abstract class ElementView<
      * Informs the element to render again after a change to the underlying definition has happened.
      */
     refreshView() {
-        if (this.case.loading) {
+        if (this.canvas.loading) {
             // No refreshing when still loading.
             //  This method is being invoked from Connector's constructor when case is being loaded
             // NOTE: overrides of this method should actually also check the same flag (not all of them do...)
@@ -427,7 +427,7 @@ export default abstract class ElementView<
      * Adds an element to another element, implements element.__addElement
      */
     __addChildElement<ViewT extends ElementView>(childElement: ViewT): ViewT {
-        return this.case.__addElement(childElement);
+        return this.canvas.__addElement(childElement);
     }
 
     /**
@@ -478,8 +478,8 @@ export default abstract class ElementView<
      */
     __delete() {
         // Deselect ourselves if we are selected, to avoid invocation of __select(false) after we have been removed.
-        if (this.case.selectedElement == this) {
-            this.case.selectedElement = undefined;
+        if (this.canvas.selectedElement == this) {
+            this.canvas.selectedElement = undefined;
         }
 
         // First, delete our children.
@@ -493,7 +493,7 @@ export default abstract class ElementView<
         this.__connectors.forEach(connector => connector.remove());
 
         // Next, inform other elements we're gonna go
-        this.case.items.forEach(element => element.__removeReferences(this));
+        this.canvas.items.forEach(element => element.__removeReferences(this));
 
         // Now remove our definition element from the case (overridden in CaseFileItemView, since that only needs to remove the shape)
         // Also let the definition side of the house know we're leaving
@@ -502,7 +502,7 @@ export default abstract class ElementView<
         console.groupEnd();
 
         // Delete us from the case
-        Util.removeFromArray(this.case.items, this);
+        Util.removeFromArray(this.canvas.items, this);
 
         // Finally remove the UI element as well. 
         this.xyz_joint.remove();
@@ -528,12 +528,12 @@ export default abstract class ElementView<
      */
     __connect(target: ElementView, edge?: Edge): Connector {
         if (!edge) {
-            edge = this.case.dimensions.createEdge(this.definition, target.definition);
+            edge = this.canvas.dimensions.createEdge(this.definition, target.definition);
         }
-        const connector = this.case.__createConnector(this, target, edge!);
+        const connector = this.canvas.__createConnector(this, target, edge!);
 
         // Render the connector in the case.
-        this.case.__addConnector(connector);
+        this.canvas.__addConnector(connector);
 
         // Inform both source and target about this new connector; just adds it to their connector collections.
         this.__addConnector(connector);
@@ -542,7 +542,7 @@ export default abstract class ElementView<
         this.adoptOutgoingConnector(connector);
         // And inform target that source has connected to it
         target.adoptIncomingConnector(connector);
-        this.case.editor.completeUserAction();
+        this.canvas.editor.completeUserAction();
         return connector;
     }
 

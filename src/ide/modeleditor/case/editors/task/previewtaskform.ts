@@ -6,7 +6,7 @@ import HumanTaskView from "../../elements/humantaskview";
 
 export default class PreviewTaskForm extends StandardForm {
     constructor(public task: HumanTaskView) {
-        super(task.case, 'Task Preview', 'task-preview');
+        super(task.canvas, 'Task Preview', 'task-preview');
     }
 
     get label() {

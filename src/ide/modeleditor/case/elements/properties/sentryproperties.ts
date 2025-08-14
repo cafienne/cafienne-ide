@@ -101,7 +101,7 @@ export default class SentryProperties extends Properties<CaseDefinition, SentryV
 
         html.find('.ifPartBody textarea').on('change', (e: any) => this.change(this.view.definition.getIfPart(), 'body', e.target.value));
         html.find('.zoombt').on('click', () => {
-            this.view.case.cfiEditor.open((cfi: CaseFileItemDef) => {
+            this.view.canvas.cfiEditor.open((cfi: CaseFileItemDef) => {
                 this.change(this.view.definition.getIfPart(), 'contextRef', cfi.id);
             });
         });
@@ -110,13 +110,13 @@ export default class SentryProperties extends Properties<CaseDefinition, SentryV
         });
         html.find('.zoomRow').on('pointerover', e => {
             e.stopPropagation();
-            this.view.case.cfiEditor.setDropHandler((dragData: { item: CaseFileItemDef }) => {
+            this.view.canvas.cfiEditor.setDropHandler((dragData: { item: CaseFileItemDef }) => {
                 const newContextRef = dragData.item.id;
                 this.change(this.view.definition.getIfPart(), 'contextRef', newContextRef);
             });
         });
         html.find('.zoomRow').on('pointerout', () => {
-            this.view.case.cfiEditor.removeDropHandler();
+            this.view.canvas.cfiEditor.removeDropHandler();
         });
         this.htmlContainer.append(html);
         return html;
@@ -127,7 +127,7 @@ export default class SentryProperties extends Properties<CaseDefinition, SentryV
             const selectedStandardEvent = e.currentTarget.selectedOptions[0];
             const newStandardEvent = onPart.parseStandardEvent(selectedStandardEvent.value);
             if (connector) {
-                const style = connector.case.diagram.connectorStyle;
+                const style = connector.canvas.diagram.connectorStyle;
                 const label = newStandardEvent.toString();
                 if (style.isNone || (style.isDefault && onPart.source.defaultTransition == newStandardEvent)) {
                     connector.label = '';
@@ -250,12 +250,12 @@ export default class SentryProperties extends Properties<CaseDefinition, SentryV
                 if (e.currentTarget.checked) e.currentTarget.checked = false;
                 return;
             }
-            const planItemView = this.view.case.getItem(onPart.sourceRef.value);
+            const planItemView = this.view.canvas.getItem(onPart.sourceRef.value);
             if (planItemView) {
                 const checked = e.currentTarget.checked;
                 if (checked) {
                     const connector = this.view.__connect(planItemView);
-                    const style = connector.case.diagram.connectorStyle;
+                    const style = connector.canvas.diagram.connectorStyle;
                     const label = onPart.standardEvent.toString();
                     if (style.isNone || (style.isDefault && onPart.source?.defaultTransition == onPart.standardEvent)) {
                         connector.label = '';
@@ -315,7 +315,7 @@ export default class SentryProperties extends Properties<CaseDefinition, SentryV
     addCaseFileItemOnPart(parentHTML: JQuery<HTMLElement>, onPart?: CaseFileItemOnPartDefinition) {
         const caseFileItemName = onPart && onPart.source ? onPart.source.name : '';
         const standardEvents = this.getCaseFileItemStandardEvents(onPart);
-        const cfiView = onPart ? this.view.case.getCaseFileItemElement(onPart.sourceRef.value) : undefined;
+        const cfiView = onPart ? this.view.canvas.getCaseFileItemElement(onPart.sourceRef.value) : undefined;
         const connector = cfiView ? this.view.__getConnector(cfiView.id) : undefined;
         const checked = connector ? 'checked="true"' : '';
         const checkedLabel = connector && connector.label ? 'checked="true"' : '';
@@ -342,18 +342,18 @@ export default class SentryProperties extends Properties<CaseDefinition, SentryV
         parentHTML.append(html);
         html.find('.btnDelete').on('click', () => this.deleteOnPart(onPart!, connector));
         html.find('.zoombt').on('click', () => {
-            this.view.case.cfiEditor.open((cfi: CaseFileItemDef) => this.changeCaseFileItemOnPart(onPart, connector, html, cfi));
+            this.view.canvas.cfiEditor.open((cfi: CaseFileItemDef) => this.changeCaseFileItemOnPart(onPart, connector, html, cfi));
         });
         html.find('.zoomRow').on('pointerover', e => {
             e.stopPropagation();
-            this.view.case.cfiEditor.setDropHandler((dragData: { item: CaseFileItemDef }) => this.changeCaseFileItemOnPart(onPart, connector, html, dragData.item));
+            this.view.canvas.cfiEditor.setDropHandler((dragData: { item: CaseFileItemDef }) => this.changeCaseFileItemOnPart(onPart, connector, html, dragData.item));
         });
         html.find('.zoomRow').on('pointerout', () => {
-            this.view.case.cfiEditor.removeDropHandler();
+            this.view.canvas.cfiEditor.removeDropHandler();
         });
         html.find('.standard-event').on('change', e => this.changeStandardEvent(e, onPart!, connector));
         html.find('#hideShowConnector').on('change', (e: any) => {
-            const cfiView = onPart ? this.view.case.getCaseFileItemElement(onPart.sourceRef.value) : undefined;
+            const cfiView = onPart ? this.view.canvas.getCaseFileItemElement(onPart.sourceRef.value) : undefined;
             const checked = e.currentTarget.checked;
             if (onPart && cfiView) {
                 if (checked) {

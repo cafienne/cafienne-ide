@@ -9,7 +9,7 @@ export default abstract class EventListenerView<ED extends EventListenerDefiniti
      * Creates a new EventListenerView
      */
     constructor(public parent: StageView, definition: ED, shape: ShapeDefinition) {
-        super(parent.case, parent, definition, shape);
+        super(parent.canvas, parent, definition, shape);
         this.__resizable = false;
     }
 

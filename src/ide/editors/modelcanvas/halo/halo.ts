@@ -33,7 +33,7 @@ export default class Halo<
     <div class="halobar left"></div>
     <div class="halobar bottom"></div>
 </div>`);
-        this.element.case.haloContainer.append(html);
+        this.element.canvas.haloContainer.append(html);
         this.rightBar = new HaloBar(this, html.find('.right'));
         this.topBar = new HaloBar(this, html.find('.top'));
         this.topRightBar = new HaloBar(this, html.find('.top-right'));
@@ -75,7 +75,7 @@ export default class Halo<
      * Deletes the html of the halo and the event listeners
      */
     delete() {
-        this.element.case.paperContainer.off('scroll', this.scrollListener);
+        this.element.canvas.paperContainer.off('scroll', this.scrollListener);
         HtmlUtil.removeHTML(this.html);
     }
 
@@ -84,8 +84,8 @@ export default class Halo<
         this.createItems();
         this.setHaloPosition();
         // Always first remove scroll listener to avoid it getting added twice.
-        this.element.case.paperContainer.off('scroll', this.scrollListener);
-        this.element.case.paperContainer.on('scroll', this.scrollListener);
+        this.element.canvas.paperContainer.off('scroll', this.scrollListener);
+        this.element.canvas.paperContainer.on('scroll', this.scrollListener);
         this.html.css('display', 'block');
     }
 
@@ -98,17 +98,17 @@ export default class Halo<
             // Clear and refill the halo, since underlying definitions of items may have changed.
             this.refresh();
         } else {
-            this.element.case.paperContainer.off('scroll', this.scrollListener);
+            this.element.canvas.paperContainer.off('scroll', this.scrollListener);
             this.html.css('display', 'none');
         }
     }
 
     get haloLeft() {
-        return this.element.shape.x - this.element.case.paperContainer.scrollLeft()!;
+        return this.element.shape.x - this.element.canvas.paperContainer.scrollLeft()!;
     }
 
     get haloTop() {
-        return this.element.shape.y - this.element.case.paperContainer.scrollTop()!;
+        return this.element.shape.y - this.element.canvas.paperContainer.scrollTop()!;
     }
 
     setHaloPosition() {

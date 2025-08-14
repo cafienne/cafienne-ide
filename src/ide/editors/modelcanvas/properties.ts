@@ -22,7 +22,7 @@ export default class Properties<
      */
     constructor(public view: ViewT) {
         // console.log("Creating properties for " + view)
-        super(view.case as any);
+        super(view.canvas as any);
         this.id = 'propertiesmenu-' + view.id;
     }
 
@@ -110,7 +110,7 @@ export default class Properties<
         // Make us visible.
         this.visible = true;
         // Hide other properties editors (if they are not pinned)
-        this.case.items.filter(item => item != this.view).forEach(item => item.propertiesView.hide());
+        this.canvas.items.filter(item => item != this.view).forEach(item => item.propertiesView.hide());
 
         if (focusNameField) {
             this.htmlContainer.find('.cmmn-element-name').select();
@@ -129,7 +129,7 @@ export default class Properties<
             const menuWidth: any = this.html.width();
             const menuHeight: any = this.html.height();
             const bdyHeight = $(document).height() || 0;
-            const canvasOffset = this.view.case.svg.offset() || { left: 0, top: 0 };
+            const canvasOffset = this.view.canvas.svg.offset() || { left: 0, top: 0 };
 
             // compensate for paper offset and scroll
             let leftPosition = (eX ?? 0) - menuWidth + canvasOffset.left - 10;
@@ -298,6 +298,6 @@ export default class Properties<
      */
     done() {
         this.view.refreshView();
-        this.case.editor.completeUserAction();
+        this.canvas.editor.completeUserAction();
     }
 }

@@ -2,11 +2,9 @@ import { dia } from '@joint/core';
 import ModelCanvas from './modelcanvas';
 
 export default abstract class CanvasElement<JointType extends dia.Cell = dia.Cell> {
-    public case: ModelCanvas;
     private __jointElement?: JointType;
 
-    constructor(cs: ModelCanvas) {
-        this.case = cs;
+    constructor(public canvas: ModelCanvas) {
     }
 
     set xyz_joint(jointElement: JointType) {

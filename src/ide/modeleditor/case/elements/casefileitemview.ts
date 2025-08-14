@@ -10,8 +10,8 @@ export default class CaseFileItemView extends CaseElementView<CaseFileItemDef> {
     temporaryId?: string;
 
     static create(stage: StageView, x: number, y: number, definition?: CaseFileItemDef) {
-        definition = definition || CaseFileItemDef.createEmptyDefinition(stage.case.caseDefinition);
-        const shape = stage.case.diagram.createShape(x, y, 25, 40, definition.id);
+        definition = definition || CaseFileItemDef.createEmptyDefinition(stage.canvas.caseDefinition);
+        const shape = stage.canvas.diagram.createShape(x, y, 25, 40, definition.id);
         return new CaseFileItemView(stage, definition, shape);
     }
 
@@ -19,7 +19,7 @@ export default class CaseFileItemView extends CaseElementView<CaseFileItemDef> {
      * Creates a new CaseFileItemView
      */
     constructor(public parent: StageView, definition: CaseFileItemDef, shape: ShapeDefinition) {
-        super(parent.case, parent, definition, shape);
+        super(parent.canvas, parent, definition, shape);
         if (definition.isEmpty) {
             // This means it is a temporary definition that will not be saved on the server.
             //  But we want to keep track of the id in case a definition is added and then removed again.
@@ -50,7 +50,7 @@ export default class CaseFileItemView extends CaseElementView<CaseFileItemDef> {
     }
 
     setDefinition(definition?: CaseFileItemDef) {
-        this.definition = definition ? definition : CaseFileItemDef.createEmptyDefinition(this.case.caseDefinition);
+        this.definition = definition ? definition : CaseFileItemDef.createEmptyDefinition(this.canvas.caseDefinition);
         if (this.definition.isEmpty) {
             if (this.temporaryId) {
                 // Restore the temporary id again

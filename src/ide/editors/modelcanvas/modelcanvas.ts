@@ -25,7 +25,6 @@ export default abstract class ModelCanvas<
 
     readonly id: string;
     readonly name: string;
-    readonly case: ModelCanvas<ModelDefT, ElemDefT, BaseViewT>;
     readonly dimensions: Dimensions;
     readonly diagram: Diagram;
     readonly html: JQuery<HTMLElement>;
@@ -51,7 +50,6 @@ export default abstract class ModelCanvas<
         public undoManager: UndoManager) {
         this.id = this.caseDefinition.id;
         this.name = this.caseDefinition.name;
-        this.case = this;
         this.dimensions = caseDefinition.dimensions!;
         this.diagram = this.dimensions.diagram;
 

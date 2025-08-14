@@ -7,7 +7,7 @@ import SentryView from "./sentryview";
 export default class EntryCriterionView extends SentryView<EntryCriterionDefinition> {
     static create(planItem: PlanItemView, x: number, y: number) {
         const definition = planItem.definition.createEntryCriterion();
-        const shape = planItem.case.diagram.createShape(x, y, 12, 20, definition.id);
+        const shape = planItem.canvas.diagram.createShape(x, y, 12, 20, definition.id);
         return new EntryCriterionView(planItem, definition, shape);
     }
 

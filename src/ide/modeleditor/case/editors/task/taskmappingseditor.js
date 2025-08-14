@@ -9,14 +9,14 @@ export default class TaskMappingsEditor extends StandardForm {
      * @param {TaskView} task 
      */
     constructor(task) {
-        super(task.case, 'Edit mappings of task ' + task.definition.name, 'tableeditorform', 'mappingform');
+        super(task.canvas, 'Edit mappings of task ' + task.definition.name, 'tableeditorform', 'mappingform');
         this.task = task;
     }
 
     renderHead() {
         super.renderHead();
         this.htmlContainer.html(
-`<div class="task-mappings">
+            `<div class="task-mappings">
     <div class="input-mappings">
         <h4>Input Mappings</h4>
         <div class="containerbox"></div>
@@ -44,8 +44,8 @@ export default class TaskMappingsEditor extends StandardForm {
         inputMappingsContainer.css('height', inputHeight + 'px');
         outputMappingsContainer.css('height', outputHeight + 'px');
         this.htmlContainer.css('height', controlHeight + 'px');
-        this.htmlContainer.parent().css('height', (controlHeight + 20) +'px');
-        this.splitter = new BottomSplitter(this.htmlContainer.find('.task-mappings'), (40+inputHeight)+'px', 100);
+        this.htmlContainer.parent().css('height', (controlHeight + 20) + 'px');
+        this.splitter = new BottomSplitter(this.htmlContainer.find('.task-mappings'), (40 + inputHeight) + 'px', 100);
         this.splitter.bar.addClass('separator task-mappings-separator');
     }
 

@@ -11,7 +11,7 @@ export default class TemporaryConnector extends CanvasElement<shapes.standard.Li
      * Creates a temporary connector (=link in jointJS) from the source to a set of target coordinates
      */
     constructor(source: ElementView, coordinates: Coordinates) {
-        super(source.case);
+        super(source.canvas);
         this.source = source;
 
         this.link = this.xyz_joint = new shapes.standard.Link({
@@ -29,7 +29,7 @@ export default class TemporaryConnector extends CanvasElement<shapes.standard.Li
                 }
             },
         });
-        this.link.addTo(this.case.graph);
+        this.link.addTo(this.canvas.graph);
     }
 
     mouseEnter(): void { }

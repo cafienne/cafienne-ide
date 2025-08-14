@@ -8,7 +8,6 @@ import CFISelector from "./cfiselector";
 import CaseFileItemsEditor from "./classic/casefileitemseditor";
 
 export default class CaseFileEditor {
-    case: CaseCanvas;
     ide: IDE;
     html: JQuery<HTMLElement>;
     divClassicEditor: JQuery<HTMLElement>;
@@ -19,9 +18,8 @@ export default class CaseFileEditor {
     /**
      * Renders the CaseFile definition through fancytree
      */
-    constructor(cs: CaseCanvas, public htmlParent: JQuery<HTMLElement>) {
-        this.case = cs;
-        this.ide = this.case.editor.ide;
+    constructor(public canvas: CaseCanvas, public htmlParent: JQuery<HTMLElement>) {
+        this.ide = this.canvas.editor.ide;
         this.html = $(`
             <div class="divCaseFileEditor">
                 <div class="divClassicCaseFileEditor"></div>
@@ -46,7 +44,7 @@ export default class CaseFileEditor {
     }
 
     get usesOldEditor() {
-        return this.case.caseDefinition.caseFile.isOldStyle;
+        return this.canvas.caseDefinition.caseFile.isOldStyle;
     }
 
     showUsedIn() {
@@ -58,7 +56,7 @@ export default class CaseFileEditor {
     /**
      */
     open(callback = (cfi: CaseFileItemDef) => { }) {
-        new CFISelector(this.case).showModalDialog((cfi: CaseFileItemDef) => cfi && callback(cfi));
+        new CFISelector(this.canvas).showModalDialog((cfi: CaseFileItemDef) => cfi && callback(cfi));
     }
 
     delete() {

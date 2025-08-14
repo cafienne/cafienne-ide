@@ -123,18 +123,18 @@ class ApplicabilityRuleProperties {
         });
 
         html.find('.zoombt').on('click', e => {
-            this.cmmnElement.case.cfiEditor.open((cfi: any) => {
+            this.cmmnElement.canvas.cfiEditor.open((cfi: any) => {
                 this.change(this.getRule(), 'contextRef', cfi.id);
             });
         });
         html.find('.zoomRow').on('pointerover', e => {
             e.stopPropagation();
-            this.cmmnElement.case.cfiEditor.setDropHandler((dragData: any) => {
+            this.cmmnElement.canvas.cfiEditor.setDropHandler((dragData: any) => {
                 this.change(this.getRule(), 'contextRef', dragData.item.id);
             });
         });
         html.find('.zoomRow').on('pointerout', e => {
-            this.cmmnElement.case.cfiEditor.removeDropHandler();
+            this.cmmnElement.canvas.cfiEditor.removeDropHandler();
         });
         html.find('.clearContextRef').on('click', e => {
             if (this.rule) {

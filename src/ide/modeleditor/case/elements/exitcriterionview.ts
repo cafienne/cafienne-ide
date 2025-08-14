@@ -12,7 +12,7 @@ export default class ExitCriterionView extends SentryView<ExitCriterionDefinitio
      */
     static create(planItem: PlanItemView, x: number, y: number) {
         const definition = planItem.definition.createExitCriterion();
-        const shape = planItem.case.diagram.createShape(x, y, 12, 20, definition.id);
+        const shape = planItem.canvas.diagram.createShape(x, y, 12, 20, definition.id);
         return new ExitCriterionView(planItem, definition, shape);
     }
 

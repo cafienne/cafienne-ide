@@ -9,7 +9,7 @@ export default class TaskProperties<TV extends TaskView = TaskView> extends Task
      * Adds a dropdown with all possible task implementation
      */
     addModelImplementation() {
-        const repositoryBrowser = this.view.case.editor.ide.repositoryBrowser;
+        const repositoryBrowser = this.view.canvas.editor.ide.repositoryBrowser;
         const taskDefinition = this.view.definition;
         const implementation = taskDefinition.implementationRef ? taskDefinition.implementationRef : '';
 
@@ -57,7 +57,7 @@ export default class TaskProperties<TV extends TaskView = TaskView> extends Task
         const taskDefinition = this.view.definition;
         const implementation = taskDefinition.validatorRef ? taskDefinition.validatorRef : '';
 
-        const options = this.case.editor.ide.repository.getProcesses().map((model: any) =>
+        const options = this.canvas.editor.ide.repository.getProcesses().map((model: any) =>
             `<option value="${model.fileName}" ${model.fileName == implementation ? " selected" : ""}>${model.name}</option>`
         ).join('');
         const html = $(`<div class="propertyBlock" title="Select a web service to be invoked to validate task output">

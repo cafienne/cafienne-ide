@@ -30,7 +30,7 @@ export default class CasePlanHalo extends CaseHalo<CasePlanDefinition, CasePlanV
 
     setHaloPosition() {
         // Determine new left and top, relative to element's position in the case paper
-        const casePaper = this.element.case.paperContainer!;
+        const casePaper = this.element.canvas.paperContainer!;
 
         // We need to make the halo a bit lower and on the right hand side of the top tab or the planning table.
         const leftCorrection = this.element.definition.planningTable ? 310 : 260;

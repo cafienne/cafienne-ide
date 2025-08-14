@@ -138,7 +138,7 @@ export default class TableEditor extends MovableEditor {
      */
     change(element, field, value) {
         element.change(field, value);
-        this.case.editor.completeUserAction();
+        this.canvas.editor.completeUserAction();
     }
 
     /**
@@ -187,7 +187,7 @@ export class RowEditor {
     }
 
     get case() {
-        return this.editor.case;
+        return this.editor.canvas;
     }
 
     get html() {

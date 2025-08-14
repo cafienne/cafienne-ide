@@ -12,7 +12,7 @@ export default class PlanningTableView extends CaseElementView<PlanningTableDefi
     stage: TaskStageView;
 
     constructor(public parent: TaskStageView, definition: PlanningTableDefinition, shape: ShapeDefinition) {
-        super(parent.case, parent, definition, shape);
+        super(parent.canvas, parent, definition, shape);
         this.parent = parent;
         this.__resizable = false;
         parent.__addChildElement(this);
