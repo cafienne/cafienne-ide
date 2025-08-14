@@ -12,7 +12,8 @@ import CaseConnector from "./connector/caseconnector";
 import PlanItemView from "./planitemview";
 import SentryProperties from "./properties/sentryproperties";
 
-export default abstract class SentryView<CD extends CriterionDefinition = CriterionDefinition> extends CaseElementView<CD> {
+export default abstract class SentryView<CD extends CriterionDefinition = CriterionDefinition>
+    extends CaseElementView<CD> {
     /**
      * Creates a new SentryView element.
      * Is an abstract sub class for EntryCriterionView and ExitCriterionView.

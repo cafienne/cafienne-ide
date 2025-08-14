@@ -1,14 +1,14 @@
 import $ from "jquery";
 import CMMNElementDefinition from "../../../../../repository/definition/cmmnelementdefinition";
 import HtmlUtil from "../../../../util/htmlutil";
-import CaseView from "../../elements/caseview";
+import CaseCanvas from "../../elements/casecanvas";
 import ColumnRenderer from "./columnrenderer";
 import RowRenderer from "./rowrenderer";
 
 export default class TableRenderer {
     /**
      * Defines a generic control for collections of CMMNElementDefinition, to select and edit data in a table
-     * @param {CaseView} cs
+     * @param {CaseCanvas} cs
      * @param {JQuery<HTMLElement>} htmlParent
      */
     constructor(cs, htmlParent) {
@@ -58,12 +58,12 @@ export default class TableRenderer {
      * Clears the current content of the editor and renders it again
      */
     renderTable() {
-        if (! this._html) {
-            this.renderHead();            
+        if (!this._html) {
+            this.renderHead();
         }
         this.renderData();
     }
- 
+
     renderHead() {
         //create the html element of the editor form
         this.html = $(`<table>

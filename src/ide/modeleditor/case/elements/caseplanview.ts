@@ -1,7 +1,7 @@
 ﻿import CasePlanDefinition from "../../../../repository/definition/cmmn/caseplan/caseplandefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import ElementView from "../../../editors/modelcanvas/elementview";
-import CaseView from "./caseview";
+import CaseCanvas from "./casecanvas";
 import CasePlanDecoratorBox from "./decorator/box/caseplandecoratorbox";
 import ExitCriterionView from "./exitcriterionview";
 import CasePlanHalo from "./halo/cmmn/caseplanhalo";
@@ -11,7 +11,7 @@ import StageView from "./stageview";
 const CPM_TAB_HEIGHT = 22;
 
 export default class CasePlanView extends StageView<CasePlanDefinition> {
-    static createNew(cs: CaseView, x = 10, y = 10) {
+    static createNew(cs: CaseCanvas, x = 10, y = 10) {
         const definition = cs.caseDefinition.casePlan;
         const shape = cs.diagram.createShape(x, y, 800, 500, definition.id);
         return new CasePlanView(cs, definition, shape)
@@ -20,9 +20,8 @@ export default class CasePlanView extends StageView<CasePlanDefinition> {
     /**
      * Creates a new CasePlan model
       */
-    constructor(cs: CaseView, definition: CasePlanDefinition, shape: ShapeDefinition) {
+    constructor(cs: CaseCanvas, definition: CasePlanDefinition, shape: ShapeDefinition) {
         super(cs, undefined, definition, shape);
-        this.definition = definition;
     }
 
     referencesDefinitionElement(definitionId: string) {
@@ -119,11 +118,11 @@ export default class CasePlanView extends StageView<CasePlanDefinition> {
         return criterionType == ExitCriterionView;
     }
 
-    createCMMNChild(viewType: Function, x: number, y: number): ElementView<any> {
+    createChildView(viewType: Function, x: number, y: number): ElementView<any> {
         if (viewType == ExitCriterionView) {
-            return this.__addCMMNChild(ExitCriterionView.create(this, x, y));
+            return this.__addChildElement(ExitCriterionView.create(this, x, y));
         } else {
-            return super.createCMMNChild(viewType, x, y);
+            return super.createChildView(viewType, x, y);
         }
     }
 

@@ -1,6 +1,7 @@
 ﻿'use strict';
 
 import $ from "jquery";
+import GraphicalModelDefinition from "../../../repository/definition/graphicalmodeldefinition";
 import ProcessModelDefinition from "../../../repository/definition/process/processmodeldefinition";
 import ProcessFile from "../../../repository/serverfile/processfile";
 import XML from "../../../util/xml";
@@ -248,6 +249,10 @@ export default class ProcessModelEditor extends ModelEditor {
         this._model = this.file.definition;
         this.render();
         this.visible = true;
+    }
+
+    loadDefinition(definition: GraphicalModelDefinition | undefined): void {
+        throw new Error('Method not implemented, called from undoredomanager.');
     }
 
     /**

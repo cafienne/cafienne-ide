@@ -1,4 +1,5 @@
 import $ from "jquery";
+import CaseDefinition from "../../../../../repository/definition/cmmn/casedefinition";
 import CaseFileItemDef from "../../../../../repository/definition/cmmn/casefile/casefileitemdef";
 import CaseFileItemTransition from "../../../../../repository/definition/cmmn/casefile/casefileitemtransition";
 import PlanItem from "../../../../../repository/definition/cmmn/caseplan/planitem";
@@ -12,7 +13,7 @@ import HtmlUtil from "../../../../util/htmlutil";
 import Images from "../../../../util/images/images";
 import SentryView from "../sentryview";
 
-export default class SentryProperties extends Properties<SentryView> {
+export default class SentryProperties extends Properties<CaseDefinition, SentryView> {
     renderData() {
         this.addDescription(this.view.purpose);
         this.addSeparator();

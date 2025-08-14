@@ -14,10 +14,10 @@ import Util from "../../../../util/util";
 import CaseFileItemDragData from "../../../dragdrop/casefileitemdragdata";
 import ServerFileDragData from "../../../dragdrop/serverfiledragdata";
 import ElementView from "../../../editors/modelcanvas/elementview";
+import CaseCanvas from "./casecanvas";
 import CaseElementView from "./caseelementview";
 import CaseFileItemView from "./casefileitemview";
 import CaseTaskView from "./casetaskview";
-import CaseView from "./caseview";
 import StageDecoratorBox from "./decorator/box/stagedecoratorbox";
 import PlanItemHalo from "./halo/cmmn/planitemhalo";
 import HumanTaskView from "./humantaskview";
@@ -38,7 +38,7 @@ export default class StageView<SD extends StageDefinition = StageDefinition> ext
         return new StageView(stage.case, stage, definition, shape);
     }
 
-    constructor(cs: CaseView, parent: CaseElementView | undefined, definition: SD, shape: ShapeDefinition) {
+    constructor(cs: CaseCanvas, parent: CaseElementView | undefined, definition: SD, shape: ShapeDefinition) {
         super(cs, parent, definition, shape);
         this.definition.planItems.forEach(planItem => this.addPlanItem(planItem));
     }
@@ -68,7 +68,7 @@ export default class StageView<SD extends StageDefinition = StageDefinition> ext
         }
 
         const coor = this.case.getCursorCoordinates(evt);
-        this.__addCMMNChild(CaseFileItemView.create(this, coor.x, coor.y, dragData.item));
+        this.__addChildElement(CaseFileItemView.create(this, coor.x, coor.y, dragData.item));
     }
 
     /**
@@ -152,7 +152,7 @@ export default class StageView<SD extends StageDefinition = StageDefinition> ext
                 return;
             }
             // Add a view based on the definition with its shape
-            return this.__addCMMNChild(this.createPlanItemView(definition, shape));
+            return this.__addChildElement(this.createPlanItemView(definition, shape));
         }
     }
 
@@ -213,15 +213,15 @@ export default class StageView<SD extends StageDefinition = StageDefinition> ext
         this.addPlanItem(definition);
     }
 
-    createCMMNChild(viewType: Function, x: number, y: number): ElementView<any> {
+    createChildView(viewType: Function, x: number, y: number): ElementView<any> {
         if (Util.isSubClassOf(PlanItemView, viewType)) {
-            return this.__addCMMNChild((viewType as any).create(this, x, y));
+            return this.__addChildElement((viewType as any).create(this, x, y));
         } else if (viewType == CaseFileItemView) {
-            return this.__addCMMNChild(CaseFileItemView.create(this, x, y));
+            return this.__addChildElement(CaseFileItemView.create(this, x, y));
         } else if (viewType == TextAnnotationView) {
-            return this.__addCMMNChild(TextAnnotationView.create(this, x, y));
+            return this.__addChildElement(TextAnnotationView.create(this, x, y));
         } else { // Could (should?) be sentry
-            return super.createCMMNChild(viewType, x, y);
+            return super.createChildView(viewType, x, y);
         }
     }
 

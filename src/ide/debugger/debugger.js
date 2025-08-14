@@ -3,7 +3,7 @@
 import $ from "jquery";
 import CodeMirrorConfig from "../editors/external/codemirrorconfig";
 import StandardForm from "../editors/standardform";
-import CaseView from "../modeleditor/case/elements/caseview";
+import CaseCanvas from "../modeleditor/case/elements/casecanvas";
 import Settings from "../settings/settings";
 import RightSplitter from "../splitter/rightsplitter";
 import { $get } from "../util/ajax";
@@ -17,7 +17,7 @@ import HtmlUtil from "../util/htmlutil";
 export default class Debugger extends StandardForm {
     /**
      * 
-     * @param {CaseView} cs 
+     * @param {CaseCanvas} cs 
      */
     constructor(cs) {
         super(cs, 'Debugger', 'debug-form');

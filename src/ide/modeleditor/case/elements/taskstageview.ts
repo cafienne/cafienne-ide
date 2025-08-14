@@ -2,8 +2,8 @@ import PlanItem from "../../../../repository/definition/cmmn/caseplan/planitem";
 import HumanTaskDefinition from "../../../../repository/definition/cmmn/caseplan/task/humantaskdefinition";
 import TaskStageDefinition from "../../../../repository/definition/cmmn/caseplan/taskstagedefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+import CaseCanvas from "./casecanvas";
 import CaseElementView from "./caseelementview";
-import CaseView from "./caseview";
 import CaseConnector from "./connector/caseconnector";
 import EntryCriterionView from "./entrycriterionview";
 import ExitCriterionView from "./exitcriterionview";
@@ -16,7 +16,7 @@ export default abstract class TaskStageView<TS extends TaskStageDefinition = Tas
     /**
      * Simple class to share some logic from TaskView and StageView.
      */
-    constructor(cs: CaseView, parent: CaseElementView | undefined, definition: TS, shape: ShapeDefinition) {
+    constructor(cs: CaseCanvas, parent: CaseElementView | undefined, definition: TS, shape: ShapeDefinition) {
         super(cs, parent, definition, shape);
         this.showPlanningTable();
     }

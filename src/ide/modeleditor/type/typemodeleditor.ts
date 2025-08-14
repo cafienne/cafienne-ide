@@ -1,5 +1,6 @@
 ﻿'use strict';
 
+import ModelDefinition from "../../../repository/definition/modeldefinition";
 import TypeFile from "../../../repository/serverfile/typefile";
 import IDE from "../../ide";
 import ModelEditor from "../modeleditor";
@@ -36,4 +37,11 @@ export default class TypeModelEditor extends ModelEditor {
     loadModel() {
         this.typeEditor.setMainType(this.file);
     }
+    saveModel(): void {
+        throw new Error("Method not implemented.");
+    }
+    loadDefinition(definition: ModelDefinition | undefined): void {
+        throw new Error("Method not implemented.");
+    }
+
 }

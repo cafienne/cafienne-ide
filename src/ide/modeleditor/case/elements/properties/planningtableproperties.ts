@@ -1,10 +1,11 @@
 import $ from "jquery";
+import CaseDefinition from "../../../../../repository/definition/cmmn/casedefinition";
 import { ApplicabilityRuleDefinition } from "../../../../../repository/definition/cmmn/caseplan/planning/applicabilityruledefinition";
 import Properties from "../../../../editors/modelcanvas/properties";
 import Images from "../../../../util/images/images";
 import PlanningTableView from "../planningtableview";
 
-export default class PlanningTableProperties extends Properties<PlanningTableView> {
+export default class PlanningTableProperties extends Properties<CaseDefinition, PlanningTableView> {
     rulesTable!: JQuery<HTMLElement>;
 
     constructor(planningTable: PlanningTableView) {

@@ -1,12 +1,16 @@
 import $ from "jquery";
-import CMMNElementDefinition from "../../repository/definition/cmmnelementdefinition";
-import CaseModelEditor from "../modeleditor/case/casemodeleditor";
-import CaseView from "../modeleditor/case/elements/caseview";
+import DocumentableElementDefinition from "../../repository/definition/documentableelementdefinition";
+import GraphicalModelDefinition from "../../repository/definition/graphicalmodeldefinition";
+import ModelEditor from "../modeleditor/modeleditor";
 import HtmlUtil from "../util/htmlutil";
+import ElementView from "./modelcanvas/elementview";
+import ModelCanvas from "./modelcanvas/modelcanvas";
 
-export default class MovableEditor {
-    case: CaseView;
-    modelEditor: CaseModelEditor;
+export default class MovableEditor<
+    M extends GraphicalModelDefinition = GraphicalModelDefinition,
+    V extends ElementView<DocumentableElementDefinition<M>> = ElementView<DocumentableElementDefinition<M>>> {
+    case: ModelCanvas<M, DocumentableElementDefinition<M>, V>;
+    modelEditor: ModelEditor;
     htmlParent: JQuery<HTMLElement>;
     private _visible: boolean = false;
     protected _html?: JQuery<HTMLElement>;
@@ -16,7 +20,7 @@ export default class MovableEditor {
      * Usually it is something that pops up upon button click (e.g., Properties of an element, Roles Editor, Parameters Editor, etc)
      * It can be moved around and resized.
      */
-    constructor(cs: CaseView) {
+    constructor(cs: ModelCanvas<M, DocumentableElementDefinition<M>, V>) {
         this.case = cs;
         this.modelEditor = cs.editor;
         this.htmlParent = this.modelEditor.divMovableEditors;
@@ -61,13 +65,13 @@ export default class MovableEditor {
         if (visible) {
             this.renderForm();
             this.toFront();
-            if (! alreadyVisible) {
+            if (!alreadyVisible) {
                 this.positionEditor();
             }
         }
         if (this._html) {
             this.html.css('display', visible ? 'block' : 'none');
-            if (! this._changingVisiblity) {
+            if (!this._changingVisiblity) {
                 this._changingVisiblity = true;
                 const nothing = visible ? this.onShow() : this.onHide();
                 this._changingVisiblity = false;
@@ -76,7 +80,7 @@ export default class MovableEditor {
     }
 
     delete() {
-        this._visible = false; // Set visible to false to avoid refresh invocations from refreshMovableViews() inside case.js
+        this._visible = false; // Set visible to false to avoid refresh invocations from refreshMovableViews() inside modelcanvas.ts
         HtmlUtil.removeHTML(this.html);
     }
 
@@ -121,7 +125,7 @@ export default class MovableEditor {
     /**
      * Method invoked after a role or case file item has changed
      */
-    refreshReferencingFields(definitionElement: CMMNElementDefinition) {}
+    refreshReferencingFields(definitionElement: DocumentableElementDefinition) { }
 
     toString() {
         return this.constructor.name;

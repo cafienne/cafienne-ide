@@ -1,4 +1,5 @@
 import $ from "jquery";
+import CaseDefinition from "../../../../../repository/definition/cmmn/casedefinition";
 import ItemControlRuleDefinition from "../../../../../repository/definition/cmmn/caseplan/itemcontrol/itemcontrolruledefinition";
 import CaseRoleReference from "../../../../../repository/definition/cmmn/caseteam/caserolereference";
 import Util from "../../../../../util/util";
@@ -7,7 +8,8 @@ import HtmlUtil from "../../../../util/htmlutil";
 import Images from "../../../../util/images/images";
 import PlanItemView from "../planitemview";
 
-export default class PlanItemProperties<PIV extends PlanItemView = PlanItemView> extends Properties<PIV> {
+export default class PlanItemProperties<PIV extends PlanItemView = PlanItemView>
+    extends Properties<CaseDefinition, PIV> {
 
     /**
      * Adds a block to render the item control rule with the specified name

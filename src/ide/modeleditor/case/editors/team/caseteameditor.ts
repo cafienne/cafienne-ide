@@ -10,7 +10,7 @@ import MovableEditor from "../../../../editors/movableeditor";
 import HtmlUtil from "../../../../util/htmlutil";
 import Images from "../../../../util/images/images";
 import CaseModelEditor from "../../casemodeleditor";
-import CaseView from "../../elements/caseview";
+import CaseCanvas from "../../elements/casecanvas";
 import CaseRoleEditor from "./caseroleeditor";
 import CaseTeamSelector from "./caseteamselector";
 
@@ -18,9 +18,9 @@ export default class CaseTeamEditor extends MovableEditor {
     caseTeam: CaseTeamDefinition;
     private htmlContainer!: JQuery<HTMLElement>;
 
-    constructor(cs: CaseView) {
+    constructor(public cs: CaseCanvas) {
         super(cs);
-        this.caseTeam = this.case.caseDefinition.caseTeam;
+        this.caseTeam = this.cs.caseDefinition.caseTeam;
     }
 
     clear() {
@@ -137,7 +137,7 @@ export default class CaseTeamEditor extends MovableEditor {
         const teamName = path.join('/');
         const teamFileName = teamName + '.caseteam';
         const teamFile = this.modelEditor.ide.repository.createCaseTeamFile(teamFileName, CaseTeamModelDefinition.createDefinitionSource(teamName));
-        if (! teamFile.definition) {
+        if (!teamFile.definition) {
             // This would be weird.
             throw new Error("Failed to create case team model definition");
         }

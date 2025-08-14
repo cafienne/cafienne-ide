@@ -128,14 +128,14 @@ export default class SettingsEditor {
                 this._changingVisiblity = true;
                 if (visible) {
                     this.onShow()
-                 }
+                }
                 this._changingVisiblity = false;
             }
         }
     }
 
     delete() {
-        this._visible = false; // Set visible to false to avoid refresh invocations from refreshMovableViews() inside case.js
+        this._visible = false; // Set visible to false to avoid refresh invocations from refreshMovableViews() inside modelcanvas.ts
         HtmlUtil.removeHTML(this.html);
     }
 

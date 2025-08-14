@@ -1,18 +1,18 @@
 import TypeDefinition from "../../../../../../../repository/definition/type/typedefinition";
 import Repository from "../../../../../../../repository/repository";
-import CaseView from "../../../../elements/caseview";
+import CaseCanvas from "../../../../elements/casecanvas";
 import CFIWrapper from "./cfiwrapper";
 import TypeWrapper from "./typewrapper";
 
 export default class CFIDConverter {
-    case: CaseView;
+    case: CaseCanvas;
     repository: Repository;
     cfiWrappers: CFIWrapper[];
     typeWrappers: TypeWrapper[];
     /**
      * Convert the CaseFileItems and their CaseFileItemDefinitions (.cfid files) to the new type structure for this case.
      */
-    constructor(cs: CaseView) {
+    constructor(cs: CaseCanvas) {
         this.case = cs;
         this.repository = this.case.editor.ide.repository;
         this.cfiWrappers = /** @type {Array<CFIWrapper>} */ ([]);

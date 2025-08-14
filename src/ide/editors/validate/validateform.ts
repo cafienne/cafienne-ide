@@ -1,7 +1,7 @@
 ﻿﻿import $ from "jquery";
 import Remark from "../../../repository/validate/remark";
 import Validator from "../../../repository/validate/validator";
-import CaseView from "../../modeleditor/case/elements/caseview";
+import CaseCanvas from "../../modeleditor/case/elements/casecanvas";
 import Settings from "../../settings/settings";
 import HtmlUtil from "../../util/htmlutil";
 import Images from "../../util/images/images";
@@ -19,7 +19,7 @@ export default class ValidateForm extends StandardForm {
         return ValidateForm._settings;
     }
 
-    constructor(cs: CaseView) {
+    constructor(cs: CaseCanvas) {
         super(cs, '');
         this.html = $(
             `<div class="basicbox basicform" id="validateformid">

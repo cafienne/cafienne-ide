@@ -84,7 +84,7 @@ export default class Resizer {
 
     /**
      * Handles the moving of an element to position the resizer around the element
-     * This event handler is invoked from case.js
+     * This event handler is invoked from modelcanvas.ts
      */
     handleMoveElement(elementView: ElementView, e: JQuery.Event, x: number, y: number) {
         this.setPosition();

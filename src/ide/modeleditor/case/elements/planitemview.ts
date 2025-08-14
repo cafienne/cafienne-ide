@@ -3,8 +3,8 @@ import PlanItem from "../../../../repository/definition/cmmn/caseplan/planitem";
 import CriterionDefinition from "../../../../repository/definition/cmmn/sentry/criteriondefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import ElementView from '../../../editors/modelcanvas/elementview';
+import CaseCanvas from './casecanvas';
 import CaseElementView from "./caseelementview";
-import CaseView from "./caseview";
 import DecoratorBox from "./decorator/decoratorbox";
 import EntryCriterionView from "./entrycriterionview";
 import ExitCriterionView from "./exitcriterionview";
@@ -18,7 +18,7 @@ export default abstract class PlanItemView<PI extends PlanItem = PlanItem> exten
      * This is a generic class for plan item rendering; it takes default properties of the definition
      * It holds a reference both to the PlanItem definition AND to the PlanItemDefinition definition (e.g., HumanTask, StageView, Milestone).
      */
-    constructor(cs: CaseView, parent: CaseElementView | undefined, definition: PI, shape: ShapeDefinition) {
+    constructor(cs: CaseCanvas, parent: CaseElementView | undefined, definition: PI, shape: ShapeDefinition) {
         super(cs, parent, definition, shape);
         // Add the sentries
         this.definition.entryCriteria.forEach(criterion => this.addCriterion(criterion, EntryCriterionView));
@@ -30,7 +30,7 @@ export default abstract class PlanItemView<PI extends PlanItem = PlanItem> exten
         // If existing shape for criterion is not found, create a new shape.
         const shape = this.case.diagram.getShape(criterion) || this.case.diagram.createShape(this.shape.x - 6, this.shape.y + 10, 12, 20, criterion.id);
         const view = new constructorFunction(this, criterion, shape);
-        this.__addCMMNChild(view);
+        this.__addChildElement(view);
     }
 
     createProperties(): PlanItemProperties<any> {
@@ -81,13 +81,13 @@ export default abstract class PlanItemView<PI extends PlanItem = PlanItem> exten
 
     createCMMNChild(viewType: Function, x: number, y: number): ElementView<any> {
         if (viewType == EntryCriterionView) {
-            return this.__addCMMNChild(EntryCriterionView.create(this, x, y));
+            return this.__addChildElement(EntryCriterionView.create(this, x, y));
         } else if (viewType == ReactivateCriterionView) {
-            return this.__addCMMNChild(ReactivateCriterionView.create(this, x, y));
+            return this.__addChildElement(ReactivateCriterionView.create(this, x, y));
         } else if (viewType == ExitCriterionView) {
-            return this.__addCMMNChild(ExitCriterionView.create(this, x, y));
+            return this.__addChildElement(ExitCriterionView.create(this, x, y));
         } else {
-            return super.createCMMNChild(viewType, x, y);
+            return super.createChildView(viewType, x, y);
         }
     }
 

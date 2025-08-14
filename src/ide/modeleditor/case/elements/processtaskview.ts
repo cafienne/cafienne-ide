@@ -5,7 +5,6 @@ import StageView from "./stageview";
 import TaskView from "./taskview";
 
 export default class ProcessTaskView extends TaskView {
-    definition: ProcessTaskDefinition;
 
     /**
      * Create a new ProcessTaskView at the given coordinates.
@@ -21,7 +20,6 @@ export default class ProcessTaskView extends TaskView {
      */
     constructor(parent: StageView, definition: ProcessTaskDefinition, shape: ShapeDefinition) {
         super(parent, definition, shape);
-        this.definition = definition;
     }
 
     getImplementationList() {

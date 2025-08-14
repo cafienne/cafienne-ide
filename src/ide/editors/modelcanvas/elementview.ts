@@ -1,30 +1,28 @@
 import { dia, util } from '@joint/core';
 import CMMNDocumentationDefinition from '../../../repository/definition/cmmndocumentationdefinition';
-import CMMNElementDefinition from '../../../repository/definition/cmmnelementdefinition';
 import Edge from '../../../repository/definition/dimensions/edge';
 import ShapeDefinition from "../../../repository/definition/dimensions/shape";
 import DocumentableElementDefinition from "../../../repository/definition/documentableelementdefinition";
-import ModelDefinition from '../../../repository/definition/modeldefinition';
+import GraphicalModelDefinition from '../../../repository/definition/graphicalmodeldefinition';
 import Remark from "../../../repository/validate/remark";
 import Util from "../../../util/util";
-import CaseModelEditor from '../../modeleditor/case/casemodeleditor';
-import CaseView from '../../modeleditor/case/elements/caseview';
+import ModelEditor from '../../modeleditor/modeleditor';
 import CanvasElement from "./canvaselement";
 import Connector from './connector/connector';
 import Grid from "./grid";
 import Halo from "./halo/halo";
 import Highlighter from "./highlighter";
 import Marker from "./marker";
+import ModelCanvas from './modelcanvas';
 import Properties from "./properties";
 import Resizer from "./resizer";
 
 export default abstract class ElementView<
-    D extends DocumentableElementDefinition<ModelDefinition> = DocumentableElementDefinition<ModelDefinition>>
+    D extends DocumentableElementDefinition<GraphicalModelDefinition> = DocumentableElementDefinition<GraphicalModelDefinition>>
     extends CanvasElement<dia.Element> {
-    readonly case: CaseView;
-    protected editor: CaseModelEditor;
+    protected editor: ModelEditor;
     protected __connectors: Connector[] = [];
-    protected __childElements: ElementView<any>[] = [];
+    protected __childElements: ElementView[] = [];
     protected __resizable: boolean = true;
     private __properties?: Properties;
     private _resizer?: Resizer;
@@ -36,14 +34,13 @@ export default abstract class ElementView<
     /**
      * Creates a new CaseElementView within the case having the corresponding definition and x, y coordinates
      */
-    constructor(cs: CaseView, public parent: ElementView<any> | undefined, public definition: D, public shape: ShapeDefinition) {
+    constructor(cs: ModelCanvas, public parent: ElementView | undefined, public definition: D, public shape: ShapeDefinition) {
         super(cs);
         if (!shape) {
             console.warn(`${this.constructor.name}[${definition.id}] does not have a shape`);
         }
 
-        this.case = cs;
-        this.case.items.push(this as any);
+        this.case.items.push(this);
         this.editor = this.case.editor;
         if (this.parent) {
             this.parent.__childElements.push(this);
@@ -119,9 +116,9 @@ export default abstract class ElementView<
     }
 
     /**
-     * Determines whether or not the cmmn element is our parent or another ancestor of us.
+     * Determines whether or not the element is our parent or another ancestor of us.
      */
-    hasAncestor(potentialAncestor: ElementView<any>): boolean {
+    hasAncestor(potentialAncestor: ElementView): boolean {
         if (!potentialAncestor) return false;
         if (!this.parent) return false;
         if (this.parent === potentialAncestor) return true;
@@ -181,7 +178,7 @@ export default abstract class ElementView<
      * Determines whether the cursor is near the element, i.e., within a certain range of 'distance' pixels around this element.
      * Used to show/hide the halo of the element.
      * distance is a parameter to distinguish between moving from within to outside the element, or moving from outside towards the element.
-     * In case.js, moving towards an element is "near" when within 10px, moving out of an element can be done up to 40px. 
+     * In modelcanvas.ts, moving towards an element is "near" when within 10px, moving out of an element can be done up to 40px. 
      * 
      */
     nearElement(e: JQuery.Event, distance: number) {
@@ -222,21 +219,21 @@ export default abstract class ElementView<
     /**
      * Adds a new shape in this element with the specified shape type.
      */
-    addElementView(viewType: Function, e: JQuery.Event | JQuery<MouseEvent>): ElementView<any> {
+    addElementView(viewType: Function, e: JQuery.Event | JQuery<MouseEvent>): ElementView {
         const coor = this.case.getCursorCoordinates(e);
-        const cmmnElement = this.createCMMNChild(viewType, Grid.snap(coor.x), Grid.snap(coor.y));
+        const element = this.createChildView(viewType, Grid.snap(coor.x), Grid.snap(coor.y));
         // Now select the newly added element
-        this.case.selectedElement = cmmnElement as any;
+        this.case.selectedElement = element;
         // Show properties of new element
-        cmmnElement.propertiesView.show(true);
-        return cmmnElement;
+        element.propertiesView.show(true);
+        return element;
     }
 
     /**
-     * Creates a cmmn child under this element with the specified type, and renders it at the given position.
-     * @returns the newly created CMMN child
+     * Creates a child under this element with the specified type, and renders it at the given position.
+     * @returns the newly created child
      */
-    createCMMNChild(viewType: Function, x: number, y: number): ElementView<any> {
+    createChildView(viewType: Function, x: number, y: number): ElementView {
         throw new Error('Cannot create an element of type' + viewType.name);
     }
 
@@ -286,7 +283,7 @@ export default abstract class ElementView<
     }
 
     /**
-     * Returns the "nice" type description of this CMMN Element.
+     * Returns the "nice" type description of this Element.
      * Sub classes must implement this, otherwise an error is thrown.
      */
     get typeDescription(): string {
@@ -307,7 +304,7 @@ export default abstract class ElementView<
     /**
      * Method invoked after a role or case file item has changed
      */
-    refreshReferencingFields(definitionElement: CMMNElementDefinition) {
+    refreshReferencingFields(definitionElement: DocumentableElementDefinition) {
         this.propertiesView.refreshReferencingFields(definitionElement);
     }
 
@@ -320,7 +317,7 @@ export default abstract class ElementView<
 
     get resizer() {
         if (!this._resizer) {
-            this._resizer = new Resizer(this as any);
+            this._resizer = new Resizer(this);
         }
         return this._resizer;
     }
@@ -331,14 +328,14 @@ export default abstract class ElementView<
 
     get marker() {
         if (!this._marker) {
-            this._marker = new Marker(this as any);
+            this._marker = new Marker(this);
         }
         return this._marker;
     }
 
     get highlighter() {
         if (!this._highlighter) {
-            this._highlighter = new Highlighter(this as any);
+            this._highlighter = new Highlighter(this);
         }
         return this._highlighter;
     }
@@ -418,8 +415,8 @@ export default abstract class ElementView<
     /**
      * Hook indicating that 'moving' completed.
      */
-    moved(x: number, y: number, newParent: ElementView<any>) {
-        // Check if this element can serve as a new parent for the cmmn element
+    moved(x: number, y: number, newParent: ElementView) {
+        // Check if this element can serve as a new parent for the element
         if (newParent && newParent.__canHaveAsChild(this.constructor) && newParent != this.parent) {
             // check if new parent is allowed
             this.changeParent(newParent);
@@ -429,14 +426,14 @@ export default abstract class ElementView<
     /**
      * Adds an element to another element, implements element.__addElement
      */
-    __addCMMNChild(cmmnChildElement: ElementView<any>): ElementView<any> {
-        return this.case.__addElement(cmmnChildElement as any);
+    __addChildElement<V extends ElementView>(childElement: V): V {
+        return this.case.__addElement(childElement);
     }
 
     /**
      * When a item is moved from one stage to another, this method is invoked
      */
-    changeParent(newParent: ElementView<any>) {
+    changeParent(newParent: ElementView) {
         if (this.parent) this.parent.releaseItem(this);
         newParent.adoptItem(this);
     }
@@ -445,7 +442,7 @@ export default abstract class ElementView<
      * Adds the item to our list of children, and embeds it in the joint structure of this element.
      * It is an existing item in the case.
      */
-    adoptItem(childElement: ElementView<any>) {
+    adoptItem(childElement: ElementView) {
         childElement.parent = this;
         this.__childElements.push(childElement);
         this.xyz_joint.embed(childElement.xyz_joint);
@@ -460,7 +457,7 @@ export default abstract class ElementView<
      * Removes the imte from our list of children, and also unembeds it from the joint structure.
      * Does not delete the item.
      */
-    releaseItem(childElement: ElementView<any>) {
+    releaseItem(childElement: ElementView) {
         this.xyz_joint.unembed(childElement.xyz_joint);
         Util.removeFromArray(this.__childElements, childElement);
     }
@@ -469,10 +466,10 @@ export default abstract class ElementView<
      * Method invoked on all case elements upon removal of an element.
      * If there are references to the element to be removed, it can be handled here.
      */
-    __removeReferences(cmmnElement: ElementView<any>) {
-        if (cmmnElement.parent == this) {
+    __removeReferences(element: ElementView) {
+        if (element.parent == this) {
             // Perhaps also render the parent again?? Since this element about to be deleted ...
-            Util.removeFromArray(this.__childElements, cmmnElement);
+            Util.removeFromArray(this.__childElements, element);
         }
     }
 
@@ -481,7 +478,7 @@ export default abstract class ElementView<
      */
     __delete() {
         // Deselect ourselves if we are selected, to avoid invocation of __select(false) after we have been removed.
-        if (this.case.selectedElement == this as any) {
+        if (this.case.selectedElement == this) {
             this.case.selectedElement = undefined;
         }
 
@@ -496,7 +493,7 @@ export default abstract class ElementView<
         this.__connectors.forEach(connector => connector.remove());
 
         // Next, inform other elements we're gonna go
-        this.case.items.forEach(cmmnElement => cmmnElement.__removeReferences(this));
+        this.case.items.forEach(element => element.__removeReferences(this));
 
         // Now remove our definition element from the case (overridden in CaseFileItemView, since that only needs to remove the shape)
         // Also let the definition side of the house know we're leaving
@@ -529,11 +526,11 @@ export default abstract class ElementView<
     /**
      * creates a connector between the element and the target.
      */
-    __connect(target: ElementView<any>, edge?: Edge): Connector {
+    __connect(target: ElementView, edge?: Edge): Connector {
         if (!edge) {
-            edge = this.case.dimensions.createEdge(this.definition as any, target.definition);
+            edge = this.case.dimensions.createEdge(this.definition, target.definition);
         }
-        const connector = this.case.__createConnector(this, target, edge!) as any;
+        const connector = this.case.__createConnector(this, target, edge!);
 
         // Render the connector in the case.
         this.case.__addConnector(connector);
@@ -573,12 +570,12 @@ export default abstract class ElementView<
     /**
      * This method is invoked on the element if it created a connection to the target CaseElementView
      */
-    __connectTo(target: ElementView<any>) { }
+    __connectTo(target: ElementView) { }
 
     /**
      * This method is invoked on the element if a connection to it was made from the source CaseElementView
      */
-    __connectFrom(source: ElementView<any>) { }
+    __connectFrom(source: ElementView) { }
 
     /**
      * Removes a connector from the registration in this element.
@@ -590,14 +587,14 @@ export default abstract class ElementView<
     /**
      * returns an array of elements that are connected (through a link/connector) with this element
      */
-    __getConnectedElements(): ElementView<any>[] {
-        const connectedCMMNElements: ElementView<any>[] = [];
+    __getConnectedElements(): ElementView[] {
+        const connectedElements: ElementView[] = [];
         this.__connectors.forEach(connector => {
-            if (!connectedCMMNElements.find(cmmnElement => connector.source == cmmnElement || connector.target == cmmnElement)) {
-                connectedCMMNElements.push(connector.source == this as any ? connector.target : connector.source);
+            if (!connectedElements.find(element => connector.source == element || connector.target == element)) {
+                connectedElements.push(connector.source == this ? connector.target : connector.source);
             }
         });
-        return connectedCMMNElements;
+        return connectedElements;
     }
 
     /**
@@ -627,7 +624,7 @@ export default abstract class ElementView<
      * Add a criterion to this element sourcing the incoming element.
      * Default implementation is empty, task, stage, caseplan and milestone can override it.
      */
-    createCriterionAndConnect(criterionType: Function, sourceElement: ElementView<any>, e: JQuery.Event) {
+    createCriterionAndConnect(criterionType: Function, sourceElement: ElementView, e: JQuery.Event) {
         // Create a new criterion and add the source as an on part
         this.addElementView(criterionType, e).adoptOnPart(sourceElement);
     }
@@ -635,7 +632,7 @@ export default abstract class ElementView<
     /**
      * Hook for sentries to override.
      */
-    adoptOnPart(sourceElement: ElementView<any>) { }
+    adoptOnPart(sourceElement: ElementView) { }
 
     /**
      * Hook for sentries to override.

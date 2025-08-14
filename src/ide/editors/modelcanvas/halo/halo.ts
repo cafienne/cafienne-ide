@@ -1,5 +1,6 @@
 import $ from "jquery";
 import DocumentableElementDefinition from "../../../../repository/definition/documentableelementdefinition";
+import GraphicalModelDefinition from "../../../../repository/definition/graphicalmodeldefinition";
 import HtmlUtil from "../../../util/htmlutil";
 import ElementView from "../elementview";
 import DeleteHaloItem from "./deletehaloitem";
@@ -7,7 +8,7 @@ import HaloBar from "./halobar";
 import HaloItem from "./haloitem";
 import PropertiesHaloItem from "./propertieshaloitem";
 
-export default class Halo<D extends DocumentableElementDefinition = DocumentableElementDefinition, V extends ElementView<D> = ElementView<D>> {
+export default class Halo<D extends DocumentableElementDefinition<GraphicalModelDefinition> = DocumentableElementDefinition<GraphicalModelDefinition>, V extends ElementView<D> = ElementView<D>> {
     html: JQuery<HTMLElement>;
     rightBar: HaloBar<this>;
     topBar: HaloBar<this>;
@@ -17,7 +18,7 @@ export default class Halo<D extends DocumentableElementDefinition = Documentable
     scrollListener: (e: JQuery.Event) => void;
 
     /**
-     * Creates a halo for the cmmn element.
+     * Creates a halo for the element.
      * The content of the halo need not be set it in the constructor, but rather
      * in the implementation of the createContent() method. This is invoked right after constructor invocation.
      */

@@ -9,7 +9,7 @@ const grids: Grid[] = []; // List of all grid objects; forms a memory leak, in a
  * Grid class contains some statics to arrange for the global settings of the grid.
  * Grid settings (size and whether visible or not) are stored in LocalStorage of the browser.
  * Also they can be modified from the IDE header above cases.
- * Grid is currently attached to the paper object of each case (see case.js).
+ * Grid is currently attached to the paper object of each case (see modelcanvas.ts).
  */
 export default class Grid {
     static initialized: boolean = false;

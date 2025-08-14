@@ -1,9 +1,10 @@
 import $ from "jquery";
+import CaseDefinition from "../../../../../repository/definition/cmmn/casedefinition";
 import CaseFileItemDef from "../../../../../repository/definition/cmmn/casefile/casefileitemdef";
 import Properties from "../../../../editors/modelcanvas/properties";
 import CaseFileItemView from "../casefileitemview";
 
-export default class CaseFileItemProperties extends Properties<CaseFileItemView> {
+export default class CaseFileItemProperties extends Properties<CaseDefinition, CaseFileItemView> {
     renderData() {
         const caseFileItemId = this.view.shape.cmmnElementRef ? this.view.shape.cmmnElementRef : '';
         const cfi = this.view.case.caseDefinition.getElement(caseFileItemId) as CaseFileItemDef | undefined;
