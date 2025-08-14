@@ -1,13 +1,14 @@
 import Dimensions from "../../../../repository/definition/dimensions/dimensions";
-import ModelDefinition from "../../../../repository/definition/modeldefinition";
+import GraphicalModelDefinition from "../../../../repository/definition/graphicalmodeldefinition";
+import ModelCanvas from "../modelcanvas";
 import Action from "./action";
 import UndoRedoBox from "./undoredobox";
 
-export default class UndoManager<M extends ModelDefinition = ModelDefinition> {
+export default class UndoManager<M extends GraphicalModelDefinition = GraphicalModelDefinition> {
     performingBufferAction: boolean = false;
-    private currentAction?: Action<M>;
+    private currentAction?: Action<any>;
 
-    constructor(public getUndoRedoBox: () => UndoRedoBox | undefined, public loadDefinition: (definition: M) => void) { }
+    constructor(public getUndoRedoBox: () => UndoRedoBox<ModelCanvas<any, any, any>> | undefined, public loadDefinition: (definition: M) => void) { }
 
     updateUndoRedoButtons(undoCount: number = this.getUndoCount(), redoCount: number = this.getRedoCount()): void {
         // Only update the buttons once the case is loaded.

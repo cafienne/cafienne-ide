@@ -3,11 +3,11 @@ import IDE from "../../../../ide";
 import TypeEditor from "../../../../modeleditor/type/editor/typeeditor";
 import TypeSelector from "../../../../modeleditor/type/editor/typeselector";
 import HtmlUtil from "../../../../util/htmlutil";
-import CaseView from "../../elements/caseview";
+import CaseCanvas from "../../elements/casecanvas";
 import CaseFileEditor from "./casefileeditor";
 
 export default class CaseTypeEditor {
-    case: CaseView;
+    case: CaseCanvas;
     ide: IDE;
     typeEditor: TypeEditor;
     divTypeEditor!: JQuery<HTMLDivElement>;

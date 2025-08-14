@@ -3,21 +3,19 @@ import CaseDefinition from "../../../repository/definition/cmmn/casedefinition";
 import CaseFile from "../../../repository/serverfile/casefile";
 import DimensionsFile from "../../../repository/serverfile/dimensionsfile";
 import Grid from "../../editors/modelcanvas/grid";
-import UndoManager from "../../editors/modelcanvas/undoredo/undomanager";
 import MovableEditor from "../../editors/movableeditor";
 import IDE from "../../ide";
 import ModelEditor from "../modeleditor";
 import ModelEditorMetadata from "../modeleditormetadata";
 import CaseModelEditorMetadata from "./casemodeleditormetadata";
+import CaseCanvas from "./elements/casecanvas";
 import CaseElementView from "./elements/caseelementview";
-import CaseView from "./elements/caseview";
 
-export default class CaseModelEditor extends ModelEditor {
+export default class CaseModelEditor extends ModelEditor<CaseDefinition> {
     caseFile: CaseFile;
     dimensionsFile?: DimensionsFile;
     ideCaseFooter: JQuery<HTMLElement>;
-    undoManager: UndoManager<CaseDefinition>;
-    case?: CaseView;
+    case?: CaseCanvas;
     trackChanges: boolean = false;
     private __migrated: any;
     autoSaveTimer: any;
@@ -35,7 +33,6 @@ export default class CaseModelEditor extends ModelEditor {
         this.caseFile = file;
         this.dimensionsFile = this.file.definition!.dimensions!.file;
         this.ideCaseFooter = $('.ideCaseFooter');
-        this.undoManager = new UndoManager<CaseDefinition>(() => this.case?.undoBox, definition => this.loadDefinition(definition));
 
         // Upon clicking the case footer's validation label, render the validateform of the case (if a case is there)
         this.ideCaseFooter.find('.validateLabel').on('click', () => this.case && this.case.validateForm.show());
@@ -49,23 +46,23 @@ export default class CaseModelEditor extends ModelEditor {
      * Loads the model and makes the editor visible
      */
     loadModel() {
-        if (this.file.definition) this.open(this.file.definition);
-    }
+        if (this.file.definition) {
+            const caseDefinition = this.file.definition;
 
-    open(caseDefinition: CaseDefinition) {
-        // Reset the undo manager.
-        this.undoManager.resetActionBuffer(caseDefinition, caseDefinition.dimensions!);
+            // Reset the undo manager.
+            this.case?.undoManager.resetActionBuffer(caseDefinition, caseDefinition.dimensions!);
 
-        // Now that the visualization information is available, we can start the import.
-        this.loadDefinition();
+            // Now that the visualization information is available, we can start the import.
+            this.loadDefinition();
 
-        super.visible = true;
+            super.visible = true;
+        }
     }
 
     /**
      * Imports the source and tries to visualize it
      */
-    loadDefinition(caseDefinition: CaseDefinition | undefined = this.caseFile.definition) {
+    loadDefinition(caseDefinition: CaseDefinition | undefined = this.caseFile.definition): void {
         if (!caseDefinition) return;
         // During import no live validation and storage of changes
         this.trackChanges = false;
@@ -76,7 +73,7 @@ export default class CaseModelEditor extends ModelEditor {
         }
 
         // Create a new case renderer on the definition and dimensions
-        this.case = new CaseView(this, this.htmlContainer, caseDefinition);
+        this.case = new CaseCanvas(this, this.htmlContainer, caseDefinition);
 
         if (this.__migrated) {
             console.log('Uploading migrated files');
@@ -155,10 +152,10 @@ export default class CaseModelEditor extends ModelEditor {
                 }
                 break;
             case 89: //y
-                if (e.ctrlKey) this.undoManager.redo();
+                if (e.ctrlKey) this.case.undoManager.redo();
                 break;
             case 90: //z
-                if (e.ctrlKey) this.undoManager.undo();
+                if (e.ctrlKey) this.case.undoManager.undo();
             default:
                 break;
         }
@@ -210,7 +207,7 @@ export default class CaseModelEditor extends ModelEditor {
         // Validate all models currently active in the ide
         if (this.case) {
             this.case.runValidation();
-            this.undoManager.saveCaseModel(this.case.caseDefinition, this.case.dimensions!);
+            this.case.undoManager.saveCaseModel(this.case.caseDefinition, this.case.dimensions!);
         }
     }
 

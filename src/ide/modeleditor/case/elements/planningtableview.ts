@@ -15,7 +15,7 @@ export default class PlanningTableView extends CaseElementView<PlanningTableDefi
         super(parent.case, parent, definition, shape);
         this.parent = parent;
         this.__resizable = false;
-        parent.__addCMMNChild(this);
+        parent.__addChildElement(this);
 
         this.stage = this.parent.isStage ? this.parent as StageView : this.parent.parent as StageView;
         // Now also render the discretionary items from the definition in our parent

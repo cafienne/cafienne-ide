@@ -2,13 +2,13 @@ import $ from "jquery";
 import CaseFileItemDef from "../../../../../repository/definition/cmmn/casefile/casefileitemdef";
 import CaseFileItemDragData from "../../../../dragdrop/casefileitemdragdata";
 import IDE from "../../../../ide";
-import CaseView from "../../elements/caseview";
+import CaseCanvas from "../../elements/casecanvas";
 import CaseTypeEditor from "./casetypeeditor";
 import CFISelector from "./cfiselector";
 import CaseFileItemsEditor from "./classic/casefileitemseditor";
 
 export default class CaseFileEditor {
-    case: CaseView;
+    case: CaseCanvas;
     ide: IDE;
     html: JQuery<HTMLElement>;
     divClassicEditor: JQuery<HTMLElement>;
@@ -19,7 +19,7 @@ export default class CaseFileEditor {
     /**
      * Renders the CaseFile definition through fancytree
      */
-    constructor(cs: CaseView, public htmlParent: JQuery<HTMLElement>) {
+    constructor(cs: CaseCanvas, public htmlParent: JQuery<HTMLElement>) {
         this.case = cs;
         this.ide = this.case.editor.ide;
         this.html = $(`

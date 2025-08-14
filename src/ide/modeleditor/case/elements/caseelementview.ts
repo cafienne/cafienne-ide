@@ -1,14 +1,19 @@
 import CMMNElementDefinition from "../../../../repository/definition/cmmnelementdefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
 import ElementView from '../../../editors/modelcanvas/elementview';
-import CaseView from "./caseview";
+import CaseCanvas from "./casecanvas";
 
-export default abstract class CaseElementView<D extends CMMNElementDefinition = CMMNElementDefinition> extends ElementView<D> {
+export default abstract class CaseElementView<D extends CMMNElementDefinition = CMMNElementDefinition>
+    extends ElementView<D> {
+
+    readonly case: CaseCanvas;
     /**
      * Creates a new CaseElementView within the case having the corresponding definition and x, y coordinates
      */
-    constructor(cs: CaseView, public parent: CaseElementView | undefined, public definition: D, public shape: ShapeDefinition) {
+    constructor(cs: CaseCanvas, public parent: CaseElementView | undefined, public definition: D, public shape: ShapeDefinition) {
         super(cs, parent, definition, shape);
+
+        this.case = cs;
     }
 
     /**

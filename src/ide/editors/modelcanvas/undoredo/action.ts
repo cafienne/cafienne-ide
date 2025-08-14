@@ -1,10 +1,10 @@
 import Dimensions from "../../../../repository/definition/dimensions/dimensions";
-import ModelDefinition from "../../../../repository/definition/modeldefinition";
+import GraphicalModelDefinition from "../../../../repository/definition/graphicalmodeldefinition";
 import DimensionsFile from "../../../../repository/serverfile/dimensionsfile";
 import ServerFile from "../../../../repository/serverfile/serverfile";
 import UndoManager from "./undomanager";
 
-export default class Action<M extends ModelDefinition = ModelDefinition> {
+export default class Action<M extends GraphicalModelDefinition = GraphicalModelDefinition> {
     private caseString: string;
     private dimensionsString: string;
     private caseFile: ServerFile<M>;

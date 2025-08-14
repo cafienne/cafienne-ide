@@ -245,7 +245,11 @@ export default class ProcessModelEditor extends ModelEditor {
     }
 
     loadModel() {
-        this._model = this.file.definition;
+        this.loadDefinition(this.file.definition);
+    }
+
+    loadDefinition(definition: ProcessModelDefinition | undefined): void {
+        this._model = definition;
         this.render();
         this.visible = true;
     }

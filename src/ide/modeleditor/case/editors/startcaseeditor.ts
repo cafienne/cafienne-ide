@@ -1,6 +1,6 @@
 ﻿import CodeMirrorConfig from "../../../editors/external/codemirrorconfig";
 import StandardForm from "../../../editors/standardform";
-import CaseView from "../elements/caseview";
+import CaseCanvas from "../elements/casecanvas";
 
 export default class StartCaseEditor extends StandardForm {
     private _codeMirrorEditor: any;
@@ -10,7 +10,7 @@ export default class StartCaseEditor extends StandardForm {
     /**
      * Editor for the content of the extension element <start-case-schema>
      */
-    constructor(cs: CaseView) {
+    constructor(public cs: CaseCanvas) {
         super(cs, 'Start Case Schema Editor', 'jsoneditor');
     }
 
@@ -38,7 +38,7 @@ export default class StartCaseEditor extends StandardForm {
             //directly after import when the value is loaded, do not save or show as changed
             if (!this._isLoading) {
                 // Update the value inside the definition.
-                this.case.caseDefinition.startCaseSchema.value = this.value;
+                this.cs.caseDefinition.startCaseSchema.value = this.value;
                 // Set 'changed' flag and enable autosave timer after 10 seconds of no change
                 this._changed = true;
                 this._enableAutoSave();
@@ -91,7 +91,7 @@ export default class StartCaseEditor extends StandardForm {
         }
     }
 }`
-        const definitionValue = this.case.caseDefinition.startCaseSchema.value;
+        const definitionValue = this.cs.caseDefinition.startCaseSchema.value;
         // Upon opening the editor, set the value with the current start-case-schema, or use the default value.
         //  Note, default value will not be written into case definition if it is not changed.
         this.value = definitionValue ? definitionValue : defaultValue;

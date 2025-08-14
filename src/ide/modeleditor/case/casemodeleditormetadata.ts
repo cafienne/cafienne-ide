@@ -1,4 +1,5 @@
 import CaseTeamModelDefinition from "../../../repository/definition/caseteam/caseteammodeldefinition";
+import CaseDefinition from "../../../repository/definition/cmmn/casedefinition";
 import Tags from "../../../repository/definition/tags";
 import TypeDefinition from "../../../repository/definition/type/typedefinition";
 import CaseFile from "../../../repository/serverfile/casefile";
@@ -6,11 +7,12 @@ import ServerFile from "../../../repository/serverfile/serverfile";
 import Util from "../../../util/util";
 import IDE from "../../ide";
 import Icons from "../../util/images/icons";
+import ModelEditor from "../modeleditor";
 import ModelEditorMetadata from "../modeleditormetadata";
 import CaseModelEditor from "./casemodeleditor";
 import CreateNewCaseModelDialog, { CreateCase } from "./createnewcasemodeldialog";
 
-export default class CaseModelEditorMetadata extends ModelEditorMetadata {
+export default class CaseModelEditorMetadata extends ModelEditorMetadata<CaseDefinition> {
     get modelList() {
         return this.ide?.repository.getCases() || [];
     }
@@ -19,7 +21,7 @@ export default class CaseModelEditorMetadata extends ModelEditorMetadata {
         return file instanceof CaseFile;
     }
 
-    createEditor(ide: IDE, file: CaseFile) {
+    createEditor(ide: IDE, file: CaseFile): ModelEditor<CaseDefinition> {
         return new CaseModelEditor(ide, file);
     }
 

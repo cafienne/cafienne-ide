@@ -1,12 +1,12 @@
 import $ from "jquery";
 import DragData from "../../../dragdrop/dragdata";
-import CaseView from "../../../modeleditor/case/elements/caseview";
+import ModelCanvas from "../modelcanvas";
 import ElementMetadata from "./elementmetadata";
 import ElementRegistry from "./elementregistry";
 import ShapeBoxDragData from "./shapeboxdragdata";
 
 export default class ShapeBox {
-    case: CaseView;
+    case: ModelCanvas;
     html: JQuery<HTMLElement>;
     dragData?: ShapeBoxDragData;
     htmlContainer: JQuery<HTMLUListElement>;
@@ -14,7 +14,7 @@ export default class ShapeBox {
     /**
      * Box that has the shapes that are available for dragging to the canvas
      */
-    constructor(cs: CaseView, typeRegistry: ElementRegistry, htmlElement: JQuery<HTMLElement>) {
+    constructor(cs: ModelCanvas, typeRegistry: ElementRegistry, htmlElement: JQuery<HTMLElement>) {
         this.case = cs;
         this.html = htmlElement;
 

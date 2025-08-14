@@ -1,5 +1,7 @@
 import $ from "jquery";
+import DocumentableElementDefinition from "../../../repository/definition/documentableelementdefinition";
 import ElementDefinition from "../../../repository/definition/elementdefinition";
+import GraphicalModelDefinition from "../../../repository/definition/graphicalmodeldefinition";
 import XMLSerializable from "../../../repository/definition/xmlserializable";
 import Util from "../../../util/util";
 import HtmlUtil from "../../util/htmlutil";
@@ -7,7 +9,10 @@ import Images from "../../util/images/images";
 import MovableEditor from "../movableeditor";
 import ElementView from "./elementview";
 
-export default class Properties<V extends ElementView = ElementView> extends MovableEditor {
+export default class Properties<
+    M extends GraphicalModelDefinition = GraphicalModelDefinition,
+    V extends ElementView<DocumentableElementDefinition<M>> = ElementView<DocumentableElementDefinition<M>>>
+    extends MovableEditor<M, any> {
     id: string;
     pinned: boolean = false; //pinned determines whether a properties menu is pinned, pinned=true means that the menu stays on the same spot all the time
     htmlContainer!: JQuery<HTMLElement>;
@@ -17,7 +22,7 @@ export default class Properties<V extends ElementView = ElementView> extends Mov
      */
     constructor(public view: V) {
         // console.log("Creating properties for " + view)
-        super(view.case);
+        super(view.case as any);
         this.id = 'propertiesmenu-' + view.id;
     }
 
@@ -105,7 +110,7 @@ export default class Properties<V extends ElementView = ElementView> extends Mov
         // Make us visible.
         this.visible = true;
         // Hide other properties editors (if they are not pinned)
-        this.case.items.filter(item => item != this.view as any).forEach(item => item.propertiesView.hide());
+        this.case.items.filter(item => item != this.view).forEach(item => item.propertiesView.hide());
 
         if (focusNameField) {
             this.htmlContainer.find('.cmmn-element-name').select();
@@ -124,7 +129,7 @@ export default class Properties<V extends ElementView = ElementView> extends Mov
             const menuWidth: any = this.html.width();
             const menuHeight: any = this.html.height();
             const bdyHeight = $(document).height() || 0;
-            const canvasOffset = (this.view.case as any).svg.offset() || { left: 0, top: 0 };
+            const canvasOffset = this.view.case.svg.offset() || { left: 0, top: 0 };
 
             // compensate for paper offset and scroll
             let leftPosition = (eX ?? 0) - menuWidth + canvasOffset.left - 10;

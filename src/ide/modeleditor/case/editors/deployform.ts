@@ -1,18 +1,19 @@
-﻿import Definitions from "../../../../repository/deploy/definitions";
+﻿import CaseDefinition from "../../../../repository/definition/cmmn/casedefinition";
+import Definitions from "../../../../repository/deploy/definitions";
 import ServerFile from "../../../../repository/serverfile/serverfile";
 import CodeMirrorConfig from "../../../editors/external/codemirrorconfig";
 import StandardForm from "../../../editors/standardform";
 import Settings from "../../../settings/settings";
 import $ajax from "../../../util/ajax";
-import CaseView from "../elements/caseview";
+import CaseCanvas from "../elements/casecanvas";
 
-export default class DeployForm extends StandardForm {
+export default class DeployForm extends StandardForm<CaseDefinition> {
     codeMirrorCaseXML: any;
     /**
      * 
      * This class implements the logic to call the repository REST service to deploy a CMMN model.
      */
-    constructor(cs: CaseView) {
+    constructor(cs: CaseCanvas) {
         super(cs, 'Deploy CMMN Model - ' + cs.case.name, 'deployform');
     }
 

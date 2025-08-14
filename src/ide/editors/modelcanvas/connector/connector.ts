@@ -53,7 +53,7 @@ export default class Connector<V extends ElementView = ElementView> extends Canv
 
         this.link.on('change:vertices', e => {
             // Joint generates many change events, so we will not completeUserAction() each time,
-            // Instead, this is done when handlePointerUpPaper in case.js
+            // Instead, this is done when handlePointerUpPaper in modelcanvas.ts
             this.edge.vertices = e.changed.vertices;
         });
     }

@@ -12,10 +12,10 @@ export default class ConnectorHaloItem extends HaloDragItem {
         // A 'plain' connector is dragged from the halo, try to link it with the target element
         // at the position of the cursor.
         // Creating a connector to parent elements looks a bit weird and is therefore avoided.
-        const cmmnElement = this.halo.element.case.getItemUnderMouse(e);
-        if (cmmnElement && !this.halo.element.hasAncestor(cmmnElement)) {
-            this.halo.element.__connect(cmmnElement);
-            this.halo.element.case.selectedElement = cmmnElement;
+        const element = this.halo.element.case.getItemUnderMouse(e);
+        if (element && !this.halo.element.hasAncestor(element)) {
+            this.halo.element.__connect(element);
+            this.halo.element.case.selectedElement = element;
         }
     }
 }

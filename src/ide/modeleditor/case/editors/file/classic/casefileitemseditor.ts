@@ -4,7 +4,7 @@ import IDE from "../../../../../ide";
 import BottomSplitter from "../../../../../splitter/bottomsplitter";
 import HtmlUtil from "../../../../../util/htmlutil";
 import CaseFileItemDefinitionEditor from "../../../../cfid/casefileitemdefinitioneditor";
-import CaseView from "../../../elements/caseview";
+import CaseCanvas from "../../../elements/casecanvas";
 import CaseFileEditor from "../casefileeditor";
 import CFINode from "./cfinode";
 import CFIDConverter from "./conversion/cfidconverter";
@@ -12,7 +12,7 @@ import CFIDConverter from "./conversion/cfidconverter";
 export const NEWDEF = '__new__';
 
 export default class CaseFileItemsEditor {
-    case: CaseView;
+    case: CaseCanvas;
     ide: IDE;
 
     // Keep track of nodes rendering individual case file items

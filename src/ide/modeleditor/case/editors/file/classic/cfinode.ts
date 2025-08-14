@@ -5,12 +5,12 @@ import Util from "../../../../../../util/util";
 import HtmlUtil from "../../../../../util/htmlutil";
 import Images from "../../../../../util/images/images";
 import Shapes from "../../../../../util/images/shapes";
-import CaseView from "../../../elements/caseview";
+import CaseCanvas from "../../../elements/casecanvas";
 import CaseFileItemsEditor, { NEWDEF } from "./casefileitemseditor";
 
 export default class CFINode {
     childNodes: CFINode[] = [];
-    case: CaseView;
+    case: CaseCanvas;
     html: JQuery<HTMLElement>;
     divCFIDetails: JQuery<HTMLElement>;
     childrenContainer: JQuery<HTMLElement>;
