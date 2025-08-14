@@ -5,7 +5,7 @@ import CanvasElement from "../canvaselement";
 import ElementView from '../elementview';
 
 
-export default class Connector<V extends ElementView = ElementView> extends CanvasElement<dia.Link> {
+export default class Connector<BaseViewT extends ElementView = ElementView> extends CanvasElement<dia.Link> {
     formerLabel?: string;
     private _hiddenLabel?: string;
 
@@ -20,7 +20,7 @@ export default class Connector<V extends ElementView = ElementView> extends Canv
     /**
      * Creates a connector (=link in jointJS) between a source and a target.
      */
-    constructor(public source: V, public target: V, public edge: Edge) {
+    constructor(public source: BaseViewT, public target: BaseViewT, public edge: Edge) {
         super(source.case);
 
         this.link = this.xyz_joint = new shapes.standard.Link({

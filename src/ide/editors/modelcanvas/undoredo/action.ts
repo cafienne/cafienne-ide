@@ -4,20 +4,20 @@ import DimensionsFile from "../../../../repository/serverfile/dimensionsfile";
 import ServerFile from "../../../../repository/serverfile/serverfile";
 import UndoManager from "./undomanager";
 
-export default class Action<M extends GraphicalModelDefinition = GraphicalModelDefinition> {
+export default class Action<ModeldefT extends GraphicalModelDefinition = GraphicalModelDefinition> {
     private caseString: string;
     private dimensionsString: string;
-    private caseFile: ServerFile<M>;
+    private caseFile: ServerFile<ModeldefT>;
     private dimensionsFile: DimensionsFile;
     private caseChanged: boolean;
     private dimensionsChanged: boolean;
-    private next?: Action<M>;
+    private next?: Action<ModeldefT>;
     private saved?: boolean;
 
-    constructor(public undoManager: UndoManager<M>, public caseDefinition: M, public dimensions: Dimensions, public previousAction?: Action<M>) {
+    constructor(public undoManager: UndoManager<ModeldefT>, public caseDefinition: ModeldefT, public dimensions: Dimensions, public previousAction?: Action<ModeldefT>) {
         this.caseString = caseDefinition.toXMLString();
         this.dimensionsString = dimensions.toXMLString();
-        this.caseFile = caseDefinition.file as ServerFile<M>;
+        this.caseFile = caseDefinition.file as ServerFile<ModeldefT>;
         this.dimensionsFile = dimensions.file;
         this.caseChanged = false;
         this.dimensionsChanged = false;
@@ -39,11 +39,11 @@ export default class Action<M extends GraphicalModelDefinition = GraphicalModelD
         }
     }
 
-    get nextAction(): Action<M> | undefined {
+    get nextAction(): Action<ModeldefT> | undefined {
         return this.next;
     }
 
-    set nextAction(action: Action<M> | undefined) {
+    set nextAction(action: Action<ModeldefT> | undefined) {
         this.next = action;
     }
 
@@ -84,7 +84,7 @@ export default class Action<M extends GraphicalModelDefinition = GraphicalModelD
      * has to be taken from the current action, for redo it has to be taken from the next action.
      * (See the actual implementations of undo and redo above) 
      */
-    async perform(direction: string, caseChanged: boolean = this.caseChanged, dimensionsChanged: boolean = this.dimensionsChanged): Promise<Action<M>> {
+    async perform(direction: string, caseChanged: boolean = this.caseChanged, dimensionsChanged: boolean = this.dimensionsChanged): Promise<Action<ModeldefT>> {
         console.groupCollapsed("Performing " + direction + " on action " + this.undoCount);
         this.undoManager.performingBufferAction = true;
         // Parse the sources again into a definition and load that in the editor.

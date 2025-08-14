@@ -2,8 +2,8 @@ import $ from "jquery";
 import Images from "../../../util/images/images";
 import ModelCanvas from "../modelcanvas";
 
-export default class UndoRedoBox<C extends ModelCanvas> {
-    private case: C;
+export default class UndoRedoBox<CanvasT extends ModelCanvas> {
+    private case: CanvasT;
     private spanUndoCounter: JQuery<HTMLElement>;
     private spanRedoCounter: JQuery<HTMLElement>;
 
@@ -11,7 +11,7 @@ export default class UndoRedoBox<C extends ModelCanvas> {
      * @param cs CaseView
      * @param html JQuery<HTMLElement>
      */
-    constructor(cs: C, public html: JQuery<HTMLElement>) {
+    constructor(cs: CanvasT, public html: JQuery<HTMLElement>) {
         this.case = cs;
         this.html.append(
             $(`<div class="formheader">

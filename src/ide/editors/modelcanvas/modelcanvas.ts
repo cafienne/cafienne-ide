@@ -19,13 +19,13 @@ import UndoManager from './undoredo/undomanager';
 import UndoRedoBox from './undoredo/undoredobox';
 
 export default abstract class ModelCanvas<
-    M extends GraphicalModelDefinition = GraphicalModelDefinition,
-    D extends DocumentableElementDefinition<M> = DocumentableElementDefinition<M>,
-    V extends ElementView<D> = ElementView<D>> {
+    ModelDefT extends GraphicalModelDefinition = GraphicalModelDefinition,
+    ElemDefT extends DocumentableElementDefinition<ModelDefT> = DocumentableElementDefinition<ModelDefT>,
+    BaseViewT extends ElementView<ElemDefT> = ElementView<ElemDefT>> {
 
     readonly id: string;
     readonly name: string;
-    readonly case: ModelCanvas<M, D, V>;
+    readonly case: ModelCanvas<ModelDefT, ElemDefT, BaseViewT>;
     readonly dimensions: Dimensions;
     readonly diagram: Diagram;
     readonly html: JQuery<HTMLElement>;
@@ -36,19 +36,19 @@ export default abstract class ModelCanvas<
     readonly paperContainer: JQuery<HTMLElement>;
     readonly undoBox: UndoRedoBox<this>;
     readonly shapeBox: ShapeBox;
-    readonly items: V[] = [];
+    readonly items: BaseViewT[] = [];
     readonly connectors: Connector[] = [];
     graph!: dia.Graph;
     paper!: dia.Paper;
     grid!: Grid;
     svg!: JQuery<SVGElement>;
     readonly undoManager: UndoManager<any>;
-    private _selectedElement?: V;
+    private _selectedElement?: BaseViewT;
     loading: boolean = false;
 
     constructor(public editor: ModelEditor,
         public htmlParent: JQuery<HTMLElement>,
-        public caseDefinition: M) {
+        public caseDefinition: ModelDefT) {
         this.id = this.caseDefinition.id;
         this.name = this.caseDefinition.name;
         this.case = this;
@@ -84,7 +84,7 @@ export default abstract class ModelCanvas<
         this.paperContainer = this.html.find('.paper-container');
 
         this.undoBox = new UndoRedoBox<this>(this, this.divUndoRedo);
-        this.undoManager = new UndoManager<M>(() => this.undoBox, definition => this.editor.loadDefinition(definition));
+        this.undoManager = new UndoManager<ModelDefT>(() => this.undoBox, definition => this.editor.loadDefinition(definition));
 
         this.shapeBox = this.createShapeBox(this.divShapeBox);
 
@@ -154,7 +154,7 @@ export default abstract class ModelCanvas<
         return jointElementView.model.xyz_cde;
     }
 
-    getElement(jointElementView: any): V {
+    getElement(jointElementView: any): BaseViewT {
         return jointElementView.model.xyz_cde;
     }
 
@@ -189,7 +189,7 @@ export default abstract class ModelCanvas<
     /**
      * Method invoked after a role or case file item has changed
      */
-    refreshReferencingFields(definitionElement: D) {
+    refreshReferencingFields(definitionElement: ElemDefT) {
         // First tell all items to update their properties, if they refer to this element.
         this.items.forEach(item => item.refreshReferencingFields(definitionElement));
         // Also update the sub editors.
@@ -204,7 +204,7 @@ export default abstract class ModelCanvas<
      * Sets/gets the element currently (to be) selected.
      * Upon setting a new selection, the previously selected element is de-selected
      */
-    set selectedElement(element: V | undefined) {
+    set selectedElement(element: BaseViewT | undefined) {
         const previousSelection = this._selectedElement;
         if (previousSelection) {
             previousSelection.__select(false);
@@ -215,7 +215,7 @@ export default abstract class ModelCanvas<
         }
     }
 
-    get selectedElement(): V | undefined {
+    get selectedElement(): BaseViewT | undefined {
         return this._selectedElement;
     }
 
@@ -261,7 +261,7 @@ export default abstract class ModelCanvas<
      * Returns the deepest element under cursor. If that is equal to self, then
      * parent of self is returned.
      */
-    getItemUnderMouse(e: any, self: V | undefined = undefined): V | undefined {
+    getItemUnderMouse(e: any, self: BaseViewT | undefined = undefined): BaseViewT | undefined {
         const itemsUnderMouse = this.items.filter(item => item.nearElement(e, 10));
         const parentsUnderMouse = itemsUnderMouse.filter(item => item.parent).map(item => item.parent);
 
@@ -300,7 +300,7 @@ export default abstract class ModelCanvas<
         return new Coordinates(clientX - offset.left, clientY - offset.top);
     }
 
-    __addElement<EV extends V>(element: EV): EV {
+    __addElement<ViewT extends BaseViewT>(element: ViewT): ViewT {
         if (this.loading) {
             return element;
         }
@@ -342,7 +342,7 @@ export default abstract class ModelCanvas<
     /**
      * Remove an element from the canvas, including its children.
      */
-    __removeElement(element: V) {
+    __removeElement(element: BaseViewT) {
         console.groupCollapsed(`Removing ${element}`);
 
         // Remove it; which recursively also removes the children; only then save it.
@@ -356,7 +356,7 @@ export default abstract class ModelCanvas<
         console.groupEnd();
     }
 
-    getItem(id: string): V | undefined {
+    getItem(id: string): BaseViewT | undefined {
         return this.items.find(item => id && item.id == id);
     }
 

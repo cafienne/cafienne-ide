@@ -4,11 +4,11 @@ import ModelCanvas from "../modelcanvas";
 import Action from "./action";
 import UndoRedoBox from "./undoredobox";
 
-export default class UndoManager<M extends GraphicalModelDefinition = GraphicalModelDefinition> {
+export default class UndoManager<ModeldefT extends GraphicalModelDefinition = GraphicalModelDefinition> {
     performingBufferAction: boolean = false;
     private currentAction?: Action<any>;
 
-    constructor(public getUndoRedoBox: () => UndoRedoBox<ModelCanvas<any, any, any>> | undefined, public loadDefinition: (definition: M) => void) { }
+    constructor(public getUndoRedoBox: () => UndoRedoBox<ModelCanvas<any, any, any>> | undefined, public loadDefinition: (definition: ModeldefT) => void) { }
 
     updateUndoRedoButtons(undoCount: number = this.getUndoCount(), redoCount: number = this.getRedoCount()): void {
         // Only update the buttons once the case is loaded.
@@ -19,7 +19,7 @@ export default class UndoManager<M extends GraphicalModelDefinition = GraphicalM
      * Clears the action buffer, and prepares it for the new content.
      * This typically only happens when we open a new case model
      */
-    resetActionBuffer(caseDefinition: M, dimensions: Dimensions): void {
+    resetActionBuffer(caseDefinition: ModeldefT, dimensions: Dimensions): void {
         this.performingBufferAction = false;
         this.currentAction = undefined;
 
@@ -31,7 +31,7 @@ export default class UndoManager<M extends GraphicalModelDefinition = GraphicalM
      * Save model and upload to server; but only if there are new changes.
      * @param forceSave Saving case model is only done on the changes with respect to the previous save action. For creating a new model we have to forcefully save.
      */
-    saveCaseModel(caseDefinition: M, dimensions: Dimensions, forceSave: boolean = false) {
+    saveCaseModel(caseDefinition: ModeldefT, dimensions: Dimensions, forceSave: boolean = false) {
         const newAction = this.addCaseAction(caseDefinition, dimensions);
         if (newAction) {
             if (forceSave) {
@@ -45,7 +45,7 @@ export default class UndoManager<M extends GraphicalModelDefinition = GraphicalM
         }
     }
 
-    private addCaseAction(caseDefinition: M, dimensions: Dimensions) {
+    private addCaseAction(caseDefinition: ModeldefT, dimensions: Dimensions) {
         if (this.performingBufferAction) {
             // This is not supposed to happen. But order of events and invocations is not so easy, so keeping it for safety reasons if you start changing this code
             console.warn('Adding case action while performing buffer action');
@@ -54,7 +54,7 @@ export default class UndoManager<M extends GraphicalModelDefinition = GraphicalM
 
         // Creating a new action makes it also the current action.
         //  Note that the actual action may not resolve in changes, and in such a case, the currentAction will return itself and remain the same.
-        this.currentAction = new Action<M>(this, caseDefinition, dimensions, this.currentAction);
+        this.currentAction = new Action<ModeldefT>(this, caseDefinition, dimensions, this.currentAction);
         this.updateUndoRedoButtons();
         return this.currentAction;
     }
