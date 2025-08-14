@@ -8,7 +8,10 @@ import HaloBar from "./halobar";
 import HaloItem from "./haloitem";
 import PropertiesHaloItem from "./propertieshaloitem";
 
-export default class Halo<D extends DocumentableElementDefinition<GraphicalModelDefinition> = DocumentableElementDefinition<GraphicalModelDefinition>, V extends ElementView<D> = ElementView<D>> {
+export default class Halo<
+    ElemDefT extends DocumentableElementDefinition<GraphicalModelDefinition> = DocumentableElementDefinition<GraphicalModelDefinition>,
+    ViewT extends ElementView<ElemDefT> = ElementView<ElemDefT>> {
+
     html: JQuery<HTMLElement>;
     rightBar: HaloBar<this>;
     topBar: HaloBar<this>;
@@ -22,7 +25,7 @@ export default class Halo<D extends DocumentableElementDefinition<GraphicalModel
      * The content of the halo need not be set it in the constructor, but rather
      * in the implementation of the createContent() method. This is invoked right after constructor invocation.
      */
-    constructor(public element: V) {
+    constructor(public element: ViewT) {
         const html = this.html = $(`<div class="halobox" element="${element.toString()}">
     <div class="halobar top"></div>
     <div class="halobar top-right"></div>
@@ -119,7 +122,7 @@ export default class Halo<D extends DocumentableElementDefinition<GraphicalModel
      * Adds halo items according to their default location (right, top, left, bottom) to this halo.
      * It is sufficient to pass a comma separated list of the HaloItem constructors.
      */
-    addItems(...haloItemConstructors: (new (h: Halo<D, V>) => HaloItem)[]) {
+    addItems(...haloItemConstructors: (new (h: Halo<ElemDefT, ViewT>) => HaloItem)[]) {
         haloItemConstructors.forEach(constructor => new constructor(this));
     }
 }

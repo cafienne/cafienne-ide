@@ -8,7 +8,7 @@ import IDE from "../ide";
 import HtmlUtil from "../util/htmlutil";
 import Images from "../util/images/images";
 
-export default abstract class ModelEditor<M extends ModelDefinition = ModelDefinition> {
+export default abstract class ModelEditor<ModelDefT extends ModelDefinition = ModelDefinition> {
     movableEditors: MovableEditor[] = [];
     htmlContainer: JQuery<HTMLElement>;
     divMovableEditors: JQuery<HTMLDivElement>;

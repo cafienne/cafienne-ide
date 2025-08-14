@@ -2,9 +2,9 @@ import $ from "jquery";
 import Halo from "./halo";
 import HaloBar from "./halobar";
 
-export default abstract class HaloItem<H extends Halo = Halo> {
+export default abstract class HaloItem<HaloT extends Halo = Halo> {
     constructor(
-        public halo: H,
+        public halo: HaloT,
         public imgURL: string,
         public title: string,
         public defaultBar: HaloBar,

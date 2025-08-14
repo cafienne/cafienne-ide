@@ -30,8 +30,8 @@ export default class ModelEditorRegistry {
      * @param file 
      * @returns 
      */
-    get<M extends ModelEditor>(file: ServerFile): M | undefined {
-        return <M> this.editors.find(editor => editor.file.fileName === file.fileName);
+    get<EditorT extends ModelEditor>(file: ServerFile): EditorT | undefined {
+        return <EditorT>this.editors.find(editor => editor.file.fileName === file.fileName);
     }
 
     /** 

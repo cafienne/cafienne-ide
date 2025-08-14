@@ -10,9 +10,9 @@ import MovableEditor from "../movableeditor";
 import ElementView from "./elementview";
 
 export default class Properties<
-    M extends GraphicalModelDefinition = GraphicalModelDefinition,
-    V extends ElementView<DocumentableElementDefinition<M>> = ElementView<DocumentableElementDefinition<M>>>
-    extends MovableEditor<M, any> {
+    ModelDefT extends GraphicalModelDefinition = GraphicalModelDefinition,
+    ViewT extends ElementView<DocumentableElementDefinition<ModelDefT>> = ElementView<DocumentableElementDefinition<ModelDefT>>>
+    extends MovableEditor<ModelDefT, any> {
     id: string;
     pinned: boolean = false; //pinned determines whether a properties menu is pinned, pinned=true means that the menu stays on the same spot all the time
     htmlContainer!: JQuery<HTMLElement>;
@@ -20,7 +20,7 @@ export default class Properties<
     /**
      * Renderer for the properties of the element
      */
-    constructor(public view: V) {
+    constructor(public view: ViewT) {
         // console.log("Creating properties for " + view)
         super(view.case as any);
         this.id = 'propertiesmenu-' + view.id;

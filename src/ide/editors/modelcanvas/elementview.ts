@@ -426,7 +426,7 @@ export default abstract class ElementView<
     /**
      * Adds an element to another element, implements element.__addElement
      */
-    __addChildElement<V extends ElementView>(childElement: V): V {
+    __addChildElement<ViewT extends ElementView>(childElement: ViewT): ViewT {
         return this.case.__addElement(childElement);
     }
 

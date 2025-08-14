@@ -9,15 +9,16 @@ import ElementView from "./modelcanvas/elementview";
 import ModelCanvas from "./modelcanvas/modelcanvas";
 import MovableEditor from "./movableeditor";
 
-export default class StandardForm<M extends GraphicalModelDefinition = GraphicalModelDefinition,
-    V extends ElementView<DocumentableElementDefinition<M>> = ElementView<DocumentableElementDefinition<M>>>
+export default class StandardForm<
+    ModelDefT extends GraphicalModelDefinition = GraphicalModelDefinition,
+    ViewT extends ElementView<DocumentableElementDefinition<ModelDefT>> = ElementView<DocumentableElementDefinition<ModelDefT>>>
 
-    extends MovableEditor<M, V> {
+    extends MovableEditor<ModelDefT, ViewT> {
     private _label: string;
     classNames: string[];
     _container?: JQuery<HTMLElement>;
 
-    constructor(cs: ModelCanvas<M, DocumentableElementDefinition<M>, V>, label: string, ...classNames: string[]) {
+    constructor(cs: ModelCanvas<ModelDefT, DocumentableElementDefinition<ModelDefT>, ViewT>, label: string, ...classNames: string[]) {
         super(cs);
         this._label = label;
         this.classNames = classNames;
