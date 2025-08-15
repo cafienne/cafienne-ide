@@ -141,28 +141,29 @@ export default abstract class SentryView<CD extends CriterionDefinition = Criter
     }
 
     moved(x: number, y: number, newParent: CaseElementView) {
-        this.moving(x, y);
     }
 
     /**
      * when moving a sentry, it can only move along the edge of its' parent
      */
     moving(x: number, y: number) {
-        const parentElement = this.canvas.graph?.getCell(this.parent.xyz_joint.id);
+        const parentElement = this.parent.xyz_joint;
         if (!parentElement) return;
-
-        const point = new g.Point(x, y);
-        const boundryPoint = parentElement.getBBox().pointNearestToPoint(point);
 
         const sX = this.position.x;
         const sY = this.position.y;
         const sH = this.size.height;
         const sW = this.size.width;
 
-        const sentryTranslateX = boundryPoint.x - sX - sW / 2;
-        const sentryTranslateY = boundryPoint.y - sY - sH / 2;
+        const shapeCenter = new g.Point(sX + (sW / 2), sY + (sH / 2));
+        const boundaryPoint = parentElement.getBBox().pointNearestToPoint(shapeCenter);
 
-        this.xyz_joint.translate(sentryTranslateX, sentryTranslateY);
+        const sentryTranslateX = boundaryPoint.x - shapeCenter.x;
+        const sentryTranslateY = boundaryPoint.y - shapeCenter.y;
+
+        if (sentryTranslateX != 0 || sentryTranslateY != 0) {
+            this.xyz_joint.translate(sentryTranslateX, sentryTranslateY);
+        }
     }
 
     /**

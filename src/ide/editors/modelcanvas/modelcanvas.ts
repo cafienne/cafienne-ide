@@ -126,7 +126,6 @@ export default abstract class ModelCanvas<
             Grid.blurSetSize();
         });
         // Enforce move constraints on certain elements
-        this.paper.on('element:pointermove', (elementView: any, e: any, x: number, y: number) => this.getElement(elementView).moving(x, y));
         this.paper.on('element:pointerdblclick', (elementView: any, e: any, x: number, y: number) => this.getElement(elementView).propertiesView.show(true));
         this.paper.on('blank:pointerclick', () => this.clearSelection());
         // For some reason pointerclick not always works, so also listening to pointerdown on blank.

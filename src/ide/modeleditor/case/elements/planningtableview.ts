@@ -71,7 +71,6 @@ export default class PlanningTableView extends CaseElementView<PlanningTableDefi
     }
 
     moved(x: number, y: number, newParent: CaseElementView) {
-        this.moving(x, y);
     }
 
     /**
@@ -84,16 +83,13 @@ export default class PlanningTableView extends CaseElementView<PlanningTableDefi
         // create a point relative to the parentElement, where the planningTable must be positioned relative to the parent
         const point = new g.Point(parentX + this.parent.__planningTablePosition.x, parentY + this.parent.__planningTablePosition.y);
 
-        // get the absolute position of the planningTable
-        // NOTE: Planning Table does NOT yet store a CMMNShape object. It would be better if it did... Now we have to use joint :(
-        const ptX = this.shape.x;
-        const ptY = this.shape.y;
-
         // position planningTable with respect to the parent
-        const translateX = point.x - ptX;
-        const translateY = point.y - ptY;
+        const translateX = point.x - x;
+        const translateY = point.y - y;
 
-        this.xyz_joint.translate(translateX, translateY);
+        if (translateX != 0 || translateY != 0) {
+            this.xyz_joint.translate(translateX, translateY);
+        }
     }
 
     referencesDefinitionElement(definitionId: string) {
