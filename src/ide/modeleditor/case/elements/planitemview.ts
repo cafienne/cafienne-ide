@@ -2,6 +2,7 @@ import { g } from '@joint/core';
 import PlanItem from "../../../../repository/definition/cmmn/caseplan/planitem";
 import CriterionDefinition from "../../../../repository/definition/cmmn/sentry/criteriondefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+import ElementView from '../../../editors/modelcanvas/elementview';
 import CaseElementView from "./caseelementview";
 import CaseView from "./caseview";
 import DecoratorBox from "./decorator/decoratorbox";
@@ -78,7 +79,7 @@ export default abstract class PlanItemView<PI extends PlanItem = PlanItem> exten
         return this._decoratorBox;
     }
 
-    createCMMNChild(viewType: Function, x: number, y: number): CaseElementView<any> {
+    createCMMNChild(viewType: Function, x: number, y: number): ElementView<any> {
         if (viewType == EntryCriterionView) {
             return this.__addCMMNChild(EntryCriterionView.create(this, x, y));
         } else if (viewType == ReactivateCriterionView) {

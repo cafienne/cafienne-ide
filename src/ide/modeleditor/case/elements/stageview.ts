@@ -13,6 +13,7 @@ import ProcessFile from "../../../../repository/serverfile/processfile";
 import Util from "../../../../util/util";
 import CaseFileItemDragData from "../../../dragdrop/casefileitemdragdata";
 import ServerFileDragData from "../../../dragdrop/serverfiledragdata";
+import ElementView from "../../../editors/modelcanvas/elementview";
 import CaseElementView from "./caseelementview";
 import CaseFileItemView from "./casefileitemview";
 import CaseTaskView from "./casetaskview";
@@ -212,7 +213,7 @@ export default class StageView<SD extends StageDefinition = StageDefinition> ext
         this.addPlanItem(definition);
     }
 
-    createCMMNChild(viewType: Function, x: number, y: number): CaseElementView {
+    createCMMNChild(viewType: Function, x: number, y: number): ElementView<any> {
         if (Util.isSubClassOf(PlanItemView, viewType)) {
             return this.__addCMMNChild((viewType as any).create(this, x, y));
         } else if (viewType == CaseFileItemView) {

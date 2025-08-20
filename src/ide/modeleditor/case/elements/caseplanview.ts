@@ -1,5 +1,6 @@
 ﻿import CasePlanDefinition from "../../../../repository/definition/cmmn/caseplan/caseplandefinition";
 import ShapeDefinition from "../../../../repository/definition/dimensions/shape";
+import ElementView from "../../../editors/modelcanvas/elementview";
 import CaseView from "./caseview";
 import CasePlanDecoratorBox from "./decorator/box/caseplandecoratorbox";
 import ExitCriterionView from "./exitcriterionview";
@@ -118,7 +119,7 @@ export default class CasePlanView extends StageView<CasePlanDefinition> {
         return criterionType == ExitCriterionView;
     }
 
-    createCMMNChild(viewType: Function, x: number, y: number) {
+    createCMMNChild(viewType: Function, x: number, y: number): ElementView<any> {
         if (viewType == ExitCriterionView) {
             return this.__addCMMNChild(ExitCriterionView.create(this, x, y));
         } else {
